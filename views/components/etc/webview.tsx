@@ -143,6 +143,19 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     // Set isReady state
     useEffect(() => {
       const cb = () => {
+        setIsReady(false)
+      }
+      if (view) {
+        view.addEventListener('load-commit', cb)
+      }
+      return () => {
+        if (view) {
+          view.removeEventListener('load-commit', cb)
+        }
+      }
+    }, [view])
+    useEffect(() => {
+      const cb = () => {
         setIsReady(true)
       }
       if (view) {
