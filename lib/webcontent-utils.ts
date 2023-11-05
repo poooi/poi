@@ -125,7 +125,8 @@ export function stopNavigateAndHandleNewWindow(id: number) {
           sandbox: false,
           webviewTag: true,
         },
-        transparent: true,
+        transparent: isModernDarwin,
+        backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
       }
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true

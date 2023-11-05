@@ -35,6 +35,7 @@ const dbg = require('./lib/debug')
 require('./lib/updater')
 require('./lib/tray')
 require('./lib/screenshot')
+require('./lib/native-theme-helper')
 
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {
@@ -239,7 +240,7 @@ app.on('ready', () => {
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
     // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : hideTitlebar ? 'hidden' : null,
-    transparent: true,
+    transparent: process.platform === 'darwin',
     frame: !hideTitlebar,
     enableLargerThanScreen: true,
     maximizable: config.get('poi.content.resizable', true),
@@ -257,7 +258,7 @@ app.on('ready', () => {
       backgroundThrottling: false,
     },
     backgroundColor: '#00000000',
-    backgroundMaterial: 'acrylic',
+    backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
     roundedCorners: true,
   })
 
@@ -280,10 +281,6 @@ app.on('ready', () => {
   mainWindow.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
   if (config.get('poi.window.isMaximized', false)) {
     mainWindow.maximize()
-  } else {
-    // Workaround for initial backgroundMaterial config not applied
-    mainWindow.setSize(width + 1, height)
-    mainWindow.setSize(width, height)
   }
   if (config.get('poi.window.isFullScreen', false)) {
     mainWindow.setFullScreen(true)

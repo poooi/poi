@@ -85,7 +85,7 @@ export function reducer(state = initState, { type, value }) {
         ...state,
         webview: {
           ...state.webview,
-          ...value,
+          ...getIntegerSize(value),
         },
       }
     default:
