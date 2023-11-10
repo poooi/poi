@@ -178,6 +178,10 @@ config.on('config.set', (path, value) => {
       adjustSize()
       setTimeout(() => {
         remote.getCurrentWindow().setContentSize(width, height)
+        const webview = getStore('layout.webview.ref')
+        if (webview) {
+          webview.forceSyncZoom()
+        }
       }, 1000)
       break
     }

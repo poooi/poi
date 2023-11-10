@@ -43,6 +43,7 @@ type Props = WebviewTagDOMAttrs & HandlerFields & ExtraFields
 type ExtendedWebviewTag = WebviewTag & {
   getWebContents: () => WebContents
   isReady: () => boolean
+  forceSyncZoom: () => void
 }
 
 const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
@@ -144,6 +145,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     useEffect(() => {
       const cb = () => {
         setIsReady(false)
+        setImmediate(() => setIsReady(true))
       }
       if (view) {
         view.addEventListener('load-commit', cb)
@@ -151,19 +153,6 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       return () => {
         if (view) {
           view.removeEventListener('load-commit', cb)
-        }
-      }
-    }, [view])
-    useEffect(() => {
-      const cb = () => {
-        setIsReady(true)
-      }
-      if (view) {
-        view.addEventListener('dom-ready', cb)
-      }
-      return () => {
-        if (view) {
-          view.removeEventListener('dom-ready', cb)
         }
       }
     }, [view])
@@ -223,9 +212,14 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
           return wc
         }
         viewToReturn.isReady = () => isReady
+        viewToReturn.forceSyncZoom = () => {
+          if (view && zoomFactor) {
+            view.setZoomFactor(zoomFactor)
+          }
+        }
         return viewToReturn
       },
-      [view, isReady],
+      [view, isReady, zoomFactor],
     )
 
     return (
