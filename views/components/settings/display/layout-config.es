@@ -75,7 +75,6 @@ const Icon = styled.span`
 export class LayoutConfig extends Component {
   static propTypes = {
     enableDoubleTabbed: PropTypes.bool,
-    enableIsolatedTabbed: PropTypes.bool,
     layout: PropTypes.string,
     reversed: PropTypes.bool,
     isolateGameWindow: PropTypes.bool,
@@ -165,9 +164,8 @@ export class LayoutConfig extends Component {
   }
 
 
-  handleSetDoubleTabbed = (doubleTabbed, isolated, vertical) => {
+  handleSetDoubleTabbed = (doubleTabbed, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)
-    config.set('poi.tabarea.isolated', isolated)
 
     if (doubleTabbed) {
       config.set('poi.tabarea.vertical', vertical)
@@ -265,8 +263,8 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={!enableDoubleTabbed && !enableIsolatedTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(false, false)}
+                  active={!enableDoubleTabbed}
+                  onClick={(e) => this.handleSetDoubleTabbed(false)}
                 >
                   <Icon invertX>{SVG.singleTab}</Icon>
                 </Button>
@@ -274,7 +272,7 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && !verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, false, false)}
+                  onClick={(e) => this.handleSetDoubleTabbed(true, false)}
                 >
                   <Icon>{SVG.doubleTabHorizontal}</Icon>
                 </Button>
@@ -282,10 +280,10 @@ export class LayoutConfig extends Component {
                   minimal
                   intent={Intent.PRIMARY}
                   active={enableDoubleTabbed && verticalDoubleTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(true, false, true)}
+                  onClick={(e) => this.handleSetDoubleTabbed(true, true)}
                 >
                   <Icon invertY>{SVG.doubleTabVertical}</Icon>
-                  </Button>
+                </Button>
               </ButtonGroup>
             </FormGroup>
           </Wrapper>
