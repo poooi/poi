@@ -40,6 +40,12 @@ poi-main {
   overflow: hidden;
 }
 
+.plugin-dropdown-container,
+.plugin-dropdown-container .bp4-popover-content {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
 .plugin-dropdown-container > .bp4-popover-content > .bp4-menu {
   background: transparent;
 }
@@ -75,6 +81,11 @@ poi-main {
   margin: 6px 10px !important;
 }
 
+body:not(.bp4-dark) #electron-app-title-bar .window-controls button:not(:hover),
+body:not(.bp4-dark) #electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:not(:hover) {
+  color: #24292e;
+}
+
 .resizable-component.width-resize > .resize-handle-right {
   background: linear-gradient(90deg, transparent 40%, #666 60%, transparent 51%);
   z-index: 10;
@@ -88,4 +99,9 @@ poi-main {
 img {
   /* stylelint-disable-next-line value-no-vendor-prefix */
   image-rendering: -webkit-optimize-contrast;
+}
+
+.map-reminder-popover.pinned [class*='transition-container'] {
+  pointer-events: none;
+  z-index: 18;
 }

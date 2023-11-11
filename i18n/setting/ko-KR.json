@@ -87,6 +87,7 @@
   "Use SVG Icon": "SVG 아이콘 사용",
   "Enable Smooth Transition": "탭을 전환할 때 컨텐츠를 부드럽게 표시",
   "Use Gridded Plugin Menu": "플러그인 메뉴를 그리드 방식으로 설정",
+  "Display detailed fleet info in main panel": "주 패널에 상세한 함대 정보 표시",
   "Plugin update": "플러그인 업데이트",
   "PluginUpdateMsg": "의 새로운 버전이 있습니다. 업데이트 해주세요.",
   "Check Update": "업데이트 확인",

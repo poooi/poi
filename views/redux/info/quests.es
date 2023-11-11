@@ -1,5 +1,5 @@
 /* global ROOT, APPDATA_PATH */
-import CSON from 'cson'
+import * as remote from '@electron/remote'
 import { join } from 'path-extra'
 import {
   map,
@@ -18,6 +18,9 @@ import moment from 'moment-timezone'
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
 import Scheduler from 'views/services/scheduler'
+
+// Workaround for https://github.com/electron/electron/issues/37404
+const CSON = remote.require('cson')
 
 const QUESTS_REFRESH_DAY = '@@QUESTS_REFRESH_DAY'
 
@@ -438,14 +441,14 @@ export function reducer(state = initState, action, store) {
       // Load static quest goal data
       let questGoals = {}
       try {
-        questGoals = CSON.parseCSONFile(questGoalsPath)
+        questGoals = JSON.parse(JSON.stringify(CSON.parseCSONFile(questGoalsPath)))
       } catch (e) {
         console.warn('No quest goal data!')
       }
       // Load quest tracking of this account
       let records = {}
       try {
-        records = CSON.parseCSONFile(questTrackingPath(admiralId))
+        records = JSON.parse(JSON.stringify(CSON.parseCSONFile(questTrackingPath(admiralId))))
         if (records && records.time) {
           records = outdateRecords(questGoals, records, records.time, Date.now())
         }

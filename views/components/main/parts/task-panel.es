@@ -54,6 +54,7 @@ function getCategory(api_category) {
     case 2:
     case 8:
     case 9:
+    case 10:
       return '#e73939'
     case 3:
       return '#87da61'

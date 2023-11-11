@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="200 130 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <title>55</title>
+  <defs>
+    <radialGradient id="Gradient1" cx="0.75" cy="0.3" r="0.6" fx="0.8" fy="0.2">
+      <stop offset="0%" stop-color="#f4f1e7" />
+      <stop offset="50%" stop-color="#bfbfbf" />
+      <stop offset="100%" stop-color="#595959" />
+    </radialGradient>
+    <linearGradient id="Gradient2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f1e7" />
+      <stop offset="65%" stop-color="#565656" />
+      <stop offset="100%" stop-color="#505050" />
+    </linearGradient>
+    <linearGradient id="Gradient3" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e0e0e0" />
+      <stop offset="50%" stop-color="#6f6f6f" />
+      <stop offset="75%" stop-color="#595959" />
+      <stop offset="100%" stop-color="#505050" />
+    </linearGradient>
+  </defs>
+
+  <g transform="scale(1.5)">
+    <path stroke="#9b9b9b" stroke-width="5" d="M335,300 v200
+                                               M250,335 L335,450
+                                               M450,308 L335,450" />
+
+    <g id="balloon" fill="url(#Gradient1)">
+      <path d="M450,166
+               A83,71,0,0,1,533,237
+               A83,71,0,0,1,450,308
+               C250,308,190,247,190,247
+               A15,15,0,0,1,190,227
+               C190,227,250,166,450,166Z" />
+    </g>
+
+    <g id="Wing" fill="url(#Gradient3)">
+      <path d="M190,165
+               C190,150,195,110,250,139
+               L308,180
+               L190,227Z" />
+    </g>
+    <use xlink:href="#Wing" transform="matrix(1 0 0 -1 0 474)" />
+
+    <g fill="url(#Gradient2)">
+      <path d="M308,237
+               L190,237
+               L165,190
+               C165,180,190,180,210,190Z" />
+    </g>
+  </g>
+</svg>

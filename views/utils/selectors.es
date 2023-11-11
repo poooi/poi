@@ -383,6 +383,10 @@ export const sortieMapDataSelector = createSelector(
 export const sortieMapHpSelector = createSelector(sortieMapDataSelector, (mapData) =>
   mapData ? getMapHp(mapData[0], mapData[1]) : undefined,
 )
+export const sortieMapEnemySelector = createSelector(
+  sortieSelector,
+  (sortie) => sortie.nextEnemyInfo,
+)
 
 // Returns [ [_ship, $ship] for ship in thisFleet]
 // See fleetShipsDataSelectorFactory for detail

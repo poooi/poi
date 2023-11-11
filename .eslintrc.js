@@ -3,6 +3,7 @@
 const configExtends = [
   'eslint:recommended',
   'plugin:react/recommended',
+  'plugin:react-hooks/recommended',
   'plugin:import/errors',
   'plugin:import/warnings',
 ]
@@ -55,7 +56,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
+      plugins: ['@typescript-eslint', 'import', 'react', 'prettier', 'react-hooks'],
       extends: [
         ...configExtends,
         'plugin:import/typescript',

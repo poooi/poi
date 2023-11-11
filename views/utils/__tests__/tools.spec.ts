@@ -2,7 +2,9 @@ import _ from 'lodash'
 import path from 'path'
 import { isSubdirectory, compareUpdate, cjkSpacing, constructArray } from '../tools'
 
-const pathPatterns = [
+type Pattern = [string, string, boolean]
+
+const pathPatterns: Pattern[] = [
   ['/foo', '/foo', true],
   ['/foo', '/bar', false],
   ['/foo', '/foo/bar', true],
@@ -14,7 +16,7 @@ const pathPatterns = [
   ['/foo/bar', './bar', false],
 ]
 
-const win32PathPatterns = [
+const win32PathPatterns: Pattern[] = [
   ['C:\\Foo', 'C:\\Foo\\Bar', true],
   ['C:\\foo', 'D:\\foo', false],
   ['C:\\foo', 'D:\\foo\\bar', false],
@@ -47,7 +49,7 @@ describe('views/utils/tools', () => {
   })
 
   describe('compareUpdate', () => {
-    const test = (a: any, b: any, d?: number) => {
+    const test = (a: unknown, b: unknown, d?: number) => {
       const c = compareUpdate(a, b, d)
       return [c !== a, c]
     }

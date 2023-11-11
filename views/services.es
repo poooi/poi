@@ -5,8 +5,7 @@ import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 
-const proxy = remote.require('./lib/proxy')
-
+const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 import './services/update'
 import './services/layout'
 import './services/welcome'
@@ -24,8 +23,7 @@ import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './ser
 
 // Update server info
 const setUpdateServer = (dispatch) => {
-  const t = setInterval(() => {
-    const { ip, num: id, name } = proxy.getServerInfo()
+  gameAPIBroadcaster.addListener('kancolle.server.change', ({ ip, num: id, name }) => {
     if (window.getStore('info.server.ip') !== ip) {
       if (ip) {
         dispatch({
@@ -33,10 +31,8 @@ const setUpdateServer = (dispatch) => {
           serverInfo: { ip, id, name },
         })
       }
-    } else {
-      clearInterval(t)
     }
-  }, 1000)
+  })
 }
 const serverObserver = observer(
   (state) => state.info.server.ip,
@@ -149,10 +145,6 @@ window.addEventListener('game.response', (e) => {
 })
 window.addEventListener('network.error', () => {
   error(i18next.t('Connection failed'), { dontReserve: true })
-})
-window.addEventListener('network.error.retry', (e) => {
-  const { counter } = e.detail
-  error(i18next.t('ConnectionFailedMsg', { count: counter }), { dontReserve: true })
 })
 window.addEventListener('network.invalid.result', (e) => {
   const { code } = e.detail

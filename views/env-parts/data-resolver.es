@@ -2,7 +2,7 @@
 import { onGameRequest, onGameResponse } from 'views/redux/reducer-factory'
 import * as remote from '@electron/remote'
 
-const proxy = remote.require('./lib/proxy')
+const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 
 const isGameApi = (pathname) => pathname.startsWith('/kcsapi')
 
@@ -131,20 +131,6 @@ const handleProxyGameStart = () => {
   window.dispatchEvent(new Event('game.start'))
 }
 
-const handleProxyNetworkErrorRetry = ([domain, path, url], counter) => {
-  if (!isGameApi(path)) {
-    return
-  }
-  const event = new CustomEvent('network.error.retry', {
-    bubbles: true,
-    cancelable: true,
-    detail: {
-      counter: counter,
-    },
-  })
-  window.dispatchEvent(event)
-}
-
 const handleProxyNetworkError = ([domain, path, url]) => {
   if (
     url.startsWith('http://www.dmm.com/netgame/') ||
@@ -159,7 +145,6 @@ const proxyListener = {
   'network.on.request': handleProxyGameOnRequest,
   'network.on.response': handleProxyGameOnResponse,
   'network.error': handleProxyNetworkError,
-  'network.error.retry': handleProxyNetworkErrorRetry,
 }
 
 window.listenerStatusFlag = false
@@ -168,7 +153,7 @@ const addProxyListener = () => {
   if (!window.listenerStatusFlag) {
     window.listenerStatusFlag = true
     for (const eventName in proxyListener) {
-      proxy.addListener(eventName, proxyListener[eventName])
+      gameAPIBroadcaster.addListener(eventName, proxyListener[eventName])
     }
   }
 }
@@ -183,7 +168,7 @@ window.addEventListener('unload', () => {
   if (window.listenerStatusFlag) {
     window.listenerStatusFlag = false
     for (const eventName in proxyListener) {
-      proxy.removeListener(eventName, proxyListener[eventName])
+      gameAPIBroadcaster.removeListener(eventName, proxyListener[eventName])
     }
   }
 })

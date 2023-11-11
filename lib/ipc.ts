@@ -5,7 +5,7 @@ import { EventEmitter } from 'events'
 import { mapValues } from 'lodash'
 
 class IPC extends EventEmitter {
-  data: any = new Object()
+  data: Record<string, Record<string, (...arg: never[]) => never | never>> = {}
 
   // scope:  string
   // opts:   key-func Object
@@ -15,7 +15,7 @@ class IPC extends EventEmitter {
       return
     }
     if (!this.data[scope]) {
-      this.data[scope] = new Object()
+      this.data[scope] = {}
     }
     this.unregister(scope, Object.keys(opts))
     for (const key in opts) {
@@ -61,10 +61,10 @@ class IPC extends EventEmitter {
 
   // key:    string
   // args:   arguments passing to api
-  foreachCall = (key: string, ...args: any[]) => {
+  foreachCall = (key: string, ...args: never[]) => {
     for (const scope in this.data) {
       if (Object.prototype.hasOwnProperty.call(this.data[scope], key)) {
-        this.data[key].apply(null, args)
+        this.data[scope][key].apply(null as never, args)
       }
     }
   }

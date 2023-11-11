@@ -5,6 +5,8 @@ import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import FontAwesome from 'react-fontawesome'
 import {
+  Classes,
+  Colors,
   Tab,
   Tabs,
   Popover,
@@ -15,6 +17,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core'
+import { IconNames } from '@blueprintjs/icons'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
@@ -94,6 +97,45 @@ const PoiTabContainer = styled.div`
 
 const PluginDropdownButton = styled(Button)`
   width: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: transparent !important;
+
+  svg[data-icon=${IconNames.CHEVRON_DOWN}] {
+    transform: rotate(0);
+    transition: transform 0.3s;
+  }
+
+  &:hover,
+  &.${Classes.ACTIVE} {
+    color: ${Colors.BLUE2} !important;
+
+    svg {
+      color: ${Colors.BLUE2};
+    }
+
+    .${Classes.DARK} & {
+      color: ${Colors.BLUE5} !important;
+
+      svg {
+        color: ${Colors.BLUE5};
+      }
+    }
+  }
+
+  &.${Classes.ACTIVE} {
+    svg[data-icon=${IconNames.CHEVRON_DOWN}] {
+      transform: rotate(180deg);
+    }
+  }
+
+  ${({ double }) =>
+    double &&
+    css`
+      width: calc(100% - 13.5px);
+      margin-left: 6.5px;
+      margin-right: 7px;
+    `}
 `
 
 const PluginDropdownMenuItem = styled(MenuItem)`
@@ -129,23 +171,43 @@ const PluginDropdown = styled(Menu)`
 `
 
 const NavTabs = styled(Tabs)`
-  width: calc(100% + 20px);
+  width: 100%;
 
-  .bp4-tab {
-    text-align: center;
-  }
+  & > .${Classes.TAB_LIST} {
+    gap: 20px;
 
-  .nav-tab-3 {
-    width: calc(33% - 20px);
-  }
+    & > .${Classes.TAB} {
+      flex: 2 0 0;
+      margin-right: 0;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      gap: 8px;
 
-  .nav-tab-4 {
-    width: calc(25% - 20px);
-  }
+      &.half-width {
+        flex: 1 0 0;
+      }
 
-  .nav-tab-8 {
-    width: calc(12.5% - 20px);
+      svg {
+        transform: rotate(0);
+        transition: 0s;
+      }
+
+      &[aria-selected='true'] {
+        svg {
+          transform: rotate(360deg);
+          transition: 0.75s;
+        }
+      }
+    }
   }
+`
+
+const PluginNameContainer = styled.div`
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 8px;
 `
 
 const PluginNonIdealState = styled(NonIdealState)`
@@ -253,19 +315,30 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
   })
 
 @withNamespaces(['setting', 'others'])
-@connect((state) => ({
-  plugins: state.plugins,
-  doubleTabbed: get(state.config, 'poi.tabarea.double', false),
-  verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
-  useGridMenu: get(state.config, 'poi.tabarea.grid', true),
-  activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
-  activePluginName: get(state.ui, 'activePluginName', get(state.plugins, '0.id', '')),
-  mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
-  mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
-  editable: get(state.config, 'poi.layout.editable', false),
-  windowmode: get(state.config, 'poi.plugin.windowmode', emptyObj),
-  async: get(state.config, 'poi.misc.async', true),
-}))
+@connect((state) => {
+  const windowmode = get(state.config, 'poi.plugin.windowmode', emptyObj)
+  let activePluginName = get(state.ui, 'activePluginName', null)
+  if (activePluginName === null) {
+    const visibleActivePlugins = state.plugins.filter(
+      (plugin) => plugin.enabled && !get(windowmode, plugin.id, false),
+    )
+    activePluginName = get(visibleActivePlugins, '0.id', '')
+  }
+
+  return {
+    plugins: state.plugins,
+    doubleTabbed: get(state.config, 'poi.tabarea.double', false),
+    verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
+    useGridMenu: get(state.config, 'poi.tabarea.grid', true),
+    activeMainTab: get(state.ui, 'activeMainTab', 'main-view'),
+    activePluginName,
+    mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+    mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
+    editable: get(state.config, 'poi.layout.editable', false),
+    windowmode,
+    async: get(state.config, 'poi.misc.async', true),
+  }
+})
 export class ControlledTabArea extends PureComponent {
   static propTypes = {
     plugins: PropTypes.array.isRequired,
@@ -633,11 +706,8 @@ export class ControlledTabArea extends PureComponent {
         ? {}
         : tabbedPlugins.find((p) => p.packageName === this.props.activePluginName) ||
           tabbedPlugins[0]
-    const defaultPluginTitle = (
-      <>
-        <FontAwesome name="sitemap" /> {t('others:Plugins')}
-      </>
-    )
+    const defaultPluginIcon = <FontAwesome name="sitemap" />
+    const defaultPluginTitle = t('others:Plugins')
 
     const pluginDropdownContents = (
       <PluginDropdown
@@ -696,30 +766,22 @@ export class ControlledTabArea extends PureComponent {
         onChange={this.handleSelectTab}
         ref={this.tabs}
       >
-        <Tab
-          key="main-view"
-          id="main-view"
-          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
-        >
+        <Tab key="main-view" id="main-view" icon={MAIN_VIEW.icon}>
           {MAIN_VIEW.displayName}
         </Tab>
-        <Tab
-          key="ship-view"
-          id="ship-view"
-          className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}
-        >
+        <Tab key="ship-view" id="ship-view" icon={SHIP_VIEW.icon}>
           {SHIP_VIEW.displayName}
         </Tab>
         {this.props.doubleTabbed && (
-          <Tab key="settings" id="settings" className="nav-tab-3">
+          <Tab key="settings" id="settings" icon={SETTINGS_VIEW.icon}>
             {SETTINGS_VIEW.displayName}
           </Tab>
         )}
 
         {/* we're not using fragment because blueprint tabs only reads direct children */}
         {!this.props.doubleTabbed && (
-          <Tab key="plugin" id="plugin" className={`nav-tab-${this.props.doubleTabbed ? 3 : 4}`}>
-            {(activePlugin || {}).displayName || defaultPluginTitle}
+          <Tab key="plugin" id="plugin" icon={activePlugin.displayIcon || defaultPluginIcon}>
+            {(activePlugin || {}).name || defaultPluginTitle}
           </Tab>
         )}
         {!this.props.doubleTabbed && (
@@ -728,7 +790,6 @@ export class ControlledTabArea extends PureComponent {
             hasBackdrop
             position={Position.BOTTOM_RIGHT}
             content={pluginDropdownContents}
-            className="nav-tab-8"
             wrapperTagName="div"
             targetTagName="div"
             popoverClassName="plugin-dropdown-container"
@@ -738,9 +799,13 @@ export class ControlledTabArea extends PureComponent {
           </Popover>
         )}
         {!this.props.doubleTabbed && (
-          <Tab key="settings" id="settings" className="nav-tab-8" width={12.5}>
-            <FontAwesome key={0} name="cog" />
-          </Tab>
+          <Tab
+            className="half-width"
+            key="settings"
+            id="settings"
+            width={12.5}
+            icon={<FontAwesome key={0} name="cog" />}
+          />
         )}
       </NavTabs>
     )
@@ -775,7 +840,7 @@ export class ControlledTabArea extends PureComponent {
           minimal
           hasBackdrop
           popoverClassName="plugin-dropdown-container"
-          position={Position.BOTTOM_RIGHT}
+          position={Position.BOTTOM}
           content={pluginDropdownContents}
           className="nav-tab"
           wrapperTagName="div"
@@ -786,8 +851,14 @@ export class ControlledTabArea extends PureComponent {
             ref={this.trigger}
             minimal
             large
-            icon="chevron-down"
-            text={(activePlugin || {}).displayName || defaultPluginTitle}
+            double
+            rightIcon="chevron-down"
+            text={
+              <PluginNameContainer>
+                {(activePlugin || {}).displayIcon || defaultPluginIcon}
+                {(activePlugin || {}).name || defaultPluginTitle}
+              </PluginNameContainer>
+            }
           />
         </Popover>
         <TabContentsUnion

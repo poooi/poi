@@ -52,16 +52,6 @@ export const PluginConfig = withNamespaces(['setting'])(({ t }) => (
       <Wrapper>
         <FormGroup inline>
           <SwitchConfig
-            label={t('Connect to npm server through proxy')}
-            configName="packageManager.proxy"
-            defaultValue={false}
-          />
-        </FormGroup>
-      </Wrapper>
-
-      <Wrapper>
-        <FormGroup inline>
-          <SwitchConfig
             label={t('Update plugins at startup')}
             configName="packageManager.enableAutoUpdate"
             defaultValue={true}

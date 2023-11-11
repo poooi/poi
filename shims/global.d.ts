@@ -3,10 +3,6 @@ interface ToastConfig {
   title: string
 }
 
-interface Window {
-  toast: (message: string, config: ToastConfig) => void
-}
-
 declare global {
   namespace NodeJS {
     interface Global {
@@ -15,6 +11,15 @@ declare global {
       DEFAULT_CACHE_PATH: string
     }
   }
+  interface Window {
+    toast: (message: string, config: ToastConfig) => void
+  }
+  // let and const do not show up on globalThis
+  /* eslint-disable no-var */
+  var EXROOT: string
+  var ROOT: string
+  var DEFAULT_CACHE_PATH: string
+  /* eslint-enable no-var */
 }
 
 export {}
