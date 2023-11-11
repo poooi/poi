@@ -20,11 +20,6 @@ const SVG = {
       <path d="M1 2v12h14V2zm13 7H2V3h12z" fill="currentColor" />
     </svg>
   ),
-  surrounding: (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-      <path d="M1 2v12h14V2H1M2 10H10V13H2ZM11 3H14V13H11Z" fill="currentColor" />
-    </svg>
-  ),
   separate: (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
       <path fill="currentColor" d="M3 2v10h12V2H3zm11 9H4V5h10v5z" />
@@ -34,6 +29,11 @@ const SVG = {
   panel: (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
       <path fill="none" stroke="currentColor" d="M.5 1.5h15v13H.5zM9.5 2v12V2z" />
+    </svg>
+  ),
+  grid: (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+      <path d="M1 2v12h14V2H1M2 10H10V13H2ZM11 3H14V13H11Z" fill="currentColor" />
     </svg>
   ),
   singleTab: (
@@ -66,11 +66,11 @@ const Icon = styled.span`
 @connect((state, props) => ({
   layout: get(state.config, 'poi.layout.mode', 'horizontal'),
   enableDoubleTabbed: get(state.config, 'poi.tabarea.double', false),
-  enableIsolatedTabbed: get(state.config, 'poi.tabarea.isolated', false),
   verticalDoubleTabbed: get(state.config, 'poi.tabarea.vertical', false),
   reversed: get(state.config, 'poi.layout.reverse', false),
   isolateGameWindow: get(state.config, 'poi.layout.isolate', false),
   overlayPanel: get(state.config, 'poi.layout.overlay', false),
+  gridPanel: get(state.config, 'poi.layout.grid', false),
 }))
 export class LayoutConfig extends Component {
   static propTypes = {
@@ -110,6 +110,9 @@ export class LayoutConfig extends Component {
     if (this.props.overlayPanel) {
       this.setOverlayPanel(false)
     }
+    if (this.props.gridPanel) {
+      this.setGridPanel(false)
+    }
     config.set('poi.layout.mode', layout)
     config.set('poi.layout.reverse', rev)
   }
@@ -117,7 +120,7 @@ export class LayoutConfig extends Component {
   handleSetIsolateGameWindow = () => {
     if (!this.props.isolateGameWindow) {
       this.createConfirmModal((e) => {
-        if (this.props.overlayPanel) {
+        if (this.props.overlayPanel || this.props.gridPanel) {
           this.setLayout('horizontal', false)
         }
         this.setIsolateGameWindow(true)
@@ -126,14 +129,27 @@ export class LayoutConfig extends Component {
   }
 
   handleSetOverlayPanel = () => {
-    if (this.props.isolateGameWindow) {
+    if (this.props.isolateGameWindow || this.props.gridPanel) {
       this.createConfirmModal(() => {
         this.setLayout('horizontal', false)
         this.setOverlayPanel(true)
       })
       return
     }
+
     this.setOverlayPanel(!this.props.overlayPanel)
+  }
+
+  handleSetGridPanel = () => {
+    if (this.props.isolateGameWindow || this.props.overlayPanel) {
+      this.createConfirmModal(() => {
+        this.setLayout('horizontal', false)
+        this.setGridPanel(true)
+      })
+      return
+    }
+
+    this.setGridPanel(!this.props.gridPanel)
   }
 
   setIsolateGameWindow = (flag) => {
@@ -143,6 +159,11 @@ export class LayoutConfig extends Component {
   setOverlayPanel = (flag) => {
     config.set('poi.layout.overlay', flag)
   }
+
+  setGridPanel = (flag) => {
+    config.set('poi.layout.grid', flag)
+  }
+
 
   handleSetDoubleTabbed = (doubleTabbed, isolated, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)
@@ -159,16 +180,16 @@ export class LayoutConfig extends Component {
       reversed,
       isolateGameWindow,
       enableDoubleTabbed,
-      enableIsolatedTabbed,
       verticalDoubleTabbed,
       overlayPanel,
+      gridPanel,
       t,
     } = this.props
-    const leftActive = !overlayPanel && !isolateGameWindow && layout === 'horizontal' && reversed
-    const downActive = !overlayPanel && !isolateGameWindow && layout !== 'horizontal' && !reversed
-    const upActive = !overlayPanel && !isolateGameWindow && layout !== 'horizontal' && reversed
+    const leftActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout === 'horizontal' && reversed
+    const downActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && !reversed
+    const upActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && reversed
     const rightActive =
-      !overlayPanel && !isolateGameWindow && layout === 'horizontal' && !reversed && !overlayPanel
+      !overlayPanel && !isolateGameWindow && !gridPanel && layout === 'horizontal' && !reversed && !overlayPanel
     return (
       <Section title={t('Layout')}>
         <Wrapper>
@@ -221,10 +242,18 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={overlayPanel && !isolateGameWindow}
+                  active={overlayPanel && !isolateGameWindow && !gridPanel}
                   onClick={(e) => this.handleSetOverlayPanel()}
                 >
                   <Icon>{SVG.panel}</Icon>
+                </Button>
+                <Button
+                  minimal
+                  intent={Intent.PRIMARY}
+                  active={gridPanel && !isolateGameWindow && !overlayPanel}
+                  onClick={(e) => this.handleSetGridPanel()}
+                >
+                  <Icon>{SVG.grid}</Icon>
                 </Button>
               </ButtonGroup>
             </FormGroup>
@@ -257,14 +286,6 @@ export class LayoutConfig extends Component {
                 >
                   <Icon invertY>{SVG.doubleTabVertical}</Icon>
                   </Button>
-                  <Button
-                  minimal
-                  intent={Intent.PRIMARY}
-                  active={!enableDoubleTabbed && enableIsolatedTabbed}
-                  onClick={(e) => this.handleSetDoubleTabbed(false, true)}
-                >
-                  <Icon>{SVG.surrounding}</Icon>
-                </Button>
               </ButtonGroup>
             </FormGroup>
           </Wrapper>
