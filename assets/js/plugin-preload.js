@@ -22,3 +22,7 @@ config.addListener('config.set', handleZoom)
 window.addEventListener('unload', (e) => {
   config.removeListener('config.set', handleZoom)
 })
+
+document.addEventListener('DOMContentLoaded', () =>
+  onZoomChange(config.get('poi.appearance.zoom', 1)),
+)

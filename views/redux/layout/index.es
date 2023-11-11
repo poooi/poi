@@ -34,15 +34,25 @@ const initState = {
   },
 }
 
+const getIntegerSize = (obj) => {
+  const result = { ...obj }
+  for (const key of Object.keys(result)) {
+    if (key.toLowerCase().includes('width') || key.toLowerCase().includes('height')) {
+      result[key] = Math.round(result[key])
+    }
+  }
+  return result
+}
+
 export function reducer(state = initState, { type, value }) {
   switch (type) {
     case '@@LayoutUpdate':
       return {
         ...state,
-        ...value,
+        ...getIntegerSize(value),
         webview: {
           ...state.webview,
-          ...value.webview,
+          ...getIntegerSize(value.webview),
         },
       }
     case '@@LayoutUpdate/webview/useFixedResolution':

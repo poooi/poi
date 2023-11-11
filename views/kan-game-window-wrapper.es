@@ -274,12 +274,13 @@ export class KanGameWindowWrapper extends PureComponent {
       }
       this.currentWindow.blur()
       this.currentWindow.focus()
-      this.currentWindow.webContents.once('dom-ready', () => {
-        this.setState({
+      this.setState(
+        {
           loaded: true,
           id: this.currentWindow.id,
-        })
-      })
+        },
+        () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
+      )
 
       // workaround for https://github.com/electron/electron/issues/22440
       const unsetResizable = debounce(() => {
@@ -309,6 +310,15 @@ export class KanGameWindowWrapper extends PureComponent {
     return true
   }
 
+  forceSyncZoom = (count = 0) => {
+    const webview = getStore('layout.webview.ref')
+    if (webview) {
+      webview.forceSyncZoom()
+    } else if (count < 20) {
+      setTimeout(() => this.forceSyncZoom(count + 1), 100)
+    }
+  }
+
   onZoomChange = (value) => {
     if (
       this.state.loaded &&
@@ -323,6 +333,7 @@ export class KanGameWindowWrapper extends PureComponent {
       this.currentWindow.setContentSize(width, height)
 
       this.currentWindow.webContents.setZoomFactor(value)
+      this.forceSyncZoom()
     }
   }
 
