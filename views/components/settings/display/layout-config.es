@@ -263,7 +263,7 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={!enableDoubleTabbed}
+                  active={!enableDoubleTabbed && !gridPanel}
                   onClick={(e) => this.handleSetDoubleTabbed(false)}
                 >
                   <Icon invertX>{SVG.singleTab}</Icon>
@@ -271,7 +271,7 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={enableDoubleTabbed && !verticalDoubleTabbed}
+                  active={enableDoubleTabbed && !verticalDoubleTabbed && !gridPanel}
                   onClick={(e) => this.handleSetDoubleTabbed(true, false)}
                 >
                   <Icon>{SVG.doubleTabHorizontal}</Icon>
@@ -279,7 +279,7 @@ export class LayoutConfig extends Component {
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  active={enableDoubleTabbed && verticalDoubleTabbed}
+                  active={enableDoubleTabbed && verticalDoubleTabbed && !gridPanel}
                   onClick={(e) => this.handleSetDoubleTabbed(true, true)}
                 >
                   <Icon invertY>{SVG.doubleTabVertical}</Icon>
