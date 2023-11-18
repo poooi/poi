@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { ResizableArea } from 'react-resizable-area'
+import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import styled, { css } from 'styled-components'
 
 import { ControlledTabArea } from './components/tab-area'
@@ -118,6 +119,7 @@ const transformToPanelSize = (size) => ({
 @connect((state, props) => ({
   layout: get(state, 'config.poi.layout.mode', 'horizontal'),
   overlay: get(state, 'config.poi.layout.overlay', false),
+  grid: get(state, 'config.poi.layout.grid', false),
   editable: get(state.config, 'poi.layout.editable', false),
   isDarkTheme: get(state.config, 'poi.appearance.theme', 'dark') === 'dark',
   overlayPanelWidth: get(state.config, 'poi.tabarea.overlaypanelwidth', overlayPanelDefaultWidth),
@@ -144,6 +146,36 @@ export class PoiApp extends Component {
           rect.height - rect.bottom + innerHeight
         }
       : 29
+
+    const mainLayout = [
+      { i: "poi-app-container", x: 0, y: 0, w: 512, h: 512, static: true },
+      { i: "controlled-tab-area", x: 512, y: 0, w: 256, h: 512, static: true },
+    ];
+
+    if (grid) {
+      return (
+        <ResponsiveReactGridLayout
+          layouts={mainLayout}
+          rowHeight={10}
+          margin={[3, 3]}
+          cols={{ lg: 20, sm: 10 }}
+          breakpoints={{ lg: 750, sm: 0 }}
+          compactType="vertical"
+        >
+          <div className="poi-app-container" key="poi-app-container">
+            <PoiAppContainer
+              id="poi-app-container"
+              className="poi-app-container"
+              overlay={overlay}
+              isDarkTheme={isDarkTheme}
+            ></PoiAppContainer>
+          </div>
+          <div className="controlled-tab-area" key="controlled-tab-area">
+            <ControlledTabArea />
+          </div>
+        </ResponsiveReactGridLayout>
+      )
+    }
     return (
       <>
         {overlay && (
