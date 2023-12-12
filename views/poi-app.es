@@ -118,7 +118,6 @@ const transformToPanelSize = (size) => ({
 @connect((state, props) => ({
   layout: get(state, 'config.poi.layout.mode', 'horizontal'),
   overlay: get(state, 'config.poi.layout.overlay', false),
-  grid: get(state, 'config.poi.layout.grid', false),
   editable: get(state.config, 'poi.layout.editable', false),
   isDarkTheme: get(state.config, 'poi.appearance.theme', 'dark') === 'dark',
   overlayPanelWidth: get(state.config, 'poi.tabarea.overlaypanelwidth', overlayPanelDefaultWidth),
