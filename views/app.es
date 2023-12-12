@@ -80,7 +80,7 @@ function layoutConfigFix(layoutConfig) {
   if (layoutConfigOutdated(layoutConfig)) {
     return defaultLayout
   }
-  return layoutConfig
+  return defaultLayout
 }
 
 if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
@@ -164,7 +164,7 @@ class Poi extends Component {
                 // onLayoutChange={this.onLayoutChange}
                 rowHeight={10}
                 margin={[3, 3]}
-                cols={{ lg: 20, sm: 10 }}
+                cols={{ lg: 40, sm: 10 }}
                 breakpoints={{ lg: 750, sm: 0 }}
                 width={1800}
                 isResizable={true}
