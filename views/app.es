@@ -15,7 +15,7 @@ import '../assets/css/global.css'
 
 import { store } from './create-store'
 import { WindowEnv } from './components/etc/window-env'
-import { ModalTrigger } from './components/etc/modal'
+import ModalTrigger from './components/etc/modal'
 import { BasicAuth } from './utils/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
 import { KanGameWrapper } from './kan-game-wrapper'

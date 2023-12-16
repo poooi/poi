@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
 
-export const ResizeSensor = ({ onResize, children }) => {
-  const [ref, setRef] = useState()
+interface ResizeSensorProps {
+  onResize: ResizeObserverCallback
+  children: React.ReactElement
+}
+
+export const ResizeSensor: React.FC<ResizeSensorProps> = ({ onResize, children }) => {
+  const [ref, setRef] = useState<HTMLElement | null>(null)
 
   const observer = useMemo(() => new ResizeObserver(onResize), [onResize])
 
