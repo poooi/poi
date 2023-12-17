@@ -9,7 +9,6 @@ import {
   Colors,
   Tab,
   Tabs,
-  Popover,
   Button,
   Position,
   NonIdealState,
@@ -17,6 +16,7 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core'
+import { Popover } from 'views/components/etc/overlay'
 import { IconNames } from '@blueprintjs/icons'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'

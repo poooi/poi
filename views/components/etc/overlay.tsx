@@ -1,8 +1,6 @@
 import React, { useContext, ReactNode } from 'react'
-import {
-  Alert as BAlert,
-  Dialog as BDialog,
-  Overlay as BOverlay,
+import * as BluePrint from '@blueprintjs/core'
+import type {
   AlertProps as BAlertProps,
   DialogProps as BDialogProps,
   OverlayProps as BOverlayProps,
@@ -16,9 +14,9 @@ interface AlertProps extends BAlertProps {
 }
 
 export const Alert: React.FC<AlertProps> = ({ children, ...props }) => (
-  <BAlert portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BluePrint.Alert portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BAlert>
+  </BluePrint.Alert>
 )
 
 interface DialogProps extends BDialogProps {
@@ -26,9 +24,9 @@ interface DialogProps extends BDialogProps {
 }
 
 export const Dialog: React.FC<DialogProps> = ({ children, ...props }) => (
-  <BDialog portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BluePrint.Dialog portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BDialog>
+  </BluePrint.Dialog>
 )
 
 interface TooltipProps extends Tooltip2Props {
@@ -56,7 +54,7 @@ interface OverlayProps extends BOverlayProps {
 }
 
 export const Overlay: React.FC<OverlayProps> = ({ children, ...props }) => (
-  <BOverlay portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BluePrint.Overlay portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BOverlay>
+  </BluePrint.Overlay>
 )

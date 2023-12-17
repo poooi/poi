@@ -4,10 +4,22 @@ import { take } from 'lodash'
 import styled, { keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { ResizeSensor } from 'views/components/etc/resize-sensor'
+import { EventEmitter } from 'views/utils/event-emitter'
 
 const HISTORY_SIZE = 7
 
-const initialMessage = {
+export interface Message {
+  type: string
+  content: string
+  priority: number
+  options?: {
+    dontReserve?: boolean
+  }
+  stickyFor?: number
+  ts?: number
+}
+
+const initialMessage: Message = {
   type: 'default',
   content: i18next.t('Waiting for response'),
   priority: 0,
@@ -66,7 +78,15 @@ const AlertLog = styled.div`
   backdrop-filter: blur(5px);
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  ${({ toggle, height, containerHeight }) =>
+  ${({
+    toggle,
+    height,
+    containerHeight,
+  }: {
+    toggle: boolean
+    height: number
+    containerHeight: number
+  }) =>
     toggle
       ? css`
           transform: translate3d(0, ${-Math.round(containerHeight + height)}px, 0);
@@ -96,7 +116,7 @@ const OverflowScroll = keyframes`
 const AlertArea = styled.div`
   cursor: pointer;
   display: flex;
-  ${({ overflow }) =>
+  ${({ overflow }: { overflow: boolean }) =>
     overflow &&
     css`
       animation-delay: 2s;
@@ -112,10 +132,10 @@ const MsgMainCnt = styled.div`
   width: fit-content;
 `
 
-window.testlist = []
+export const messageInstance = new EventEmitter<Message>()
 
-export const PoiAlert = () => {
-  const [list, setList] = useState([initialMessage])
+export const PoiAlert: React.FC = () => {
+  const [list, setList] = useState<Message[]>([initialMessage])
   const [showHistory, setShowHistory] = useState(false)
   const [containerWidth, setContainerWidth] = useState(1)
   const [containerHeight, setContainerHeight] = useState(0)
@@ -125,37 +145,34 @@ export const PoiAlert = () => {
 
   const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
 
-  const handleAddAlert = useCallback((e) => {
+  const handleAddAlert = useCallback((e: Message) => {
     const nowTS = Date.now()
-    const value = {
-      type: 'default',
-      content: '',
-      priority: 0,
+    const value: Message = {
       ts: nowTS,
       stickyFor: 3000,
-      ...e.detail,
+      ...e,
     }
     setList((prevList) => {
       const [current, ...history] = prevList
       if (value.priority < current.priority && nowTS < stickyEnd.current) {
-        if (!value.dontReserve) {
+        if (!value.options?.dontReserve) {
           // Old message has higher priority, push new message to history
           return [current, value, ...take(history, HISTORY_SIZE - 2)]
         }
-      } else if (!current.dontReserve) {
+      } else if (!current.options?.dontReserve) {
         // push old message to history
-        stickyEnd.current = nowTS + value.stickyFor
+        stickyEnd.current = nowTS + (value.stickyFor || 0)
         return [value, current, ...take(history, HISTORY_SIZE - 2)]
       } else {
         // Replace old message
-        stickyEnd.current = nowTS + value.stickyFor
+        stickyEnd.current = nowTS + (value.stickyFor || 0)
         return [value, ...take(history, HISTORY_SIZE - 1)]
       }
       return prevList
     })
   }, [])
 
-  const handleAlertMainResize = useCallback((entries) => {
+  const handleAlertMainResize = useCallback((entries: ResizeObserverEntry[]) => {
     entries.forEach((entry) => {
       if (entry.contentRect) {
         const { width: containerWidth, height: containerHeight } = entry.contentRect
@@ -165,7 +182,7 @@ export const PoiAlert = () => {
     })
   }, [])
 
-  const handleMsgCntResize = useCallback((entries) => {
+  const handleMsgCntResize = useCallback((entries: ResizeObserverEntry[]) => {
     entries.forEach((entry) => {
       if (entry.contentRect) {
         setMsgWidth(entry.contentRect.width)
@@ -173,7 +190,7 @@ export const PoiAlert = () => {
     })
   }, [])
 
-  const handleAlertLogResize = useCallback((entries) => {
+  const handleAlertLogResize = useCallback((entries: ResizeObserverEntry[]) => {
     entries.forEach((entry) => {
       if (entry.contentRect) {
         setHistoryHeight(entry.contentRect.height)
@@ -182,9 +199,9 @@ export const PoiAlert = () => {
   }, [])
 
   useEffect(() => {
-    window.addEventListener('alert.new', handleAddAlert)
+    messageInstance.on(handleAddAlert)
     return () => {
-      window.removeEventListener('alert.new', handleAddAlert)
+      messageInstance.off(handleAddAlert)
     }
   }, [handleAddAlert])
 
@@ -192,6 +209,7 @@ export const PoiAlert = () => {
   const [current, ...history] = list
 
   return (
+    // @ts-expect-error wrong type definition
     <PoiAlertTag tag="poi-alert">
       <ResizeSensor onResize={handleAlertMainResize}>
         <AlertMain id="alert-main" className="alert-main bp4-popover">

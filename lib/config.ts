@@ -3,7 +3,7 @@ import { set, get, isEqual, keys } from 'lodash'
 import EventEmitter from 'events'
 import CSON from 'cson'
 import fs from 'fs-extra'
-import path from 'path-extra'
+import path from 'path'
 import dbg from './debug'
 import defaultConfig from './default-config'
 import { mergeConfig, warn } from './utils'
@@ -123,5 +123,7 @@ class PoiConfig extends EventEmitter {
 
 const config = new PoiConfig()
 config.setMaxListeners(100)
+
+export type ConfigInstance = typeof config
 
 export default config

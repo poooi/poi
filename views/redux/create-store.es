@@ -142,5 +142,8 @@ export const extendReducer = (function () {
 })()
 
 window.config.get = (path, value) => {
+  if (path === '') {
+    return window.getStore('config')
+  }
   return get(window.getStore('config'), path, value)
 }
