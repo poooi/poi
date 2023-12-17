@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { compareUpdate } from 'views/utils/tools'
 import {
-  createAPIGetMemberReqireInfoAction,
+  createAPIGetMemberRequireInfoAction,
   createAPIPortPortResponseAction,
   createAPIReqMissionResultResponseAction,
   createAPIReqPracticeResultResponseAction,
@@ -20,7 +20,7 @@ const basicSlice = createSlice({
       .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
         return compareUpdate(state, payload.body.api_basic)
       })
-      .addCase(createAPIGetMemberReqireInfoAction, (state, { payload }) => {
+      .addCase(createAPIGetMemberRequireInfoAction, (state, { payload }) => {
         return compareUpdate(state, {
           api_member_id: `${payload.body.api_basic.api_member_id}`,
         })

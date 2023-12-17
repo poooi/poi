@@ -19,6 +19,12 @@ import {
   APIReqPracticeBattleResultRequest,
   APIReqPracticeBattleResultResponse,
   APIReqSortieBattleresultResponse,
+  APIReqKousyouGetshipResponse,
+  APIReqKousyouGetshipRequest,
+  APIGetMemberKdockResponse,
+  APIGetMemberKdockRequest,
+  APIReqKousyouCreateshipSpeedchangeResponse,
+  APIReqKousyouCreateshipSpeedchangeRequest,
 } from 'kcsapi'
 
 import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
@@ -81,7 +87,7 @@ export const createAPIPortPortResponseAction = createAction<
   GameResponsePayload<APIPortPortResponse, APIPortPortRequest>
 >('@@Response/kcsapi/api_port/port')
 
-export const createAPIGetMemberReqireInfoAction = createAction<
+export const createAPIGetMemberRequireInfoAction = createAction<
   GameResponsePayload<APIGetMemberRequireInfoResponse, APIGetMemberRequireInfoRequest>
 >('@@Response/kcsapi/api_get_member/require_info')
 
@@ -96,6 +102,21 @@ export const createAPIReqPracticeResultResponseAction = createAction<
 export const createAPIReqSortieBattleResultResponseAction = createAction<
   GameResponsePayload<APIReqSortieBattleresultResponse, undefined>
 >('@@Response/kcsapi/api_req_sortie/battleresult')
+
+export const createAPIReqKousyouGetShipResponseAction = createAction<
+  GameResponsePayload<APIReqKousyouGetshipResponse, APIReqKousyouGetshipRequest>
+>('@@Response/kcsapi/api_req_kousyou/getship')
+
+export const createAPIGetMemberKdockResponseAction = createAction<
+  GameResponsePayload<APIGetMemberKdockResponse[], APIGetMemberKdockRequest>
+>('@@Response/kcsapi/api_get_member/kdock')
+
+export const createAPIReqKousyouCreateShipSpeedChangeResponseAction = createAction<
+  GameResponsePayload<
+    APIReqKousyouCreateshipSpeedchangeResponse,
+    APIReqKousyouCreateshipSpeedchangeRequest
+  >
+>('@@Response/kcsapi/api_req_kousyou/createship_speedchange')
 
 export interface APIReqAirCorpsChangeDeploymentBaseRequest {
   api_area_id: string
