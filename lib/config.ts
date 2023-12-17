@@ -13,7 +13,7 @@ const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
-type Config = { [key: string]: Config }
+export type Config = { [key: string]: Config }
 
 class PoiConfig extends EventEmitter {
   configData: Config

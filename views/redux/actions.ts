@@ -37,6 +37,13 @@ interface APIReqAirCorpsChangeNameResponse {
   api_result_msg: string
 }
 
+interface ConfigAction {
+  path: string
+  value: object
+}
+
+export const createConfigAction = createAction<ConfigAction>('@@Config')
+
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')

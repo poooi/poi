@@ -14,6 +14,7 @@ import { reducer as ui } from './ui'
 import { reducer as ipc } from './ipc'
 import { reducer as wctf } from './wctf'
 import misc from './misc'
+import { createConfigAction } from './actions'
 
 const emptyObject = {}
 
@@ -98,11 +99,7 @@ export function onGameRequest({ method, path, body, time }) {
 }
 
 export function onConfigChange({ path, value }) {
-  return {
-    type: '@@Config',
-    path,
-    value,
-  }
+  return createConfigAction({ path, value })
 }
 
 // publish data changes to plugin windows
