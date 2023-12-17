@@ -12,6 +12,13 @@ import {
   APIReqMapNextResponse,
   APIPortPortRequest,
   APIPortPortResponse,
+  APIGetMemberRequireInfoResponse,
+  APIGetMemberRequireInfoRequest,
+  APIReqMissionResultRequest,
+  APIReqMissionResultResponse,
+  APIReqPracticeBattleResultRequest,
+  APIReqPracticeBattleResultResponse,
+  APIReqSortieBattleresultResponse,
 } from 'kcsapi'
 
 import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
@@ -42,8 +49,10 @@ interface ConfigAction {
   value: object
 }
 
+// Config
 export const createConfigAction = createAction<ConfigAction>('@@Config')
 
+// API
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')
@@ -71,6 +80,22 @@ export const createAPIReqMapNextResponseAction = createAction<
 export const createAPIPortPortResponseAction = createAction<
   GameResponsePayload<APIPortPortResponse, APIPortPortRequest>
 >('@@Response/kcsapi/api_port/port')
+
+export const createAPIGetMemberReqireInfoAction = createAction<
+  GameResponsePayload<APIGetMemberRequireInfoResponse, APIGetMemberRequireInfoRequest>
+>('@@Response/kcsapi/api_get_member/require_info')
+
+export const createAPIReqMissionResultResponseAction = createAction<
+  GameResponsePayload<APIReqMissionResultResponse, APIReqMissionResultRequest>
+>('@@Response/kcsapi/api_req_mission/result')
+
+export const createAPIReqPracticeResultResponseAction = createAction<
+  GameResponsePayload<APIReqPracticeBattleResultResponse, APIReqPracticeBattleResultRequest>
+>('@@Response/kcsapi/api_req_practice/battle_result')
+
+export const createAPIReqSortieBattleResultResponseAction = createAction<
+  GameResponsePayload<APIReqSortieBattleresultResponse, undefined>
+>('@@Response/kcsapi/api_req_sortie/battleresult')
 
 export interface APIReqAirCorpsChangeDeploymentBaseRequest {
   api_area_id: string
