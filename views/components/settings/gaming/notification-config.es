@@ -13,7 +13,7 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import styled from 'styled-components'
 
 const InlineFormGroup = styled(FormGroup)`
-  .bp4-form-content {
+  .bp5-form-content {
     display: flex;
     align-items: center;
   }

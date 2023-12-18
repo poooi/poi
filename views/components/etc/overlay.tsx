@@ -1,12 +1,16 @@
 import React, { useContext, ReactNode } from 'react'
-import * as BluePrint from '@blueprintjs/core'
-import type {
+import {
+  Alert as BAlert,
+  Dialog as BDialog,
+  Overlay as BOverlay,
   AlertProps as BAlertProps,
   DialogProps as BDialogProps,
   OverlayProps as BOverlayProps,
+  Popover as BPopover,
+  Tooltip as BTooltip,
+  PopoverProps as BPopoverProps,
+  TooltipProps as BTooltipProps,
 } from '@blueprintjs/core'
-import { Popover2, Tooltip2, Popover2Props, Tooltip2Props } from '@blueprintjs/popover2'
-import '@blueprintjs/popover2/lib/css/blueprint-popover2.css'
 import { WindowEnv } from './window-env'
 
 interface AlertProps extends BAlertProps {
@@ -14,9 +18,9 @@ interface AlertProps extends BAlertProps {
 }
 
 export const Alert: React.FC<AlertProps> = ({ children, ...props }) => (
-  <BluePrint.Alert portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BAlert portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BluePrint.Alert>
+  </BAlert>
 )
 
 interface DialogProps extends BDialogProps {
@@ -24,29 +28,29 @@ interface DialogProps extends BDialogProps {
 }
 
 export const Dialog: React.FC<DialogProps> = ({ children, ...props }) => (
-  <BluePrint.Dialog portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BDialog portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BluePrint.Dialog>
+  </BDialog>
 )
 
-interface TooltipProps extends Tooltip2Props {
+interface TooltipProps extends BTooltipProps {
   children: ReactNode
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({ children, ...props }) => (
-  <Tooltip2 portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BTooltip portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </Tooltip2>
+  </BTooltip>
 )
 
-interface PopoverProps extends Popover2Props {
+interface PopoverProps extends BPopoverProps {
   children: ReactNode
 }
 
 export const Popover: React.FC<PopoverProps> = ({ children, ...props }) => (
-  <Popover2 portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BPopover portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </Popover2>
+  </BPopover>
 )
 
 interface OverlayProps extends BOverlayProps {
@@ -54,7 +58,7 @@ interface OverlayProps extends BOverlayProps {
 }
 
 export const Overlay: React.FC<OverlayProps> = ({ children, ...props }) => (
-  <BluePrint.Overlay portalContainer={useContext(WindowEnv).mountPoint} {...props}>
+  <BOverlay portalContainer={useContext(WindowEnv).mountPoint} {...props}>
     {children}
-  </BluePrint.Overlay>
+  </BOverlay>
 )

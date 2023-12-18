@@ -71,7 +71,6 @@ const stylesheetTagsWithHref = [
   'electron-react-titlebar/assets/style.css',
   'react-resizable/css/styles.css',
   'react-grid-layout/css/styles.css',
-  '@blueprintjs/popover2/lib/css/blueprint-popover2.css',
 ]
   .map((href) => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`)
   .join('')

@@ -7,7 +7,7 @@ export const CardWrapper = styled(Card)`
   width: 100%;
   padding: 4px 8px;
 
-  .bp4-tag {
+  .bp5-tag {
     min-height: initial;
     font-size: 90%;
     line-height: 1.2;

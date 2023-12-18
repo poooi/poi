@@ -49,7 +49,6 @@ const BasicAuth: FC = () => {
       isOpen={showModal}
       onClose={close}
       title={t('Website requires login')}
-      portalContainer={document.body}
     >
       <div className={Classes.DIALOG_BODY}>
         <FormGroup label={t('Username')}>

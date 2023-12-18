@@ -37,7 +37,7 @@ interface ScrollShadowProps {
   className?: string
 }
 
-export const ScrollShadow: React.FC<ScrollShadowProps> = ({ children, className }) => {
+const ScrollShadow: React.FC<ScrollShadowProps> = ({ children, className }) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const topSentinelRef = useRef<HTMLDivElement>(null)
   const bottomSentinelRef = useRef<HTMLDivElement>(null)
@@ -89,3 +89,5 @@ export const ScrollShadow: React.FC<ScrollShadowProps> = ({ children, className 
     </Container>
   )
 }
+
+export default ScrollShadow

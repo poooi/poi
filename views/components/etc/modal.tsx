@@ -78,7 +78,6 @@ const ModalTrigger: React.FC = () => {
       onClose={handleNextModal}
       onClosing={onClosing}
       title={title}
-      portalContainer={document.body}
     >
       <DialogBody>{content}</DialogBody>
       <DialogFooter

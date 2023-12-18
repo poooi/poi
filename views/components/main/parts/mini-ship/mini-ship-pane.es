@@ -8,7 +8,7 @@ import { compose } from 'redux'
 import styled from 'styled-components'
 
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
-import { ScrollShadow } from 'views/components/etc/scroll-shadow'
+import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
 const miniShipRowWidthSelector = (state) => get(state, 'layout.minishippane.width', 250)
@@ -29,21 +29,23 @@ export const PaneBodyMini = connect(() => {
   <>
     <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} />
     <ShipDetailsMini className="ship-details-mini">
-      {(!enableOverviewFleetDetail) ? (shipsId || []).map((shipId, i) => (
-        <MiniShipRow
-          key={shipId}
-          shipId={shipId}
-          enableAvatar={enableAvatar}
-          compact={width < 240}
-        />
-      )) : (shipsId || []).map((shipId, i) => (
-        <ShipRow
-          key={shipId}
-          shipId={shipId}
-          enableAvatar={enableAvatar}
-          compact={width < 240}
-        />
-      ))}
+      {!enableOverviewFleetDetail
+        ? (shipsId || []).map((shipId, i) => (
+            <MiniShipRow
+              key={shipId}
+              shipId={shipId}
+              enableAvatar={enableAvatar}
+              compact={width < 240}
+            />
+          ))
+        : (shipsId || []).map((shipId, i) => (
+            <ShipRow
+              key={shipId}
+              shipId={shipId}
+              enableAvatar={enableAvatar}
+              compact={width < 240}
+            />
+          ))}
     </ShipDetailsMini>
   </>
 ))

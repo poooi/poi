@@ -19,12 +19,12 @@ const ButtonArea = styled(Wrapper)`
     margin-left: 10px;
   }
 
-  .bp4-callout {
+  .bp5-callout {
     margin-top: 0.5em;
   }
 `
 const InlineFormGroup = styled(FormGroup)`
-  .bp4-form-content {
+  .bp5-form-content {
     display: flex;
     align-items: center;
   }

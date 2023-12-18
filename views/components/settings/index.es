@@ -54,11 +54,11 @@ const TABS = [
 const SettingsTabs = styled(Tabs)`
   height: 100%;
 
-  .bp4-tab-list {
+  .bp5-tab-list {
     justify-content: space-between;
   }
 
-  .bp4-tab {
+  .bp5-tab {
     flex: 1 0 30px;
     text-align: center;
     justify-content: center;
@@ -70,7 +70,7 @@ const SettingsTabs = styled(Tabs)`
     }
   }
 
-  .bp4-tab-panel {
+  .bp5-tab-panel {
     margin: 0;
     height: calc(100% - 30px);
     overflow-y: scroll;

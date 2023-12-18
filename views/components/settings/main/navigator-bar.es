@@ -14,7 +14,7 @@ import {
 } from '@blueprintjs/core'
 
 import { gameRefreshPage, gameReload } from 'views/services/utils'
-import { ContextButtonTooltip } from 'views/components/etc/context-button-tooltip'
+import ContextButtonTooltip from 'views/components/etc/context-button-tooltip'
 
 import { Section } from '../components/section'
 

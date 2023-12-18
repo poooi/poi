@@ -39,7 +39,7 @@ const KanGame = styled(CustomTag)`
   overflow: hidden;
   width: 100%;
 
-  .bp4-toast-container {
+  .bp5-toast-container {
     overflow: hidden !important;
   }
 `

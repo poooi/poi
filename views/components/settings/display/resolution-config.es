@@ -20,7 +20,7 @@ const NumericResolution = styled.div`
   align-items: center;
   flex: 1;
 
-  .bp4-input-group {
+  .bp5-input-group {
     flex-shrink: 1;
   }
 `

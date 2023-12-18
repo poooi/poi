@@ -132,8 +132,8 @@ export function loadStyle(
     glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
-      classNames('bp4-focus-disabled', {
-        'bp4-dark': isDark,
+      classNames('bp5-focus-disabled', {
+        'bp5-dark': isDark,
       }),
     )
     if ($('#bootstrap-css')) {

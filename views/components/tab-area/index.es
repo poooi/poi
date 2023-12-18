@@ -67,7 +67,7 @@ const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
 
-  & > .bp4-card {
+  & > .bp5-card {
     padding: 4px;
     height: 100%;
     display: flex;

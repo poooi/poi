@@ -212,10 +212,10 @@ export const PoiAlert: React.FC = () => {
     // @ts-expect-error wrong type definition
     <PoiAlertTag tag="poi-alert">
       <ResizeSensor onResize={handleAlertMainResize}>
-        <AlertMain id="alert-main" className="alert-main bp4-popover">
+        <AlertMain id="alert-main" className="alert-main bp5-popover">
           <AlertContainer
             id="alert-container"
-            className={`bp4-callout bp4-intent-${current.type} alert-container`}
+            className={`bp5-callout bp5-intent-${current.type} alert-container`}
             onClick={toggleHistory}
           >
             <AlertPosition
@@ -237,7 +237,7 @@ export const PoiAlert: React.FC = () => {
           <ResizeSensor onResize={handleAlertLogResize}>
             <AlertLog
               id="alert-log"
-              className="alert-log bp4-popover-content"
+              className="alert-log bp5-popover-content"
               toggle={showHistory}
               height={historyHeight}
               containerHeight={containerHeight}
@@ -247,7 +247,7 @@ export const PoiAlert: React.FC = () => {
               {history.reverse().map((h) => (
                 <AlertLogContent
                   key={h.ts}
-                  className={`bp4-callout bp4-intent-${h.type}`}
+                  className={`bp5-callout bp5-intent-${h.type}`}
                   data-ts={h.ts}
                 >
                   {h.content}
