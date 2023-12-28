@@ -6,27 +6,27 @@ function dispatchAlertEvent(value: Message) {
   messageInstance.emit(value)
 }
 
-const log = (msg: string, options: Message['options']) => {
+const log = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'default',
     priority: 0,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }
-const success = (msg: string, options: Message['options']) => {
+const success = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'success',
     priority: 1,
     stickyFor: DEFAULT_STICKYFOR,
-    options,
+    ...options,
   }
   dispatchAlertEvent(value)
 }
-const warn = (msg: string, options: Message['options']) => {
+const warn = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'warning',
@@ -36,7 +36,7 @@ const warn = (msg: string, options: Message['options']) => {
   }
   dispatchAlertEvent(value)
 }
-const error = (msg: string, options: Message['options']) => {
+const error = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'danger',

@@ -7,6 +7,8 @@ export interface ButtonData {
   name: string
   func: (e: React.MouseEvent<HTMLElement>) => void
   intent?: Intent
+  // for backward compatibility
+  style?: Intent
 }
 
 export interface ModalEvent {
@@ -58,7 +60,7 @@ const ModalTrigger: React.FC = () => {
             handleNextModal()
             button.func(e)
           }}
-          intent={button.intent}
+          intent={button.intent || button.style}
         >
           {button.name}
         </Button>
