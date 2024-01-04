@@ -1,6 +1,8 @@
 import { Colors } from '@blueprintjs/core'
+import { LegacyColors } from '@blueprintjs/colors'
 
 export const darkTheme = {
+  ...LegacyColors,
   ...Colors,
   name: 'bp5-dark',
   variant: 'dark',
@@ -8,6 +10,7 @@ export const darkTheme = {
 }
 
 export const lightTheme = {
+  ...LegacyColors,
   ...Colors,
   name: 'bp5-light',
   variant: 'light',
