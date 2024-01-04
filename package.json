@@ -64,7 +64,7 @@
     "@blueprintjs/datetime": "^4.3.5",
     "@blueprintjs/popover2": "^1.5.1",
     "@blueprintjs/select": "^4.5.3",
-    "@electron/remote": "^2.0.11",
+    "@electron/remote": "^2.1.1",
     "@exponent/electron-cookies": "^2.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-brands-svg-icons": "^6.1.2",
