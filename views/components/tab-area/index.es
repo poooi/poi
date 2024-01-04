@@ -335,6 +335,7 @@ const dispatchTabChangeEvent = (tabInfo, autoSwitch = false) =>
     mainPanelWidth: get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
     mainPanelHeight: get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
     editable: get(state.config, 'poi.layout.editable', false),
+    gridLayout: get(state.config, 'poi.layout.grid', false),
     windowmode,
     async: get(state.config, 'poi.misc.async', true),
   }
@@ -356,6 +357,7 @@ export class ControlledTabArea extends PureComponent {
       percent: PropTypes.number,
     }),
     editable: PropTypes.bool.isRequired,
+    gridLayout: PropTypes.bool.isRequired,
     windowmode: PropTypes.object.isRequired,
   }
 
@@ -766,9 +768,11 @@ export class ControlledTabArea extends PureComponent {
         onChange={this.handleSelectTab}
         ref={this.tabs}
       >
-        <Tab key="main-view" id="main-view" icon={MAIN_VIEW.icon}>
-          {MAIN_VIEW.displayName}
-        </Tab>
+        {!this.props.gridLayout && (
+          <Tab key="main-view" id="main-view" icon={MAIN_VIEW.icon}>
+            {MAIN_VIEW.displayName}
+          </Tab>
+        )}
         <Tab key="ship-view" id="ship-view" icon={SHIP_VIEW.icon}>
           {SHIP_VIEW.displayName}
         </Tab>

@@ -159,56 +159,50 @@ class Poi extends Component {
               </title-bar>
             )}
             <ResizeSensor onResize={this.handleResize}>
-              <ResponsiveReactGridLayout
-                layouts={this.props.layouts}
-                // onLayoutChange={this.onLayoutChange}
-                rowHeight={10}
-                margin={[3, 3]}
-                cols={{ lg: 40, sm: 10 }}
-                breakpoints={{ lg: 750, sm: 0 }}
-                width={1800}
-                isResizable={true}
-                isDraggable={true}
-                compactType="horizontal"
+              <poi-main
+                style={{
+                  flexFlow: `${isHorizontal ? 'row' : 'column'}${
+                    reversed ? '-reverse' : ''
+                  } nowrap`,
+                  ...(!isHorizontal && { overflow: 'hidden' }),
+                }}
               >
-                <div className="poi-main" key="poi-main">
-                  <poi-main
-                    style={{
-                      flexFlow: `${isHorizontal ? 'row' : 'column'}${
-                        reversed ? '-reverse' : ''
-                      } nowrap`,
-                      ...(!isHorizontal && { overflow: 'hidden' }),
-                    }}
-                  >
-                    {this.props.isolateGameWindow ? (
-                      <KanGameWindowWrapper />
-                    ) : (
-                      <KanGameWrapper key="frame" />
-                    )}
-                  </poi-main>
-                </div>
-                <div className="teitoku-panel" key="teitoku-panel">
-                  <AdmiralPanel editable={this.props.editable} />
-                </div>
-                <div className="resource-panel" key="resource-panel">
-                  <ResourcePanel editable={this.props.editable} />
-                </div>
-                <div className="miniship" key="miniship">
-                  <MiniShip editable={this.props.editable} />
-                </div>
-                <div className="repair-panel panel-col" key="repair-panel">
-                  <RepairPanel editable={this.props.editable} />
-                </div>
-                <div className="construction-panel panel-col" key="construction-panel">
-                  <ConstructionPanel editable={this.props.editable} />
-                </div>
-                <div className="expedition-panel" key="expedition-panel">
-                  <ExpeditionPanel editable={this.props.editable} />
-                </div>
-                <div className="task-panel" key="task-panel">
-                  <TaskPanel editable={this.props.editable} />
-                </div>
-              </ResponsiveReactGridLayout>
+                <ResponsiveReactGridLayout
+                  layouts={this.props.layouts}
+                  // onLayoutChange={this.onLayoutChange}
+                  rowHeight={10}
+                  margin={[3, 3]}
+                  cols={{ lg: 40, sm: 10 }}
+                  breakpoints={{ lg: 750, sm: 0 }}
+                  width={1800}
+                  isResizable={true}
+                  isDraggable={true}
+                  compactType="horizontal"
+                >
+                  <div className="teitoku-panel" key="teitoku-panel">
+                    <AdmiralPanel editable={this.props.editable} />
+                  </div>
+                  <div className="resource-panel" key="resource-panel">
+                    <ResourcePanel editable={this.props.editable} />
+                  </div>
+                  <div className="repair-panel panel-col" key="repair-panel">
+                    <RepairPanel editable={this.props.editable} />
+                  </div>
+                  <div className="construction-panel panel-col" key="construction-panel">
+                    <ConstructionPanel editable={this.props.editable} />
+                  </div>
+                  <div className="expedition-panel" key="expedition-panel">
+                    <ExpeditionPanel editable={this.props.editable} />
+                  </div>
+                  <div className="task-panel" key="task-panel">
+                    <TaskPanel editable={this.props.editable} />
+                  </div>
+                  <div className="kan-game-wrapper" key="poi-main">
+                    <KanGameWrapper key="frame" />
+                  </div>
+                </ResponsiveReactGridLayout>
+                <PoiApp />
+              </poi-main>
             </ResizeSensor>
             <ModalTrigger />
             <BasicAuth />
