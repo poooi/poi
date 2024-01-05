@@ -1,5 +1,5 @@
 import { Avatar } from 'views/components/etc/avatar'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 

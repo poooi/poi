@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { take } from 'lodash'
-import styled, { keyframes, css } from 'styled-components'
+import { styled, keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { ResizeSensor } from 'views/components/etc/resize-sensor'
 import { EventEmitter } from 'views/utils/event-emitter'

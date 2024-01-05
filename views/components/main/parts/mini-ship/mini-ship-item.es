@@ -8,7 +8,7 @@ import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
 import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'

@@ -3,7 +3,7 @@ import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
 import { Trans, withNamespaces } from 'react-i18next'
 import { isEqual, map } from 'lodash'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { PoiConfig } from './main'
 import { GamingConfig } from './gaming'

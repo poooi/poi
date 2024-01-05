@@ -4,7 +4,7 @@
 import React, { ReactNode, FunctionComponent } from 'react'
 import PropTypes from 'prop-types'
 import { Card, H3 } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 interface SectionProps {
   title: ReactNode

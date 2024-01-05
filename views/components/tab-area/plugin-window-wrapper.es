@@ -6,7 +6,7 @@ import { TitleBar } from 'electron-react-titlebar/renderer'
 import * as remote from '@electron/remote'
 import { fileUrl } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
-import styled, { StyleSheetManager } from 'styled-components'
+import { styled, StyleSheetManager } from 'styled-components'
 import { loadStyle } from 'views/env-parts/theme'
 import { appMenu } from 'views/components/etc/menu'
 

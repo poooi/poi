@@ -5,7 +5,7 @@ import React, { Fragment } from 'react'
 import { get } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import { compose } from 'redux'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import ScrollShadow from 'views/components/etc/scroll-shadow'

@@ -2,7 +2,7 @@
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import {
   Button,
   ButtonGroup,

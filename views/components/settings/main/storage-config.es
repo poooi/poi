@@ -6,7 +6,7 @@ import { withNamespaces } from 'react-i18next'
 import { remove } from 'fs-extra'
 import { join } from 'path'
 import { Button, FormGroup, Intent, Callout } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'

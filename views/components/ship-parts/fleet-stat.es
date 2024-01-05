@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'

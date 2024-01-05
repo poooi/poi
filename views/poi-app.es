@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { ResizableArea } from 'react-resizable-area'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { ControlledTabArea } from './components/tab-area'
 

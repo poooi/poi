@@ -22,7 +22,7 @@ import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
 import * as remote from '@electron/remote'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import * as Sentry from '@sentry/electron'
 
 import { isInGame } from 'views/utils/game-utils'

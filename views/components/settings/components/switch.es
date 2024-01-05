@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { Switch } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 const SwitchWithMargin = styled(Switch)`
   margin-right: 8px;

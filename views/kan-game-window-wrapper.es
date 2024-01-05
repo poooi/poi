@@ -8,7 +8,7 @@ import { fileUrl, loadScript } from 'views/utils/tools'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { debounce } from 'lodash'
-import styled, { StyleSheetManager } from 'styled-components'
+import { styled, StyleSheetManager } from 'styled-components'
 import { loadStyle } from './env-parts/theme'
 import { appMenu } from 'views/components/etc/menu'
 

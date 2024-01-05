@@ -9,7 +9,7 @@ import i18next from 'views/env-parts/i18next'
 import path from 'path'
 import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import FA from 'react-fontawesome'
 
 import { isSubdirectory } from 'views/utils/tools'

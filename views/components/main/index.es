@@ -5,7 +5,7 @@ import FontAwesome from 'react-fontawesome'
 import { connect } from 'react-redux'
 import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
 import { Trans } from 'react-i18next'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import { ResizeSensor } from '@blueprintjs/core'
 

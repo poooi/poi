@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { get, isEqual, range } from 'lodash'
 import { ResizeSensor } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { MaterialIcon } from 'views/components/etc/icon'
 import { CardWrapper as CardWrapperL } from './styled-components'

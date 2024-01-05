@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {

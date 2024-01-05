@@ -6,7 +6,7 @@ import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { get, map, zip, each } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import styled, { css, keyframes } from 'styled-components'
+import { styled, css, keyframes } from 'styled-components'
 import { rgba } from 'polished'
 import classNames from 'classnames'
 

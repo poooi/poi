@@ -1,6 +1,6 @@
 /* global ROOT, POI_VERSION, LATEST_COMMIT */
 import React from 'react'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { map, capitalize, memoize, size, throttle, isString, toUpper } from 'lodash'
 import { withNamespaces } from 'react-i18next'
 import { Tooltip, AnchorButton, Intent } from '@blueprintjs/core'

@@ -2,7 +2,7 @@
 import React from 'react'
 import { map, memoize } from 'lodash'
 import { shell } from 'electron'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { Section } from 'views/components/settings/components/section'
 

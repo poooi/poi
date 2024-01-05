@@ -5,7 +5,7 @@ import { Tag, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
 import { createSelector } from 'reselect'
 import React from 'react'
 import { withNamespaces, Trans } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { escapeI18nKey } from 'views/utils/tools'
 import { CardWrapper as CardWrapperL } from './styled-components'

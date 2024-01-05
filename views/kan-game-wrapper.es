@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { createHash } from 'crypto'
 import ReactMarkdown from 'react-remarkable'
 

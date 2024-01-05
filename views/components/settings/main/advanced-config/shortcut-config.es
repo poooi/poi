@@ -8,7 +8,7 @@ import { get } from 'lodash'
 import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
 import cls from 'classnames'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 const BorderlessDialog = styled(Dialog)`
   padding: 0;

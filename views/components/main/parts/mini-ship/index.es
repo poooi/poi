@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 import { Button, ResizeSensor } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
