@@ -27,7 +27,7 @@ export const PaneBodyMini = connect(() => {
   })
 })(({ fleetId, shipsId, enableAvatar, enableOverviewFleetDetail, width }) => (
   <>
-    <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} />
+    <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} isMainView />
     <ShipDetailsMini className="ship-details-mini">
       {!enableOverviewFleetDetail
         ? (shipsId || []).map((shipId, i) => (
