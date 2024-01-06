@@ -232,7 +232,7 @@ const defaultConfig = {
             x: 0,
             y: 0,
             static: true,
-            i: 'poi-main',
+            i: 'kan-game-wrapper',
           },
           {
             w: 10,
@@ -265,7 +265,7 @@ const defaultConfig = {
             minH: 9,
             maxW: 20,
             maxH: 50,
-            i: 'miniship',
+            i: 'poi-main',
           },
           {
             w: 5,
