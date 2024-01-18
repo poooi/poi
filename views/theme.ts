@@ -1,15 +1,18 @@
 import { Colors } from '@blueprintjs/core'
+import { LegacyColors } from '@blueprintjs/colors'
 
 export const darkTheme = {
+  ...LegacyColors,
   ...Colors,
-  name: 'bp4-dark',
+  name: 'bp5-dark',
   variant: 'dark',
   slotBg: 'rgb(33 33 33 / 0.7)',
 }
 
 export const lightTheme = {
+  ...LegacyColors,
   ...Colors,
-  name: 'bp4-light',
+  name: 'bp5-light',
   variant: 'light',
   slotBg: 'rgb(255 255 255 / 0.7)',
 }

@@ -11,7 +11,7 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 

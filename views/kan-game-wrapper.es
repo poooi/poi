@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { createHash } from 'crypto'
 import ReactMarkdown from 'react-remarkable'
 
@@ -39,7 +39,7 @@ const KanGame = styled(CustomTag)`
   overflow: hidden;
   width: 100%;
 
-  .bp4-toast-container {
+  .bp5-toast-container {
     overflow: hidden !important;
   }
 `

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { Card, Tooltip } from '@blueprintjs/core'
 
 export const CardWrapper = styled(Card)`
@@ -6,8 +6,9 @@ export const CardWrapper = styled(Card)`
   overflow: scroll;
   width: 100%;
   padding: 4px 8px;
+  container-type: size;
 
-  .bp4-tag {
+  .bp5-tag {
     min-height: initial;
     font-size: 90%;
     line-height: 1.2;
@@ -22,10 +23,8 @@ export const DockPanelCardWrapper = styled(CardWrapper)`
 `
 
 export const PanelItemTooltip = styled(Tooltip)`
-  flex: 0 0 ${(props) => `${100 / props.dimension}%`};
-  max-width: ${(props) => `${100 / props.dimension}%`};
-  align-items: center;
   display: flex;
+  align-items: center;
 
   & > * {
     width: 100%;
@@ -33,28 +32,46 @@ export const PanelItemTooltip = styled(Tooltip)`
   }
 `
 
-export const DockName = styled.span`
+export const DockName = styled.div`
   flex: 1;
   margin-right: auto;
   overflow: hidden;
   padding-right: 10px;
-  text-overflow: clip;
+  text-overflow: ecilpse;
   white-space: nowrap;
+  opacity: 0;
+
+  @container (min-width: 132px) {
+    opacity: 1;
+  }
 `
 
 export const DockInnerWrapper = styled.div`
   display: flex;
   width: 100%;
   align-items: center;
+  container-type: size;
 `
 
 export const Panel = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-wrap: wrap;
   overflow: scroll;
   justify-content: center;
+  vertical-align: middle;
+  align-items: center;
+
+  grid-template-columns: repeat(1, 1fr);
+
+  @container (min-width: 256px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @container (min-width: 496px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `
 
 export const Watermark = styled.div`
@@ -75,4 +92,8 @@ export const EmptyDockWrapper = styled.div`
   height: 20px;
   text-align: center;
   width: 37px;
+
+  + ${DockName} {
+    opacity: 1;
+  }
 `

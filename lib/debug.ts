@@ -321,4 +321,6 @@ class DebuggerRenderer extends DebuggerBase {
 
 const dbg = isRenderer ? DebuggerRenderer.getInstance() : DebuggerMain.getInstance()
 
+export type DbgInstance = typeof dbg
+
 export default dbg

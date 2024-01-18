@@ -6,7 +6,7 @@ import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
 import { ipcRenderer } from 'electron'
 import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
@@ -20,7 +20,7 @@ const NumericResolution = styled.div`
   align-items: center;
   flex: 1;
 
-  .bp4-input-group {
+  .bp5-input-group {
     flex-shrink: 1;
   }
 `

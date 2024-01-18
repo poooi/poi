@@ -1,7 +1,7 @@
 import { Avatar } from 'views/components/etc/avatar'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
-import { ScrollShadow } from 'views/components/etc/scroll-shadow'
+import ScrollShadow from 'views/components/etc/scroll-shadow'
 
 export const ShipCard = styled(Card)`
   display: flex;
@@ -77,7 +77,7 @@ export const FleetNameButton = styled(ButtonGroup)`
   padding: 5px 5px 1px;
   width: 100%;
 
-  .bp4-button {
+  .bp5-button {
     flex: 1;
     overflow: hidden;
   }
@@ -112,7 +112,7 @@ export const ShipItem = styled.div`
     `
   }}
 
-  .bp4-progress-bar {
+  .bp5-progress-bar {
     height: 7px;
   }
 `
@@ -312,7 +312,7 @@ export const ShipLabel = styled.span`
     css`
       position: relative;
       top: -1px;
-      .bp4-tag {
+      .bp5-tag {
         overflow: visible;
         max-width: initial;
         font-size: 80%;

@@ -12,6 +12,19 @@ import {
   APIReqMapNextResponse,
   APIPortPortRequest,
   APIPortPortResponse,
+  APIGetMemberRequireInfoResponse,
+  APIGetMemberRequireInfoRequest,
+  APIReqMissionResultRequest,
+  APIReqMissionResultResponse,
+  APIReqPracticeBattleResultRequest,
+  APIReqPracticeBattleResultResponse,
+  APIReqSortieBattleresultResponse,
+  APIReqKousyouGetshipResponse,
+  APIReqKousyouGetshipRequest,
+  APIGetMemberKdockResponse,
+  APIGetMemberKdockRequest,
+  APIReqKousyouCreateshipSpeedchangeResponse,
+  APIReqKousyouCreateshipSpeedchangeRequest,
 } from 'kcsapi'
 
 import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
@@ -37,6 +50,15 @@ interface APIReqAirCorpsChangeNameResponse {
   api_result_msg: string
 }
 
+interface ConfigAction {
+  path: string
+  value: object
+}
+
+// Config
+export const createConfigAction = createAction<ConfigAction>('@@Config')
+
+// API
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')
@@ -64,6 +86,37 @@ export const createAPIReqMapNextResponseAction = createAction<
 export const createAPIPortPortResponseAction = createAction<
   GameResponsePayload<APIPortPortResponse, APIPortPortRequest>
 >('@@Response/kcsapi/api_port/port')
+
+export const createAPIGetMemberRequireInfoAction = createAction<
+  GameResponsePayload<APIGetMemberRequireInfoResponse, APIGetMemberRequireInfoRequest>
+>('@@Response/kcsapi/api_get_member/require_info')
+
+export const createAPIReqMissionResultResponseAction = createAction<
+  GameResponsePayload<APIReqMissionResultResponse, APIReqMissionResultRequest>
+>('@@Response/kcsapi/api_req_mission/result')
+
+export const createAPIReqPracticeResultResponseAction = createAction<
+  GameResponsePayload<APIReqPracticeBattleResultResponse, APIReqPracticeBattleResultRequest>
+>('@@Response/kcsapi/api_req_practice/battle_result')
+
+export const createAPIReqSortieBattleResultResponseAction = createAction<
+  GameResponsePayload<APIReqSortieBattleresultResponse, undefined>
+>('@@Response/kcsapi/api_req_sortie/battleresult')
+
+export const createAPIReqKousyouGetShipResponseAction = createAction<
+  GameResponsePayload<APIReqKousyouGetshipResponse, APIReqKousyouGetshipRequest>
+>('@@Response/kcsapi/api_req_kousyou/getship')
+
+export const createAPIGetMemberKdockResponseAction = createAction<
+  GameResponsePayload<APIGetMemberKdockResponse[], APIGetMemberKdockRequest>
+>('@@Response/kcsapi/api_get_member/kdock')
+
+export const createAPIReqKousyouCreateShipSpeedChangeResponseAction = createAction<
+  GameResponsePayload<
+    APIReqKousyouCreateshipSpeedchangeResponse,
+    APIReqKousyouCreateshipSpeedchangeRequest
+  >
+>('@@Response/kcsapi/api_req_kousyou/createship_speedchange')
 
 export interface APIReqAirCorpsChangeDeploymentBaseRequest {
   api_area_id: string

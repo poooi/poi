@@ -88,8 +88,7 @@ const capableShipTypes = [
    - EquipsInfo: Array of `EquipInfo`,
        where EquipInfo at least has shape: [equip, $equip, onslot]
  */
-export const getShipAAPB = (...args) => {
-  const [[ship, $ship], equipsInfo] = args
+export const getShipAAPB = ([ship, $ship], equipsInfo) => {
   if (!capableShipTypes.includes($ship.api_stype)) return 0
 
   let rlk2Count = 0

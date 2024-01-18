@@ -9,7 +9,7 @@ import i18next from 'views/env-parts/i18next'
 import path from 'path'
 import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import FA from 'react-fontawesome'
 
 import { isSubdirectory } from 'views/utils/tools'
@@ -20,7 +20,7 @@ const PickerBox = styled.div`
   display: flex;
   width: 100%;
 
-  .bp4-overflow-list {
+  .bp5-overflow-list {
     flex: 1;
   }
 
@@ -28,7 +28,7 @@ const PickerBox = styled.div`
     margin-left: 1em;
   }
 
-  .bp4-breadcrumb {
+  .bp5-breadcrumb {
     font-size: 12px;
   }
 `

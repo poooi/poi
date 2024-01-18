@@ -18,7 +18,7 @@ import {
   Tooltip,
   Label,
 } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { get, compact } from 'lodash'
 import { Button, ButtonGroup, Intent, FormGroup } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { Section, Wrapper } from 'views/components/settings/components/section'
 

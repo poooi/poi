@@ -40,17 +40,14 @@ if (window.isMain) {
   fs.ensureDirSync(window.PLUGIN_EXTRA_PATH)
   fs.ensureDirSync(path.join(window.PLUGIN_EXTRA_PATH, 'node_modules'))
 
-  // Debug
-  window.dbg = require(path.join(window.ROOT, 'lib', 'debug'))
-  window.dbg.init()
-
   // Handle New Window
-
   const { stopNavigateAndHandleNewWindow, handleWebviewPreloadHack } =
     remote.require('./lib/webcontent-utils')
   stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
   handleWebviewPreloadHack(remote.getCurrentWebContents().id)
 }
+
+require('./env-parts/dbg')
 
 // Disable eval
 window.eval = global.eval = function () {
@@ -67,13 +64,9 @@ Object.clone = (obj) => JSON.parse(JSON.stringify(obj))
 Object.remoteClone = (obj) => JSON.parse(window.remote.require('./lib/utils').remoteStringify(obj))
 
 // Node modules
-const originConfig = remote.require('./lib/config')
+require('./env-parts/config')
 window.ipc = remote.require('./lib/ipc')
 window.CONST = Object.remoteClone(remote.require('./lib/constant'))
-window.config = {}
-for (const key in originConfig) {
-  window.config[key] = originConfig[key]
-}
 
 if (process.env.NODE_ENV === 'production' && window.config.get?.('poi.misc.exceptionReporting')) {
   init({

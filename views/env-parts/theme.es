@@ -110,7 +110,7 @@ export function loadStyle(
       if ('darwin' === process.platform) {
         delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.59)' : 'rgba(246, 247, 249, 0.59)')
       } else {
-        delaySetBackgroundColor(isDark ? 'rgba(36, 41, 46, 0.7)' : 'rgba(246, 247, 249, 0.25)')
+        delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.5)' : 'rgba(246, 247, 249, 0.25)')
       }
     } else {
       delaySetBackgroundColor(isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)')
@@ -132,8 +132,8 @@ export function loadStyle(
     glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
-      classNames('bp4-focus-disabled', {
-        'bp4-dark': isDark,
+      classNames('bp5-focus-disabled', {
+        'bp5-dark': isDark,
       }),
     )
     if ($('#bootstrap-css')) {
@@ -239,25 +239,6 @@ export function loadStyle(
     setBackground(config.get('poi.appearance.background'))
     toggleBackground(config.get('poi.appearance.vibrant'))
   })
-
-  // Workaround for window transparency on 27.0.0
-  if (process.platform === 'win32') {
-    const resetBackgroundColor = () => {
-      if (config.get('poi.appearance.vibrant', 0) === 1) {
-        currentWindow.setBackgroundColor('#00000000')
-      }
-    }
-
-    currentWindow.on('blur', resetBackgroundColor)
-    currentWindow.on('focus', resetBackgroundColor)
-    currentWindow.on('restore', () => {
-      if (config.get('poi.appearance.vibrant', 0) === 1) {
-        const [width, height] = currentWindow.getSize()
-        currentWindow.setSize(width + 1, height + 1)
-        currentWindow.setSize(width, height)
-      }
-    })
-  }
 }
 
 loadStyle()

@@ -9,7 +9,6 @@ import {
   Colors,
   Tab,
   Tabs,
-  Popover,
   Button,
   Position,
   NonIdealState,
@@ -17,12 +16,13 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core'
+import { Popover } from 'views/components/etc/overlay'
 import { IconNames } from '@blueprintjs/icons'
 import { get } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import { withNamespaces } from 'react-i18next'
 import * as remote from '@electron/remote'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import * as Sentry from '@sentry/electron'
 
 import { isInGame } from 'views/utils/game-utils'
@@ -67,7 +67,7 @@ const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
 
-  & > .bp4-card {
+  & > .bp5-card {
     padding: 4px;
     height: 100%;
     display: flex;

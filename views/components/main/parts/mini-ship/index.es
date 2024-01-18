@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
 import { Button, ResizeSensor } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 import { LandbaseButton } from '../../../ship-parts/landbase-button'
@@ -20,7 +20,7 @@ import {
 import { CardWrapper as CardWrapperL } from '../styled-components'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
-  .bp4-button {
+  .bp5-button {
     border-width: 0 0 1px;
     height: 18px;
     min-height: 18px;

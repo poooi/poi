@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { VersionInfo } from './version-info'
 import { AppMetrics } from './app-metrics'

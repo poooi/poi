@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import _, { get, map } from 'lodash'
 import { withNamespaces, Trans } from 'react-i18next'
 import { Button, ButtonGroup, Tag, Intent, Position, Tooltip } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import memoizeOne from 'memoize-one'
 
 const AirbaseLabel = styled(Tag)`
@@ -17,7 +17,7 @@ const LandbaseButtonContainer = styled(ButtonGroup)`
     isMini
       ? css`
           padding: 5px 5px 1px 5px;
-          .bp4-button {
+          .bp5-button {
             flex: 1;
             border-width: 0 0 1px;
             height: 18px;
@@ -32,7 +32,7 @@ const LandbaseButtonContainer = styled(ButtonGroup)`
           padding-right: 5px;
           padding-top: 5px;
           width: 100%;
-          .bp4-button {
+          .bp5-button {
             flex: 1;
             overflow: hidden;
           }

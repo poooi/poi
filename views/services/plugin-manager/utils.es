@@ -21,7 +21,7 @@ import glob from 'glob'
 import crypto from 'crypto'
 import child_process from 'child_process'
 import path from 'path'
-import i18next from 'views/env-parts/i18next'
+import i18next, { addGlobalI18n, addResourceBundleDebounce } from 'views/env-parts/i18next'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
 
 import { extendReducer } from 'views/create-store'
@@ -149,8 +149,8 @@ export function updateI18n(plugin) {
     each(
       window.LOCALES.map((lng) => lng.locale),
       (language) => {
-        i18next.addGlobalI18n(namespace)
-        i18next.addResourceBundleDebounce(
+        addGlobalI18n(namespace)
+        addResourceBundleDebounce(
           language,
           namespace,
           readI18nResources(join(i18nFile, `${language}.json`)),

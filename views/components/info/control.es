@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { get, padStart } from 'lodash'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 import { withNamespaces, Trans } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
 

@@ -12,7 +12,7 @@ import {
   getSlotItemBackgroundPath,
 } from 'views/utils/ship-img'
 import classnames from 'classnames'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 const ShipAvatarContainer = styled.div`
   align-items: center;

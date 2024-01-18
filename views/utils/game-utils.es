@@ -205,8 +205,8 @@ export function equipIsAircraft(equip) {
       (between(equip, 6, 10) ||
         between(equip, 21, 22) ||
         between(equip, 37, 40) ||
-        between(equip, 43, 46) ||
-        [33].includes(equip))
+        between(equip, 43, 51) ||
+        [33, 56].includes(equip))
     )
   } else {
     const id = get(equip, 'api_type.2', 0)

@@ -8,7 +8,7 @@ import { isEqual, pick, omit, memoize, get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
 import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
@@ -311,7 +311,7 @@ const ShipCond = styled.div`
 const HPProgress = styled.div`
   grid-row: 2 / 3;
   grid-column: 3 / 6;
-  .bp4-progress-bar {
+  .bp5-progress-bar {
     flex: auto;
     height: 7px;
     margin-top: 3px;

@@ -4,7 +4,7 @@ import FontAwesome from 'react-fontawesome'
 import ReactMarkdown from 'react-remarkable'
 import { Trans, withNamespaces } from 'react-i18next'
 import { ButtonGroup, Button, Tooltip, Position, Intent, AnchorButton } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 import Transition from 'react-transition-group/Transition'
 
 import { CheckboxLabelConfig } from '../components/checkbox'

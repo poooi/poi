@@ -19,6 +19,7 @@ declare global {
   var EXROOT: string
   var ROOT: string
   var DEFAULT_CACHE_PATH: string
+  var isMain: boolean | undefined
   /* eslint-enable no-var */
 }
 

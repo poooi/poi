@@ -1,6 +1,6 @@
 /* global ROOT, getStore */
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
+import React, { Component, useId } from 'react'
 import PropTypes from 'prop-types'
 import { join } from 'path-extra'
 import { get, join as joinString, memoize } from 'lodash'
@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { CountdownNotifier } from 'views/utils/notifiers'
@@ -35,7 +35,7 @@ import {
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
 
-const isActive = () => getStore('ui.activeMainTab') === 'ship-view'
+const isActive = () => ['ship-view', 'main-view'].includes(getStore('ui.activeMainTab'))
 
 const FleetStats = styled.div`
   white-space: nowrap;
@@ -224,6 +224,7 @@ export const FleetStat = compose(
     condTarget,
     canNotify,
     t,
+    isMainView = false,
   }) => {
     const { saku33, saku33x2, saku33x3, saku33x4 } = saku
     const { speed } = fleetSpeed
@@ -253,6 +254,9 @@ export const FleetStat = compose(
         conds.map((cond) => recoveryEndTime(condTick, cond, condTarget)),
       )
     }
+
+    const timerId = useId()
+
     return (
       <FleetStats className="fleet-stat">
         {isMini ? (
@@ -332,10 +336,10 @@ export const FleetStat = compose(
               </Item>
               <Item label={inExpedition ? t('main:Expedition') : t('main:Resting')}>
                 <CountdownLabel
-                  fleetId={fleetId}
+                  fleetId={`${timerId}-${fleetId}`}
                   fleetName={fleetName}
                   completeTime={completeTime}
-                  shouldNotify={!inExpedition && !inBattle && canNotify}
+                  shouldNotify={!inExpedition && !inBattle && !isMainView && canNotify}
                 />
               </Item>
             </Container>

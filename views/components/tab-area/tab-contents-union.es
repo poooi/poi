@@ -3,7 +3,7 @@ import React, { Component, Children } from 'react'
 import PropTypes from 'prop-types'
 import { isEqual, omit, get } from 'lodash'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import styled, { css } from 'styled-components'
+import { styled, css } from 'styled-components'
 
 const PoiTabContents = styled.div`
   flex: 1 0 0;

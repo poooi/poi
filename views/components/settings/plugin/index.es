@@ -18,7 +18,7 @@ import {
   Position,
   MenuItem,
 } from '@blueprintjs/core'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import PluginManager from 'views/services/plugin-manager'
 

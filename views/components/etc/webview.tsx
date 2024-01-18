@@ -125,7 +125,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     // Error handling
     useEffect(() => {
       const callback = (e: DidFailLoadEvent) => {
-        if (e.errorCode !== -3) {
+        if (e.errorCode !== -3 && e.isMainFrame) {
           const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
           const target = e.target as WebviewTag
           target.executeJavaScript(errorScript)

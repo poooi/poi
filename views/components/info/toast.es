@@ -1,6 +1,6 @@
 import React, { createRef } from 'react'
-import { Position, Toaster, Intent } from '@blueprintjs/core'
-import styled, { css } from 'styled-components'
+import { Position, OverlayToaster, Intent } from '@blueprintjs/core'
+import { styled, css } from 'styled-components'
 import { connect } from 'react-redux'
 import { get } from 'lodash'
 
@@ -17,7 +17,7 @@ const toastPreload = (...props) => {
 
 window.toast = toastPreload
 
-const ToasterPositioned = styled(Toaster)`
+const ToasterPositioned = styled(OverlayToaster)`
   padding-bottom: 25px;
   ${({ inbound }) =>
     inbound &&

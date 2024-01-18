@@ -9,7 +9,7 @@ import { withNamespaces, Trans } from 'react-i18next'
 import i18next from 'views/env-parts/i18next'
 import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
 import { compose } from 'redux'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import { configSelector, basicSelector } from 'views/utils/selectors'

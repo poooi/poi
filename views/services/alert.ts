@@ -1,15 +1,12 @@
+import { Message, messageInstance } from 'views/components/info/alert'
+
 const DEFAULT_STICKYFOR = 3 * 1000 // Milliseconds
 
-function dispatchAlertEvent(value) {
-  const event = new CustomEvent('alert.new', {
-    bubbles: true,
-    cancelable: false,
-    detail: value,
-  })
-  window.dispatchEvent(event)
+function dispatchAlertEvent(value: Message) {
+  messageInstance.emit(value)
 }
 
-window.log = (msg, options) => {
+const log = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'default',
@@ -19,7 +16,7 @@ window.log = (msg, options) => {
   }
   dispatchAlertEvent(value)
 }
-window.success = (msg, options) => {
+const success = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'success',
@@ -29,7 +26,7 @@ window.success = (msg, options) => {
   }
   dispatchAlertEvent(value)
 }
-window.warn = (msg, options) => {
+const warn = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'warning',
@@ -39,7 +36,7 @@ window.warn = (msg, options) => {
   }
   dispatchAlertEvent(value)
 }
-window.error = (msg, options) => {
+const error = (msg: string, options: Partial<Message>) => {
   const value = {
     content: msg,
     type: 'danger',
@@ -49,3 +46,12 @@ window.error = (msg, options) => {
   }
   dispatchAlertEvent(value)
 }
+
+// @ts-expect-error backward compatibility
+window.log = log
+// @ts-expect-error backward compatibility
+window.success = success
+// @ts-expect-error backward compatibility
+window.warn = warn
+// @ts-expect-error backward compatibility
+window.error = error

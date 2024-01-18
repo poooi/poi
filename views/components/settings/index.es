@@ -3,7 +3,7 @@ import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
 import FontAwesome from 'react-fontawesome'
 import { Trans, withNamespaces } from 'react-i18next'
 import { isEqual, map } from 'lodash'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 
 import { PoiConfig } from './main'
 import { GamingConfig } from './gaming'
@@ -54,11 +54,11 @@ const TABS = [
 const SettingsTabs = styled(Tabs)`
   height: 100%;
 
-  .bp4-tab-list {
+  .bp5-tab-list {
     justify-content: space-between;
   }
 
-  .bp4-tab {
+  .bp5-tab {
     flex: 1 0 30px;
     text-align: center;
     justify-content: center;
@@ -70,7 +70,7 @@ const SettingsTabs = styled(Tabs)`
     }
   }
 
-  .bp4-tab-panel {
+  .bp5-tab-panel {
     margin: 0;
     height: calc(100% - 30px);
     overflow-y: scroll;
