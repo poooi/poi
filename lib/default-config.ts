@@ -263,8 +263,8 @@ const defaultConfig = {
             y: 0,
             minW: 3,
             minH: 9,
-            maxW: 20,
-            maxH: 50,
+            maxW: 40,
+            maxH: 200,
             i: 'poi-main',
           },
           {

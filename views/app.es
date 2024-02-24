@@ -145,7 +145,7 @@ class Poi extends Component {
   }
 
   render() {
-    const { isHorizontal, reversed, isolateGameWindow, grid, theme } = this.props
+    const { isHorizontal, reversed, theme, grid, layouts } = this.props
     if (grid) {
       return (
         <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
@@ -197,6 +197,7 @@ class Poi extends Component {
                     flexFlow: `${isHorizontal ? 'row' : 'column'}${
                       reversed ? '-reverse' : ''
                     } nowrap`,
+                    height: `100%`,
                     ...(!isHorizontal && { overflow: 'hidden' }),
                   }}
                 >
