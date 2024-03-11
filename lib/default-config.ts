@@ -393,7 +393,6 @@ const defaultConfig = {
             h: 58,
             x: 0,
             y: 0,
-            static: true,
             i: 'kan-game-wrapper',
           },
           {

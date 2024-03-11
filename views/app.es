@@ -145,7 +145,12 @@ class Poi extends Component {
               <div className="task-panel" key="task-panel">
                 <TaskPanel editable={this.props.editable} />
               </div>
-              <div className="kan-game-wrapper" key="kan-game-wrapper">
+              <div
+                className="kan-game-wrapper"
+                key="kan-game-wrapper"
+                isResizable={false}
+                isDraggable={this.props.editable}
+              >
                 <KanGameWrapper key="frame" />
               </div>
               <div className="poi-main" key="poi-main">
