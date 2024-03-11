@@ -163,7 +163,6 @@ export class LayoutConfig extends Component {
     config.set('poi.layout.grid', flag)
   }
 
-
   handleSetDoubleTabbed = (doubleTabbed, vertical) => {
     config.set('poi.tabarea.double', doubleTabbed)
 
@@ -183,11 +182,19 @@ export class LayoutConfig extends Component {
       gridPanel,
       t,
     } = this.props
-    const leftActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout === 'horizontal' && reversed
-    const downActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && !reversed
-    const upActive = !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && reversed
+    const leftActive =
+      !overlayPanel && !isolateGameWindow && !gridPanel && layout === 'horizontal' && reversed
+    const downActive =
+      !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && !reversed
+    const upActive =
+      !overlayPanel && !isolateGameWindow && !gridPanel && layout !== 'horizontal' && reversed
     const rightActive =
-      !overlayPanel && !isolateGameWindow && !gridPanel && layout === 'horizontal' && !reversed && !overlayPanel
+      !overlayPanel &&
+      !isolateGameWindow &&
+      !gridPanel &&
+      layout === 'horizontal' &&
+      !reversed &&
+      !overlayPanel
     return (
       <Section title={t('Layout')}>
         <Wrapper>
