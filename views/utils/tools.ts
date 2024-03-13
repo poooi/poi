@@ -24,7 +24,7 @@ import pangu from 'pangu'
 import path from 'path'
 import { readJsonSync } from 'fs-extra'
 import url from 'url'
-import { Modifiers } from 'popper.js'
+import { PopoverProps } from '@blueprintjs/core'
 
 /**
  * Sums up each position for each position for a 2-dimension array (matrix)
@@ -367,11 +367,6 @@ export const loadScript = (path: string, document = window.document): void => {
 /**
  * Default blueprint popover(Popper.js) modifiers used in poi
  */
-export const POPOVER_MODIFIERS: Modifiers = {
-  computeStyle: { gpuAcceleration: false }, // prevent using translat3d since it could make text blurry with zooming
-  preventOverflow: {
-    boundariesElement: 'window', // enable display tooltip within small containers
-  },
-}
+export const POPOVER_MODIFIERS: PopoverProps['modifiers'] = {}
 
 export const cjkSpacing = (str: string) => (isString(str) ? pangu.spacing(str) : toString(str))
