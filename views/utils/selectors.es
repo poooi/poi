@@ -62,9 +62,9 @@ function getMapHp(map, $map) {
     const { api_now_maphp, api_max_maphp, api_gauge_type } = map.api_eventmap
     return [api_now_maphp, api_max_maphp, api_gauge_type]
   }
-  const maxCount = $map.api_required_defeat_count
+  const maxCount = map.api_required_defeat_count
   if (!maxCount) return
-  const nowCount = map.api_defeat_count || maxCount
+  const nowCount = map.api_defeat_count ?? maxCount
   const nowHp = maxCount - nowCount
   return [nowHp, maxCount, undefined]
 }
