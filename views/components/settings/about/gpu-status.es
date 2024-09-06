@@ -17,10 +17,13 @@ export class GPUStatus extends PureComponent {
     const gpuWindow = open(fileUrl(path.join(ROOT, 'index-plugin.html')), 'plugin[gpuinfo]')
     gpuWindow.addEventListener('DOMContentLoaded', () => {
       const div = gpuWindow.document.createElement('div')
+      const color = window.isDarkTheme ? '#3d3d3d' : 'white'
       div.style.height = '100%'
-      div.innerHTML = '<webview src="chrome://gpu" style="width: 100%; height: 100%" />'
+      div.innerHTML =
+        '<webview src="chrome://gpu" style="width: 100%; height: 100%" webpreferences="transparent=yes" />'
       gpuWindow.document.body.style.height = '100vh'
       gpuWindow.document.body.style.margin = 0
+      gpuWindow.document.body.style.backgroundColor = color
       gpuWindow.document.body.appendChild(div)
     })
   }
