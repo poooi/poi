@@ -1,4 +1,39 @@
+/* global config */
 import { padStart } from 'lodash'
+import * as remote from '@electron/remote'
+import path from 'path-extra'
+import fs from 'fs-extra'
+import url from 'url'
+
+const getCachePath = (pathname = '') => {
+  const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
+  return path.join(dir, pathname)
+}
+
+const findHackFilePath = (pathname = '') => {
+  const originFilePath = getCachePath(path.join('KanColle', pathname))
+  const sp = originFilePath.split('.')
+  const ext = sp.pop()
+  sp.push('hack')
+  if (ext) {
+    sp.push(ext)
+  }
+  const hackedFilePath = sp.join('.')
+  try {
+    fs.accessSync(hackedFilePath, fs.constants.R_OK)
+    return hackedFilePath
+  } catch (e) {
+    try {
+      fs.accessSync(originFilePath, fs.constants.R_OK)
+      return originFilePath
+    } catch (e) {
+      return undefined
+    }
+  }
+}
+
+const pathToFileURL = (filePath = '') =>
+  url.pathToFileURL(filePath.split(path.sep).join(path.posix.sep))
 
 export const shipImgType = [
   'banner',
@@ -62,6 +97,10 @@ function create(id, seed) {
 }
 
 function join(ip, base, version) {
+  const hackedPath = findHackFilePath(base)
+  if (hackedPath) {
+    return pathToFileURL(hackedPath).href
+  }
   if (!ip) {
     return base
   }
