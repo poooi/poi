@@ -107,6 +107,7 @@ const isAAFD = itemTypeIs(36)
 // Surface Radar are excluded by checking whether
 // the equipment gives AA stat (api_tyku)
 const isAARadar = equip => isRadar(equip) && equip.api_tyku > 0
+const isAdvancedAARadar = equip => isRadar(equip) && equip.api_tyku >= 4
 
 // id 4: battleships
 declareAACI({
@@ -683,6 +684,35 @@ declareAACI({
     hasSome(isCDMG),
     hasSome(isAARadar),
     hasSome(validAny(is356mmTwinMountKai3Dazzle, is356mmTwinMountKai4)),
+  ),
+})
+
+// id 47: Shiratsuyu Class Kai 2
+
+const isShiratsuyuClassK2 = validAny(
+  shipIdIs(497),
+  shipIdIs(145),
+  shipIdIs(961),
+  shipIdIs(498),
+  shipIdIs(975),
+)
+// 529: 12.7cm連装砲C型改三H
+const is127mmTwinMountTypeCKai3H = equip => equip.api_slotitem_id === 529
+// 505: 25mm対空機銃増備
+const is25mmAAGunExtraEmplacement = equip => equip.api_slotitem_id === 505
+
+declareAACI({
+  name: ['白露改二', '時雨改二', '時雨改三', '村雨改二', '春雨改二'],
+  id: 47,
+  fixed: 2,
+  modifier: 1.3,
+  shipValid: validAny(isShiratsuyuClassK2),
+  equipsValid: validAny(
+    validAll(
+      hasSome(is127mmTwinMountTypeCKai3H),
+      hasSome(validAny(is25mmAAGunExtraEmplacement, isAdvancedAARadar)),
+    ),
+    hasAtLeast(is127mmTwinMountTypeCKai3H, 2),
   ),
 })
 
