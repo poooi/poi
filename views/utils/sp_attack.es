@@ -6,6 +6,8 @@ const SP_ATTACK_ID = {
   Mutsu_Splash: 102,
   Colorado_Fire: 103,
   Kongo_Class_Kaini_C_Charge: 104,
+  Baguette_Charge: 105,
+  QE_Touch: 106,
   Yamato_Attack_Triple: 400,
   Yamato_Attack_Double: 401,
   Submarine_Special_Attack: 302,
@@ -84,6 +86,14 @@ const isKirishimaKaiNi = shipIdIs(152)
 
 const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
 
+const isWarspiteKai = shipIdIs(364)
+
+const isValiantKai = shipIdIs(733)
+
+const isRichelieuKaiOrDeux = _.overSome([shipIdIs(392), shipIdIs(969)])
+
+const isJeanBartKai = shipIdIs(724)
+
 const isYamatoKaiNi = _.overSome([shipIdIs(911), shipIdIs(916)])
 
 const isMusashiKaiNi = shipIdIs(546)
@@ -91,8 +101,6 @@ const isMusashiKaiNi = shipIdIs(546)
 const isBismarckDrei = shipIdIs(178)
 
 const isIowaKai = shipIdIs(360)
-
-const isRichelieuKai = shipIdIs(392)
 
 const isIseKaiNi = shipIdIs(553)
 
@@ -198,7 +206,7 @@ const isYamatoDoubleAttack = _.overEvery([
     _.overEvery(overShip(0)(isYamatoKaiNi), overShip(1)(isMusashiKaiNi)),
     _.overEvery(overShip(0)(isYamatoKaiNi), overShip(1)(isBismarckDrei)),
     _.overEvery(overShip(0)(isYamatoKaiNi), overShip(1)(isIowaKai)),
-    _.overEvery(overShip(0)(isYamatoKaiNi), overShip(1)(isRichelieuKai)),
+    _.overEvery(overShip(0)(isYamatoKaiNi), overShip(1)(isRichelieuKaiOrDeux)),
     _.overEvery(overShip(0)(isMusashiKaiNi), overShip(1)(isYamatoKaiNi)),
   ),
   overShip(0)(isNotMidDmg),
@@ -239,9 +247,39 @@ const isYamatoTripleAttack = _.overEvery([
 ])
 
 const isYamatoAttack = _.overEvery([
-  hasShipMoreThan(6),
+  isFullFleet,
   isSpAttackLessThan([SP_ATTACK_ID.Yamato_Attack_Double, SP_ATTACK_ID.Yamato_Attack_Triple])(1),
   _.overSome(isYamatoDoubleAttack, isYamatoTripleAttack),
+])
+
+const isQESpAttack = _.overEvery([
+  isSpAttackLessThan([SP_ATTACK_ID.QE_Touch])(1),
+  isFullFleet,
+  _.overSome(
+    _.overEvery(overShip(0)(isWarspiteKai), overShip(1)(isValiantKai)),
+    _.overEvery(overShip(0)(isValiantKai), overShip(1)(isWarspiteKai)),
+  ),
+  overShip(0)(isNotMidDmg),
+  overShip(1)(isNotHeavyDmg),
+  overShip(2)(isNotSub),
+  overShip(3)(isNotSub),
+  overShip(4)(isNotSub),
+  overShip(5)(isNotSub),
+])
+
+const isBaguetteSpAttack = _.overEvery([
+  isSpAttackLessThan([SP_ATTACK_ID.Baguette_Charge])(1),
+  isFullFleet,
+  _.overSome(
+    _.overEvery(overShip(0)(isRichelieuKaiOrDeux), overShip(1)(isJeanBartKai)),
+    _.overEvery(overShip(0)(isJeanBartKai), overShip(1)(isRichelieuKaiOrDeux)),
+  ),
+  overShip(0)(isNotMidDmg),
+  overShip(1)(isNotHeavyDmg),
+  overShip(2)(isNotSub),
+  overShip(3)(isNotSub),
+  overShip(4)(isNotSub),
+  overShip(5)(isNotSub),
 ])
 
 export const isSpAttackAvailable = _.overSome([
@@ -252,4 +290,6 @@ export const isSpAttackAvailable = _.overSome([
   isKongoClassKaiNiCSpAttack,
   isSubmarineSpAttack,
   isYamatoAttack,
+  isQESpAttack,
+  isBaguetteSpAttack,
 ])
