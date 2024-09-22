@@ -5,11 +5,11 @@ const shipIdIs = (n) => (ship) => ship.api_ship_id === n
 const hasSome = (pred) => (xs) => xs.some(pred)
 const hasMoreThan = (num) => (pred) => (xs) => xs.filter(pred).length >= num
 
+const isDepthCharge = iconIs(17)
 const isSonar = iconIs(18)
 
 const isDiveBomber = (equip) => equip.api_type[2] === 7
 const isTorpedoBomber = (equip) => equip.api_type[2] === 8
-const isLargeSonar = (equip) => equip.api_type[2] === 40
 const taisenAbove = (value) => (ship) => ship.api_taisen[0] >= value
 
 const isDE = (ship) => ship.api_stype === 1
@@ -19,6 +19,7 @@ const isJClassKai = _.overSome([shipIdIs(394), shipIdIs(893), shipIdIs(906)])
 const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isSamuelKaiNi = shipIdIs(920)
+const isFusoClassKaiNi = _.overSome([shipIdIs(411), shipIdIs(412)])
 const isFletcherClassOrKai = _.overSome([
   shipIdIs(562), // Johnston
   shipIdIs(689), // Johnston Kai
@@ -31,6 +32,7 @@ const isFletcherClassOrKai = _.overSome([
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])
 const isTaiyouClassKaiNi = _.overSome([shipIdIs(529), shipIdIs(536)])
+const isMogamiClassKouKaiNi = _.overSome([shipIdIs(508), shipIdIs(509)])
 
 const isHyugaKaiNi = shipIdIs(554)
 
@@ -39,6 +41,10 @@ const isYuubariKaiNiTei = shipIdIs(624)
 const isKagaKaiNiGo = shipIdIs(646)
 
 const isShinShuMaruKai = shipIdIs(626)
+
+const isYamatoKaiNiJuu = shipIdIs(916)
+
+const isKumanomaru = _.overSome([shipIdIs(943), shipIdIs(948)])
 
 const isFixedWingASWAircraft = (equip) =>
   // 対潜哨戒機 (e.g. 三式指揮連絡機(対潜))
@@ -125,8 +131,8 @@ export const isOASWWith = (allCVEIds) =>
           _.overSome(
             // 対潜値1以上の艦攻
             _.overEvery(isTorpedoBomber, equipTaisAbove(1)),
-            // 艦爆
-            isDiveBomber,
+            // 対潜値1以上の艦爆
+            _.overEvery(isDiveBomber, equipTaisAbove(1)),
             // 三式指揮連絡機(対潜) / カ号観測機
             isASWAircraft,
           ),
@@ -135,7 +141,11 @@ export const isOASWWith = (allCVEIds) =>
     ),
     // 護衛空母 (excluding 大鷹改 大鷹改二)
     _.overEvery(
-      (s) => !isTaiyouClassKai(s) && !isTaiyouClassKaiNi(s) && allCVEIds.includes(s.api_ship_id),
+      (s) =>
+        !isTaiyouClassKai(s) &&
+        !isTaiyouClassKaiNi(s) &&
+        !isMogamiClassKouKaiNi(s) &&
+        allCVEIds.includes(s.api_ship_id),
       _.overSome(
         _.overEvery(
           taisenAbove(65),
@@ -152,7 +162,7 @@ export const isOASWWith = (allCVEIds) =>
         ),
         _.overEvery(
           taisenAbove(50),
-          overEquips(hasSome(isLargeSonar)),
+          overEquips(hasSome(isSonar)),
           overEquips(
             hasSome(
               _.overSome(
@@ -160,6 +170,20 @@ export const isOASWWith = (allCVEIds) =>
                 _.overEvery(isTorpedoBomber, equipTaisAbove(7)),
                 // 三式指揮連絡機(対潜) / カ号観測機
                 isASWAircraft,
+              ),
+            ),
+          ),
+        ),
+        _.overEvery(
+          taisenAbove(100),
+          overEquips(hasSome(isSonar)),
+          overEquips(
+            hasSome(
+              _.overSome(
+                // 対潜値1以上の艦攻
+                _.overEvery(isTorpedoBomber, equipTaisAbove(1)),
+                // 対潜値1以上の艦爆
+                _.overEvery(isDiveBomber, equipTaisAbove(1)),
               ),
             ),
           ),
@@ -176,9 +200,9 @@ export const isOASWWith = (allCVEIds) =>
         overEquips(hasMoreThan(2)(isAutogyro)),
       ),
     ),
-    // 神州丸改
+    // 神州丸改 大和改二重
     _.overEvery(
-      isShinShuMaruKai,
+      _.overSome(isShinShuMaruKai, isYamatoKaiNiJuu),
       taisenAbove(100),
       overEquips(
         hasSome(
@@ -191,5 +215,41 @@ export const isOASWWith = (allCVEIds) =>
         ),
       ),
       overEquips(hasSome(isSonar)),
+    ),
+    // 熊野丸/改
+    _.overEvery(
+      _.overSome(isKumanomaru),
+      taisenAbove(100),
+      overEquips(hasSome(isSonar)),
+      overEquips(
+        hasSome(
+          _.overSome(
+            // 対潜値1以上の艦爆
+            _.overEvery(isDiveBomber, equipTaisAbove(1)),
+            // オートジャイロ機
+            isAutogyro,
+            // 対潜哨戒機
+            isFixedWingASWAircraft,
+          ),
+        ),
+      ),
+    ),
+    // 扶桑改二 山城改二
+    _.overEvery(
+      _.overSome(isFusoClassKaiNi),
+      taisenAbove(100),
+      overEquips(hasSome(isSonar)),
+      overEquips(
+        hasSome(
+          _.overSome(
+            // 水上爆撃機
+            isSeaplaneBomber,
+            // オートジャイロ機
+            isAutogyro,
+            // 爆雷投射機/爆雷
+            isDepthCharge,
+          ),
+        ),
+      ),
     ),
   )
