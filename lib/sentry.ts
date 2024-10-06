@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/electron'
-import { isString, includes, get, each, takeRight, split } from 'lodash'
+import { isString, some, get, each, takeRight, split } from 'lodash'
 import path from 'path'
 
 interface InitOptions {
@@ -33,9 +33,8 @@ export const init = ({ build, paths }: InitOptions) => {
     dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
     beforeSend(event) {
       if (
-        includes(
-          get(event, 'exception.mechanism.data.message'),
-          'React is running in production mode',
+        some(['React is running in production mode', ':17027'], (messageToIgnore) =>
+          get(event, 'exception.mechanism.data.message')?.includes(messageToIgnore),
         )
       ) {
         return null
