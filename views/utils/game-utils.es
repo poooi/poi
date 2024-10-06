@@ -531,15 +531,18 @@ export const getFleetSpeed = (shipsData) => ({
 
 export async function isInGame() {
   try {
-    return (
+    if (
       document.querySelector('webview').getURL() ===
-        'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/' ||
-      (await new Promise((resolve, reject) => {
-        document
-          .querySelector('webview')
-          .executeJavaScript("document.querySelector('embed') !== null", (e) => resolve(e))
-      }))
-    )
+      'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
+    ) {
+      return true
+    }
+
+    const exists =
+      (await document
+        .querySelector('webview')
+        ?.executeJavaScript("document.querySelector('embed') !== null")) ?? false
+    return exists
   } catch (e) {
     return false
   }
