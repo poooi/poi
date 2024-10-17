@@ -30,7 +30,7 @@ export const init = ({ build, paths }: InitOptions) => {
   }
 
   Sentry.init({
-    dsn: 'https://bc58c4a7f37a43e8aa89ba9097536c84@sentry.io/1250935',
+    dsn: 'https://5e47d6b6bdb5f3b9979a59d9f01c5fca@o171991.ingest.us.sentry.io/1250935',
     beforeSend(event) {
       if (
         some(['React is running in production mode', ':17027'], (messageToIgnore) =>
