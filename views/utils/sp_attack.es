@@ -84,9 +84,13 @@ const isHarunaKaiNiC = shipIdIs(954)
 
 const isKirishimaKaiNi = shipIdIs(152)
 
+const isKirishimaKaiNiC = shipIdIs(694)
+
 const isWarspite = _.overSome([shipIdIs(364), shipIdIs(439)])
 
 const isWarspiteKai = shipIdIs(364)
+
+const isValiant = _.overSome([shipIdIs(927), shipIdIs(733)])
 
 const isValiantKai = shipIdIs(733)
 
@@ -166,22 +170,62 @@ const isKongoClassKaiNiCSpAttack = _.overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Kongo_Class_Kaini_C_Charge])(2),
   isFleetWith5NonSubs,
   _.overSome([
+    // Kongo Kai Ni C
     _.overEvery([
       overShip(0)(_.overEvery([isKongoKaiNiC, isNotMidDmg])),
       overShip(1)(
         _.overEvery([
-          _.overSome([isHieiKaiNiC, isHarunaKaiNi, isHarunaKaiNiB, isHarunaKaiNiC, isWarspite]),
+          _.overSome([
+            isHieiKaiNiC,
+            isHarunaKaiNi,
+            isHarunaKaiNiB,
+            isHarunaKaiNiC,
+            isKirishimaKaiNi,
+            isWarspite,
+            isValiant,
+          ]),
           isNotMidDmg,
         ]),
       ),
     ]),
+    // Hiei Kai Ni C
     _.overEvery([
       overShip(0)(_.overEvery([isHieiKaiNiC, isNotMidDmg])),
-      overShip(1)(_.overEvery([_.overSome([isKongoKaiNiC, isKirishimaKaiNi]), isNotMidDmg])),
+      overShip(1)(
+        _.overEvery([
+          _.overSome([
+            isKongoKaiNiC,
+            isHarunaKaiNiB,
+            isHarunaKaiNiC,
+            isKirishimaKaiNi,
+            isKirishimaKaiNiC,
+          ]),
+          isNotMidDmg,
+        ]),
+      ),
     ]),
+    // Haruna Kai Ni B/C
     _.overEvery([
       overShip(0)(_.overEvery([_.overSome([isHarunaKaiNiB, isHarunaKaiNiC]), isNotMidDmg])),
-      overShip(1)(_.overEvery([_.overSome([isKongoKaiNiC, isHieiKaiNiC]), isNotMidDmg])),
+      overShip(1)(
+        _.overEvery([_.overSome([isKongoKaiNiC, isHieiKaiNiC, isKirishimaKaiNiC]), isNotMidDmg]),
+      ),
+    ]),
+    // Kirishima Kai Ni C
+    _.overEvery([
+      overShip(0)(_.overEvery([isKirishimaKaiNiC, isNotMidDmg])),
+      overShip(1)(
+        _.overEvery([
+          _.overSome([
+            isKongoKaiNiC,
+            isHieiKaiNiC,
+            isHarunaKaiNiB,
+            isHarunaKaiNiC,
+            isSouthDakotaKai,
+          ]),
+          isNotMidDmg,
+        ]),
+      ),
     ]),
   ]),
 ])
