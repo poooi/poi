@@ -50,11 +50,12 @@ export function reducer(state = initState, { type, path, postBody, body }) {
   switch (type) {
     /*
        Clear sortie state if we have returned to port (api_port/port)
-       or if we have reloaded in the middle of a sorite, in which case api_req_member/get_incentive
+       or if we have reloaded in the middle of a sortie, in which case
+       `kcsapi/api_start2/get_option_setting`
        is the first API that game calls.
      */
     case '@@Response/kcsapi/api_port/port':
-    case '@@Request/kcsapi/api_req_member/get_incentive':
+    case '@@Request/kcsapi/api_start2/get_option_setting':
       return {
         ...state,
         combinedFlag:
