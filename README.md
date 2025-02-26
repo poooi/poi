@@ -40,7 +40,7 @@ Key features include:
 | Platform                                                      | Maintainer            | Instruction                                                   |
 | ------------------------------------------------------------- | --------------------- | ------------------------------------------------------------- |
 | AUR / Arch Linux                                              | @swordfeng            | see [AUR page](https://aur.archlinux.org/packages/poi/)       |
-| Homebrew Cask / macOS                                         | @darg20127            | `brew update && brew cask install poi`                        |
+| Homebrew Cask / macOS                                         | @darg20127            | `brew update && brew install --cask poi`                        |
 | [Chocolatey / Windows](https://chocolatey.org/packages/poi)   | @chocolatey and @drel | `choco install poi`                                           |
 | [Scoop / Windows](https://github.com/Darkatse/Scoop-KanColle) | @Darkatse             | see [bucket repo](https://github.com/Darkatse/Scoop-KanColle) |
 
