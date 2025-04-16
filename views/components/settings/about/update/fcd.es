@@ -17,6 +17,7 @@ const serverList = [
   'https://update.poi.moe/fcd/',
   'https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/',
   'https://fastly.poi.moe/fcd/',
+  'https://cdn.jsdelivr.net/gh/poooi/poi@master/assets/data/fcd/',
 ]
 
 const fetchHeader = new Headers()
