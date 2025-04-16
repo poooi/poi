@@ -16,6 +16,7 @@ import {
 const serverList = [
   'https://update.poi.moe/fcd/',
   'https://raw.githubusercontent.com/poooi/poi/master/assets/data/fcd/',
+  'https://fastly.poi.moe/fcd/',
 ]
 
 const fetchHeader = new Headers()
