@@ -6,46 +6,21 @@ function dispatchAlertEvent(value: Message) {
   messageInstance.emit(value)
 }
 
-const log = (msg: string, options: Message['options']) => {
+const mkAlert = (type: string, priority: number) => (msg: string, options: Message['options']) => {
   const value = {
     content: msg,
-    type: 'default',
-    priority: 0,
+    type,
+    priority,
     stickyFor: DEFAULT_STICKYFOR,
     options,
   }
   dispatchAlertEvent(value)
 }
-const success = (msg: string, options: Message['options']) => {
-  const value = {
-    content: msg,
-    type: 'success',
-    priority: 1,
-    stickyFor: DEFAULT_STICKYFOR,
-    options,
-  }
-  dispatchAlertEvent(value)
-}
-const warn = (msg: string, options: Message['options']) => {
-  const value = {
-    content: msg,
-    type: 'warning',
-    priority: 2,
-    stickyFor: DEFAULT_STICKYFOR,
-    options,
-  }
-  dispatchAlertEvent(value)
-}
-const error = (msg: string, options: Message['options']) => {
-  const value = {
-    content: msg,
-    type: 'danger',
-    priority: 4,
-    stickyFor: DEFAULT_STICKYFOR,
-    options,
-  }
-  dispatchAlertEvent(value)
-}
+
+const log = mkAlert('default', 0)
+const success = mkAlert('success', 1)
+const warn = mkAlert('warning', 2)
+const error = mkAlert('danger', 4)
 
 // @ts-expect-error backward compatibility
 window.log = log
