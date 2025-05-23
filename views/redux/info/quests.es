@@ -210,6 +210,32 @@ function satisfyGoal(req, goal, options) {
   return !unsatisfy
 }
 
+function satisfyShip(goal, options) {
+  if (goal.flagship && !goal.flagship.some((goalName) => options.shipname[0].includes(goalName))) {
+    return false
+  }
+  if (
+    goal.escortship &&
+    goal.escortship.filter((goalName) =>
+      options.shipname.some((optionShipName) => optionShipName.includes(goalName)),
+    ).length < (goal.escortshiprequired || 1)
+  ) {
+    return false
+  }
+  if (goal.flagshiptype && !goal.flagshiptype.includes(options.shiptype[0])) {
+    return false
+  }
+  if (goal.escortshiptype && goal.escortshiptype.length > 0) {
+    for (const [goalType, goalCount] of goal.escortshiptype) {
+      const count = options.shiptype.filter((optionShipType) => optionShipType === goalType).length
+      if (count < goalCount) {
+        return false
+      }
+    }
+  }
+  return true
+}
+
 // `records` will be modified
 function updateQuestRecordFactory(records, activeQuests, questGoals) {
   return (event, options, delta) => {
@@ -238,6 +264,8 @@ function updateQuestRecordFactory(records, activeQuests, questGoals) {
         if (!satisfyGoal('maparea', subgoal, options)) return
         if (!satisfyGoal('slotitemType2', subgoal, options)) return
         if (!satisfyGoal('times', subgoal, options)) return
+        if (!satisfyGoal('mapcell', subgoal, options)) return
+        if (!satisfyShip(subgoal, options)) return
         const subrecord = { ...record[_event] }
         subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
         records[api_no] = {
@@ -387,26 +415,47 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
       break
     // type: battle result
     case '@@BattleResult': {
-      const { rank, boss, map, enemyHp, enemyShipId } = result
+      const {
+        rank,
+        boss,
+        map: maparea,
+        mapCell: mapcell,
+        enemyHp,
+        enemyShipId,
+        deckShipId,
+      } = result
       let flag = false
-      flag = updateQuestRecord('battle', null, 1) || flag
+      const shipname = deckShipId.map((id) => {
+        const shipId = get(store, `info.ships.${id}.api_ship_id`)
+        return get(store, `const.$ships.${shipId}.api_name`, '')
+      })
+      const shiptype = deckShipId.map((id) => {
+        const shipId = get(store, `info.ships.${id}.api_ship_id`)
+        return get(store, `const.$ships.${shipId}.api_stype`, -1)
+      })
+      const battleMeta = {
+        shipname,
+        shiptype,
+        mapcell,
+        maparea,
+      }
+      flag = updateQuestRecord('battle', battleMeta, 1) || flag
       // type: battle_win
       if (rank === 'S' || rank === 'A' || rank === 'B')
-        flag = updateQuestRecord('battle_win', null, 1) || flag
+        flag = updateQuestRecord('battle_win', battleMeta, 1) || flag
       // type: battle_rank_s
-      if (rank === 'S') flag = updateQuestRecord('battle_rank_s', null, 1) || flag
+      if (rank === 'S') flag = updateQuestRecord('battle_rank_s', battleMeta, 1) || flag
       // type: battle_boss
       if (boss) {
-        flag = updateQuestRecord('battle_boss', null, 1) || flag
+        flag = updateQuestRecord('battle_boss', battleMeta, 1) || flag
         // type: battle_boss_win
         if (rank === 'S' || rank === 'A' || rank === 'B')
-          flag = updateQuestRecord('battle_boss_win', { maparea: map }, 1) || flag
+          flag = updateQuestRecord('battle_boss_win', battleMeta, 1) || flag
         // type: battle_boss_win_rank_a
         if (rank === 'S' || rank === 'A')
-          flag = updateQuestRecord('battle_boss_win_rank_a', { maparea: map }, 1) || flag
+          flag = updateQuestRecord('battle_boss_win_rank_a', battleMeta, 1) || flag
         // type: battle_boss_win_rank_s
-        if (rank == 'S')
-          flag = updateQuestRecord('battle_boss_win_rank_s', { maparea: map }, 1) || flag
+        if (rank == 'S') flag = updateQuestRecord('battle_boss_win_rank_s', battleMeta, 1) || flag
       }
       // type: sinking
       enemyShipId.forEach((shipId, idx) => {
