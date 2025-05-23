@@ -214,20 +214,28 @@ function satisfyShip(goal, options) {
   if (goal.flagship && !goal.flagship.some((goalName) => options.shipname[0].includes(goalName))) {
     return false
   }
-  if (
-    goal.escortship &&
-    goal.escortship.filter((goalName) =>
-      options.shipname.some((optionShipName) => optionShipName.includes(goalName)),
-    ).length < (goal.escortshiprequired || 1)
-  ) {
-    return false
+  if (goal.escortship && goal.escortship.length) {
+    let flag = false
+    for (const [goalNames, goalCount] of goal.escortship) {
+      const count = options.shipname.filter((optionShipName) =>
+        goalNames.some((goalName) => optionShipName.includes(goalName)),
+      ).length
+      if (count >= goalCount) {
+        flag = true
+      }
+    }
+    if (!flag) {
+      return false
+    }
   }
   if (goal.flagshiptype && !goal.flagshiptype.includes(options.shiptype[0])) {
     return false
   }
   if (goal.escortshiptype && goal.escortshiptype.length > 0) {
     for (const [goalType, goalCount] of goal.escortshiptype) {
-      const count = options.shiptype.filter((optionShipType) => optionShipType === goalType).length
+      const count = options.shiptype.filter((optionShipType) =>
+        goalType.includes(optionShipType),
+      ).length
       if (count < goalCount) {
         return false
       }

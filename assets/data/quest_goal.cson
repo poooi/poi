@@ -291,14 +291,14 @@ for more details see views/redux/quests.es
 256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
   type: 3
   "battle_boss_win_rank_s":
-    description: "勝利"
+    description: "6-3 S"
     maparea: [61]
     required: 3
     init: 0
 265: # 海上護衛強化月間 获得1-5 BOSS战A胜利以上10次
   type: 3
   "battle_boss_win_rank_a":
-    description: "勝利"
+    description: "1-5 A"
     maparea: [15]
     required: 10
     init: 0
@@ -315,6 +315,33 @@ for more details see views/redux/quests.es
     description: "遠征"
     required: 4
     mission: ['海上護衛任務']
+    init: 0
+280: #兵站線確保！海上警備を強化実施せよ！
+  type: 3
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
     init: 0
 ###
 # Quarterly
@@ -451,4 +478,211 @@ for more details see views/redux/quests.es
     maparea: [72]
     mapcell: [15]
     required: 3
+    init: 0
+
+888: #新編成「三川艦隊」、鉄底海峡に突入せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    required: 1
+    init: 0
+
+284: #南西諸島方面「海上警備行動」発令
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+
+845: #発令！「西方海域作戦」
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@41":
+    description: "4-1 S"
+    maparea: [41]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    description: "4-4 S"
+    maparea: [44]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    required: 1
+    init: 0
+903: #拡張「六水戦」、最前線へ
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagship: ['夕張改二']
+    escortship: [
+      [['由良改二'], 1],
+      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    ]
+    escortshiprequired: 4
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    flagship: ['夕張改二']
+    escortship: [
+      [['由良改二'], 1],
+      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    ]
+    escortshiprequired: 4
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagship: ['夕張改二']
+    escortship: [
+      [['由良改二'], 1],
+      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    ]
+    escortshiprequired: 4
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagship: ['夕張改二']
+    escortship: [
+      [['由良改二'], 1],
+      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    ]
+    escortshiprequired: 4
+    required: 1
+    init: 0
+
+862: #前線の航空偵察を実施せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@63":
+    description: "6-3 A"
+    maparea: [63]
+    escortshiptype: [[[16], 1], [[3], 2]] #水母1隻・軽巡2隻
+    required: 2
+    init: 0
+
+873: #北方海域警備を実施せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@31":
+    description: "3-1 A"
+    maparea: [31]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@33":
+    description: "3-3 A"
+    maparea: [33]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+
+875: #精鋭「三一駆」、鉄底海域に突入せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@5-4":
+    description: "5-4 S"
+    maparea: [54]
+    escortship: [
+      [['長波改二', '高波改'], 2],
+      [['長波改二', '沖波改'], 2],
+      [['長波改二', '朝霜改'], 2]
+    ]
+    escortshiprequired: 4
+    required: 2
+    init: 0
+
+894: #空母戦力の投入による兵站線戦闘哨戒
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 A"
+    maparea: [14]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 A"
+    maparea: [21]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 A"
+    maparea: [22]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
     init: 0
