@@ -12,6 +12,7 @@ import {
   get,
   size,
   isEqual,
+  range,
 } from 'lodash'
 import moment from 'moment-timezone'
 
@@ -120,6 +121,16 @@ export const getTanakalendarQuarterMonth = (time) => {
 const isDifferentQuarter = (time1, time2) =>
   !isEqual(getTanakalendarQuarterMonth(time1), getTanakalendarQuarterMonth(time2))
 
+const getTanakalendarYearlyYear = (time, resetMonth) => {
+  const y = moment(time).tz(ARMENIA_TIMEZONE).year()
+  // yup, month apparently starts at 0
+  const m = moment(time).tz(ARMENIA_TIMEZONE).month() + 1
+  return m >= resetMonth ? y : y - 1
+}
+
+const isDifferentYear = (time1, time2, resetMonth) =>
+  getTanakalendarYearlyYear(time1, resetMonth) != getTanakalendarYearlyYear(time2, resetMonth)
+
 function newQuestRecord(id, questGoals) {
   const questGoal = questGoals[id]
   if (!questGoal) return
@@ -167,6 +178,7 @@ const resetQuestRecordDaily = resetQuestRecordFactory([1, 8, 9], 1)
 const resetQuestRecordWeekly = resetQuestRecordFactory([2], 2)
 const resetQuestRecordMonthly = resetQuestRecordFactory([3], 3)
 const resetQuestRecordQuarterly = resetQuestRecordFactory([4], 4)
+const resetQuestRecordYearlyFactory = (resetMonth) => resetQuestRecordFactory([100 + resetMonth], 5)
 function outdateRecords(questGoals, records, then, now) {
   if (!isDifferentDay(now, then)) {
     return records
@@ -181,12 +193,17 @@ function outdateRecords(questGoals, records, then, now) {
   if (isDifferentQuarter(now, then)) {
     records = mapValues(records, resetQuestRecordQuarterly(questGoals))
   }
+  for (const resetMonth of range(1, 13)) {
+    if (isDifferentYear(now, then, resetMonth)) {
+      records = mapValues(records, resetQuestRecordYearlyFactory(resetMonth)(questGoals))
+    }
+  }
   return filterObjectValue(records)
 }
 
 function filterActiveQuestFactory(now) {
   return (activeQuest = {}) => {
-    const { time, detail: { api_type, api_no } = {} } = activeQuest
+    const { time, detail: { api_type, api_no, api_label_type } = {} } = activeQuest
     if (!time || !api_type) return false
     if (!isDifferentDay(now, time)) return true
     // Daily
@@ -195,6 +212,16 @@ function filterActiveQuestFactory(now) {
     if (isDifferentWeek(now, time) && api_type == 2) return false
     // Monthly
     if (isDifferentMonth(now, time) && api_type == 3) return false
+    // Yearly
+    for (const resetMonth of range(1, 13)) {
+      if (
+        isDifferentYear(now, time, resetMonth) &&
+        api_type == 5 &&
+        api_label_type === resetMonth + 100 // Yearly api_label_type = refreshMonth + 100
+      ) {
+        return false
+      }
+    }
     return true
   }
 }
