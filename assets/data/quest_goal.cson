@@ -863,6 +863,57 @@ for more details see views/redux/quests.es
     ]
     required: 4
     init: 0
+434: #特設護衛船団司令部、活動開始！
+  type: 102
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    required: 1
+    mission: ['海峡警備行動']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+442: #西方連絡作戦準備を実施せよ！
+  type: 102
+  fuzzy: true
+  "mission_success@西方海域偵察作戦":
+    description: "D1"
+    required: 1
+    mission: ['西方海域偵察作戦']
+    init: 0
+  "mission_success@欧州方面友軍との接触":
+    description: "D3"
+    required: 1
+    mission: ['欧州方面友軍との接触']
+    init: 0
+  "mission_success@潜水艦派遣演習":
+    description: "29"
+    required: 1
+    mission: ['潜水艦派遣演習']
+    init: 0
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    required: 1
+    mission: ['潜水艦派遣作戦']
+    init: 0
 ###
 # Yearly (March)
 ###
@@ -961,6 +1012,62 @@ for more details see views/redux/quests.es
     description: "演習勝利 A"
     escortship: [[['朧', '漣', '曙', '潮'], 4]]
     required: 3
+    init: 0
+436: #練習航海及び警備任務を実施せよ！
+  type: 103
+  fuzzy: true
+  "mission_success@練習航海":
+    description: "1"
+    required: 1
+    mission: ['練習航海']
+    init: 0
+  "mission_success@長距離練習航海":
+    description: "2"
+    required: 1
+    mission: ['長距離練習航海']
+    init: 0
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "10"
+    required: 1
+    mission: ['強行偵察任務']
+    init: 0
+444: #新兵装開発資材輸送を船団護衛せよ！
+  type: 103
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+  "mission_success@ボーキサイト輸送任務":
+    description: "11"
+    required: 1
+    mission: ['ボーキサイト輸送任務']
+    init: 0
+  "mission_success@資源輸送任務":
+    description: "12"
+    required: 1
+    mission: ['資源輸送任務']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
     init: 0
 ###
 # Yearly (April)
@@ -1061,6 +1168,29 @@ for more details see views/redux/quests.es
     description: "演習勝利 S"
     escortship: [[['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4]]
     required: 3
+    init: 0
+437: #小笠原沖哨戒線の強化を実施せよ！
+  type: 105
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@小笠原沖哨戒線":
+    description: "A5"
+    required: 1
+    mission: ['小笠原沖哨戒線']
+    init: 0
+  "mission_success@小笠原沖戦闘哨戒":
+    description: "A6"
+    required: 1
+    mission: ['小笠原沖戦闘哨戒']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
     init: 0
 ###
 # Yearly (June)
@@ -1276,7 +1406,29 @@ for more details see views/redux/quests.es
 ###
 # Yearly (August)
 ###
-
+438: #南西諸島方面の海上護衛を強化せよ！
+  type: 108
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+  "mission_success@南西諸島捜索撃滅戦":
+    description: "B5"
+    required: 1
+    mission: ['南西諸島捜索撃滅戦']
+    init: 0
 ###
 # Yearly (September)
 ###
@@ -1368,6 +1520,57 @@ for more details see views/redux/quests.es
       [[3], 1] #軽巡1
     ]
     required: 4
+    init: 0
+439: #兵站強化遠征任務【基本作戦】
+  type: 109
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@ボーキサイト輸送任務":
+    description: "11"
+    required: 1
+    mission: ['ボーキサイト輸送任務']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
+    init: 0
+440: #兵站強化遠征任務【拡張作戦】
+  type: 109
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@ブルネイ泊地沖哨戒":
+    description: "41"
+    required: 1
+    mission: ['ブルネイ泊地沖哨戒']
+    init: 0
+  "mission_success@水上機前線輸送":
+    description: "40"
+    required: 1
+    mission: ['水上機前線輸送']
+    init: 0
+  "mission_success@南西海域戦闘哨戒":
+    description: "46"
+    required: 1
+    mission: ['南西海域戦闘哨戒']
+    init: 0
+  "mission_success@強行鼠輸送作戦":
+    description: "E2"
+    required: 1
+    mission: ['強行鼠輸送作戦']
     init: 0
 ###
 # Yearly (October)
