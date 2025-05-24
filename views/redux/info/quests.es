@@ -238,7 +238,18 @@ function satisfyGoal(req, goal, options) {
 }
 
 function satisfyShip(goal, options) {
-  if (goal.flagship && !goal.flagship.some((goalName) => options.shipname[0].includes(goalName))) {
+  if (
+    goal.flagship &&
+    (options.shipname.length < 1 ||
+      !goal.flagship.some((goalName) => options.shipname[0].includes(goalName)))
+  ) {
+    return false
+  }
+  if (
+    goal.secondship &&
+    (options.shipname.length < 2 ||
+      !goal.secondship.some((goalName) => options.shipname[1].includes(goalName)))
+  ) {
     return false
   }
   if (goal.escortship && goal.escortship.length) {
@@ -414,9 +425,20 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
   switch (type) {
     // type: practice, practice_win
     case '@@Response/kcsapi/api_req_practice/battle_result': {
-      let changed = updateQuestRecord('practice', null, 1)
-      if (['S', 'A', 'B'].includes(body.api_win_rank))
-        changed = updateQuestRecord('practice_win', null, 1) || changed
+      const deckShipId = get(store, 'battle.result.deckShipId', [])
+      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, store)
+      let changed = updateQuestRecord('practice', { shipname, shiptype, shipclass }, 1)
+      if (['S', 'A', 'B'].includes(body.api_win_rank)) {
+        changed = updateQuestRecord('practice_win', { shipname, shiptype, shipclass }, 1) || changed
+      }
+      if (['S', 'A'].includes(body.api_win_rank)) {
+        changed =
+          updateQuestRecord('practice_win_a', { shipname, shiptype, shipclass }, 1) || changed
+      }
+      if (['S'].includes(body.api_win_rank)) {
+        changed =
+          updateQuestRecord('practice_win_s', { shipname, shiptype, shipclass }, 1) || changed
+      }
       if (changed) {
         return {
           ...state,

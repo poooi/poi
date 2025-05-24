@@ -309,6 +309,17 @@ for more details see views/redux/quests.es
     description: "演習勝利"
     required: 7
     init: 0
+318: # 給糧艦「伊良湖」の支援
+  type: 3
+  "practice_win":
+    description: "演習勝利"
+    flagshiptype: [7, 11, 18] # 空母
+    escortshiptype: [
+      [[7, 11, 18], 2] # 空母2
+      [[2], 2] # 駆逐2
+    ]
+    required: 1
+    init: 0
 424:
   type: 3
   "mission_success":
@@ -388,6 +399,42 @@ for more details see views/redux/quests.es
     required: 2
     mission: ['長時間対潜警戒']
     init: 0
+
+330: #空母機動部隊、演習始め！
+  type: 4
+  fuzzy: true
+  "practice_win":
+    description: "演習勝利"
+    escortshiptype: [[[7, 11], 1]] #空母1隻以上
+    required: 4
+    init: 0
+
+337: #「十八駆」演習！
+  type: 4
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [[['霰', '霞', '陽炎', '不知火'], 4]]
+    required: 3
+    init: 0
+
+339: #「十九駆」演習！
+  type: 4
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [[['磯波', '浦波', '綾波', '敷波'], 4]]
+    required: 3
+    init: 0
+
+342: #小艦艇群演習強化任務
+  type: 4
+    "practice_win_a":
+      description: "演習勝利 A"
+      escortshiptype: [
+        [[1, 2, 3, 4, 21], 4] # 駆逐・海防・軽巡級(軽巡・雷巡・練巡)4隻
+        [[1, 2], 3] # 駆逐・海防3隻
+      ]
+      required: 4
+      init: 0
 
 663: #新型艤装の継続研究 (大口径主砲を10個廃棄)
   type: 4
@@ -641,8 +688,8 @@ for more details see views/redux/quests.es
     description: "5-4 S"
     maparea: [54]
     escortship: [
-      [['長波改二', '高波改'], 2],
-      [['長波改二', '沖波改'], 2],
+      [['長波改二', '高波改'], 2]
+      [['長波改二', '沖波改'], 2]
       [['長波改二', '朝霜改'], 2]
     ]
     required: 2
@@ -691,7 +738,7 @@ for more details see views/redux/quests.es
     description: "1-2 A"
     maparea: [12]
     escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4],
+      [['朧改', '漣改', '曙改', '潮改'], 4]
     ]
     required: 1
     init: 0
@@ -699,7 +746,7 @@ for more details see views/redux/quests.es
     description: "1-3 A"
     maparea: [13]
     escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4],
+      [['朧改', '漣改', '曙改', '潮改'], 4]
     ]
     required: 1
     init: 0
@@ -707,7 +754,7 @@ for more details see views/redux/quests.es
     description: "1-5 A"
     maparea: [15]
     escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4],
+      [['朧改', '漣改', '曙改', '潮改'], 4]
     ]
     required: 1
     init: 0
@@ -715,7 +762,7 @@ for more details see views/redux/quests.es
     description: "3-2 A"
     maparea: [32]
     escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4],
+      [['朧改', '漣改', '曙改', '潮改'], 4]
     ]
     required: 1
     init: 0
@@ -729,7 +776,7 @@ for more details see views/redux/quests.es
     description: "1-1 A"
     maparea: [11]
     escortshiptype: [
-      [[1], 3], #海防3+自由枠2
+      [[1], 3] #海防3+自由枠2
     ]
     fleetlimit: 5
     required: 1
@@ -738,7 +785,7 @@ for more details see views/redux/quests.es
     description: "1-2 A"
     maparea: [12]
     escortshiptype: [
-      [[1], 3], #海防3+自由枠2
+      [[1], 3] #海防3+自由枠2
     ]
     fleetlimit: 5
     required: 1
@@ -747,7 +794,7 @@ for more details see views/redux/quests.es
     description: "1-3 A"
     maparea: [13]
     escortshiptype: [
-      [[1], 3], #海防3+自由枠2
+      [[1], 3] #海防3+自由枠2
     ]
     fleetlimit: 5
     required: 1
@@ -756,7 +803,7 @@ for more details see views/redux/quests.es
     description: "1-5 A"
     maparea: [15]
     escortshiptype: [
-      [[1], 3], #海防3+自由枠2
+      [[1], 3] #海防3+自由枠2
     ]
     fleetlimit: 5
     required: 1
@@ -766,7 +813,7 @@ for more details see views/redux/quests.es
     maparea: [16]
     mapcell: [14, 17]
     escortshiptype: [
-      [[1], 3], #海防3+自由枠2
+      [[1], 3] #海防3+自由枠2
     ]
     fleetlimit: 5
     required: 1
@@ -778,7 +825,7 @@ for more details see views/redux/quests.es
     description: "2-5 S"
     maparea: [25]
     escortship: [
-      [['綾波改二', '敷波改二'], 2],
+      [['綾波改二', '敷波改二'], 2]
     ]
     required: 1
     init: 0
@@ -786,7 +833,7 @@ for more details see views/redux/quests.es
     description: "3-4 S"
     maparea: [34]
     escortship: [
-      [['綾波改二', '敷波改二'], 2],
+      [['綾波改二', '敷波改二'], 2]
     ]
     required: 1
     init: 0
@@ -794,7 +841,7 @@ for more details see views/redux/quests.es
     description: "4-5 S"
     maparea: [45]
     escortship: [
-      [['綾波改二', '敷波改二'], 2],
+      [['綾波改二', '敷波改二'], 2]
     ]
     required: 1
     init: 0
@@ -802,9 +849,19 @@ for more details see views/redux/quests.es
     description: "5-3 S"
     maparea: [53]
     escortship: [
-      [['綾波改二', '敷波改二'], 2],
+      [['綾波改二', '敷波改二'], 2]
     ]
     required: 1
+    init: 0
+348: #「精鋭軽巡」演習！
+  type: 102
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshiptype: [
+      [[3, 21], 3] # 軽巡級(軽巡・練巡)3隻
+      [[2], 2] # 駆逐2隻
+    ]
+    required: 4
     init: 0
 ###
 # Yearly (March)
@@ -817,7 +874,7 @@ for more details see views/redux/quests.es
     maparea: [13]
     flagship: ['明石']
     escortshiptype: [
-      [[2], 3], #駆逐3
+      [[2], 3] #駆逐3
     ]
     required: 1
     init: 0
@@ -827,7 +884,7 @@ for more details see views/redux/quests.es
     mapcell: [14, 17]
     flagship: ['明石']
     escortshiptype: [
-      [[2], 3], #駆逐3
+      [[2], 3] #駆逐3
     ]
     fleetlimit: 5
     required: 1
@@ -837,7 +894,7 @@ for more details see views/redux/quests.es
     maparea: [21]
     flagship: ['明石']
     escortshiptype: [
-      [[2], 3], #駆逐3
+      [[2], 3] #駆逐3
     ]
     required: 1
     init: 0
@@ -846,7 +903,7 @@ for more details see views/redux/quests.es
     maparea: [22]
     flagship: ['明石']
     escortshiptype: [
-      [[2], 3], #駆逐3
+      [[2], 3] #駆逐3
     ]
     required: 1
     init: 0
@@ -855,7 +912,7 @@ for more details see views/redux/quests.es
     maparea: [23]
     flagship: ['明石']
     escortshiptype: [
-      [[2], 3], #駆逐3
+      [[2], 3] #駆逐3
     ]
     required: 1
     init: 0
@@ -866,8 +923,8 @@ for more details see views/redux/quests.es
     description: "4-1 A"
     maparea: [41]
     escortshiptype: [
-      [[5], 3], #重巡3
-      [[2], 1], #駆逐1
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
     ]
     required: 1
     init: 0
@@ -875,8 +932,8 @@ for more details see views/redux/quests.es
     description: "4-2 A"
     maparea: [42]
     escortshiptype: [
-      [[5], 3], #重巡3
-      [[2], 1], #駆逐1
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
     ]
     required: 1
     init: 0
@@ -884,8 +941,8 @@ for more details see views/redux/quests.es
     description: "4-3 A"
     maparea: [43]
     escortshiptype: [
-      [[5], 3], #重巡3
-      [[2], 1], #駆逐1
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
     ]
     required: 1
     init: 0
@@ -893,15 +950,36 @@ for more details see views/redux/quests.es
     description: "4-4 A"
     maparea: [44]
     escortshiptype: [
-      [[5], 3], #重巡3
-      [[2], 1], #駆逐1
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
     ]
     required: 1
+    init: 0
+350: #精鋭「第七駆逐隊」演習開始！
+  type: 103
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortship: [[['朧', '漣', '曙', '潮'], 4]]
+    required: 3
     init: 0
 ###
 # Yearly (April)
 ###
-
+362: #特型初代「第十一駆逐隊」演習スペシャル！
+  type: 104
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortship: [[['吹雪', '白雪', '初雪', '深雪'], 4]]
+    required: 4
+    init: 0
+371: #春です！「春雨」、演習しますっ！
+  type: 104
+  "practice_win_a":
+    description: "演習勝利 A"
+    flagship: ['春雨']
+    escortship: [[['村雨', '夕立', '五月雨', '白露', '時雨'], 3]]
+    required: 4
+    init: 0
 ###
 # Yearly (May)
 ###
@@ -949,7 +1027,7 @@ for more details see views/redux/quests.es
     maparea: [11]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1], #海防1
+      [[1], 1] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
@@ -960,7 +1038,7 @@ for more details see views/redux/quests.es
     maparea: [12]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1], #海防1
+      [[1], 1] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
@@ -971,11 +1049,18 @@ for more details see views/redux/quests.es
     maparea: [15]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1], #海防1
+      [[1], 1] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
     required: 2
+    init: 0
+356: #精鋭「第十九駆逐隊」演習！
+  type: 105
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [[['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4]]
+    required: 3
     init: 0
 ###
 # Yearly (June)
@@ -988,7 +1073,7 @@ for more details see views/redux/quests.es
     maparea: [12]
     flagshiptype: [2, 5] #駆逐艦, 重巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -997,7 +1082,7 @@ for more details see views/redux/quests.es
     maparea: [13]
     flagshiptype: [2, 5] #駆逐艦, 重巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -1006,7 +1091,7 @@ for more details see views/redux/quests.es
     maparea: [14]
     flagshiptype: [2, 5] #駆逐艦, 重巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -1018,7 +1103,7 @@ for more details see views/redux/quests.es
     maparea: [22]
     flagshiptype: [7, 11, 18] #空母
     escortshiptype: [
-      [[5, 6], 2], #重巡航巡2
+      [[5, 6], 2] #重巡航巡2
     ]
     required: 1
     init: 0
@@ -1027,7 +1112,7 @@ for more details see views/redux/quests.es
     maparea: [23]
     flagshiptype: [7, 11, 18] #空母
     escortshiptype: [
-      [[5, 6], 2], #重巡航巡2
+      [[5, 6], 2] #重巡航巡2
     ]
     required: 1
     init: 0
@@ -1036,7 +1121,7 @@ for more details see views/redux/quests.es
     maparea: [24]
     flagshiptype: [7, 11, 18] #空母
     escortshiptype: [
-      [[5, 6], 2], #重巡航巡2
+      [[5, 6], 2] #重巡航巡2
     ]
     required: 1
     init: 0
@@ -1048,7 +1133,7 @@ for more details see views/redux/quests.es
     maparea: [15]
     flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -1058,7 +1143,7 @@ for more details see views/redux/quests.es
     mapcell: [14, 17]
     flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -1067,7 +1152,7 @@ for more details see views/redux/quests.es
     maparea: [21]
     flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
     escortshiptype: [
-      [[1, 2], 3, true], #海防+駆逐3
+      [[1, 2], 3, true] #海防+駆逐3
     ]
     required: 2
     init: 0
@@ -1078,7 +1163,7 @@ for more details see views/redux/quests.es
     description: "3-1 S"
     maparea: [31]
     escortshiptype: [
-      [[7], 2], #軽空母2
+      [[7], 2] #軽空母2
     ]
     required: 1
     init: 0
@@ -1086,7 +1171,7 @@ for more details see views/redux/quests.es
     description: "3-3 S"
     maparea: [33]
     escortshiptype: [
-      [[7], 2], #軽空母2
+      [[7], 2] #軽空母2
     ]
     required: 1
     init: 0
@@ -1094,7 +1179,7 @@ for more details see views/redux/quests.es
     description: "3-4 S"
     maparea: [34]
     escortshiptype: [
-      [[7], 2], #軽空母2
+      [[7], 2] #軽空母2
     ]
     required: 1
     init: 0
@@ -1102,7 +1187,7 @@ for more details see views/redux/quests.es
     description: "3-5 S"
     maparea: [35]
     escortshiptype: [
-      [[7], 2], #軽空母2
+      [[7], 2] #軽空母2
     ]
     required: 1
     init: 0
@@ -1133,10 +1218,61 @@ for more details see views/redux/quests.es
     flagshiptype: [7, 11, 18] #空母
     required: 2
     init: 0
+353: #「巡洋艦戦隊」演習！
+  type: 106
+  "practice_win":
+    description: "演習勝利"
+    flagshiptype: [5, 6] #重巡航巡
+    escortshiptype: [
+      [[5, 6], 4] #重巡航巡4
+      [[2], 2] #駆逐2隻
+    ]
+    required: 5
+    init: 0
+357: #「大和型戦艦」第一戦隊演習、始め！
+  type: 106
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: ['大和', '武蔵']
+    escortshiptype: [
+      [[3], 1] #軽巡1隻
+      [[2], 2] #駆逐2隻
+    ]
+    required: 3
+    init: 0
+372: #水上艦「艦隊防空演習」を実施せよ！
+  type: 106
+  "practice_win_a":
+    description: "演習勝利 A"
+    flagshipclass: [54] #秋月型
+    escortshiptype: [
+      [[10], 2] #航空戦艦2隻
+      [[2], 2] #駆逐2隻
+    ]
+    required: 4
+    init: 0
 ###
 # Yearly (July)
 ###
-
+354: #「改装特務空母」任務部隊演習！
+  type: 107
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagship: ['Gambier Bay Mk.II']
+    escortshipclass: [
+      [[91, 87], 2] #Fletcher級駆逐艦/John C.Butler級駆逐艦2隻
+    ]
+    required: 4
+    init: 0
+368: #「十六駆」演習！
+  type: 107
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [
+      [['天津風', '雪風', '丹陽', '時津風', '初風'], 2]
+    ]
+    required: 3
+    init: 0
 ###
 # Yearly (August)
 ###
@@ -1152,7 +1288,7 @@ for more details see views/redux/quests.es
     maparea: [72]
     mapcell: [15]
     escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
     ]
     required: 2
     init: 0
@@ -1161,7 +1297,7 @@ for more details see views/redux/quests.es
     maparea: [73]
     mapcell: [18, 23, 24, 25]
     escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
     ]
     required: 2
     init: 0
@@ -1169,7 +1305,7 @@ for more details see views/redux/quests.es
     description: "4-2 S"
     maparea: [42]
     escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
     ]
     required: 2
     init: 0
@@ -1183,7 +1319,7 @@ for more details see views/redux/quests.es
       [['比叡', '霧島'], 2],
     ]
     escortshiptype: [
-      [[2], 2], #駆逐2
+      [[2], 2] #駆逐2
     ]
     required: 1
     init: 0
@@ -1191,10 +1327,10 @@ for more details see views/redux/quests.es
     description: "5-3 A"
     maparea: [53]
     escortship: [
-      [['比叡', '霧島'], 2],
+      [['比叡', '霧島'], 2]
     ]
     escortshiptype: [
-      [[2], 2], #駆逐2
+      [[2], 2] #駆逐2
     ]
     required: 1
     init: 0
@@ -1202,10 +1338,10 @@ for more details see views/redux/quests.es
     description: "5-4 A"
     maparea: [54]
     escortship: [
-      [['比叡', '霧島'], 2],
+      [['比叡', '霧島'], 2]
     ]
     escortshiptype: [
-      [[2], 2], #駆逐2
+      [[2], 2] #駆逐2
     ]
     required: 1
     init: 0
@@ -1213,17 +1349,65 @@ for more details see views/redux/quests.es
     description: "5-5 A"
     maparea: [55]
     escortship: [
-      [['比叡', '霧島'], 2],
+      [['比叡', '霧島'], 2]
     ]
     escortshiptype: [
-      [[2], 2], #駆逐2
+      [[2], 2] #駆逐2
     ]
     required: 1
+    init: 0
+368: #「第三戦隊」第二小隊、演習開始！
+  type: 109
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [
+      [['比叡', '霧島'], 2]
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+      [[3], 1] #軽巡1
+    ]
+    required: 4
     init: 0
 ###
 # Yearly (October)
 ###
-
+346: #最精鋭！主力オブ主力、演習開始！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortship: [
+      [['夕雲改二', '巻雲改二', '風雲改二', '秋雲改二'], 4]
+    ]
+    required: 4
+    init: 0
+345: #演習ティータイム！
+  type: 110
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortship: [
+      [['Warspite', '金剛', 'Ark Royal', 'Nelson', 'Jervis', 'Janus', 'Javelin'], 4]
+    ]
+    required: 4
+    init: 0
+355: #精鋭「第十五駆逐隊」第一小隊演習！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagship: ['黒潮改二', '親潮改二']
+    secondship: ['黒潮改二', '親潮改二']
+    required: 4
+    init: 0
+377: #「第二駆逐隊(後期編成)」、練度向上！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagship: ['早霜', '秋霜', '清霜']
+    escortship: [
+      [['早霜', '秋霜', '清霜', '朝霜'], 3]
+    ]
+    required: 4
+    init: 0
 ###
 # Yearly (November)
 ###
