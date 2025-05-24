@@ -427,14 +427,14 @@ for more details see views/redux/quests.es
 
 342: #小艦艇群演習強化任務
   type: 4
-    "practice_win_a":
-      description: "演習勝利 A"
-      escortshiptype: [
-        [[1, 2, 3, 4, 21], 4] # 駆逐・海防・軽巡級(軽巡・雷巡・練巡)4隻
-        [[1, 2], 3] # 駆逐・海防3隻
-      ]
-      required: 4
-      init: 0
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshiptype: [
+      [[1, 2, 3, 4, 21], 4] # 駆逐・海防・軽巡級(軽巡・雷巡・練巡)4隻
+      [[1, 2], 3] # 駆逐・海防3隻
+    ]
+    required: 4
+    init: 0
 
 663: #新型艤装の継続研究 (大口径主砲を10個廃棄)
   type: 4
