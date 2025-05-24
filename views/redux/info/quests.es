@@ -243,8 +243,9 @@ function satisfyShip(goal, options) {
   }
   if (goal.escortship && goal.escortship.length) {
     let flag = false
-    for (const [goalNames, goalCount] of goal.escortship) {
-      const count = options.shipname.filter((optionShipName) =>
+    for (const [goalNames, goalCount, ignoreFlagShip] of goal.escortship) {
+      const shipname = ignoreFlagShip ? options.shipname.slice(1) : options.shipname
+      const count = shipname.filter((optionShipName) =>
         goalNames.some((goalName) => optionShipName.includes(goalName)),
       ).length
       if (count >= goalCount) {
@@ -259,13 +260,35 @@ function satisfyShip(goal, options) {
     return false
   }
   if (goal.escortshiptype && goal.escortshiptype.length > 0) {
-    for (const [goalType, goalCount] of goal.escortshiptype) {
-      const count = options.shiptype.filter((optionShipType) =>
-        goalType.includes(optionShipType),
+    for (const [goalType, goalCount, ignoreFlagShip] of goal.escortshiptype) {
+      const shiptype = ignoreFlagShip ? options.shiptype.slice(1) : options.shiptype
+      const count = shiptype.filter((optionShipType) => goalType.includes(optionShipType)).length
+      if (count < goalCount) {
+        return false
+      }
+    }
+  }
+
+  if (goal.flagshipclass && !goal.flagshipclass.includes(options.shipclass[0])) {
+    return false
+  }
+  if (goal.escortshipclass && goal.escortshipclass.length > 0) {
+    for (const [goalClass, goalCount, ignoreFlagShip] of goal.escortshipclass) {
+      const shipclass = ignoreFlagShip ? options.shipclass.slice(1) : options.shipclass
+      const count = shipclass.filter((optionShipClass) =>
+        goalClass.includes(optionShipClass),
       ).length
       if (count < goalCount) {
         return false
       }
+    }
+  }
+  if (goal.fleetlimit && options.shipname.length > goal.fleetlimit) {
+    return false
+  }
+  if (goal.banshiptype && goal.banshiptype.length > 0) {
+    if (!goal.banshiptype.some((goalType) => options.shiptype.includes(goalType))) {
+      return false
     }
   }
   return true
@@ -328,6 +351,28 @@ function limitProgress(count, required, progressFlag, completed) {
     default:
       return count
   }
+}
+
+function getFleetInfo(deckShipId, store) {
+  const shipname = deckShipId
+    .map((id) => {
+      const shipId = get(store, `info.ships.${id}.api_ship_id`)
+      return get(store, `const.$ships.${shipId}.api_name`, '')
+    })
+    .filter((name) => name.length > 0)
+  const shiptype = deckShipId
+    .map((id) => {
+      const shipId = get(store, `info.ships.${id}.api_ship_id`)
+      return get(store, `const.$ships.${shipId}.api_stype`, -1)
+    })
+    .filter((id) => id > 0)
+  const shipclass = deckShipId
+    .map((id) => {
+      const shipId = get(store, `info.ships.${id}.api_ship_id`)
+      return get(store, `const.$ships.${shipId}.api_ctype`, -1)
+    })
+    .filter((id) => id > 0)
+  return { shipname, shiptype, shipclass }
 }
 
 // Update progress of existing records
@@ -448,6 +493,18 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
     case '@@Response/kcsapi/api_req_map/start':
       if (updateQuestRecord('sally', null, 1)) return { ...state, records }
       break
+    // type: reach map point
+    case '@@Response/kcsapi/api_req_map/next': {
+      const mapcell = body.api_no
+      const maparea = body.api_maparea_id * 10 + body.api_mapinfo_no
+      const deckShipId = get(store, 'battle.result.deckShipId', [])
+      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, store)
+      if (
+        updateQuestRecord('reach_mapcell', { mapcell, maparea, shipname, shiptype, shipclass }, 1)
+      )
+        return { ...state, records }
+      break
+    }
     // type: battle result
     case '@@BattleResult': {
       const {
@@ -460,17 +517,11 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
         deckShipId,
       } = result
       let flag = false
-      const shipname = deckShipId.map((id) => {
-        const shipId = get(store, `info.ships.${id}.api_ship_id`)
-        return get(store, `const.$ships.${shipId}.api_name`, '')
-      })
-      const shiptype = deckShipId.map((id) => {
-        const shipId = get(store, `info.ships.${id}.api_ship_id`)
-        return get(store, `const.$ships.${shipId}.api_stype`, -1)
-      })
+      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, store)
       const battleMeta = {
         shipname,
         shiptype,
+        shipclass,
         mapcell,
         maparea,
       }

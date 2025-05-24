@@ -569,7 +569,6 @@ for more details see views/redux/quests.es
       [['由良改二'], 1],
       [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
     ]
-    escortshiprequired: 4
     required: 1
     init: 0
   "battle_boss_win_rank_s@54":
@@ -580,7 +579,6 @@ for more details see views/redux/quests.es
       [['由良改二'], 1],
       [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
     ]
-    escortshiprequired: 4
     required: 1
     init: 0
   "battle_boss_win_rank_s@64":
@@ -591,7 +589,6 @@ for more details see views/redux/quests.es
       [['由良改二'], 1],
       [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
     ]
-    escortshiprequired: 4
     required: 1
     init: 0
   "battle_boss_win_rank_s@65":
@@ -602,7 +599,6 @@ for more details see views/redux/quests.es
       [['由良改二'], 1],
       [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
     ]
-    escortshiprequired: 4
     required: 1
     init: 0
 
@@ -649,7 +645,6 @@ for more details see views/redux/quests.es
       [['長波改二', '沖波改'], 2],
       [['長波改二', '朝霜改'], 2]
     ]
-    escortshiprequired: 4
     required: 2
     init: 0
 
@@ -686,3 +681,553 @@ for more details see views/redux/quests.es
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
     init: 0
+###
+# Yearly (January)
+###
+1005: #精強「第七駆逐隊」緊急出動！
+  type: 101
+  fuzzy: true
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    escortship: [
+      [['朧改', '漣改', '曙改', '潮改'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortship: [
+      [['朧改', '漣改', '曙改', '潮改'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortship: [
+      [['朧改', '漣改', '曙改', '潮改'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortship: [
+      [['朧改', '漣改', '曙改', '潮改'], 4],
+    ]
+    required: 1
+    init: 0
+###
+# Yearly (February)
+###
+905: #「海防艦」、海を護る！
+  type: 102
+  fuzzy: true
+  "battle_boss_win_rank_a@11":
+    description: "1-1 A"
+    maparea: [11]
+    escortshiptype: [
+      [[1], 3], #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    escortshiptype: [
+      [[1], 3], #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshiptype: [
+      [[1], 3], #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortshiptype: [
+      [[1], 3], #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshiptype: [
+      [[1], 3], #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+904: #精鋭「十九駆」、躍り出る！
+  type: 102
+  fuzzy: true
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    escortship: [
+      [['綾波改二', '敷波改二'], 2],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    escortship: [
+      [['綾波改二', '敷波改二'], 2],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortship: [
+      [['綾波改二', '敷波改二'], 2],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortship: [
+      [['綾波改二', '敷波改二'], 2],
+    ]
+    required: 1
+    init: 0
+###
+# Yearly (March)
+###
+912: #工作艦「明石」護衛任務
+  type: 103
+  fuzzy: true
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    flagship: ['明石']
+    escortshiptype: [
+      [[2], 3], #駆逐3
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagship: ['明石']
+    escortshiptype: [
+      [[2], 3], #駆逐3
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@21":
+    description: "2-1 A"
+    maparea: [21]
+    flagship: ['明石']
+    escortshiptype: [
+      [[2], 3], #駆逐3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@22":
+    description: "2-2 A"
+    maparea: [22]
+    flagship: ['明石']
+    escortshiptype: [
+      [[2], 3], #駆逐3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    flagship: ['明石']
+    escortshiptype: [
+      [[2], 3], #駆逐3
+    ]
+    required: 1
+    init: 0
+914: #重巡戦隊、西へ！
+  type: 103
+  fuzzy: true
+  "battle_boss_win_rank_a@41":
+    description: "4-1 A"
+    maparea: [41]
+    escortshiptype: [
+      [[5], 3], #重巡3
+      [[2], 1], #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@42":
+    description: "4-2 A"
+    maparea: [42]
+    escortshiptype: [
+      [[5], 3], #重巡3
+      [[2], 1], #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@43":
+    description: "4-3 A"
+    maparea: [43]
+    escortshiptype: [
+      [[5], 3], #重巡3
+      [[2], 1], #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@44":
+    description: "4-4 A"
+    maparea: [44]
+    escortshiptype: [
+      [[5], 3], #重巡3
+      [[2], 1], #駆逐1
+    ]
+    required: 1
+    init: 0
+###
+# Yearly (April)
+###
+
+###
+# Yearly (May)
+###
+975: #精鋭「第十九駆逐隊」、全力出撃！
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    escortship: [
+      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortship: [
+      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortship: [
+      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortship: [
+      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    ]
+    required: 1
+    init: 0
+# TODO: Add 日英米合同水上艦隊、抜錨せよ！ when there is a way to find out ship's origin nation
+1012: #鵜来型海防艦、静かな海を防衛せよ！
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_s@11":
+    description: "1-1 S"
+    maparea: [11]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1], #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 3
+    init: 0
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1], #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1], #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 2
+    init: 0
+###
+# Yearly (June)
+###
+944: #鎮守府近海海域の哨戒を実施せよ！
+  type: 106
+  fuzzy: true
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    flagshiptype: [2, 5] #駆逐艦, 重巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    flagshiptype: [2, 5] #駆逐艦, 重巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    flagshiptype: [2, 5] #駆逐艦, 重巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+946: #空母機動部隊、出撃！敵艦隊を迎撃せよ！
+  type: 106
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshiptype: [7, 11, 18] #空母
+    escortshiptype: [
+      [[5, 6], 2], #重巡航巡2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshiptype: [7, 11, 18] #空母
+    escortshiptype: [
+      [[5, 6], 2], #重巡航巡2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshiptype: [7, 11, 18] #空母
+    escortshiptype: [
+      [[5, 6], 2], #重巡航巡2
+    ]
+    required: 1
+    init: 0
+945: #南西方面の兵站航路の安全を図れ！
+  type: 106
+  fuzzy: true
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@21":
+    description: "2-1 A"
+    maparea: [21]
+    flagshiptype: [2, 3, 21] #駆逐,軽巡,練巡
+    escortshiptype: [
+      [[1, 2], 3, true], #海防+駆逐3
+    ]
+    required: 2
+    init: 0
+947: #AL作戦
+  type: 106
+  fuzzy: true
+  "battle_boss_win_rank_s@31":
+    description: "3-1 S"
+    maparea: [31]
+    escortshiptype: [
+      [[7], 2], #軽空母2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    escortshiptype: [
+      [[7], 2], #軽空母2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    escortshiptype: [
+      [[7], 2], #軽空母2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    escortshiptype: [
+      [[7], 2], #軽空母2
+    ]
+    required: 1
+    init: 0
+948: #機動部隊決戦
+  type: 106
+  fuzzy: true
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    flagshiptype: [7, 11, 18] #空母
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagshiptype: [7, 11, 18] #空母
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@64":
+    description: "6-4 A"
+    maparea: [64]
+    flagshiptype: [7, 11, 18] #空母
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshiptype: [7, 11, 18] #空母
+    required: 2
+    init: 0
+###
+# Yearly (July)
+###
+
+###
+# Yearly (August)
+###
+
+###
+# Yearly (September)
+###
+928: #歴戦「第十方面艦隊」、全力出撃！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortship: [
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    escortship: [
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    escortship: [
+      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2],
+    ]
+    required: 2
+    init: 0
+1018: #「第三戦隊」第二小隊、鉄底海峡へ！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_a@51":
+    description: "5-1 A"
+    maparea: [51]
+    escortship: [
+      [['比叡', '霧島'], 2],
+    ]
+    escortshiptype: [
+      [[2], 2], #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@53":
+    description: "5-3 A"
+    maparea: [53]
+    escortship: [
+      [['比叡', '霧島'], 2],
+    ]
+    escortshiptype: [
+      [[2], 2], #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@54":
+    description: "5-4 A"
+    maparea: [54]
+    escortship: [
+      [['比叡', '霧島'], 2],
+    ]
+    escortshiptype: [
+      [[2], 2], #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@55":
+    description: "5-5 A"
+    maparea: [55]
+    escortship: [
+      [['比叡', '霧島'], 2],
+    ]
+    escortshiptype: [
+      [[2], 2], #駆逐2
+    ]
+    required: 1
+    init: 0
+###
+# Yearly (October)
+###
+
+###
+# Yearly (November)
+###
+
+###
+# Yearly (December)
+###
