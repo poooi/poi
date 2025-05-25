@@ -2,6 +2,8 @@ import _ from 'lodash'
 
 const iconIs = (n) => (equip) => equip.api_type[3] === n
 const shipIdIs = (n) => (ship) => ship.api_ship_id === n
+const shipCTypeIs = (n) => (ship) => ship.api_ctype === n
+const isKai = (ship) => ship.api_getmes === '<br>'
 const hasSome = (pred) => (xs) => xs.some(pred)
 const hasMoreThan = (num) => (pred) => (xs) => xs.filter(pred).length >= num
 
@@ -20,14 +22,11 @@ const isTatsutaKai = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isSamuelKaiNi = shipIdIs(920)
 const isFusoClassKaiNi = _.overSome([shipIdIs(411), shipIdIs(412)])
+const isFletcherClassKai = _.overEvery([shipCTypeIs(91), isKai])
 const isFletcherClassOrKai = _.overSome([
   shipIdIs(562), // Johnston
-  shipIdIs(689), // Johnston Kai
   shipIdIs(596), // Fletcher
-  shipIdIs(692), // Fletcher Kai
-  shipIdIs(628), // Fletcher Kai Mod.2
-  shipIdIs(629), // Fletcher Mk.II
-  shipIdIs(726), // Heywood L.E. Kai (Note: no OASW without kai)
+  isFletcherClassKai,
 ])
 
 const isTaiyouClassKai = _.overSome([shipIdIs(380), shipIdIs(381)])

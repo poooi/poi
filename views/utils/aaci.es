@@ -37,7 +37,9 @@ const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid })
 }
 
 const shipIdIs = n => ship => ship.api_ship_id === n
+const equipIdIs = n => equip => equip.api_slotitem_id === n
 const shipIdIsOneOf = (...shipIds) => ship => shipIds.includes(ship.api_ship_id)
+const isKai = (ship) => ship.api_getmes === '<br>'
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
@@ -209,18 +211,18 @@ declareAACI({
   equipsValid: validAll(hasSome(isCDMG), hasAtLeast(isAAGun, 2), hasSome(isAARadar)),
 })
 
-// id 13: <unknown>
-// declareAACI({
-//   name: [],
-//   id: 13,
-//   fixed: 3,
-//   modifier: 1.35,
-//   equipsValid: validAll(
-//     hasSome(isBuiltinHighAngleMount),
-//     hasSome(isCDMG),
-//     hasSome(isAARadar),
-//   ),
-// })
+// id 13: all surface ships
+declareAACI({
+  id: 13,
+  fixed: 4,
+  modifier: 1.35,
+  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  equipsValid: validAll(
+    hasSome(isBuiltinHighAngleMount),
+    hasSome(isCDMG),
+    hasSome(isAARadar),
+  ),
+})
 
 
 const isIsuzuK2 = shipIdIs(141)
@@ -356,7 +358,7 @@ const isIseK2 = shipIdIs(553)
 const isHyuuGaK = shipIdIs(88)
 const isHyuuGaK2 = shipIdIs(554)
 // 274: 12cm30連装噴進砲改二
-const isRocketK2 = equip => equip.api_slotitem_id === 274
+const isRocketK2 = equipIdIs(274)
 
 // id 25: Ise-class Kai
 declareAACI({
@@ -371,7 +373,7 @@ declareAACI({
 const isMusashiK2 = shipIdIs(546)
 const isYamatoK2 = validAny(shipIdIs(911), shipIdIs(916))
 // 275: 10cm連装高角砲改+増設機銃
-const isHighAngleMountGun = equip => equip.api_slotitem_id === 275
+const isHighAngleMountGun = equipIdIs(275)
 
 // id 26: Yamato K2 / Yamato K2 Heavy / Musashi K2
 declareAACI({
@@ -452,13 +454,13 @@ declareAACI({
 // 108 = Town class
 const isRoyalNavyShips = ship => [67, 78, 82, 88, 108].includes(ship.api_ctype)
 // 6 = 金剛型
-const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_aftershipid === '0'
+const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_name.includes('改二')
 // 191: QF 2ポンド8連装ポンポン砲
-const isQF2Pounder = equip => equip.api_slotitem_id === 191
+const isQF2Pounder = equipIdIs(191)
 // 300: 16inch Mk.I三連装砲改+FCR type284
-const is16InchMkITriplePlusFCR = equip => equip.api_slotitem_id === 300
+const is16InchMkITriplePlusFCR = equipIdIs(300)
 // 301: 20連装7inch UP Rocket Launchers
-const is20Tube7InchUpRocketLaunchers = equip => equip.api_slotitem_id === 301
+const is20Tube7InchUpRocketLaunchers = equipIdIs(301)
 
 // id 32: HMS & Kongou-class K2
 declareAACI({
@@ -495,7 +497,7 @@ const isFletcherClassOrKai = shipIdIsOneOf(
   941, 726,
 )
 
-const is5InchSingleGunMountMk30PlusGFCS = equip => equip.api_slotitem_id === 308
+const is5InchSingleGunMountMk30PlusGFCS = equipIdIs(308)
 
 // id 34~37: Johnston
 declareAACI({
@@ -522,7 +524,7 @@ declareAACI({
   ),
 })
 
-const isGFCSMk37 = equip => equip.api_slotitem_id === 307
+const isGFCSMk37 = equipIdIs(307)
 
 declareAACI({
   name: ['Fletcher-class'],
@@ -549,7 +551,7 @@ declareAACI({
 const isAtlantaOrKai = ship => [597, 696].includes(ship.api_ship_id)
 // 362: 5inch連装両用砲(集中配備)
 // 363: GFCS Mk.37+5inch連装両用砲(集中配備)
-const isGFCSMk37And5InchTwinDualPurposeGunMount = equip => equip.api_slotitem_id === 363
+const isGFCSMk37And5InchTwinDualPurposeGunMount = equipIdIs(363)
 const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.api_slotitem_id)
 
 declareAACI({
@@ -607,7 +609,7 @@ declareAACI({
 // id 42~45: Yamato K2 / Yamoto K2 Heavy / Musashi K2
 
 // 464: 10cm連装高角砲群 集中配備
-const is10cmTwinHighAngleGunMountConcentratedDeployment = equip => equip.api_slotitem_id === 464
+const is10cmTwinHighAngleGunMountConcentratedDeployment = equipIdIs(464)
 
 // 142: 15m二重測距儀＋21号電探改二
 // 460: 15m二重測距儀改＋21号電探改二＋熟練射撃指揮所
@@ -670,9 +672,9 @@ declareAACI({
 
 const isHarunaKaiNiB = shipIdIs(593)
 // 502: 35.6cm連装砲改三(ダズル迷彩仕様)
-const is356mmTwinMountKai3Dazzle = equip => equip.api_slotitem_id === 502
+const is356mmTwinMountKai3Dazzle = equipIdIs(502)
 // 503: 35.6cm連装砲改四
-const is356mmTwinMountKai4 = equip => equip.api_slotitem_id === 503
+const is356mmTwinMountKai4 = equipIdIs(503)
 
 declareAACI({
   name: ['榛名改二乙'],
@@ -697,9 +699,9 @@ const isShiratsuyuClassK2 = validAny(
   shipIdIs(975),
 )
 // 529: 12.7cm連装砲C型改三H
-const is127mmTwinMountTypeCKai3H = equip => equip.api_slotitem_id === 529
+const is127mmTwinMountTypeCKai3H = equipIdIs(529)
 // 505: 25mm対空機銃増備
-const is25mmAAGunExtraEmplacement = equip => equip.api_slotitem_id === 505
+const is25mmAAGunExtraEmplacement = equipIdIs(505)
 
 declareAACI({
   name: ['白露改二', '時雨改二', '時雨改三', '村雨改二', '春雨改二'],
@@ -713,6 +715,122 @@ declareAACI({
       hasSome(validAny(is25mmAAGunExtraEmplacement, isAdvancedAARadar)),
     ),
     hasAtLeast(is127mmTwinMountTypeCKai3H, 2),
+  ),
+})
+
+// id 48: Akizuki Class Kai / Kai 2
+
+// 533: 10cm連装高角砲改＋高射装置改
+const is100mmTwinMountKaiAAFD = equipIdIs(533)
+
+declareAACI({
+  name: ['Akizuki Class Kai', 'Akizuki Class Kai 2'],
+  id: 48,
+  fixed: 8,
+  modifier: 1.75,
+  shipValid: validAny(
+    validAll(
+      isAkizukiClass,
+      isKai,
+    )
+  ),
+  equipsValid: validAny(
+    validAll(
+      hasAtLeast(is100mmTwinMountKaiAAFD, 2),
+      isAdvancedAARadar,
+    ),
+  ),
+})
+
+// id 49: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni
+
+const isFujinamiK2 = shipIdIs(981)
+const isFubukiK2 = shipIdIs(426)
+const isShirayukiK2 = shipIdIs(986)
+
+declareAACI({
+  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  id: 49,
+  fixed: 5,
+  modifier: 1.5,
+  shipValid: validAny(
+    isFujinamiK2,
+    isFubukiK2,
+    isShirayukiK2,
+  ),
+  equipsValid: validAny(
+    validAll(
+      hasAtLeast(isBuiltinHighAngleMount, 2),
+      isAdvancedAARadar,
+    ),
+  ),
+})
+
+// id 50: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni / Akizuki Class
+
+const isType94AAFD = equipIdIs(121)
+const is100mmTwinMountKai = equipIdIs(553)
+const is100mmTwinMountKaiOrAAFD = validAny(
+  is100mmTwinMountKaiAAFD,
+  is100mmTwinMountKai,
+)
+
+declareAACI({
+  name: ['藤波改二', '吹雪改二', '白雪改二', 'Akizuki Class'],
+  id: 50,
+  fixed: 7,
+  modifier: 1.5,
+  shipValid: validAny(
+    isFujinamiK2,
+    isFubukiK2,
+    isShirayukiK2,
+    isAkizukiClass,
+  ),
+  equipsValid: validAny(
+    validAll(
+      hasAtLeast(is100mmTwinMountKaiOrAAFD, 2),
+      isAdvancedAARadar,
+      isType94AAFD,
+    ),
+  ),
+})
+
+// id 51~52: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni
+
+declareAACI({
+  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  id: 51,
+  fixed: 5,
+  modifier: 1.35,
+  shipValid: validAny(
+    isFujinamiK2,
+    isFubukiK2,
+    isShirayukiK2,
+  ),
+  equipsValid: validAny(
+    validAll(
+      is100mmTwinMountKaiOrAAFD,
+      isAdvancedAARadar,
+      isAAGun,
+    ),
+  ),
+})
+
+declareAACI({
+  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  id: 52,
+  fixed: 4,
+  modifier: 1.4,
+  shipValid: validAny(
+    isFujinamiK2,
+    isFubukiK2,
+    isShirayukiK2,
+  ),
+  equipsValid: validAny(
+    validAll(
+      hasAtLeast(is100mmTwinMountKai, 2),
+      isType94AAFD,
+    ),
   ),
 })
 
