@@ -1,7 +1,7 @@
-/* global $, getStore */
+/* global getStore */
 
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { connect, Provider } from 'react-redux'
 import { webFrame } from 'electron'
 import * as remote from '@electron/remote'
@@ -104,8 +104,8 @@ class Poi extends Component {
     )
   }
 }
-
-ReactDOM.render(
+const ReactRoot = createRoot(document.getElementById('poi'))
+ReactRoot.render(
   <I18nextProvider i18n={i18next}>
     <Provider store={store}>
       <WindowEnv.Provider
@@ -118,5 +118,4 @@ ReactDOM.render(
       </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,
-  $('#poi'),
 )
