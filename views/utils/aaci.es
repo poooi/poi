@@ -737,7 +737,7 @@ declareAACI({
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKaiAAFD, 2),
-      isAdvancedAARadar,
+      hasSome(isAdvancedAARadar),
     ),
   ),
 })
@@ -761,7 +761,7 @@ declareAACI({
   equipsValid: validAny(
     validAll(
       hasAtLeast(isBuiltinHighAngleMount, 2),
-      isAdvancedAARadar,
+      hasSome(isAdvancedAARadar),
     ),
   ),
 })
@@ -789,8 +789,8 @@ declareAACI({
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKaiOrAAFD, 2),
-      isAdvancedAARadar,
-      isType94AAFD,
+      hasSome(isAdvancedAARadar),
+      hasSome(isType94AAFD),
     ),
   ),
 })
@@ -809,9 +809,9 @@ declareAACI({
   ),
   equipsValid: validAny(
     validAll(
-      is100mmTwinMountKaiOrAAFD,
-      isAdvancedAARadar,
-      isAAGun,
+      hasSome(is100mmTwinMountKaiOrAAFD),
+      hasSome(isAdvancedAARadar),
+      hasSome(isAAGun),
     ),
   ),
 })
@@ -829,7 +829,7 @@ declareAACI({
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKai, 2),
-      isType94AAFD,
+      hasSome(isType94AAFD),
     ),
   ),
 })
