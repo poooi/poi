@@ -937,7 +937,6 @@ for more details see views/redux/quests.es
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
-    fleetlimit: 5
     required: 1
     init: 0
   "battle_boss_win_rank_a@21":
