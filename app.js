@@ -37,6 +37,12 @@ require('./lib/tray')
 require('./lib/screenshot')
 require('./lib/native-theme-helper')
 
+// macOS drag area fix
+if (process.platform === 'darwin') {
+  const electronDragClick = require('electron-drag-click')
+  electronDragClick()
+}
+
 // Disable HA
 if (config.get('poi.misc.disablehwaccel', false)) {
   app.commandLine.appendSwitch('disable-software-rasterizer')
