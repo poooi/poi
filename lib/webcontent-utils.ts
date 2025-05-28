@@ -117,6 +117,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
         minWidth: 200,
         minHeight: 200,
         titleBarStyle: isModernDarwin ? 'hidden' : undefined,
+        titleBarOverlay: isModernDarwin ? {} : undefined,
         autoHideMenuBar: true,
         webPreferences: {
           nodeIntegration: false,
