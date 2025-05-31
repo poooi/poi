@@ -318,7 +318,7 @@ for more details see views/redux/quests.es
       [[7, 11, 18], 2] # 空母2
       [[2], 2] # 駆逐2
     ]
-    required: 1
+    required: 3
     init: 0
 424:
   type: 3
