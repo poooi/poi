@@ -7,18 +7,16 @@ import { Tag, Intent } from '@blueprintjs/core'
 import {
   shipDataSelectorFactory,
   shipEquipDataSelectorFactory,
-  allCVEIdsSelector,
+  // allCVEIdsSelector,
 } from 'views/utils/selectors'
-import { isOASWWith } from 'views/utils/oasw'
+import { isOASW } from 'views/utils/oasw'
 import { withNamespaces } from 'react-i18next'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
 
-const isOASWFuncSelector = createSelector(allCVEIdsSelector, (allCVEIds) => isOASWWith(allCVEIds))
-
 const OASWSelectorFactory = memoize((shipId) =>
   createSelector(
-    [isOASWFuncSelector, shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
-    (isOASW, [_ship = {}, $ship = {}] = [], _equips = []) => {
+    [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
+    ([_ship = {}, $ship = {}] = [], _equips = []) => {
       const ship = { ...$ship, ..._ship }
       const equips = _equips
         .filter(([_equip, $equip, onslot] = []) => !!_equip && !!$equip)

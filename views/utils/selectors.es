@@ -439,21 +439,21 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
   ),
 )
 
-export const allCVEIdsSelector = createSelector(constSelector, (c) =>
-  values(get(c, '$ships'))
-    .filter(
-      (x) =>
-        // our ships
-        x.api_id <= 1500 &&
-        // must be CVL
-        x.api_stype === 7 &&
-        // have ASW stat
-        Array.isArray(x.api_tais) &&
-        // in case Tanaka happens
-        x.api_tais[0] > 0,
-    )
-    .map((x) => x.api_id),
-)
+// export const allCVEIdsSelector = createSelector(constSelector, (c) =>
+//   values(get(c, '$ships'))
+//     .filter(
+//       (x) =>
+//         // our ships
+//         x.api_id <= 1500 &&
+//         // must be CVL
+//         x.api_stype === 7 &&
+//         // have ASW stat
+//         Array.isArray(x.api_tais) &&
+//         // in case Tanaka happens
+//         x.api_tais[0] > 0,
+//     )
+//     .map((x) => x.api_id),
+// )
 
 /*
    returns:
