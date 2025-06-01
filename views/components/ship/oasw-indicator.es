@@ -4,11 +4,7 @@ import { createSelector } from 'reselect'
 import { memoize } from 'lodash'
 import { Tag, Intent } from '@blueprintjs/core'
 
-import {
-  shipDataSelectorFactory,
-  shipEquipDataSelectorFactory,
-  // allCVEIdsSelector,
-} from 'views/utils/selectors'
+import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 import { isOASW } from 'views/utils/oasw'
 import { withNamespaces } from 'react-i18next'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
