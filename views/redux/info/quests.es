@@ -425,7 +425,7 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
   switch (type) {
     // type: practice, practice_win
     case '@@Response/kcsapi/api_req_practice/battle_result': {
-      const deckShipId = get(store, 'battle.result.deckShipId', [])
+      const deckShipId = body.api_ship_id
       const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, store)
       let changed = updateQuestRecord('practice', { shipname, shiptype, shipclass }, 1)
       if (['S', 'A', 'B'].includes(body.api_win_rank)) {
