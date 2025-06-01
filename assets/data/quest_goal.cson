@@ -313,7 +313,6 @@ for more details see views/redux/quests.es
   type: 3
   "practice_win":
     description: "演習勝利"
-    flagshiptype: [7, 11, 18] # 空母
     escortshiptype: [
       [[7, 11, 18], 2] # 空母2
       [[2], 2] # 駆逐2
@@ -1362,7 +1361,7 @@ for more details see views/redux/quests.es
   type: 106
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: ['大和', '武蔵']
+    escortship: [['大和', '武蔵'], 2]
     escortshiptype: [
       [[3], 1] #軽巡1隻
       [[2], 2] #駆逐2隻

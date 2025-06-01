@@ -365,23 +365,15 @@ function limitProgress(count, required, progressFlag, completed) {
 }
 
 function getFleetInfo(deckShipId, store) {
-  const shipname = deckShipId
-    .map((id) => {
-      const shipId = get(store, `info.ships.${id}.api_ship_id`)
-      return get(store, `const.$ships.${shipId}.api_name`, '')
-    })
+  const deckShipAPIShipId = deckShipId.map((id) => get(store, `info.ships.${id}.api_ship_id`, -1))
+  const shipname = deckShipAPIShipId
+    .map((id) => get(store, `const.$ships.${id}.api_name`, ''))
     .filter((name) => name.length > 0)
-  const shiptype = deckShipId
-    .map((id) => {
-      const shipId = get(store, `info.ships.${id}.api_ship_id`)
-      return get(store, `const.$ships.${shipId}.api_stype`, -1)
-    })
+  const shiptype = deckShipAPIShipId
+    .map((id) => get(store, `const.$ships.${id}.api_stype`, -1))
     .filter((id) => id > 0)
-  const shipclass = deckShipId
-    .map((id) => {
-      const shipId = get(store, `info.ships.${id}.api_ship_id`)
-      return get(store, `const.$ships.${shipId}.api_ctype`, -1)
-    })
+  const shipclass = deckShipAPIShipId
+    .map((id) => get(store, `const.$ships.${id}.api_ctype`, -1))
     .filter((id) => id > 0)
   return { shipname, shiptype, shipclass }
 }
@@ -425,7 +417,8 @@ function questTrackingReducer(state, { type, postBody, body, result }, store) {
   switch (type) {
     // type: practice, practice_win
     case '@@Response/kcsapi/api_req_practice/battle_result': {
-      const deckShipId = body.api_ship_id
+      const fleetId = get(store, 'sortie.sortieStatus', []).findIndex((x) => x)
+      const deckShipId = get(store, `info.fleets.${fleetId}.api_ship`, [])
       const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, store)
       let changed = updateQuestRecord('practice', { shipname, shiptype, shipclass }, 1)
       if (['S', 'A', 'B'].includes(body.api_win_rank)) {
