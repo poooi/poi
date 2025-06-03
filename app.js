@@ -326,6 +326,11 @@ app.on('ready', () => {
   if (config.get('poi.devtool.enable', false)) {
     require('./lib/devtool')
   }
+
+  // DNS over HTTPS
+  app.configureHostResolver({
+    enableBuiltInResolver: true,
+  })
 })
 // http basic auth
 app.on('login', (event, webContents, request, authInfo, callback) => {
