@@ -298,7 +298,7 @@ function satisfyShip(goal, options) {
     return false
   }
   if (goal.banshiptype && goal.banshiptype.length > 0) {
-    if (!goal.banshiptype.some((goalType) => options.shiptype.includes(goalType))) {
+    if (goal.banshiptype.some((goalType) => options.shiptype.includes(goalType))) {
       return false
     }
   }

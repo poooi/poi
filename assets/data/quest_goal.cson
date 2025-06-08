@@ -1132,7 +1132,7 @@ for more details see views/redux/quests.es
     maparea: [11]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1] #海防1
+      [[1], 1, true] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
@@ -1143,7 +1143,7 @@ for more details see views/redux/quests.es
     maparea: [12]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1] #海防1
+      [[1], 1, true] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
@@ -1154,7 +1154,7 @@ for more details see views/redux/quests.es
     maparea: [15]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
-      [[1], 1] #海防1
+      [[1], 1, true] #海防1
     ]
     banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
     fleetlimit: 4
