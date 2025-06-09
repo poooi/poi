@@ -285,6 +285,42 @@ for more details see views/redux/quests.es
     slotitemType2: [21] # 21=対空機銃
     required: 6
     init: 0
+676: # 装備開発力の集中整備
+  type: 2
+  fuzzy: true
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 3
+    init: 0
+  "destory_item@副砲":
+    description: "廃棄 - 副砲"
+    slotitemType2: [4] # 4=副砲
+    required: 3
+    init: 0
+  "destory_item@ドラム缶(輸送用)":
+    description: "廃棄 - ドラム缶(輸送用)"
+    slotitemType2: [30] # 30=ドラム缶(輸送用)
+    required: 1
+    init: 0
+677: #継戦支援能力の整備
+  type: 2
+  fuzzy: true
+  "destory_item@大口径主砲":
+    description: "廃棄 - 大口径主砲"
+    slotitemType2: [3] # 3=大口径主砲
+    required: 4
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 2
+    init: 0
+  "destory_item@魚雷":
+    description: "廃棄 - 魚雷"
+    slotitemType2: [5] # 5=魚雷
+    required: 3
+    init: 0
 ###
 # Monthly
 ###
