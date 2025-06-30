@@ -1542,7 +1542,7 @@ for more details see views/redux/quests.es
     ]
     required: 1
     init: 0
-368: #「第三戦隊」第二小隊、演習開始！
+375: #「第三戦隊」第二小隊、演習開始！
   type: 109
   "practice_win_s":
     description: "演習勝利 S"
