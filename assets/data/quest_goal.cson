@@ -350,8 +350,7 @@ for more details see views/redux/quests.es
   "practice_win":
     description: "演習勝利"
     escortshiptype: [
-      [[7, 11, 18], 2] # 空母2
-      [[2], 2] # 駆逐2
+      [[3], 2] # 軽巡2
     ]
     required: 3
     init: 0
