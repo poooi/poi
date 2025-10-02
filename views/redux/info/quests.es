@@ -119,7 +119,7 @@ export const getTanakalendarQuarterMonth = (time) => {
 }
 
 const isDifferentQuarter = (time1, time2) =>
-  !isEqual(getTanakalendarQuarterMonth(time1), getTanakalendarQuarterMonth(time2))
+  !isEqual(getTanakalendarQuarterMonth(time1)[0], getTanakalendarQuarterMonth(time2)[0])
 
 const getTanakalendarYearlyYear = (time, resetMonth) => {
   const y = moment(time).tz(ARMENIA_TIMEZONE).year()
