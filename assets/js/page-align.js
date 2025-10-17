@@ -34,12 +34,7 @@ alignCSS.innerHTML = `html {
 `
 
 window.align = function () {
-  if (
-    location.pathname.includes('kancolle') ||
-    location.pathname.includes('854854') ||
-    location.hostname === 'osapi.dmm.com' ||
-    location.pathname.includes('kcs')
-  ) {
+  if (location.pathname === '/game/kancolle' && location.hostname === 'play.games.dmm.com') {
     document.body.appendChild(alignCSS)
     window.scrollTo(0, 0)
   }
