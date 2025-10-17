@@ -74,6 +74,7 @@
     "classnames": "^2.5.1",
     "create-react-class": "^15.7.0",
     "cson": "^8.4.0",
+    "dom-helpers": "^6.0.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-drag-click": "^1.0.6",
     "electron-log": "^4.4.8",
