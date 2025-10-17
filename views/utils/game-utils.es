@@ -531,10 +531,7 @@ export const getFleetSpeed = (shipsData) => ({
 
 export async function isInGame() {
   try {
-    if (
-      document.querySelector('webview').getURL() ===
-      'http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/'
-    ) {
+    if (document.querySelector('webview').getURL() === 'https://play.games.dmm.com/game/kancolle') {
       return true
     }
 

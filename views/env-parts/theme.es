@@ -190,6 +190,10 @@ export function loadStyle(
 
   setVibrancy(config.get('poi.appearance.vibrant', 0))
 
+  currentWindow.on('focus', () => {
+    setVibrancy(config.get('poi.appearance.vibrant', 0))
+  })
+
   const themeChangeHandler = (path, value) => {
     if (path === 'poi.appearance.theme') {
       loadTheme(value)

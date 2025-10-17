@@ -11,7 +11,7 @@ const defaultConfig = {
       disablenetworkalert: false,
       dmmcookie: false,
       bypassgooglerestriction: false,
-      homepage: 'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
+      homepage: 'https://play.games.dmm.com/game/kancolle',
       networklog: true,
       analytics: true,
       exceptionReporting: true,

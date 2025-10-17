@@ -71,11 +71,7 @@ const KanGameWebview = styled(WebView)`
   windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
   overlayPanel: get(state, 'config.poi.layout.overlay', false),
   bypassGoogleRestriction: get(state, 'config.poi.misc.bypassgooglerestriction', false),
-  homepage: get(
-    state,
-    'config.poi.misc.homepage',
-    'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
-  ),
+  homepage: get(state, 'config.poi.misc.homepage', 'https://play.games.dmm.com/game/kancolle'),
 }))
 export class KanGameWrapper extends Component {
   webview = React.createRef()

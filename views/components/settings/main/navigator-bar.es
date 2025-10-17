@@ -51,10 +51,7 @@ const Control = styled.div`
 export class NavigatorBar extends React.Component {
   constructor() {
     super()
-    config.setDefault(
-      'poi.misc.homepage',
-      'http://www.dmm.com/netgame/social/application/-/detail/=/app_id=854854/',
-    )
+    config.setDefault('poi.misc.homepage', 'https://play.games.dmm.com/game/kancolle')
     this.state = {
       status: 1,
       url: config.get('poi.misc.homepage'),
