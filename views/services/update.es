@@ -126,6 +126,6 @@ const toggleUpdate = (version, log) => {
   toggleModal(title, content, footer)
 }
 
-if (config.get('poi.update.enable', true)) {
+if (config.get('poi.update.enable', false)) {
   setTimeout(checkUpdate, 5000)
 }
