@@ -177,7 +177,7 @@ export function loadStyle(
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
         currentWindow.setBackgroundColor(value === 1 ? '#00000000' : '#000000')
-        currentWindow.setBackgroundMaterial(value === 1 ? 'acrylic' : 'none')
+        currentWindow.setBackgroundMaterial?.(value === 1 ? 'acrylic' : 'none')
       }
     }
     window.dispatchEvent(new Event('resize'))
