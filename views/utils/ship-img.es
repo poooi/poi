@@ -104,7 +104,7 @@ function join(ip, base, version) {
   if (!ip) {
     return base
   }
-  let url = `http://${ip}${base}`
+  let url = `https://${ip}${base}`
   if (version && parseInt(version) > 1) {
     url = `${url}?version=${version}`
   }
