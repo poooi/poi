@@ -6,7 +6,7 @@
 import React, { cloneElement, useContext, useState } from 'react'
 import ReactDOM from 'react-dom'
 import * as ReactBootstrap from 'react-bootstrap'
-import contains from 'dom-helpers/contains'
+import { contains } from 'dom-helpers'
 import { WindowEnv } from '../components/etc/window-env'
 import { includes, debounce } from 'lodash'
 

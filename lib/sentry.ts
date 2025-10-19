@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/electron'
-import { isString, some, get, each, takeRight, split } from 'lodash'
+import { isString, get, each, takeRight, split } from 'lodash'
 import path from 'path'
 
 interface InitOptions {
