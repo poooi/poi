@@ -191,5 +191,8 @@
   "Start testing": "Start testing",
   "connection-test-failure-message": "Your connection seems having issue. Please verify you configuration.",
   "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only.",
-  "AvatarBackground": "Avatar Background Color"
+  "AvatarBackground": "Avatar Background Color",
+  "Custom Certificate Authority": "Custom Certificate Authority",
+  "Delete": "Delete",
+  "custom-certificate-authority-description": "This configuration will take effect after restarting poi. Please make sure you have fully understood the security risks behind it."
 }

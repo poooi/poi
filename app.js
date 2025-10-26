@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const electronRemote = require('@electron/remote/main')
 const path = require('path-extra')
 const fs = require('fs-extra')
+const { X509Certificate, createHash } = require('crypto')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -32,6 +33,7 @@ const config = require('./lib/config')
 const shortcut = require('./lib/shortcut')
 const { warn, error } = require('./lib/utils')
 const dbg = require('./lib/debug')
+const { memoize } = require('lodash')
 require('./lib/updater')
 require('./lib/tray')
 require('./lib/screenshot')
@@ -346,13 +348,48 @@ ipcMain.on('refresh-shortcut', () => {
   shortcut.register()
 })
 
-const { createHash } = require('crypto')
+let caCert
+let caCertError = false
+
+const ensureCACert = () => {
+  if (caCertError || caCert) {
+    return
+  }
+  const customCertificateAuthority = config.get('poi.network.customCertificateAuthority', '')
+  if (customCertificateAuthority) {
+    try {
+      const ca = fs.readFileSync(customCertificateAuthority, 'utf8')
+      caCert = new X509Certificate(ca)
+    } catch (e) {
+      error('CA error', e)
+      caCertError = true
+    }
+  }
+}
+
+const verifyCACert = memoize((data) => {
+  ensureCACert()
+  if (!caCert) {
+    return false
+  }
+  const cert = new X509Certificate(data)
+  const caPublicKey = caCert.publicKey
+  return cert.verify(caPublicKey)
+})
+
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   const trusted = config.get('poi.misc.trustedCerts', [])
-  const hash = createHash('sha256').update(certificate.data).digest('base64')
-  if (trusted.includes(hash)) {
+  const isSignedByCA = verifyCACert(certificate.data)
+
+  if (isSignedByCA) {
     event.preventDefault()
     callback(true)
+  } else {
+    const hash = createHash('sha256').update(certificate.data).digest('base64')
+    if (trusted.includes(hash)) {
+      event.preventDefault()
+      callback(true)
+    }
   }
 })
 
