@@ -31,6 +31,9 @@ alignCSS.innerHTML = `html {
   top: 83px !important;
   border: 0;
 }
+aside {
+  display: none !important;
+}
 `
 
 window.align = function () {
