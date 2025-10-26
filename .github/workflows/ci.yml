@@ -101,5 +101,5 @@ jobs:
 
       - name: Upload to R2
         run: |
-          rclone copy artifacts r2:poi-nightlies/${{ github.run_id }}
-          rclone tree r2:poi-nightlies/${{ github.run_id }}
+          rclone copy artifacts r2:poi-nightlies/${{ github.run_number }}
+          rclone tree r2:poi-nightlies/${{ github.run_number }}
