@@ -2,11 +2,11 @@
 import React, { Component } from 'react'
 import * as remote from '@electron/remote'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { get, memoize } from 'lodash'
 import { ResizableArea } from 'react-resizable-area'
 import classnames from 'classnames'
 import { styled } from 'styled-components'
-import { createHash } from 'crypto'
+import { createHash, X509Certificate } from 'crypto'
 import ReactMarkdown from 'react-remarkable'
 
 import { PoiAlert } from './components/info/alert'
@@ -18,11 +18,42 @@ import { CustomTag } from 'views/components/etc/custom-tag'
 import WebView from 'views/components/etc/webview'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import i18next from 'views/env-parts/i18next'
+import fs from 'fs-extra'
 
 const config = remote.require('./lib/config')
 const ipc = remote.require('./lib/ipc')
+const { error } = remote.require('./lib/utils')
 const poiControlHeight = 30
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
+
+let caCert
+let caCertError = false
+
+const ensureCACert = () => {
+  if (caCertError) {
+    return
+  }
+  const customCertificateAuthority = config.get('poi.network.customCertificateAuthority', '')
+  if (customCertificateAuthority) {
+    try {
+      const ca = fs.readFileSync(customCertificateAuthority, 'utf8')
+      caCert = new X509Certificate(ca)
+    } catch (e) {
+      error('CA error', e)
+      caCertError = true
+    }
+  }
+}
+
+const verifyCACert = memoize((data) => {
+  ensureCACert()
+  if (!caCert) {
+    return false
+  }
+  const cert = new X509Certificate(data)
+  const caPublicKey = caCert.publicKey
+  return cert.verify(caPublicKey)
+})
 
 const PoiInfo = styled(CustomTag)`
   flex: 0 0 ${poiControlHeight}px;
@@ -123,7 +154,11 @@ export class KanGameWrapper extends Component {
   }
 
   handleCertError = (event, url, error, certificate, callback) => {
-    console.warn(event, url, error, certificate)
+    const isSignedByCA = verifyCACert(certificate.data)
+    if (isSignedByCA) {
+      return
+    }
+
     const trusted = config.get('poi.misc.trustedCerts', [])
     const untrusted = config.get('poi.misc.untrustedCerts', [])
     const hash = createHash('sha256').update(certificate.data).digest('base64')
