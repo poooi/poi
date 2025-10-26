@@ -156,15 +156,15 @@ export class KanGameWrapper extends Component {
 
   settrustedCerts = (hash) => {
     const trusted = config.get('poi.misc.trustedCerts', [])
-    trusted.push(hash)
-    config.set('poi.misc.trustedCerts', trusted)
+    const newTrusted = [...trusted, hash]
+    config.set('poi.misc.trustedCerts', newTrusted)
     this.webview.current.reload()
   }
 
   setuntrustedCerts = (hash) => {
     const untrusted = config.get('poi.misc.untrustedCerts', [])
-    untrusted.push(hash)
-    config.set('poi.misc.untrustedCerts', untrusted)
+    const newUntrusted = [...untrusted, hash]
+    config.set('poi.misc.untrustedCerts', newUntrusted)
   }
 
   setProperWindowSize = (webviewWidth, webviewHeight) => {
