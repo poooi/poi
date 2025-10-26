@@ -11,6 +11,7 @@ import { styled } from 'styled-components'
 import FA from 'react-fontawesome'
 
 import { isSubdirectory } from 'views/utils/tools'
+import { FileFilter } from 'electron'
 
 const { dialog } = remote.require('electron')
 
@@ -46,6 +47,7 @@ interface FolderPickerConfigOwnProps {
   exclude?: string[]
   defaultValue?: string
   extraControl?: React.ReactNode
+  filters?: FileFilter[]
 }
 
 type FolderPickerConfigProps = FolderPickerConfigOwnProps
@@ -58,6 +60,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   exclude = [],
   defaultValue,
   extraControl,
+  filters,
 }) => {
   const [locked, setLocked] = useState(false)
 
@@ -124,6 +127,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
       title: label,
       defaultPath,
       properties: isFolder ? ['openDirectory', 'createDirectory'] : ['openFile'],
+      filters,
     })
 
     if (!selection.canceled && size(selection.filePaths)) {
@@ -131,7 +135,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
     }
 
     setLocked(false)
-  }, [locked, isFolder, value, label, setPath])
+  }, [locked, isFolder, value, label, setPath, filters])
 
   const parseBreadcrumb = useCallback(
     (value: string) =>
