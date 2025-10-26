@@ -39,7 +39,7 @@ aside {
 window.align = function () {
   if (
     location.href === 'https://games.dmm.com/detail/kancolle' ||
-    location.hostname == 'accounts.dmm.com'
+    location.hostname === 'accounts.dmm.com'
   ) {
     return
   }
