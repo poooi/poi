@@ -8,9 +8,6 @@ on:
       - '**'
   pull_request:
 
-env:
-  THIS_MONTH: ${{ format('{0:yyyyMM}', github.event.head_commit.timestamp) }}
-
 jobs:
   linux:
     runs-on: ubuntu-latest
@@ -33,7 +30,6 @@ jobs:
           buildType: ${{ matrix.buildType }}
           csc_link: ${{ secrets.CSC_LINK }}
           csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
-          cache_month: ${{ env.THIS_MONTH }}
 
   macos:
     runs-on: macos-latest
@@ -50,7 +46,6 @@ jobs:
           buildType: ${{ matrix.buildType }}
           csc_link: ${{ secrets.CSC_LINK }}
           csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
-          cache_month: ${{ env.THIS_MONTH }}
 
   windows:
     runs-on: windows-latest
@@ -67,7 +62,6 @@ jobs:
           buildType: ${{ matrix.buildType }}
           csc_link: ${{ secrets.CSC_LINK }}
           csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
-          cache_month: ${{ env.THIS_MONTH }}
 
   upload-to-r2:
     name: Upload to Cloudflare R2

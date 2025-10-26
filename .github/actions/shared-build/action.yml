@@ -11,9 +11,6 @@ inputs:
   csc_key_password:
     description: 'Certificate key password'
     required: false
-  cache_month:
-    description: 'Cache key month (yyyyMM format)'
-    required: true
 
 runs:
   using: 'composite'
@@ -23,18 +20,20 @@ runs:
       with:
         node-version-file: '.node-version'
 
-    - name: Get npm cache directory
+    - name: Get npm cache directory and month
       id: npm-cache-dir
       shell: bash
-      run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+      run: |
+        echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+        echo "month=$(date +%Y%m)" >> $GITHUB_OUTPUT
 
     - name: Cache npm dependencies
       uses: actions/cache@v4
       with:
         path: ${{ steps.npm-cache-dir.outputs.dir }}
-        key: ${{ inputs.cache_month }}-npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        key: ${{ steps.npm-cache-dir.outputs.month }}-npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
         restore-keys: |
-          ${{ inputs.cache_month }}-npm-${{ runner.os }}-
+          ${{ steps.npm-cache-dir.outputs.month }}-npm-${{ runner.os }}-
 
     - name: Install dependencies
       shell: bash
