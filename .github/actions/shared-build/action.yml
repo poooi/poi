@@ -57,3 +57,4 @@ runs:
           !dist/mac
           !dist/mac-*
           !dist/win-*-unpacked
+          !dist/builder-debug.yml
