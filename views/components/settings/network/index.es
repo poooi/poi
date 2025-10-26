@@ -11,6 +11,7 @@ import { TextConfig } from 'views/components/settings/components/text'
 
 import { ProxyConfig } from './proxy-config'
 import { ConnectionTest } from './connection-test'
+import { CustomCertificateAuthority } from './custom-certificate-authority'
 
 @withNamespaces(['setting'])
 @connect((state) => ({
@@ -80,6 +81,9 @@ export class NetworkConfig extends Component {
         <ProxiesConfig />
         <Section title={t('setting:Connection test')}>
           <ConnectionTest />
+        </Section>
+        <Section title={t('setting:Custom Certificate Authority')}>
+          <CustomCertificateAuthority />
         </Section>
       </div>
     )

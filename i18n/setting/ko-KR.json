@@ -228,5 +228,8 @@
   "Start testing": "Start testing",
   "connection-test-failure-message": "Your connection seems having issue. Please verify you configuration.",
   "connection-test-description": "The test will try to connect Google.com with your proxy configuration. Its result is for reference only.",
-  "AvatarBackground": "배경색"
+  "AvatarBackground": "배경색",
+  "Custom Certificate Authority": "커스텀 인증서 기관",
+  "Delete": "삭제",
+  "custom-certificate-authority-description": "이 설정은 poi를 재시작하면 적용됩니다. 이 설정의 보안 위험을 완전히 이해하고 있는지 확인해주세요."
 }

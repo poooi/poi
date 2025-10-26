@@ -236,5 +236,8 @@
   "connection-test-description": "Google.com をプロキシサーバ経由で接続するテストです。実際の接続状況と異なる場合があります。",
   "AvatarBackground": "背景色",
   "Key not set": "設定されていません",
-  "Set": "設定"
+  "Set": "設定",
+  "Custom Certificate Authority": "カスタム証明書機関",
+  "Delete": "削除",
+  "custom-certificate-authority-description": "この設定は poi を再起動した後に有効になります。この設定のセキュリティリスクを完全に理解していることを確認してください。"
 }

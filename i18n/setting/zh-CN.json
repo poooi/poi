@@ -236,5 +236,8 @@
   "connection-test-description": "测试会尝试使用代理设置来连接 Google.com，结果仅供参考。",
   "AvatarBackground": "头像背景色",
   "Key not set": "未设置",
-  "Set": "设置"
+  "Set": "设置",
+  "Custom Certificate Authority": "自定义证书机构",
+  "Delete": "删除",
+  "custom-certificate-authority-description": "此配置将在重启 poi 后生效。请确保你完全理解了此配置的安全风险。"
 }
