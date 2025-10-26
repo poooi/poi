@@ -30,7 +30,7 @@ let caCert
 let caCertError = false
 
 const ensureCACert = () => {
-  if (caCertError) {
+  if (caCertError || caCert) {
     return
   }
   const customCertificateAuthority = config.get('poi.network.customCertificateAuthority', '')
