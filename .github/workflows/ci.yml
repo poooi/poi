@@ -72,9 +72,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+          merge-multiple: true
 
       - name: List artifacts
-        run: ls -lh artifacts/*
+        run: ls -lh artifacts/
 
       - name: Generate SHA256 checksums
         working-directory: artifacts

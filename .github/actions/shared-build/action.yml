@@ -50,4 +50,10 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ runner.os }}-${{ inputs.buildType }}
-        path: dist/*
+        path: |
+          dist/*
+          !dist/*-unpacked
+          !dist/linux-*-unpacked
+          !dist/mac
+          !dist/mac-*
+          !dist/win-*-unpacked
