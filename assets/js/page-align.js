@@ -35,6 +35,12 @@ alignCSS.innerHTML = `html {
 
 window.align = function () {
   if (
+    location.href === 'https://games.dmm.com/detail/kancolle' ||
+    location.hostname == 'accounts.dmm.com'
+  ) {
+    return
+  }
+  if (
     location.pathname.includes('kancolle') ||
     location.pathname.includes('854854') ||
     location.hostname === 'osapi.dmm.com' ||
