@@ -237,7 +237,11 @@
   "AvatarBackground": "背景色",
   "Key not set": "設定されていません",
   "Set": "設定",
-  "Custom Certificate Authority": "カスタム証明書機関",
+  "Custom Certificate Authority": "カスタム証明書機関（CA）",
   "Delete": "削除",
-  "custom-certificate-authority-description": "この設定は poi を再起動した後に有効になります。この設定のセキュリティリスクを完全に理解していることを確認してください。"
+  "custom-certificate-authority-description": "この設定は poi を再起動した後に有効になります。この設定のセキュリティリスクを完全に理解していることを確認してください。",
+  "Test": "テスト",
+  "Custom Certificate Authority test": "カスタム証明書機関のテスト",
+  "Certificate is valid": "証明書は有効です。",
+  "Certificate is invalid": "証明書は無効です。"
 }

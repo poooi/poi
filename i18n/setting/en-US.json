@@ -194,5 +194,9 @@
   "AvatarBackground": "Avatar Background Color",
   "Custom Certificate Authority": "Custom Certificate Authority",
   "Delete": "Delete",
-  "custom-certificate-authority-description": "This configuration will take effect after restarting poi. Please make sure you have fully understood the security risks behind it."
+  "custom-certificate-authority-description": "This configuration will take effect after restarting poi. Please make sure you have fully understood the security risks behind it.",
+  "Test": "Test",
+  "Custom Certificate Authority test": "Custom Certificate Authority test",
+  "Certificate is valid": "Certificate is valid.",
+  "Certificate is invalid": "Certificate is invalid."
 }
