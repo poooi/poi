@@ -1,0 +1,110 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - '**'
+  pull_request:
+
+env:
+  THIS_MONTH: ${{ format('{0:yyyyMM}', github.event.head_commit.timestamp) }}
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        buildType: [x64, arm64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm libarchive-tools
+          sudo snap install snapcraft --classic
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        buildType: [x64, arm64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        buildType: [x64]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  upload-to-r2:
+    name: Upload to Cloudflare R2
+    needs: [linux, macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: List artifacts
+        run: ls -lh artifacts/*
+
+      - name: Generate SHA256 checksums
+        working-directory: artifacts
+        run: |
+          find . -type f -exec sha256sum {} \; > sha256sum
+          cat sha256sum
+
+      - name: Install and configure rclone
+        env:
+          ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+        run: |
+          curl https://rclone.org/install.sh | sudo bash
+          rclone config touch
+          rclone config create r2 s3 \
+            provider Cloudflare \
+            access_key_id $ACCESS_KEY_ID \
+            secret_access_key $SECRET_ACCESS_KEY \
+            endpoint $ENDPOINT \
+            acl private \
+            --non-interactive
+
+      - name: Upload to R2
+        run: |
+          rclone copy artifacts r2:poi-nightlies/${{ github.run_id }}
+          rclone tree r2:poi-nightlies/${{ github.run_id }}

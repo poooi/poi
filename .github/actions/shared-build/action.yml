@@ -1,0 +1,54 @@
+name: 'Shared Build Steps'
+description: 'Common build steps for poi project'
+
+inputs:
+  buildType:
+    description: 'Build type (x64, arm64, full)'
+    required: true
+  csc_link:
+    description: 'Certificate signing link'
+    required: false
+  csc_key_password:
+    description: 'Certificate key password'
+    required: false
+  cache_month:
+    description: 'Cache key month (yyyyMM format)'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: '.node-version'
+
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      shell: bash
+      run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ inputs.cache_month }}-npm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ inputs.cache_month }}-npm-${{ runner.os }}-
+
+    - name: Install dependencies
+      shell: bash
+      run: npm ci
+
+    - name: Build ${{ inputs.buildType }}
+      shell: bash
+      run: npm run build:${{ inputs.buildType }}
+      env:
+        CSC_LINK: ${{ inputs.csc_link }}
+        CSC_KEY_PASSWORD: ${{ inputs.csc_key_password }}
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ runner.os }}-${{ inputs.buildType }}
+        path: dist/*

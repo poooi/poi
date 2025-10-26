@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  THIS_MONTH: ${{ format('{0:yyyyMM}', github.event.head_commit.timestamp) }}
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        buildType: [full]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libopenjp2-tools rpm libarchive-tools
+          sudo snap install snapcraft --classic
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        buildType: [full]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        buildType: [full]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run shared build steps
+        uses: ./.github/actions/shared-build
+        with:
+          buildType: ${{ matrix.buildType }}
+          csc_link: ${{ secrets.CSC_LINK }}
+          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          cache_month: ${{ env.THIS_MONTH }}
+
+  create-release:
+    name: Create GitHub Release
+    needs: [linux, macos, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "${{ github.ref_name }}" \
+            --generate-notes \
+            artifacts/*
