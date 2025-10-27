@@ -32,8 +32,16 @@ document.addEventListener('DOMContentLoaded', (e) => {
       location.href = config.getDefault('poi.misc.homepage')
     }
   }
-  if (config.get('poi.misc.disablenetworkalert', false) && window.DMM) {
-    window.DMM.netgame.reloadDialog = function () {}
+  if (
+    config.get('poi.misc.disablenetworkalert', false) &&
+    (window.location.toString().includes('https://play.games.dmm.com/game/kancolle') ||
+      [...document.querySelectorAll('link')].some((l) => l.href.includes('zodios')))
+  ) {
+    window.confirmBackup = window.confirm
+    window.confirm = () => {}
+    if (window.DMM?.netgame?.reloadDialog) {
+      window.DMM.netgame.reloadDialog = () => {}
+    }
   }
 })
 
