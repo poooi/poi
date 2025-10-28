@@ -1,81 +1,81 @@
 {
-	"203.104.209.71": {
+	"w01y.kancolle-server.com": {
 		"num": 1,
 		"name": "横須賀鎮守府"
 	},
-	"203.104.209.87": {
+	"w02k.kancolle-server.com": {
 		"num": 2,
 		"name": "呉鎮守府"
 	},
-	"125.6.184.215": {
+	"w03s.kancolle-server.com": {
 		"num": 3,
 		"name": "佐世保鎮守府"
 	},
-	"203.104.209.183": {
+	"w04m.kancolle-server.com": {
 		"num": 4,
 		"name": "舞鶴鎮守府"
 	},
-	"203.104.209.150": {
+	"w05o.kancolle-server.com": {
 		"num": 5,
 		"name": "大湊警備府"
 	},
-	"203.104.209.134": {
+	"w06t.kancolle-server.com": {
 		"num": 6,
 		"name": "トラック泊地"
 	},
-	"203.104.209.167": {
+	"w07l.kancolle-server.com": {
 		"num": 7,
 		"name": "リンガ泊地"
 	},
-	"203.104.248.135": {
+	"w08r.kancolle-server.com": {
 		"num": 8,
 		"name": "ラバウル基地"
 	},
-	"125.6.189.7": {
+	"w09s.kancolle-server.com": {
 		"num": 9,
 		"name": "ショートランド泊地"
 	},
-	"125.6.189.39": {
+	"w10b.kancolle-server.com": {
 		"num": 10,
 		"name": "ブイン基地"
 	},
-	"125.6.189.71": {
+	"w11t.kancolle-server.com": {
 		"num": 11,
 		"name": "タウイタウイ泊地"
 	},
-	"125.6.189.103": {
+	"w12p.kancolle-server.com": {
 		"num": 12,
 		"name": "パラオ泊地"
 	},
-	"125.6.189.135": {
+	"w13b.kancolle-server.com": {
 		"num": 13,
 		"name": "ブルネイ泊地"
 	},
-	"125.6.189.167": {
+	"w14h.kancolle-server.com": {
 		"num": 14,
 		"name": "単冠湾泊地"
 	},
-	"125.6.189.215": {
+	"w15p.kancolle-server.com": {
 		"num": 15,
 		"name": "幌筵泊地"
 	},
-	"125.6.189.247": {
+	"w16s.kancolle-server.com": {
 		"num": 16,
 		"name": "宿毛湾泊地"
 	},
-	"203.104.209.23": {
+	"w17k.kancolle-server.com": {
 		"num": 17,
 		"name": "鹿屋基地"
 	},
-	"203.104.209.39": {
+	"w18i.kancolle-server.com": {
 		"num": 18,
 		"name": "岩川基地"
 	},
-	"203.104.209.55": {
+	"w19s.kancolle-server.com": {
 		"num": 19,
 		"name": "佐伯湾泊地"
 	},
-	"203.104.209.102": {
+	"w20h.kancolle-server.com": {
 		"num": 20,
 		"name": "柱島泊地"
 	}

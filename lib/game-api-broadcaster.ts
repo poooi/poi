@@ -2,7 +2,7 @@ import EventEmitter from 'events'
 import querystring from 'querystring'
 import fs from 'fs-extra'
 import path from 'path'
-import URL from 'url'
+import { URL } from 'url'
 
 type RequestOrigin = string | undefined
 type PathName = string
@@ -91,7 +91,7 @@ class GameAPIBroadcaster extends EventEmitter {
   private updateKanColleServer = (requestInfo: RequestInfo) => {
     const [, pathName, reqUrl] = requestInfo
     if (this.isKancolleGameApi(pathName)) {
-      const { hostname } = URL.parse(reqUrl)
+      const { hostname } = new URL(reqUrl)
       if (hostname) {
         if (this.serverList[hostname]) {
           this.serverInfo = {
