@@ -101,7 +101,7 @@
     "os-name": "^4.0.1",
     "pangu": "^4.0.7",
     "path-extra": "^4.3.0",
-    "poi-asset-contributor-data": "^1.1.3",
+    "poi-asset-contributor-data": "^1.2.1",
     "poi-asset-themes": "^4.6.0",
     "poi-lib-battle": "^2.20.0",
     "polished": "^4.2.2",
