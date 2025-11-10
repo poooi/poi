@@ -9,6 +9,14 @@ mapname: [
   "ナルヴィク駐留艦隊"
   "イギリス本国艦隊"
   "イギリス機動部隊"
+  "欧州遠征収容艦隊"
+  "拡張第三十一戦隊"
+  "機動部隊"
+  "礼号作戦部隊"
+  "横須賀防備戦隊"
+  "連合艦隊"
+  "第百四戦隊"
+  "決戦艦隊"
 ]
 color: [
   "#d1d1d1"
@@ -17,6 +25,14 @@ color: [
   "#cbb6f6"
   "#49bfc7"
   "#f59e2b"
+  "#c2b9ad"
+  "#e199be"
+  "#b0f75f"
+  "#fee75d"
+  "#41c5f7"
+  "#58f97d"
+  "#57a5ff"
+  "#4ebc7b"
 ]
 fleetname:
   "zh-CN": [
@@ -26,6 +42,14 @@ fleetname:
     "纳尔维克驻留舰队"
     "英国本国舰队"
     "英国机动部队"
+    "欧洲远征收容舰队"
+    "扩张第三十一战队"
+    "机动部队"
+    "礼号作战部队"
+    "横须贺防备战队"
+    "连合舰队"
+    "第百四战队"
+    "决战舰队"
   ]
   "zh-TW": [
     "改R4計畫艦隊"
@@ -34,6 +58,14 @@ fleetname:
     "納爾維克駐留艦隊"
     "英國本國艦隊"
     "英國機動部隊"
+    "歐洲遠征收容艦隊"
+    "擴張第三十一戰隊"
+    "機動部隊"
+    "禮號作戰部隊"
+    "橫須賀防備戰隊"
+    "連合艦隊"
+    "第百四戰隊"
+    "決戰艦隊"
   ]
   "ja-JP": [
     "改R4計画艦隊"
@@ -42,6 +74,14 @@ fleetname:
     "ナルヴィク駐留艦隊"
     "イギリス本国艦隊"
     "イギリス機動部隊"
+    "欧州遠征収容艦隊"
+    "拡張第三十一戦隊"
+    "機動部隊"
+    "礼号作戦部隊"
+    "横須賀防備戦隊"
+    "連合艦隊"
+    "第百四戦隊"
+    "決戦艦隊"
   ]
   "en-US": [
     "Plan R4 Kai Fleet"
@@ -50,4 +90,12 @@ fleetname:
     "Narvik Garrison Fleet"
     "British Home Fleet"
     "British Carrier Task Force"
+    "European Expeditionary Fleet"
+    "Expanded 31st Squadron"
+    "Carrier Task Force"
+    "Operation Rei-go Fleet"
+    "Yokosuka Defense Squadron"
+    "Combined Fleet"
+    "104th Squadron"
+    "Decisive Battle Fleet"
   ]
