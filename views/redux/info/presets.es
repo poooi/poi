@@ -44,25 +44,22 @@ const reducer = (state = initState, action) => {
       }
 
       const newDeck = {...state.api_deck}
-      if (vFrom && vTo) {
-        // both
-        newDeck[api_preset_from] = vTo
-        newDeck[api_preset_to] = vFrom
-      } else if (vFrom) {
-        delete newDeck[api_preset_from]
-        newDeck[api_preset_to] = vFrom
-      } else {
-        // vTo has value (this should usually not happen due to UI restriction)
-        delete newDeck[api_preset_to]
-        newDeck[api_preset_from] = vTo
+
+      if (vFrom) delete newDeck[api_preset_from]
+      if (vTo) delete newDeck[api_preset_to]
+
+      if (vFrom) {
+         newDeck[api_preset_to] = {
+          ...vFrom,
+           api_preset_no: parseInt(api_preset_to, 10),
+        }
       }
 
-      // fix api_preset_no consistency post-swap.
-      if (vFrom) {
-        vFrom.api_preset_no = parseInt(api_preset_to, 10)
-      }
       if (vTo) {
-        vTo.api_preset_no = parseInt(api_preset_from, 10)
+        newDeck[api_preset_from] =  {
+          ...vTo,
+          api_preset_no: parseInt(api_preset_from, 10),
+        }
       }
 
       return {...state, api_deck: newDeck}
