@@ -327,7 +327,7 @@ for more details see views/redux/quests.es
 256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
   type: 3
   "battle_boss_win_rank_s":
-    description: "6-3 S"
+    description: "6-1 S"
     maparea: [61]
     required: 3
     init: 0
