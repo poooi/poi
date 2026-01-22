@@ -769,6 +769,18 @@ export function reducer(
   action: QuestAction,
   store?: Store,
 ): QuestsState {
+  // TODO(rtk-migration): Migrate this reducer to Redux Toolkit (createSlice + extraReducers).
+  // Blockers/notes:
+  // - This file relies on the legacy reducer signature `reducer(state, action, store)` and
+  //   reads cross-slice/root state via the `store` arg (ships/fleets/equips/const/sortie/battle)
+  //   for quest progress inference (see questTrackingReducer/getFleetInfo/destroyitem2/etc).
+  //   RTK slice reducers only receive (state, action), so these cross-slice reads must move to
+  //   middleware/listener logic, or be replaced by actions carrying the required context.
+  // - Some handled actions are internal to poi (e.g. @@BattleResult, QUESTS_REFRESH_DAY) and
+  //   need proper action creators to be used with builder.addCase(...).
+  // - saveQuestTracking() currently persists via a store subscriber + window.getStore().
+  //   For an RTK migration we likely want a dedicated persistence middleware/listener to keep
+  //   side effects out of observers and make behavior/testability explicit.
   const { type, postBody, body } = action
   switch (type) {
     //== Initialization. ==
