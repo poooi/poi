@@ -952,11 +952,7 @@ function processQuestRecords(
 ): ProcessedRecords {
   // Deep clone to avoid mutating redux state objects from a store subscriber.
   // This matches the legacy behavior where only the serialized file copy is updated.
-  const structuredCloneFn = (globalThis as unknown as { structuredClone?: <T>(value: T) => T })
-    .structuredClone
-  const newRecords = (
-    structuredCloneFn ? structuredCloneFn(records) : JSON.parse(JSON.stringify(records))
-  ) as Record<string, QuestRecord & { count?: number; required?: number; active?: boolean }>
+  const newRecords = structuredClone(records)
   forEach(newRecords, (record, recordId) => {
     if (!record || typeof record !== 'object') return
     const [count, required] = arraySum(
