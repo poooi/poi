@@ -5,6 +5,7 @@ This document provides instructions and context for AI agents working on the poi
 ## Repository Overview
 
 poi is an Electron-based game assistant for Kantai Collection (KanColle). It uses:
+
 - **React** for UI components
 - **Redux** with **@reduxjs/toolkit** for state management
 - **TypeScript** for type safety
@@ -25,6 +26,7 @@ poi is an Electron-based game assistant for Kantai Collection (KanColle). It use
 ### Test Location
 
 Tests are located in `__tests__` directories adjacent to the code being tested:
+
 - `/views/redux/info/__tests__/` - Tests for info reducers
 - Test files use `.spec.ts` or `.spec.es` extension
 
@@ -33,6 +35,7 @@ Tests are located in `__tests__` directories adjacent to the code being tested:
 ### File Extensions
 
 The codebase uses multiple file extensions:
+
 - `.ts` - TypeScript files (preferred for new code)
 - `.tsx` - TypeScript React components
 - `.es` - ES6 JavaScript files (legacy, being migrated)
@@ -91,6 +94,7 @@ API action creators are defined in `/views/redux/actions.ts`.
 ### kcsapi Package
 
 The `kcsapi` package provides TypeScript types for the game API:
+
 - Request types: `API*Request` (e.g., `APIGetMemberDeckRequest`)
 - Response types: `API*Response` (e.g., `APIGetMemberDeckResponse`)
 
@@ -113,9 +117,14 @@ export const createAPIExampleResponseAction = createAction<
 >('@@Response/kcsapi/api_path/endpoint')
 ```
 
+### Payload Shape Notes
+
+- Some endpoints return arrays even if `kcsapi` exports an item type (e.g. `api_get_member/ndock` is `APIGetMemberNdockResponse[]` in practice). Prefer matching the real response shape when typing `GameResponsePayload`.
+
 ### Finding Available Types
 
 To see available types from kcsapi:
+
 ```bash
 cat node_modules/kcsapi/index.ts
 ```
@@ -141,6 +150,7 @@ export interface APIReqHenseiPresetOrderChangeResponse {
 ### Currently Missing from kcsapi
 
 These API endpoints are used but not typed in the kcsapi package:
+
 1. `@@Response/kcsapi/api_req_hensei/preset_order_change`
 2. `@@Response/kcsapi/api_req_member/updatedeckname`
 3. `@@Response/kcsapi/api_req_air_corps/change_name`
@@ -172,7 +182,9 @@ describe('reducer name', () => {
   })
 
   it('should handle specific action', () => {
-    const body = { /* mock response */ }
+    const body = {
+      /* mock response */
+    }
     const result = reducer(initialState, {
       type: '@@Response/kcsapi/api_path/endpoint',
       body,
@@ -182,9 +194,19 @@ describe('reducer name', () => {
 })
 ```
 
+### RTK Slice Tests
+
+- If reducers are migrated to RTK `createSlice` with `extraReducers(builder.addCase(actionCreator, ...))`, tests should dispatch the real action creator from `views/redux/actions.ts` (not raw `{ type: '...' }` objects), since `addCase` matches on the action creator.
+
+### Response-Saver Fixtures
+
+- Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
+- Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
+
 ### Mocking External Dependencies
 
 For tests that require electron/remote:
+
 ```typescript
 jest.mock('@electron/remote', () => ({ require }))
 ```
@@ -221,6 +243,7 @@ Located in `/views/utils/tools.ts`:
 ## Redux Store Structure
 
 The main store structure under `info`:
+
 - `basic` - Admiral basic info
 - `ships` - Ship roster
 - `fleets` - Fleet compositions

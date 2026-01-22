@@ -1,6 +1,23 @@
-import { map, get } from 'lodash'
+import { map } from 'lodash'
 
 import { compareUpdate } from 'views/utils/tools'
+import { createSlice } from '@reduxjs/toolkit'
+import {
+  createAPIPortPortResponseAction,
+  createAPIGetMemberMaterialResponseAction,
+  createAPIReqHokyuChargeResponseAction,
+  createAPIReqKousyouDestroyshipResponseAction,
+  createAPIReqKousyouCreateitemResponseAction,
+  createAPIReqKousyouRemodelSlotResponseAction,
+  createAPIReqKousyouCreateshipResponseAction,
+  createAPIReqKousyouCreateShipSpeedChangeResponseAction,
+  createAPIReqKousyouDestroyitem2ResponseAction,
+  createAPIReqNyukyoStartResponseAction,
+  createAPIReqNyukyoSpeedchangeResponseAction,
+  createAPIReqAirCorpsSetPlaneResponseAction,
+  createAPIReqAirCorpsSupplyResponseAction,
+  createInfoResourcesApplyDeltaAction,
+} from '../actions'
 
 // FORMAT
 // 0: <Fuel>
@@ -14,38 +31,6 @@ import { compareUpdate } from 'views/utils/tools'
 
 export type ResourcesState = number[]
 
-interface Action {
-  type: string
-  body?: {
-    api_material?: { api_value: number }[] | number[]
-    api_after_material?: number[]
-    api_get_material?: number[]
-    api_after_bauxite?: number
-    api_after_fuel?: number
-  }
-  postBody?: {
-    api_highspeed?: string | number
-    api_item1?: string | number
-    api_item2?: string | number
-    api_item3?: string | number
-    api_item4?: string | number
-    api_item5?: string | number
-    api_kdock_id?: string | number
-    api_ship_id?: string | number
-  }
-}
-
-interface Store {
-  info?: {
-    constructions?: { api_item1?: number }[]
-    ships?: {
-      [key: string]: {
-        api_ndock_item?: [number, number]
-      }
-    }
-  }
-}
-
 function addArrayResources(state: ResourcesState, arr: number[]): ResourcesState {
   const newState = state.slice()
   arr.forEach((n, i) => {
@@ -54,71 +39,91 @@ function addArrayResources(state: ResourcesState, arr: number[]): ResourcesState
   return newState
 }
 
+const resourcesSlice = createSlice({
+  name: 'resources',
+  initialState: [] as ResourcesState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
+        return compareUpdate(state, map(payload.body.api_material, 'api_value'))
+      })
+      .addCase(createAPIGetMemberMaterialResponseAction, (state, { payload }) => {
+        return compareUpdate(
+          state,
+          map(payload.body as unknown as { api_value: number }[], 'api_value'),
+        )
+      })
+      .addCase(createAPIReqHokyuChargeResponseAction, (state, { payload }) => {
+        return compareUpdate(state, payload.body.api_material as unknown as number[])
+      })
+      .addCase(createAPIReqKousyouDestroyshipResponseAction, (state, { payload }) => {
+        // These apis give only 4 resources
+        return compareUpdate(state, payload.body.api_material as unknown as number[])
+      })
+      .addCase(createAPIReqKousyouCreateitemResponseAction, (state, { payload }) => {
+        return compareUpdate(state, payload.body.api_material as unknown as number[])
+      })
+      .addCase(createAPIReqKousyouRemodelSlotResponseAction, (state, { payload }) => {
+        return compareUpdate(state, payload.body.api_after_material as unknown as number[])
+      })
+      .addCase(createAPIReqKousyouCreateshipResponseAction, (state, { payload }) => {
+        const newState = state.slice()
+        if (parseInt(String(payload.postBody.api_highspeed)) > 0) {
+          const lsc = parseInt(String(payload.postBody.api_item1)) > 1000
+          newState[4] -= lsc ? 10 : 1
+        }
+        newState[0] -= parseInt(String(payload.postBody.api_item1))
+        newState[1] -= parseInt(String(payload.postBody.api_item2))
+        newState[2] -= parseInt(String(payload.postBody.api_item3))
+        newState[3] -= parseInt(String(payload.postBody.api_item4))
+        newState[6] -= parseInt(String(payload.postBody.api_item5))
+        return newState
+      })
+      .addCase(createAPIReqKousyouDestroyitem2ResponseAction, (state, { payload }) => {
+        return addArrayResources(state, payload.body.api_get_material as unknown as number[])
+      })
+      .addCase(createAPIReqNyukyoSpeedchangeResponseAction, (state) => {
+        const newState = state.slice()
+        newState[5] -= 1
+        return newState
+      })
+      .addCase(createAPIReqAirCorpsSetPlaneResponseAction, (state, { payload }) => {
+        const afterBauxite = (payload.body as unknown as { api_after_bauxite?: number })
+          .api_after_bauxite
+        if (!afterBauxite) return state
+        const newState = state.slice()
+        newState[3] = afterBauxite
+        return newState
+      })
+      .addCase(createAPIReqAirCorpsSupplyResponseAction, (state, { payload }) => {
+        const newState = state.slice()
+        newState[0] = Number(
+          (payload.body as unknown as { api_after_fuel?: number }).api_after_fuel,
+        )
+        newState[3] = Number(
+          (payload.body as unknown as { api_after_bauxite?: number }).api_after_bauxite,
+        )
+        return newState
+      })
+  },
+})
+
 export function reducer(
   state: ResourcesState = [],
-  { type, body, postBody }: Action,
-  store?: Store,
+  action: { type: string; payload?: unknown },
 ): ResourcesState {
-  switch (type) {
-    case '@@Response/kcsapi/api_port/port':
-      return compareUpdate(state, map(body.api_material, 'api_value'))
-    case '@@Response/kcsapi/api_get_member/material':
-      return compareUpdate(state, map(body, 'api_value'))
-    case '@@Response/kcsapi/api_req_hokyu/charge':
-    case '@@Response/kcsapi/api_req_kousyou/destroyship':
-      // These apis give only 4 resources
-      return compareUpdate(state, body.api_material)
-    case '@@Response/kcsapi/api_req_kousyou/createitem':
-      return compareUpdate(state, body.api_material)
-    case '@@Response/kcsapi/api_req_kousyou/remodel_slot':
-      return compareUpdate(state, body.api_after_material)
-    case '@@Response/kcsapi/api_req_kousyou/createship': {
-      const newState = state.slice()
-      if (parseInt(postBody.api_highspeed) > 0) {
-        const lsc = parseInt(postBody.api_item1) > 1000
-        newState[4] -= lsc ? 10 : 1
-      }
-      newState[0] -= parseInt(postBody.api_item1)
-      newState[1] -= parseInt(postBody.api_item2)
-      newState[2] -= parseInt(postBody.api_item3)
-      newState[3] -= parseInt(postBody.api_item4)
-      newState[6] -= parseInt(postBody.api_item5)
-      return newState
-    }
-    case '@@Response/kcsapi/api_req_kousyou/createship_speedchange': {
-      // There's no large ship construction flag in kdock, judge by resources
-      const item1 = get(store, `info.constructions.${postBody.api_kdock_id - 1}.api_item1`)
-      const lsc = item1 > 1000
-      const newState = state.slice()
-      newState[4] -= lsc ? 10 : 1
-      return newState
-    }
-    case '@@Response/kcsapi/api_req_kousyou/destroyitem2':
-      return addArrayResources(state, body.api_get_material)
-    case '@@Response/kcsapi/api_req_nyukyo/start': {
-      const [fuel, steel] = get(store, `info.ships.${postBody.api_ship_id}.api_ndock_item`)
-      state = state.slice()
-      state[0] -= fuel
-      state[2] -= steel
-      if (postBody.api_highspeed == 1) state[5] -= 1
+  switch (action.type) {
+    // These cross-slice dependent cases are handled by resourcesCrossSliceMiddleware.
+    // Keep the type here so the old behavior isn't accidentally reintroduced.
+    case createAPIReqKousyouCreateShipSpeedChangeResponseAction.type:
+    case createAPIReqNyukyoStartResponseAction.type:
       return state
+    case createInfoResourcesApplyDeltaAction.type: {
+      const delta = (action as ReturnType<typeof createInfoResourcesApplyDeltaAction>).payload.delta
+      return addArrayResources(state, delta)
     }
-    case '@@Response/kcsapi/api_req_nyukyo/speedchange':
-      state = state.slice()
-      state[5] -= 1
-      return state
-    case '@@Response/kcsapi/api_req_air_corps/set_plane':
-      if (body.api_after_bauxite) {
-        state = state.slice()
-        state[3] = body.api_after_bauxite
-        return state
-      }
-      break
-    case '@@Response/kcsapi/api_req_air_corps/supply':
-      state = state.slice()
-      state[0] = body.api_after_fuel
-      state[3] = body.api_after_bauxite
-      return state
+    default:
+      return resourcesSlice.reducer(state, action as never)
   }
-  return state
 }

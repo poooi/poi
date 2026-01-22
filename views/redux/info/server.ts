@@ -21,11 +21,5 @@ const initState: ServerState = {
   name: null,
 }
 
-export const reducer = (state: ServerState = initState, action: Action): ServerState => {
-  if (action.type === '@@ServerReady') {
-    const { serverInfo } = action as ServerReadyAction
-    return serverInfo
-  }
-
-  return state
-}
+export const reducer = (state: ServerState = initState, action: Action): ServerState =>
+  action.type === '@@ServerReady' ? (action as ServerReadyAction).serverInfo : state

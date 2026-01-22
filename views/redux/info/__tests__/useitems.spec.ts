@@ -1,3 +1,8 @@
+import {
+  createAPIGetMemberRequireInfoAction,
+  createAPIGetMemberUseitemResponseAction,
+} from 'views/redux/actions'
+
 import { reducer, UseItemsState } from '../useitems'
 
 describe('useitems reducer', () => {
@@ -20,7 +25,16 @@ describe('useitems reducer', () => {
         { api_id: 2, api_count: 20 },
       ],
     }
-    const result = reducer({}, { type: '@@Response/kcsapi/api_get_member/require_info', body })
+    const result = reducer(
+      {},
+      createAPIGetMemberRequireInfoAction({
+        method: 'POST',
+        path: '/kcsapi/api_get_member/require_info',
+        body: body as never,
+        postBody: {} as never,
+        time: 0,
+      }),
+    )
     expect(result).toEqual({
       '1': { api_id: 1, api_count: 10 },
       '2': { api_id: 2, api_count: 20 },
@@ -32,7 +46,16 @@ describe('useitems reducer', () => {
       { api_id: 1, api_count: 15 },
       { api_id: 3, api_count: 5 },
     ]
-    const result = reducer({}, { type: '@@Response/kcsapi/api_get_member/useitem', body })
+    const result = reducer(
+      {},
+      createAPIGetMemberUseitemResponseAction({
+        method: 'POST',
+        path: '/kcsapi/api_get_member/useitem',
+        body: body as never,
+        postBody: {} as never,
+        time: 0,
+      }),
+    )
     expect(result).toEqual({
       '1': { api_id: 1, api_count: 15 },
       '3': { api_id: 3, api_count: 5 },

@@ -1,3 +1,10 @@
+import {
+  createAPIPortPortResponseAction,
+  createAPIReqHenseiChangeResponseAction,
+  createAPIReqMemberUpdatedecknameResponseAction,
+} from 'views/redux/actions'
+import apiPortPortFixture from './__fixtures__/api_port_port.json'
+
 import { reducer, FleetsState, Fleet } from '../fleets'
 
 describe('fleets reducer', () => {
@@ -18,16 +25,8 @@ describe('fleets reducer', () => {
   })
 
   it('should handle api_port/port', () => {
-    const body = {
-      api_deck_port: [
-        createFleet(1, [101, 102, -1, -1, -1, -1]),
-        createFleet(2, [201, -1, -1, -1, -1, -1]),
-      ],
-    }
-    const result = reducer([], { type: '@@Response/kcsapi/api_port/port', body })
-    expect(result).toHaveLength(2)
-    expect(result[0].api_ship).toEqual([101, 102, -1, -1, -1, -1])
-    expect(result[1].api_ship).toEqual([201, -1, -1, -1, -1, -1])
+    const result = reducer([], createAPIPortPortResponseAction(apiPortPortFixture as never))
+    expect(result).toMatchSnapshot()
   })
 
   it('should handle api_req_member/updatedeckname', () => {
@@ -36,10 +35,19 @@ describe('fleets reducer', () => {
       api_deck_id: '1',
       api_name: 'New Fleet Name',
     }
-    const result = reducer(initialState, {
-      type: '@@Response/kcsapi/api_req_member/updatedeckname',
-      postBody,
-    })
+    const result = reducer(
+      initialState,
+      createAPIReqMemberUpdatedecknameResponseAction({
+        method: 'POST',
+        path: '/kcsapi/api_req_member/updatedeckname',
+        body: {
+          api_result: 1,
+          api_result_msg: 'success',
+        },
+        postBody: postBody as never,
+        time: 0,
+      }),
+    )
     expect(result[0].api_name).toBe('New Fleet Name')
     expect(result[1].api_name).toBe('Fleet 2')
   })
@@ -51,10 +59,19 @@ describe('fleets reducer', () => {
       api_ship_idx: '1',
       api_ship_id: '-1',
     }
-    const result = reducer(initialState, {
-      type: '@@Response/kcsapi/api_req_hensei/change',
-      postBody,
-    })
+    const result = reducer(
+      initialState,
+      createAPIReqHenseiChangeResponseAction({
+        method: 'POST',
+        path: '/kcsapi/api_req_hensei/change',
+        body: {
+          api_result: 1,
+          api_result_msg: 'success',
+        },
+        postBody: postBody as never,
+        time: 0,
+      }),
+    )
     // After removing ship at position 1, ships should shift
     expect(result[0].api_ship).toEqual([101, 103, -1, -1, -1, -1])
   })

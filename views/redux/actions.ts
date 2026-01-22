@@ -130,6 +130,12 @@ interface ConfigAction {
 
 export const createConfigAction = createAction<ConfigAction>('@@Config')
 
+export const createInfoResourcesApplyDeltaAction = createAction<{ delta: number[] }>(
+  '@@info.resources@ApplyDelta',
+)
+
+export type InfoResourcesApplyDeltaAction = ReturnType<typeof createInfoResourcesApplyDeltaAction>
+
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')

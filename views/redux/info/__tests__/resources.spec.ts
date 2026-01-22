@@ -1,3 +1,10 @@
+import {
+  createAPIPortPortResponseAction,
+  createAPIGetMemberMaterialResponseAction,
+  createAPIReqNyukyoSpeedchangeResponseAction,
+} from 'views/redux/actions'
+import apiPortPortFixture from './__fixtures__/api_port_port.json'
+
 import { reducer, ResourcesState } from '../resources'
 
 describe('resources reducer', () => {
@@ -12,20 +19,8 @@ describe('resources reducer', () => {
   })
 
   it('should handle api_port/port', () => {
-    const body = {
-      api_material: [
-        { api_value: 10000 },
-        { api_value: 10000 },
-        { api_value: 10000 },
-        { api_value: 10000 },
-        { api_value: 100 },
-        { api_value: 200 },
-        { api_value: 300 },
-        { api_value: 50 },
-      ],
-    }
-    const result = reducer([], { type: '@@Response/kcsapi/api_port/port', body })
-    expect(result).toEqual([10000, 10000, 10000, 10000, 100, 200, 300, 50])
+    const result = reducer([], createAPIPortPortResponseAction(apiPortPortFixture as never))
+    expect(result).toMatchSnapshot()
   })
 
   it('should handle api_get_member/material', () => {
@@ -39,13 +34,36 @@ describe('resources reducer', () => {
       { api_value: 150 },
       { api_value: 25 },
     ]
-    const result = reducer([], { type: '@@Response/kcsapi/api_get_member/material', body })
+    const result = reducer(
+      [],
+      createAPIGetMemberMaterialResponseAction({
+        method: 'POST',
+        path: '/kcsapi/api_get_member/material',
+        body: body as never,
+        postBody: {} as never,
+        time: 0,
+      }),
+    )
     expect(result).toEqual([5000, 6000, 7000, 8000, 50, 100, 150, 25])
   })
 
   it('should handle api_req_nyukyo/speedchange', () => {
     const currentState: ResourcesState = [1000, 1000, 1000, 1000, 100, 100, 100, 100]
-    const result = reducer(currentState, { type: '@@Response/kcsapi/api_req_nyukyo/speedchange' })
+    const result = reducer(
+      currentState,
+      createAPIReqNyukyoSpeedchangeResponseAction({
+        method: 'POST',
+        path: '/kcsapi/api_req_nyukyo/speedchange',
+        body: {
+          api_result: 1,
+          api_result_msg: 'success',
+        } as never,
+        postBody: {
+          api_ndock_id: '1',
+        } as never,
+        time: 0,
+      }),
+    )
     expect(result[5]).toBe(99) // Bucket decremented by 1
   })
 })
