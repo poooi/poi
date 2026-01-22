@@ -1,8 +1,29 @@
-import { getTanakalendarQuarterMonth } from '../quests'
+import { getTanakalendarQuarterMonth, saveQuestTracking } from '../quests'
 import moment from 'moment-timezone'
 import { padStart } from 'lodash'
 import Scheduler from 'views/services/scheduler'
-jest.mock('@electron/remote', () => ({ require }))
+
+jest.mock('@electron/remote', () => ({
+  require: (moduleName: string) => {
+    if (moduleName === 'cson') {
+      return {
+        stringify: (value: unknown) => JSON.stringify(value),
+      }
+    }
+    throw new Error(`Unexpected remote.require: ${moduleName}`)
+  },
+}))
+
+jest.mock('views/utils/file-writer', () => {
+  const writeMock = jest.fn()
+  return {
+    __esModule: true,
+    __writeMock: writeMock,
+    default: class FileWriter {
+      write = writeMock
+    },
+  }
+})
 
 const spec = it
 
@@ -43,4 +64,70 @@ describe('getTanakalendarQuarterMonth', () => {
   })
 
   Scheduler._stopTick()
+})
+
+describe('saveQuestTracking', () => {
+  const { __writeMock: writeMock } = jest.requireMock('views/utils/file-writer') as {
+    __writeMock: jest.Mock
+  }
+
+  beforeEach(() => {
+    writeMock.mockReset()
+    ;(globalThis as unknown as { APPDATA_PATH: string }).APPDATA_PATH = 'C:\\tmp'
+    ;(globalThis as unknown as { window: { getStore: jest.Mock } }).window = {
+      getStore: jest.fn((path: string) => {
+        if (path === 'info.quests') {
+          return {
+            activeQuests: {
+              1: { detail: { api_no: 1 }, time: 1 },
+            },
+          }
+        }
+        if (path === 'info.basic.api_member_id') {
+          return '100'
+        }
+        return undefined
+      }),
+    }
+  })
+
+  it('does not mutate input records', () => {
+    const records = {
+      1: {
+        id: 1,
+        goal: { count: 3, required: 5 },
+      },
+    }
+
+    saveQuestTracking(records)
+
+    expect(records).toStrictEqual({
+      1: {
+        id: 1,
+        goal: { count: 3, required: 5 },
+      },
+    })
+  })
+
+  it('writes derived fields to the serialized copy only', () => {
+    const records = {
+      1: {
+        id: 1,
+        goal: { count: 3, required: 5 },
+      },
+    }
+
+    saveQuestTracking(records)
+
+    expect(writeMock).toHaveBeenCalledTimes(1)
+    const [, serialized] = writeMock.mock.calls[0]
+    const saved = JSON.parse(serialized as string) as Record<string, unknown>
+
+    expect(saved.time).toEqual(expect.any(Number))
+
+    const savedRecord = saved['1'] as Record<string, unknown>
+    expect(savedRecord.active).toBe(true)
+    expect(savedRecord.count).toBe(3)
+    expect(savedRecord.required).toBe(5)
+  })
 })
