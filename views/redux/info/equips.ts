@@ -1,5 +1,5 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { flatMap, isArray, get, keyBy, filter } from 'lodash'
+import { isArray, keyBy, filter } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 import {
   createAPIGetMemberSlotItemResponseAction,
@@ -12,6 +12,7 @@ import {
   createAPIReqKousyouDestroyshipResponseAction,
   createAPIReqKousyouRemodelSlotResponseAction,
   createAPIReqMemberItemuseResponseAction,
+  createInfoEquipsRemoveByIdsAction,
 } from '../actions'
 
 export interface Equip {
@@ -23,16 +24,6 @@ export interface Equip {
 
 export interface EquipsState {
   [key: string]: Equip
-}
-
-interface Store {
-  info?: {
-    ships?: {
-      [key: string]: {
-        api_slot?: number[]
-      }
-    }
-  }
 }
 
 // Returns a clone
@@ -130,44 +121,22 @@ const equipsSlice = createSlice({
           ...indexify(ensureArray(body.api_slotitem)),
         }
       })
+      .addCase(createInfoEquipsRemoveByIdsAction, (state, { payload }) => {
+        return removeEquips(state, payload.ids)
+      })
   },
 })
 
 export function reducer(
   state: EquipsState = {},
   action: { type: string; payload?: unknown },
-  store?: Store,
 ): EquipsState {
   switch (action.type) {
-    case createAPIReqKaisouPowerupResponseAction.type: {
-      const payload = action.payload as {
-        postBody?: { api_slot_dest_flag?: string; api_id_items?: string }
-      }
-      return parseInt(payload.postBody?.api_slot_dest_flag || '0') === 0
-        ? state
-        : removeEquips(
-            state,
-            (payload.postBody?.api_id_items || '')
-              .split(',')
-              .flatMap((shipId) => get(store, `info.ships.${shipId}.api_slot`) || []),
-          )
-    }
-    case createAPIReqKousyouDestroyshipResponseAction.type: {
-      const payload = action.payload as {
-        postBody?: { api_slot_dest_flag?: string; api_ship_id: string }
-      }
-      return parseInt(payload.postBody?.api_slot_dest_flag || '0') === 0
-        ? state
-        : removeEquips(
-            state,
-            flatMap(
-              String(payload.postBody?.api_ship_id || '')
-                .split(',')
-                .filter(Boolean),
-              (shipId) => get(store, `info.ships.${shipId}.api_slot`) || [],
-            ),
-          )
-    }
+    // These cross-slice dependent cases are handled by equipsCrossSliceMiddleware.
+    // Keep the type here so the old behavior isn't accidentally reintroduced.
+    case createAPIReqKaisouPowerupResponseAction.type:
+    case createAPIReqKousyouDestroyshipResponseAction.type:
+      return state
     default:
       return equipsSlice.reducer(state, action as never)
   }

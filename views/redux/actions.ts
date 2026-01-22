@@ -136,6 +136,13 @@ export const createInfoResourcesApplyDeltaAction = createAction<{ delta: number[
 
 export type InfoResourcesApplyDeltaAction = ReturnType<typeof createInfoResourcesApplyDeltaAction>
 
+// Internal action (not from kcsapi package) used by equipsCrossSliceMiddleware.
+export const createInfoEquipsRemoveByIdsAction = createAction<{ ids: Array<string | number> }>(
+  '@@info.equips@RemoveByIds',
+)
+
+export type InfoEquipsRemoveByIdsAction = ReturnType<typeof createInfoEquipsRemoveByIdsAction>
+
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')
