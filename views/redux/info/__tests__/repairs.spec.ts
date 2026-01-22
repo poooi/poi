@@ -1,4 +1,19 @@
 import { reducer, RepairsState } from '../repairs'
+import {
+  createAPIGetMemberNdockResponseAction,
+  createAPIPortPortResponseAction,
+} from '../../actions'
+
+import ndockFixture from './__fixtures__/api_get_member_ndock.json'
+import portFixture from './__fixtures__/api_port_port.json'
+
+import type { GameResponsePayload } from '../../actions'
+import type {
+  APIGetMemberNdockRequest,
+  APIGetMemberNdockResponse,
+  APIPortPortRequest,
+  APIPortPortResponse,
+} from 'kcsapi'
 
 describe('repairs reducer', () => {
   it('should return initial state', () => {
@@ -24,40 +39,25 @@ describe('repairs reducer', () => {
   })
 
   it('should handle api_get_member/ndock', () => {
-    const body = [
-      {
-        api_id: 1,
-        api_complete_time: 1234567890,
-        api_complete_time_str: '2024-01-01 00:00:00',
-        api_item1: 100,
-        api_item2: 0,
-        api_item3: 50,
-        api_item4: 0,
-        api_ship_id: 123,
-        api_state: 1,
-      },
-    ]
-    const result = reducer([], { type: '@@Response/kcsapi/api_get_member/ndock', body })
-    expect(result).toEqual(body)
+    const result = reducer(
+      [],
+      createAPIGetMemberNdockResponseAction(
+        ndockFixture as unknown as GameResponsePayload<
+          APIGetMemberNdockResponse[],
+          APIGetMemberNdockRequest
+        >,
+      ),
+    )
+    expect(result).toMatchSnapshot()
   })
 
   it('should handle api_port/port', () => {
-    const body = {
-      api_ndock: [
-        {
-          api_id: 1,
-          api_complete_time: 0,
-          api_complete_time_str: '0',
-          api_item1: 0,
-          api_item2: 0,
-          api_item3: 0,
-          api_item4: 0,
-          api_ship_id: 0,
-          api_state: 0,
-        },
-      ],
-    }
-    const result = reducer([], { type: '@@Response/kcsapi/api_port/port', body })
-    expect(result).toEqual(body.api_ndock)
+    const result = reducer(
+      [],
+      createAPIPortPortResponseAction(
+        portFixture as unknown as GameResponsePayload<APIPortPortResponse, APIPortPortRequest>,
+      ),
+    )
+    expect(result).toMatchSnapshot()
   })
 })

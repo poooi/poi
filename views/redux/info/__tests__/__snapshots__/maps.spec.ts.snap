@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`maps reducer should handle api_get_member/mapinfo 1`] = `
+Object {
+  "11": Object {
+    "api_cleared": 1,
+    "api_id": 11,
+  },
+  "12": Object {
+    "api_cleared": 1,
+    "api_id": 12,
+  },
+  "13": Object {
+    "api_cleared": 1,
+    "api_id": 13,
+  },
+  "14": Object {
+    "api_cleared": 1,
+    "api_id": 14,
+  },
+  "15": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 15,
+    "api_required_defeat_count": 4,
+  },
+  "21": Object {
+    "api_cleared": 1,
+    "api_id": 21,
+  },
+  "22": Object {
+    "api_cleared": 1,
+    "api_id": 22,
+  },
+  "23": Object {
+    "api_cleared": 1,
+    "api_id": 23,
+  },
+  "24": Object {
+    "api_cleared": 1,
+    "api_id": 24,
+  },
+  "25": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 25,
+    "api_required_defeat_count": 4,
+  },
+  "31": Object {
+    "api_cleared": 1,
+    "api_id": 31,
+  },
+  "32": Object {
+    "api_cleared": 1,
+    "api_id": 32,
+  },
+  "33": Object {
+    "api_cleared": 1,
+    "api_id": 33,
+  },
+  "34": Object {
+    "api_cleared": 1,
+    "api_id": 34,
+  },
+  "35": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 35,
+    "api_required_defeat_count": 4,
+  },
+  "41": Object {
+    "api_cleared": 1,
+    "api_id": 41,
+  },
+  "42": Object {
+    "api_cleared": 1,
+    "api_id": 42,
+  },
+  "43": Object {
+    "api_cleared": 1,
+    "api_id": 43,
+  },
+  "44": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 44,
+  },
+  "45": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 45,
+    "api_required_defeat_count": 5,
+  },
+  "51": Object {
+    "api_cleared": 1,
+    "api_id": 51,
+  },
+  "52": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 52,
+  },
+  "53": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 53,
+  },
+  "531": Object {
+    "api_air_base_decks": 1,
+    "api_cleared": 0,
+    "api_eventmap": Object {
+      "api_max_maphp": 9999,
+      "api_now_maphp": 9999,
+      "api_selected_rank": 0,
+      "api_state": 1,
+    },
+    "api_gauge_num": 1,
+    "api_gauge_type": 2,
+    "api_id": 531,
+    "api_sally_flag": Array [
+      1,
+      0,
+      0,
+    ],
+  },
+  "54": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 54,
+  },
+  "55": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 55,
+    "api_required_defeat_count": 5,
+  },
+  "61": Object {
+    "api_cleared": 1,
+    "api_id": 61,
+  },
+  "62": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 62,
+  },
+  "63": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 63,
+  },
+  "64": Object {
+    "api_air_base_decks": 1,
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 64,
+  },
+  "65": Object {
+    "api_air_base_decks": 2,
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 65,
+    "api_required_defeat_count": 6,
+  },
+  "71": Object {
+    "api_cleared": 1,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 71,
+  },
+  "72": Object {
+    "api_cleared": 1,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 72,
+    "api_required_defeat_count": 3,
+  },
+  "73": Object {
+    "api_cleared": 0,
+    "api_defeat_count": 0,
+    "api_gauge_num": 1,
+    "api_gauge_type": 1,
+    "api_id": 73,
+    "api_required_defeat_count": 3,
+  },
+}
+`;
+
+exports[`maps reducer should handle api_req_map/select_eventmap_rank 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -95,19 +95,10 @@
+      \\"api_gauge_num\\": 1,
+      \\"api_gauge_type\\": 1,
+      \\"api_id\\": 45,
+      \\"api_required_defeat_count\\": 5,
+    },
+-   \\"494\\": Object {
+-     \\"api_eventmap\\": Object {
+-       \\"api_gauge_num\\": 1,
+-       \\"api_gauge_type\\": 3,
+-       \\"api_max_maphp\\": 600,
+-       \\"api_now_maphp\\": 600,
+-       \\"api_selected_rank\\": 4,
+-     },
+-   },
+    \\"51\\": Object {
+      \\"api_cleared\\": 1,
+      \\"api_id\\": 51,
+    },
+    \\"52\\": Object {"
+`;

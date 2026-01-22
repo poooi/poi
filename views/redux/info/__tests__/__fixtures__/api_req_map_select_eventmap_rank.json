@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_map/select_eventmap_rank","body":{"api_maphp":{"api_now_maphp":600,"api_max_maphp":600,"api_gauge_type":3,"api_gauge_num":1},"api_sally_flag":[1,7,0]},"postBody":{"api_verno":"1","api_maparea_id":"49","api_map_no":"4","api_rank":"4"},"time":1609594546024}

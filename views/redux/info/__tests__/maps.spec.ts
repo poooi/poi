@@ -1,4 +1,19 @@
 import { reducer, MapsState } from '../maps'
+import {
+  createAPIGetMemberMapinfoResponseAction,
+  createAPIReqMapSelectEventmapRankResponseAction,
+} from '../../actions'
+
+import mapInfoFixture from './__fixtures__/api_get_member_mapinfo.json'
+import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank.json'
+
+import type { GameResponsePayload } from '../../actions'
+import type {
+  APIGetMemberMapinfoRequest,
+  APIGetMemberMapinfoResponse,
+  APIReqMapSelectEventmapRankRequest,
+  APIReqMapSelectEventmapRankResponse,
+} from 'kcsapi'
 
 describe('maps reducer', () => {
   it('should return initial state', () => {
@@ -14,42 +29,37 @@ describe('maps reducer', () => {
   })
 
   it('should handle api_get_member/mapinfo', () => {
-    const body = {
-      api_map_info: [
-        { api_id: 11, api_cleared: 1 },
-        { api_id: 12, api_cleared: 0 },
-      ],
-    }
-    const result = reducer({}, { type: '@@Response/kcsapi/api_get_member/mapinfo', body })
-    expect(result).toEqual({
-      '11': { api_id: 11, api_cleared: 1 },
-      '12': { api_id: 12, api_cleared: 0 },
-    })
+    const result = reducer(
+      {},
+      createAPIGetMemberMapinfoResponseAction(
+        mapInfoFixture as unknown as GameResponsePayload<
+          APIGetMemberMapinfoResponse,
+          APIGetMemberMapinfoRequest
+        >,
+      ),
+    )
+    expect(result).toMatchSnapshot()
   })
 
   it('should handle api_req_map/select_eventmap_rank', () => {
-    const initialState: MapsState = {
-      '351': { api_id: 351 },
-    }
-    const body = {
-      api_maphp: { api_max_maphp: 5000, api_now_maphp: 5000 },
-    }
-    const postBody = {
-      api_maparea_id: '35',
-      api_map_no: '1',
-      api_rank: '2',
-    }
-    const result = reducer(initialState, {
-      type: '@@Response/kcsapi/api_req_map/select_eventmap_rank',
-      body,
-      postBody,
-    })
-    expect(result['351']).toMatchObject({
-      api_eventmap: {
-        api_selected_rank: 2,
-        api_max_maphp: 5000,
-        api_now_maphp: 5000,
-      },
-    })
+    const before: MapsState = reducer(
+      {},
+      createAPIGetMemberMapinfoResponseAction(
+        mapInfoFixture as unknown as GameResponsePayload<
+          APIGetMemberMapinfoResponse,
+          APIGetMemberMapinfoRequest
+        >,
+      ),
+    )
+    const after = reducer(
+      before,
+      createAPIReqMapSelectEventmapRankResponseAction(
+        selectEventmapRankFixture as unknown as GameResponsePayload<
+          APIReqMapSelectEventmapRankResponse,
+          APIReqMapSelectEventmapRankRequest
+        >,
+      ),
+    )
+    expect(after).toMatchDiffSnapshot(before)
   })
 })

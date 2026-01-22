@@ -69,20 +69,23 @@ const repairsSlice = createSlice({
 export const reducer = repairsSlice.reducer
 
 // observe docking complete events and modify ship HP accordingly.
-export const dockingCompleteObserver = observer(
-  (state: RootState) => state.info.repairs,
-  (dispatch: Dispatch, current: RepairsState, previous: RepairsState) => {
+export const dockingCompleteObserver = observer<RootState, RepairsState>(
+  (state) => state.info.repairs,
+  (dispatch: Dispatch, current: RepairsState, previous?: RepairsState) => {
     /*
        only observe valid state changes:
        - the state should be available before and after
        - no length change allowed
-     */
+      */
     if (!Array.isArray(current) || !Array.isArray(previous) || current.length !== previous.length) {
       return
     }
 
-    current.map((repairDataCur, ind) => {
+    current.forEach((repairDataCur, ind) => {
       const repairDataPrev = previous[ind]
+      if (!repairDataPrev) {
+        return
+      }
       const rstId = repairDataPrev.api_ship_id
 
       if (

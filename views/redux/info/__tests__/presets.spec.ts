@@ -1,41 +1,47 @@
 import _ from 'lodash'
-import reducer from '../presets'
+import reducer, { PresetsState } from '../presets'
+import { createAPIReqHenseiPresetOrderChangeResponseAction } from '../../actions'
 
 const spec = it
 
-// Note: partial definitions containing only essentials.
-interface PresetDeck {
-  api_preset_no: number
-  api_name: string
-  api_ship: Array<number>
-}
-
-type Decks = Record<number, PresetDeck>
-
-interface PresetsState {
-  api_max_num: number
-  api_deck: Decks
-}
-
 describe('presets reducer', () => {
-  const mkDeck = (): Decks => ({
-    1: { api_preset_no: 1, api_name: 'ps 1', api_ship: [114, 514, 1919, 810_0721, -1, -1, -1] },
-    4: { api_preset_no: 4, api_name: 'ps 4', api_ship: [1, 2, 3, 4, 5, 6, -1] },
-    12: { api_preset_no: 12, api_name: 'ps 12', api_ship: [1, 2, 3, -1, -1, -1, -1] },
+  const mkDeck = (): PresetsState['api_deck'] => ({
+    1: {
+      api_preset_no: 1,
+      api_name: 'ps 1',
+      api_name_id: '0',
+      api_ship: [114, 514, 1919, 810_0721, -1, -1, -1],
+    },
+    4: {
+      api_preset_no: 4,
+      api_name: 'ps 4',
+      api_name_id: '0',
+      api_ship: [1, 2, 3, 4, 5, 6, -1],
+    },
+    12: {
+      api_preset_no: 12,
+      api_name: 'ps 12',
+      api_name_id: '0',
+      api_ship: [1, 2, 3, -1, -1, -1, -1],
+    },
   })
   const mkInitState = (): PresetsState => ({
     ...reducer(undefined, { type: '@@INIT' }),
     api_deck: mkDeck(),
   })
 
-  const mkAction = (src: number | string, dst: number | string) => ({
-    type: '@@Response/kcsapi/api_req_hensei/preset_order_change',
-    postBody: {
-      api_verno: '1',
-      api_preset_from: String(src),
-      api_preset_to: String(dst),
-    },
-  })
+  const mkAction = (src: number | string, dst: number | string) =>
+    createAPIReqHenseiPresetOrderChangeResponseAction({
+      method: 'POST',
+      path: '/kcsapi/api_req_hensei/preset_order_change',
+      body: { api_result: 1, api_result_msg: 'OK' },
+      postBody: {
+        api_verno: '1',
+        api_preset_from: String(src),
+        api_preset_to: String(dst),
+      },
+      time: 0,
+    })
 
   const expectApiPresetNumberingConsistency = (state: PresetsState) =>
     _.forOwn(state.api_deck, (value, key) => {

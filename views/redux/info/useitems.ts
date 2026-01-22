@@ -31,12 +31,10 @@ interface Action {
 }
 
 /**
- * helper function to update useitem count(api_count)
- * if the item does not exist, it will create one
- * @param state the state
- * @param key useitem id
- * @param value the value to increment
+ * Helper function to update useitem count (api_count).
+ * If the item does not exist, it will create one.
  */
+
 const increment = (state: UseItemsState, key: number, value: number): UseItemsState => ({
   ...state,
   [key]: {
@@ -47,23 +45,22 @@ const increment = (state: UseItemsState, key: number, value: number): UseItemsSt
 
 /**
  * useitems reducer
- * __ATTENTION__
- * It should be noted that API on useitems are not complete, and its update may not be timely
- * one should not expect the value to be always correct
- * @param state
- * @param action
+ *
+ * ATTENTION:
+ * It should be noted that APIs on useitems are not complete, and its update may not be timely.
+ * One should not expect the value to be always correct.
  */
 export const reducer = (state: UseItemsState = {}, action: Action): UseItemsState => {
   const { type, body = {} } = action
   switch (type) {
     // info from login
     case '@@Response/kcsapi/api_get_member/require_info': {
-      const newState = indexify(body.api_useitem)
+      const newState = indexify(body.api_useitem || [])
       return compareUpdate(pickExisting(state, newState), newState)
     }
     // info from login
     case '@@Response/kcsapi/api_get_member/useitem': {
-      const newState = indexify(body)
+      const newState = indexify(Array.isArray(body) ? body : [])
       return compareUpdate(pickExisting(state, newState), newState)
     }
     // item remodel consumption
@@ -84,8 +81,8 @@ export const reducer = (state: UseItemsState = {}, action: Action): UseItemsStat
     // mission award
     case '@@Response/kcsapi/api_req_mission/result': {
       const { api_get_item1 } = body
-      if (api_get_item1?.api_useitem_id > 0) {
-        return increment(state, api_get_item1.api_useitem_id, api_get_item1.api_useitem_count)
+      if (api_get_item1?.api_useitem_id != null && api_get_item1.api_useitem_id > 0) {
+        return increment(state, api_get_item1.api_useitem_id, api_get_item1.api_useitem_count || 0)
       }
       break
     }
@@ -94,10 +91,10 @@ export const reducer = (state: UseItemsState = {}, action: Action): UseItemsStat
     case '@@Response/kcsapi/api_req_sortie/battleresult': {
       const { api_get_useitem, api_get_exmap_useitem_id } = body
       let nextState = { ...state }
-      if (api_get_useitem?.api_useitem_id > 0) {
+      if (api_get_useitem?.api_useitem_id != null && api_get_useitem.api_useitem_id > 0) {
         nextState = increment(nextState, api_get_useitem.api_useitem_id, 1)
       }
-      if (api_get_exmap_useitem_id > 0) {
+      if (api_get_exmap_useitem_id != null && api_get_exmap_useitem_id > 0) {
         nextState = increment(nextState, api_get_exmap_useitem_id, 1)
       }
       return compareUpdate(state, nextState)

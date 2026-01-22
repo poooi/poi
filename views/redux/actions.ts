@@ -102,7 +102,7 @@ import {
 
 import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
 
-interface GameResponsePayload<Body, PostBody> {
+export interface GameResponsePayload<Body, PostBody> {
   method: string
   path: string
   body: Body
@@ -110,7 +110,7 @@ interface GameResponsePayload<Body, PostBody> {
   time: number
 }
 
-// FIXME: @@Response/kcsapi/api_req_air_corps/change_name
+// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_air_corps/change_name
 interface APIReqAirCorpsChangeNameRequest {
   api_verno: string
   api_area_id: string
@@ -128,10 +128,8 @@ interface ConfigAction {
   value: object
 }
 
-// Config
 export const createConfigAction = createAction<ConfigAction>('@@Config')
 
-// API
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')
@@ -191,6 +189,7 @@ export const createAPIReqKousyouCreateShipSpeedChangeResponseAction = createActi
   >
 >('@@Response/kcsapi/api_req_kousyou/createship_speedchange')
 
+// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_air_corps/change_deployment_base
 export interface APIReqAirCorpsChangeDeploymentBaseRequest {
   api_area_id: string
   api_base_id: string
@@ -217,11 +216,6 @@ export const createAPIReqAirCorpsChangeDeploymentBaseResponseAction = createActi
   >
 >('@@Response/kcsapi/api_req_air_corps/change_deployment_base')
 
-// ==========================================
-// Actions for views/redux/info reducers
-// ==========================================
-
-// api_get_member actions
 export const createAPIGetMemberDeckResponseAction = createAction<
   GameResponsePayload<APIGetMemberDeckResponse, APIGetMemberDeckRequest>
 >('@@Response/kcsapi/api_get_member/deck')
@@ -231,7 +225,7 @@ export const createAPIGetMemberMaterialResponseAction = createAction<
 >('@@Response/kcsapi/api_get_member/material')
 
 export const createAPIGetMemberNdockResponseAction = createAction<
-  GameResponsePayload<APIGetMemberNdockResponse, APIGetMemberNdockRequest>
+  GameResponsePayload<APIGetMemberNdockResponse[], APIGetMemberNdockRequest>
 >('@@Response/kcsapi/api_get_member/ndock')
 
 export const createAPIGetMemberPresetDeckResponseAction = createAction<
@@ -262,12 +256,10 @@ export const createAPIGetMemberUseitemResponseAction = createAction<
   GameResponsePayload<APIGetMemberUseitemResponse, APIGetMemberUseitemRequest>
 >('@@Response/kcsapi/api_get_member/useitem')
 
-// api_req_combined_battle actions
 export const createAPIReqCombinedBattleBattleresultResponseAction = createAction<
   GameResponsePayload<APIReqCombinedBattleBattleresultResponse, undefined>
 >('@@Response/kcsapi/api_req_combined_battle/battleresult')
 
-// api_req_hensei actions
 export const createAPIReqHenseiChangeResponseAction = createAction<
   GameResponsePayload<APIReqHenseiChangeResponse, APIReqHenseiChangeRequest>
 >('@@Response/kcsapi/api_req_hensei/change')
@@ -304,12 +296,10 @@ export const createAPIReqHenseiPresetOrderChangeResponseAction = createAction<
   GameResponsePayload<APIReqHenseiPresetOrderChangeResponse, APIReqHenseiPresetOrderChangeRequest>
 >('@@Response/kcsapi/api_req_hensei/preset_order_change')
 
-// api_req_hokyu actions
 export const createAPIReqHokyuChargeResponseAction = createAction<
   GameResponsePayload<APIReqHokyuChargeResponse, APIReqHokyuChargeRequest>
 >('@@Response/kcsapi/api_req_hokyu/charge')
 
-// api_req_kaisou actions
 export const createAPIReqKaisouLockResponseAction = createAction<
   GameResponsePayload<APIReqKaisouLockResponse, APIReqKaisouLockRequest>
 >('@@Response/kcsapi/api_req_kaisou/lock')
@@ -334,7 +324,6 @@ export const createAPIReqKaisouSlotExchangeIndexResponseAction = createAction<
   GameResponsePayload<APIReqKaisouSlotExchangeIndexResponse, APIReqKaisouSlotExchangeIndexRequest>
 >('@@Response/kcsapi/api_req_kaisou/slot_exchange_index')
 
-// api_req_kousyou actions
 export const createAPIReqKousyouCreateitemResponseAction = createAction<
   GameResponsePayload<APIReqKousyouCreateitemResponse, APIReqKousyouCreateitemRequest>
 >('@@Response/kcsapi/api_req_kousyou/createitem')
@@ -362,7 +351,6 @@ export const createAPIReqKousyouRemodelSlotlistDetailResponseAction = createActi
   >
 >('@@Response/kcsapi/api_req_kousyou/remodel_slotlist_detail')
 
-// api_req_map actions
 export const createAPIReqMapAnchorageRepairResponseAction = createAction<
   GameResponsePayload<APIReqMapAnchorageRepairResponse, APIReqMapAnchorageRepairRequest>
 >('@@Response/kcsapi/api_req_map/anchorage_repair')
@@ -375,7 +363,6 @@ export const createAPIReqMapStartResponseAction = createAction<
   GameResponsePayload<APIReqMapStartResponse, APIReqMapStartRequest>
 >('@@Response/kcsapi/api_req_map/start')
 
-// api_req_member actions
 export const createAPIReqMemberItemuseResponseAction = createAction<
   GameResponsePayload<APIReqMemberItemuseResponse, APIReqMemberItemuseRequest>
 >('@@Response/kcsapi/api_req_member/itemuse')
@@ -396,7 +383,6 @@ export const createAPIReqMemberUpdatedecknameResponseAction = createAction<
   GameResponsePayload<APIReqMemberUpdatedecknameResponse, APIReqMemberUpdatedecknameRequest>
 >('@@Response/kcsapi/api_req_member/updatedeckname')
 
-// api_req_nyukyo actions
 export const createAPIReqNyukyoSpeedchangeResponseAction = createAction<
   GameResponsePayload<APIReqNyukyoSpeedchangeResponse, APIReqNyukyoSpeedchangeRequest>
 >('@@Response/kcsapi/api_req_nyukyo/speedchange')
@@ -405,7 +391,6 @@ export const createAPIReqNyukyoStartResponseAction = createAction<
   GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartRequest>
 >('@@Response/kcsapi/api_req_nyukyo/start')
 
-// api_req_quest actions
 export const createAPIReqQuestClearitemgetResponseAction = createAction<
   GameResponsePayload<APIReqQuestClearitemgetResponse, APIReqQuestClearitemgetRequest>
 >('@@Response/kcsapi/api_req_quest/clearitemget')
