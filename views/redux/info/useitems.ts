@@ -73,10 +73,10 @@ export const reducer = (state: UseItemsState = {}, action: Action): UseItemsStat
       let nextState = { ...state }
 
       // assume there's enough items
-      if (api_req_useitem_id) {
+      if (api_req_useitem_id && api_req_useitem_num) {
         nextState = increment(nextState, api_req_useitem_id, api_req_useitem_num)
       }
-      if (api_req_useitem_id2) {
+      if (api_req_useitem_id2 && api_req_useitem_num2) {
         nextState = increment(nextState, api_req_useitem_id2, api_req_useitem_num2)
       }
       return compareUpdate(state, nextState)

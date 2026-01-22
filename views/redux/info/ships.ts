@@ -200,8 +200,8 @@ export function reducer(
       let newState = state
       if (instantDockingCompletionState) {
         const { rstId, dockId } = instantDockingCompletionState
-        const dockInfo = body.find((x) => x.api_id === dockId)
-        if (dockInfo.api_ship_id === 0) {
+        const dockInfo = (body as DockInfo[]).find((x) => x.api_id === dockId)
+        if (dockInfo && dockInfo.api_ship_id === 0) {
           newState = {
             ...state,
             [rstId]: completeRepair(state[rstId]),
