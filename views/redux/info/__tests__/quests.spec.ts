@@ -8,14 +8,13 @@ const spec = it
 
 /**
  * creates a date for first quest refresh of given year and month
- * @param {number} year
- * @param {number} month
  */
-const createDate = (year, month) =>
+const createDate = (year: number, month: number): Date =>
   new Date(+moment.tz(`${year}-${padStart(String(month), 2, '0')}-01 05:00`, 'Asia/Tokyo'))
 
-const testCase = (year, month, expected) =>
+const testCase = (year: number, month: number, expected: [number, number]): void => {
   expect(getTanakalendarQuarterMonth(createDate(year, month))).toStrictEqual(expected)
+}
 
 describe('getTanakalendarQuarterMonth', () => {
   spec('sample of a full year', () => {

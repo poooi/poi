@@ -12,15 +12,53 @@ import { compareUpdate } from 'views/utils/tools'
 // 6: <Development material>
 // 7: <Improvement material>
 
-function addArrayResources(state, arr) {
-  state = state.slice()
-  arr.forEach((n, i) => {
-    state[i] += n
-  })
-  return state
+export type ResourcesState = number[]
+
+interface Action {
+  type: string
+  body?: {
+    api_material?: { api_value: number }[] | number[]
+    api_after_material?: number[]
+    api_get_material?: number[]
+    api_after_bauxite?: number
+    api_after_fuel?: number
+  }
+  postBody?: {
+    api_highspeed?: string | number
+    api_item1?: string | number
+    api_item2?: string | number
+    api_item3?: string | number
+    api_item4?: string | number
+    api_item5?: string | number
+    api_kdock_id?: string | number
+    api_ship_id?: string | number
+  }
 }
 
-export function reducer(state = [], { type, body, postBody }, store) {
+interface Store {
+  info?: {
+    constructions?: { api_item1?: number }[]
+    ships?: {
+      [key: string]: {
+        api_ndock_item?: [number, number]
+      }
+    }
+  }
+}
+
+function addArrayResources(state: ResourcesState, arr: number[]): ResourcesState {
+  const newState = state.slice()
+  arr.forEach((n, i) => {
+    newState[i] += n
+  })
+  return newState
+}
+
+export function reducer(
+  state: ResourcesState = [],
+  { type, body, postBody }: Action,
+  store?: Store,
+): ResourcesState {
   switch (type) {
     case '@@Response/kcsapi/api_port/port':
       return compareUpdate(state, map(body.api_material, 'api_value'))

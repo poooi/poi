@@ -2,6 +2,65 @@ import { values, get } from 'lodash'
 
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
 
+export interface Ship {
+  api_id: number
+  api_ship_id?: number
+  api_nowhp?: number
+  api_maxhp?: number
+  api_cond?: number
+  api_ndock_time?: number
+  api_ndock_item?: [number, number]
+  api_locked?: number
+  api_slot?: number[]
+  api_slot_ex?: number
+  [key: string]: unknown
+}
+
+export interface ShipsState {
+  [key: string]: Ship
+}
+
+interface DockInfo {
+  api_id: number
+  api_ship_id: number
+}
+
+interface Action {
+  type: string
+  body?: {
+    api_ship?: Ship | Ship[]
+    api_ship_data?: Ship | Ship[]
+    api_locked?: number
+    api_id?: number
+    [key: string]: unknown
+  } & Ship[] &
+    Ship &
+    DockInfo[]
+  postBody?: {
+    api_ship_id?: string
+    api_highspeed?: string
+    api_ndock_id?: string
+    api_id_items?: string
+    api_id?: string
+    [key: string]: unknown
+  }
+}
+
+interface Store {
+  info?: {
+    repair?: {
+      [key: string]: {
+        api_ship_id?: number
+      }
+    }
+  }
+}
+
+interface InstantDockingState {
+  dockId: number
+  rstId: string
+}
+
 /*
 
    turns out if it takes less than 60 seconds to repair a ship,
@@ -43,19 +102,23 @@ import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
    the transition is short, and no other part cares about this particular part of state.
 
  */
-let instantDockingCompletionState = null
+let instantDockingCompletionState: InstantDockingState | null = null
 
 // Restore a ship with full health and >=40 cond.
 // Returns a clone.
-function completeRepair(ship) {
+function completeRepair(ship: Ship): Ship {
   return compareUpdate(ship, {
     api_nowhp: ship.api_maxhp,
-    api_cond: Math.max(40, ship.api_cond),
+    api_cond: Math.max(40, ship.api_cond || 0),
     api_ndock_time: 0,
   })
 }
 
-export function reducer(state = {}, { type, body, postBody }, store) {
+export function reducer(
+  state: ShipsState = {},
+  { type, body, postBody }: Action,
+  store?: Store,
+): ShipsState {
   switch (type) {
     case '@@Response/kcsapi/api_port/port': {
       const bodyShips = indexify(body.api_ship)

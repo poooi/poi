@@ -1,5 +1,35 @@
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
+export interface UseItem {
+  api_id?: number
+  api_count?: number
+  [key: string]: unknown
+}
+
+export interface UseItemsState {
+  [key: string]: UseItem
+}
+
+interface Action {
+  type: string
+  body?: {
+    api_useitem?: UseItem[]
+    api_req_useitem_id?: number
+    api_req_useitem_num?: number
+    api_req_useitem_id2?: number
+    api_req_useitem_num2?: number
+    api_get_item1?: {
+      api_useitem_id?: number
+      api_useitem_count?: number
+    }
+    api_get_useitem?: {
+      api_useitem_id?: number
+    }
+    api_get_exmap_useitem_id?: number
+    [key: string]: unknown
+  }
+}
+
 /**
  * helper function to update useitem count(api_count)
  * if the item does not exist, it will create one
@@ -7,7 +37,7 @@ import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
  * @param key useitem id
  * @param value the value to increment
  */
-const increment = (state, key, value) => ({
+const increment = (state: UseItemsState, key: number, value: number): UseItemsState => ({
   ...state,
   [key]: {
     ...(state[key] || {}),
@@ -23,7 +53,7 @@ const increment = (state, key, value) => ({
  * @param state
  * @param action
  */
-export const reducer = (state = {}, action) => {
+export const reducer = (state: UseItemsState = {}, action: Action): UseItemsState => {
   const { type, body = {} } = action
   switch (type) {
     // info from login

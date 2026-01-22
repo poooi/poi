@@ -2,13 +2,41 @@ import { isEqual } from 'lodash'
 
 import { buildArray, compareUpdate } from 'views/utils/tools'
 
-function mergeIndexifiedFleets(state, body) {
-  const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet]))
+export interface Fleet {
+  api_id: number
+  api_name?: string
+  api_ship: number[]
+  [key: string]: unknown
+}
+
+export type FleetsState = Fleet[]
+
+interface Action {
+  type: string
+  body?: {
+    api_deck_port?: Fleet[]
+    api_deck?: Fleet[]
+    api_deck_data?: Fleet[]
+    [key: string]: unknown
+  } & Fleet &
+    Fleet[]
+  postBody?: {
+    api_deck_id?: string
+    api_ship_id?: string
+    api_id?: string
+    api_ship_idx?: string
+    api_name?: string
+    [key: string]: unknown
+  }
+}
+
+function mergeIndexifiedFleets(state: FleetsState, body: Fleet[]): FleetsState {
+  const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet] as [number, Fleet]))
   return compareUpdate(state, bodyFleet, 2)
 }
 
 // Ensure all -1 is in the end of array
-function fixPlaceholder(originShips) {
+function fixPlaceholder(originShips: number[]): number[] {
   const ships = originShips.filter((a) => a > 0)
   while (ships.length < originShips.length) {
     ships.push(-1)
@@ -18,7 +46,7 @@ function fixPlaceholder(originShips) {
 
 // Return [fleetId, pos] if found
 // [-1, -1] otherwise
-function findShip(fleets, shipId) {
+function findShip(fleets: FleetsState, shipId: number): [number, number] {
   for (let fleetId = 0; fleetId < fleets.length; fleetId++) {
     const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
     if (pos != -1) {
@@ -32,7 +60,7 @@ function findShip(fleets, shipId) {
 // Otherwise, just assign the ship.
 // The clone of the fleet is returned.
 // pos is 0..5
-function setShip(fleet, pos, shipId) {
+function setShip(fleet: Fleet, pos: number, shipId: number): Fleet {
   const ships = fleet.api_ship.slice()
   if (shipId == -1) {
     ships.splice(pos, 1)
@@ -47,7 +75,7 @@ function setShip(fleet, pos, shipId) {
   }
 }
 
-export function reducer(state = [], { type, postBody, body }) {
+export function reducer(state: FleetsState = [], { type, postBody, body }: Action): FleetsState {
   switch (type) {
     case '@@Response/kcsapi/api_port/port':
       return compareUpdate(state, body.api_deck_port, 2)

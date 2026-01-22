@@ -37,10 +37,11 @@ describe('presets reducer', () => {
     },
   })
 
-  const expectApiPresetNumberingConsistency = (state: PresetsState) => _.forOwn(state.api_deck, (value, key) => {
-    expect(typeof value.api_preset_no).toBe('number')
-    expect(value.api_preset_no).toBe(parseInt(key, 10))
-  })
+  const expectApiPresetNumberingConsistency = (state: PresetsState) =>
+    _.forOwn(state.api_deck, (value, key) => {
+      expect(typeof value.api_preset_no).toBe('number')
+      expect(value.api_preset_no).toBe(parseInt(key, 10))
+    })
 
   describe('api_req_hensei/preset_order_change', () => {
     spec('swap existing presets', () => {
@@ -64,9 +65,6 @@ describe('presets reducer', () => {
       expect(_.get(mut.api_deck, ['16', 'api_name'])).toBe('ps 12')
     })
 
-    spec('noop', () =>
-      expect(
-        reducer(mkInitState(), mkAction(5, 5))
-      ).toStrictEqual(mkInitState()))
+    spec('noop', () => expect(reducer(mkInitState(), mkAction(5, 5))).toStrictEqual(mkInitState()))
   })
 })

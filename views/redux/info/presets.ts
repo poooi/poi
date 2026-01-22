@@ -1,12 +1,40 @@
 import { reduxSet, compareUpdate } from 'views/utils/tools'
 import { omit } from 'lodash'
 
-const initState = {
+export interface PresetDeck {
+  api_preset_no: number
+  api_name?: string
+  api_ship?: number[]
+  [key: string]: unknown
+}
+
+export interface PresetsState {
+  api_max_num: number
+  api_deck: Record<string, PresetDeck>
+}
+
+interface Action {
+  type: string
+  body?: {
+    api_max_num?: number
+    api_deck?: Record<string, PresetDeck>
+    api_preset_no?: number
+    [key: string]: unknown
+  }
+  postBody?: {
+    api_preset_no?: string
+    api_preset_from?: string
+    api_preset_to?: string
+    [key: string]: unknown
+  }
+}
+
+const initState: PresetsState = {
   api_max_num: 0,
   api_deck: {},
 }
 
-const reducer = (state = initState, action) => {
+const reducer = (state: PresetsState = initState, action: Action): PresetsState => {
   const { type, body, postBody } = action
   switch (type) {
     case '@@Response/kcsapi/api_get_member/preset_deck':
@@ -19,7 +47,7 @@ const reducer = (state = initState, action) => {
       const { api_preset_no } = body
       return {
         ...state,
-        api_deck: reduxSet(state.api_deck, String(api_preset_no), body),
+        api_deck: reduxSet(state.api_deck, [String(api_preset_no)], body),
       }
     }
     case '@@Response/kcsapi/api_req_hensei/preset_delete': {
@@ -43,26 +71,26 @@ const reducer = (state = initState, action) => {
         return state
       }
 
-      const newDeck = {...state.api_deck}
+      const newDeck = { ...state.api_deck }
 
       if (vFrom) delete newDeck[api_preset_from]
       if (vTo) delete newDeck[api_preset_to]
 
       if (vFrom) {
-         newDeck[api_preset_to] = {
+        newDeck[api_preset_to] = {
           ...vFrom,
-           api_preset_no: parseInt(api_preset_to, 10),
+          api_preset_no: parseInt(api_preset_to, 10),
         }
       }
 
       if (vTo) {
-        newDeck[api_preset_from] =  {
+        newDeck[api_preset_from] = {
           ...vTo,
           api_preset_no: parseInt(api_preset_from, 10),
         }
       }
 
-      return {...state, api_deck: newDeck}
+      return { ...state, api_deck: newDeck }
     }
   }
   return state

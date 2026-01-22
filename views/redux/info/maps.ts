@@ -1,9 +1,46 @@
 import { mapValues } from 'lodash'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
-export function reducer(state = {}, { type, body, postBody }) {
+export interface MapEventInfo {
+  api_selected_rank?: number
+  api_max_maphp?: number
+  api_now_maphp?: number
+  [key: string]: unknown
+}
+
+export interface MapInfo {
+  api_id?: number
+  api_eventmap?: MapEventInfo
+  [key: string]: unknown
+}
+
+export interface MapsState {
+  [key: string]: MapInfo
+}
+
+interface Action {
+  type: string
+  body?: {
+    api_map_info?: MapInfo[]
+    api_maphp?: Record<string, number | string>
+    api_eventmap?: {
+      api_max_maphp?: number
+      api_now_maphp?: number
+    }
+    [key: string]: unknown
+  }
+  postBody?: {
+    api_maparea_id?: string
+    api_map_no?: string
+    api_mapinfo_no?: string
+    api_rank?: string
+    [key: string]: unknown
+  }
+}
+
+export function reducer(state: MapsState = {}, { type, body, postBody }: Action): MapsState {
   // Compatibility: Old api arranges maps in array
-  if (Array.isArray(state)) state = indexify(state.filter((e) => e && e.api_id))
+  if (Array.isArray(state)) state = indexify((state as MapInfo[]).filter((e) => e && e.api_id))
   switch (type) {
     case '@@Response/kcsapi/api_get_member/mapinfo': {
       const newState = indexify(body.api_map_info)
