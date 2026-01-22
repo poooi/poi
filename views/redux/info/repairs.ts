@@ -2,6 +2,12 @@ import _ from 'lodash'
 import { compareUpdate } from 'views/utils/tools'
 import { observer } from 'redux-observers'
 import { Dispatch } from 'redux'
+import { createSlice } from '@reduxjs/toolkit'
+import {
+  createAPIGetMemberNdockResponseAction,
+  createAPIPortPortResponseAction,
+  createAPIReqNyukyoSpeedchangeResponseAction,
+} from '../actions'
 
 export interface RepairData {
   api_id?: number
@@ -17,14 +23,6 @@ export interface RepairData {
 }
 
 export type RepairsState = RepairData[]
-
-interface Action {
-  type: string
-  body?: RepairData[] | { api_ndock?: RepairData[] }
-  postBody?: {
-    api_ndock_id?: string | number
-  }
-}
 
 interface RootState {
   info: {
@@ -44,24 +42,31 @@ const emptyRepair: Partial<RepairData> = {
   api_state: 0,
 }
 
-export function reducer(state: RepairsState = [], { type, body, postBody }: Action): RepairsState {
-  switch (type) {
-    case '@@Response/kcsapi/api_get_member/ndock':
-      return compareUpdate(state, body as RepairData[])
-    case '@@Response/kcsapi/api_port/port':
-      return compareUpdate(state, (body as { api_ndock?: RepairData[] })?.api_ndock)
-    case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-      const api_ndock_id = Number(postBody?.api_ndock_id)
-      const newState = state.slice()
-      newState[api_ndock_id - 1] = {
-        ...newState[api_ndock_id - 1],
-        ...emptyRepair,
-      } as RepairData
-      return newState
-    }
-  }
-  return state
-}
+const repairsSlice = createSlice({
+  name: 'repairs',
+  initialState: [] as RepairsState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createAPIGetMemberNdockResponseAction, (state, { payload }) => {
+        return compareUpdate(state, payload.body as unknown as RepairsState)
+      })
+      .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
+        return compareUpdate(state, payload.body.api_ndock as unknown as RepairsState)
+      })
+      .addCase(createAPIReqNyukyoSpeedchangeResponseAction, (state, { payload }) => {
+        const api_ndock_id = Number(payload.postBody.api_ndock_id)
+        const newState = state.slice()
+        newState[api_ndock_id - 1] = {
+          ...newState[api_ndock_id - 1],
+          ...emptyRepair,
+        } as RepairData
+        return newState
+      })
+  },
+})
+
+export const reducer = repairsSlice.reducer
 
 // observe docking complete events and modify ship HP accordingly.
 export const dockingCompleteObserver = observer(
