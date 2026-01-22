@@ -25,7 +25,6 @@ import {
   APIGetMemberKdockRequest,
   APIReqKousyouCreateshipSpeedchangeResponse,
   APIReqKousyouCreateshipSpeedchangeRequest,
-  // Additional imports for info reducers
   APIGetMemberDeckRequest,
   APIGetMemberDeckResponse,
   APIGetMemberMaterialRequest,
