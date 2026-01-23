@@ -60,7 +60,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 interface Store {
   info?: {
-    repair?: {
+    repairs?: {
       [key: string]: {
         api_ship_id?: number
       }
@@ -229,7 +229,7 @@ export function reducer(
         break
       }
 
-      if (api_highspeed == '1') {
+      if (api_highspeed === '1') {
         const ship = state[api_ship_id]
         if (!ship) {
           break
@@ -272,7 +272,7 @@ export function reducer(
       if (!dockId) {
         break
       }
-      const api_ship_id = get(store, `info.repair.${dockId}.api_ship_id`) as number | undefined
+      const api_ship_id = get(store, `info.repairs.${dockId}.api_ship_id`) as number | undefined
       if (api_ship_id) {
         const ship = state[api_ship_id]
         if (!ship) {
