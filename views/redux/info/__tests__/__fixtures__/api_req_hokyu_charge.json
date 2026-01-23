@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_hokyu/charge","body":{"api_ship":[{"api_id":84,"api_fuel":25,"api_bull":30,"api_onslot":[1,1,1,0,0]}],"api_material":[61856,190510,214408,126215],"api_use_bou":0},"postBody":{"api_verno":"1","api_kind":"3","api_id_items":"84","api_onslot":"1"},"time":1585409295189}

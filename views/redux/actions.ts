@@ -101,6 +101,7 @@ import {
 } from 'kcsapi'
 
 import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
+import type { APIShipDatum } from 'kcsapi/api_req_map/anchorage_repair/response'
 
 export interface GameResponsePayload<Body, PostBody> {
   method: string
@@ -142,6 +143,13 @@ export const createInfoEquipsRemoveByIdsAction = createAction<{ ids: Array<strin
 )
 
 export type InfoEquipsRemoveByIdsAction = ReturnType<typeof createInfoEquipsRemoveByIdsAction>
+
+// Internal action used by shipsCrossSliceMiddleware and repairs observer.
+export const createInfoShipsRepairCompletedAction = createAction<{ api_ship_id: number }>(
+  '@@info.ships@RepairCompleted',
+)
+
+export type InfoShipsRepairCompletedAction = ReturnType<typeof createInfoShipsRepairCompletedAction>
 
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
@@ -250,7 +258,12 @@ export const createAPIGetMemberQuestlistResponseAction = createAction<
 >('@@Response/kcsapi/api_get_member/questlist')
 
 export const createAPIGetMemberShip2ResponseAction = createAction<
-  GameResponsePayload<APIGetMemberShip2Response, APIGetMemberShip2Request>
+  // NOTE: despite kcsapi typing, this endpoint returns an array in practice.
+  // NOTE: response-saver payloads may omit fields that kcsapi requires (e.g. api_sally_area).
+  GameResponsePayload<
+    Array<Partial<APIGetMemberShip2Response> & { api_id: number }>,
+    APIGetMemberShip2Request
+  >
 >('@@Response/kcsapi/api_get_member/ship2')
 
 export const createAPIGetMemberShip3ResponseAction = createAction<
@@ -364,8 +377,16 @@ export const createAPIReqKousyouRemodelSlotlistDetailResponseAction = createActi
   >
 >('@@Response/kcsapi/api_req_kousyou/remodel_slotlist_detail')
 
+// NOTE: response-saver payloads sometimes omit fields that kcsapi requires (e.g. api_sally_area).
+export type APIReqMapAnchorageRepairResponseCompat = Omit<
+  APIReqMapAnchorageRepairResponse,
+  'api_ship_data'
+> & {
+  api_ship_data: Array<Partial<APIShipDatum> & { api_id: number }>
+}
+
 export const createAPIReqMapAnchorageRepairResponseAction = createAction<
-  GameResponsePayload<APIReqMapAnchorageRepairResponse, APIReqMapAnchorageRepairRequest>
+  GameResponsePayload<APIReqMapAnchorageRepairResponseCompat, APIReqMapAnchorageRepairRequest>
 >('@@Response/kcsapi/api_req_map/anchorage_repair')
 
 export const createAPIReqMapSelectEventmapRankResponseAction = createAction<

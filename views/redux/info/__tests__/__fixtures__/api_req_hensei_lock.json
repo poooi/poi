@@ -1,0 +1,7 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_hensei/lock",
+  "body": { "api_locked": 0 },
+  "postBody": { "api_verno": "1", "api_ship_id": "26567" },
+  "time": 1612317586726
+}
