@@ -112,7 +112,7 @@ function completeRepair(ship: Ship): Ship {
   return compareUpdate(ship, {
     ...ship,
     api_nowhp: ship.api_maxhp,
-    api_cond: Math.max(40, ship.api_cond || 0),
+    api_cond: Math.max(40, ship.api_cond ?? 0),
     api_ndock_time: 0,
   })
 }

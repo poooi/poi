@@ -1,5 +1,3 @@
-import { get } from 'lodash'
-
 import {
   createAPIReqNyukyoSpeedchangeResponseAction,
   createInfoShipsRepairCompletedAction,
@@ -34,7 +32,7 @@ export const shipsCrossSliceMiddleware: Middleware = (store) => (next) => (actio
   const a = action as Action
 
   if (a.type === createAPIReqNyukyoSpeedchangeResponseAction.type) {
-    const dockId = Number(get(a.payload, 'postBody.api_ndock_id'))
+    const dockId = Number(a.payload?.postBody?.api_ndock_id)
     if (dockId > 0) {
       const shipId = state?.info?.repairs?.[dockId - 1]?.api_ship_id
       if (typeof shipId === 'number' && shipId > 0) {
