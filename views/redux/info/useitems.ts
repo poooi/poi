@@ -12,7 +12,6 @@ import {
 export interface UseItem {
   api_id?: number
   api_count?: number
-  [key: string]: unknown
 }
 
 export interface UseItemsState {
@@ -53,8 +52,7 @@ const useitemsSlice = createSlice({
       })
       // info from login
       .addCase(createAPIGetMemberUseitemResponseAction, (state, { payload }) => {
-        const body = payload.body as unknown
-        const newState = indexify(Array.isArray(body) ? (body as UseItem[]) : [])
+        const newState = indexify<UseItem>(payload.body)
         return compareUpdate(pickExisting(state, newState), newState)
       })
       // item remodel consumption
@@ -64,21 +62,16 @@ const useitemsSlice = createSlice({
           api_req_useitem_num,
           api_req_useitem_id2,
           api_req_useitem_num2,
-        } = payload.body as {
-          api_req_useitem_id?: number
-          api_req_useitem_num?: number
-          api_req_useitem_id2?: number
-          api_req_useitem_num2?: number
-        }
+        } = payload.body
 
         let nextState = { ...state }
 
         // assume there's enough items
         if (api_req_useitem_id && api_req_useitem_num) {
-          nextState = increment(nextState, api_req_useitem_id, api_req_useitem_num)
+          nextState = increment(nextState, api_req_useitem_id, -api_req_useitem_num)
         }
         if (api_req_useitem_id2 && api_req_useitem_num2) {
-          nextState = increment(nextState, api_req_useitem_id2, api_req_useitem_num2)
+          nextState = increment(nextState, api_req_useitem_id2, -api_req_useitem_num2)
         }
         return compareUpdate(state, nextState)
       })

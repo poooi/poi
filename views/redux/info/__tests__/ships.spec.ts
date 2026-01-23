@@ -49,30 +49,29 @@ import type {
   APIReqKousyouGetshipRequest,
   APIReqKousyouGetshipResponse,
   APIReqMapAnchorageRepairRequest,
-  APIReqMapAnchorageRepairResponse,
   APIReqNyukyoStartRequest,
   APIReqNyukyoStartResponse,
 } from 'kcsapi'
 
 import type { APIReqMapAnchorageRepairResponseCompat, GameResponsePayload } from '../../actions'
 
-import lockFixture from './__fixtures__/api_req_hensei_lock.json'
-import getShipFixture from './__fixtures__/api_req_kousyou_getship.json'
-import portFixture from './__fixtures__/api_port_port.json'
+import lockFixture from './__fixtures__/api_req_hensei_lock_unlock_ship.json'
+import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
 
-import hokyuChargeFixture from './__fixtures__/api_req_hokyu_charge.json'
-import shipDeckFixture from './__fixtures__/api_get_member_ship_deck.json'
-import ship3Fixture from './__fixtures__/api_get_member_ship3.json'
-import ship2Fixture from './__fixtures__/api_get_member_ship2.json'
-import slotExchangeIndexFixture from './__fixtures__/api_req_kaisou_slot_exchange_index.json'
-import marriageFixture from './__fixtures__/api_req_kaisou_marriage.json'
-import slotDepriveFixture from './__fixtures__/api_req_kaisou_slot_deprive.json'
-import powerupFixture from './__fixtures__/api_req_kaisou_powerup.json'
-import nyukyoStartHighspeedFixture from './__fixtures__/api_req_nyukyo_start_bucket_repairs_immediately.json'
-import nyukyoStartInstantCompletionFixture from './__fixtures__/api_req_nyukyo_start_instant_completion.json'
-import ndockInstantCompletionFixture from './__fixtures__/api_get_member_ndock_instant_completion.json'
-import anchorageRepairFixture from './__fixtures__/api_req_map_anchorage_repair.json'
-import openExslotFixture from './__fixtures__/api_req_kaisou_open_exslot.json'
+import hokyuChargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
+import shipDeckFixture from './__fixtures__/api_get_member_ship_deck_deck1_two_ships.json'
+import ship3Fixture from './__fixtures__/api_get_member_ship3_with_slot_data.json'
+import ship2Fixture from './__fixtures__/api_get_member_ship2_full_list.json'
+import slotExchangeIndexFixture from './__fixtures__/api_req_kaisou_slot_exchange_index_swap_slots.json'
+import marriageFixture from './__fixtures__/api_req_kaisou_marriage_level_100.json'
+import slotDepriveFixture from './__fixtures__/api_req_kaisou_slot_deprive_move_equip.json'
+import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
+import nyukyoStartHighspeedFixture from './__fixtures__/api_req_nyukyo_start_highspeed_bucket_repairs_immediately.json'
+import nyukyoStartInstantCompletionFixture from './__fixtures__/api_req_nyukyo_start_instant_completion_under_60s.json'
+import ndockInstantCompletionFixture from './__fixtures__/api_get_member_ndock_instant_completion_shows_empty.json'
+import anchorageRepairFixture from './__fixtures__/api_req_map_anchorage_repair_repairs_multiple_ships.json'
+import openExslotFixture from './__fixtures__/api_req_kaisou_open_exslot_unlock_exslot.json'
 
 describe('ships reducer', () => {
   const createShip = (id: number, shipId: number): Ship => ({
@@ -294,7 +293,8 @@ describe('ships reducer', () => {
     > = {
       method: 'POST',
       path: '/kcsapi/api_req_kaisou/marriage',
-      body: { api_id: 'nope' } as unknown as APIReqKaisouMarriageResponse,
+      // @ts-expect-error api_id should be number; test invalid payload guard
+      body: { api_id: 'nope' },
       postBody: { api_verno: '1', api_id: '1' },
       time: 0,
     }
@@ -366,10 +366,11 @@ describe('ships reducer', () => {
           APIReqKaisouPowerupResponse,
           APIReqKaisouPowerupRequest
         >),
+        // @ts-expect-error api_id_items is missing; test invalid payload guard
         postBody: {
           api_verno: '1',
           api_id: '28341',
-        } as unknown as APIReqKaisouPowerupRequest,
+        },
       }
     const result = reducer(initialState, createAPIReqKaisouPowerupResponseAction(badPayload))
     expect(result).toBe(initialState)
@@ -430,11 +431,12 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_nyukyo/start',
       body: { api_result: 1, api_result_msg: '成功' },
+      // @ts-expect-error api_ship_id is missing; test invalid payload guard
       postBody: {
         api_verno: '1',
         api_highspeed: '0',
         api_ndock_id: '1',
-      } as unknown as APIReqNyukyoStartRequest,
+      },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqNyukyoStartResponseAction(badPayload))
@@ -468,7 +470,7 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_map/anchorage_repair',
       body: {} as APIReqMapAnchorageRepairResponseCompat,
-      postBody: { api_verno: '1' } as unknown as APIReqMapAnchorageRepairRequest,
+      postBody: { api_verno: '1' },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqMapAnchorageRepairResponseAction(badPayload))
@@ -499,7 +501,8 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_kaisou/open_exslot',
       body: { api_result: 1, api_result_msg: '成功' },
-      postBody: { api_verno: '1' } as unknown as APIReqKaisouOpenExslotRequest,
+      // @ts-expect-error api_id is missing; test invalid payload guard
+      postBody: { api_verno: '1' },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqKaisouOpenExslotResponseAction(badPayload))

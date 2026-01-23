@@ -10,12 +10,12 @@ import {
   createAPIPortPortResponseAction,
 } from '../../actions'
 
-import mapInfoFixture from './__fixtures__/api_get_member_mapinfo.json'
-import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane.json'
-import changeNameFixture from './__fixtures__/api_req_air_corps_change_name.json'
-import setActionFixture from './__fixtures__/api_req_air_corps_set_action.json'
-import supplyFixture from './__fixtures__/api_req_air_corps_supply.json'
-import nextFixture from './__fixtures__/api_req_map_next.json'
+import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
+import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane_assign_planes.json'
+import changeNameFixture from './__fixtures__/api_req_air_corps_change_name_rename_base.json'
+import setActionFixture from './__fixtures__/api_req_air_corps_set_action_bulk_update.json'
+import supplyFixture from './__fixtures__/api_req_air_corps_supply_resupply_squadron.json'
+import nextFixture from './__fixtures__/api_req_map_next_with_itemget.json'
 
 import type { GameResponsePayload } from '../../actions'
 import type { APIReqMapNextRequest, APIReqMapNextResponse } from 'kcsapi'
@@ -67,16 +67,9 @@ describe('airbase reduer', () => {
   })
 
   it('createAPIReqMapNextResponseAction', () => {
+    const payload: GameResponsePayload<APIReqMapNextResponse, APIReqMapNextRequest> = nextFixture
     expect(initialState).toMatchDiffSnapshot(
-      reducer(
-        initialState,
-        createAPIReqMapNextResponseAction(
-          nextFixture as unknown as GameResponsePayload<
-            APIReqMapNextResponse,
-            APIReqMapNextRequest
-          >,
-        ),
-      ),
+      reducer(initialState, createAPIReqMapNextResponseAction(payload)),
     )
   })
 })

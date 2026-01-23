@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash'
 
-import { buildArray, compareUpdate } from 'views/utils/tools'
+import { compareUpdate, constructArray } from 'views/utils/tools'
 import { createSlice } from '@reduxjs/toolkit'
 import {
   createAPIPortPortResponseAction,
@@ -18,13 +18,15 @@ export interface Fleet {
   api_id: number
   api_name?: string
   api_ship: number[]
-  [key: string]: unknown
 }
 
 export type FleetsState = Fleet[]
 
 function mergeIndexifiedFleets(state: FleetsState, body: Fleet[]): FleetsState {
-  const bodyFleet = buildArray(body.map((fleet) => [fleet.api_id - 1, fleet] as [number, Fleet]))
+  const bodyFleet = constructArray(
+    body.map((fleet) => fleet.api_id - 1),
+    body,
+  )
   return compareUpdate(state, bodyFleet, 2)
 }
 
@@ -41,8 +43,8 @@ function fixPlaceholder(originShips: number[]): number[] {
 // [-1, -1] otherwise
 function findShip(fleets: FleetsState, shipId: number): [number, number] {
   for (let fleetId = 0; fleetId < fleets.length; fleetId++) {
-    const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId == shipId)
-    if (pos != -1) {
+    const pos = fleets[fleetId].api_ship.findIndex((_shipId) => _shipId === shipId)
+    if (pos !== -1) {
       return [fleetId, pos]
     }
   }
@@ -55,7 +57,7 @@ function findShip(fleets: FleetsState, shipId: number): [number, number] {
 // pos is 0..5
 function setShip(fleet: Fleet, pos: number, shipId: number): Fleet {
   const ships = fleet.api_ship.slice()
-  if (shipId == -1) {
+  if (shipId === -1) {
     ships.splice(pos, 1)
     ships.push(-1)
   } else {
@@ -75,28 +77,26 @@ const fleetsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body.api_deck_port as unknown as Fleet[], 2)
+        return compareUpdate(state, payload.body.api_deck_port, 2)
       })
       .addCase(createAPIGetMemberDeckResponseAction, (state, { payload }) => {
-        return mergeIndexifiedFleets(state, payload.body as unknown as Fleet[])
+        return mergeIndexifiedFleets(state, payload.body)
       })
       .addCase(createAPIReqKaisouPowerupResponseAction, (state, { payload }) => {
-        return mergeIndexifiedFleets(state, payload.body.api_deck as unknown as Fleet[])
+        return mergeIndexifiedFleets(state, payload.body.api_deck)
       })
       .addCase(createAPIGetMemberShipDeckResponseAction, (state, { payload }) => {
-        return mergeIndexifiedFleets(state, payload.body.api_deck_data as unknown as Fleet[])
+        return mergeIndexifiedFleets(state, payload.body.api_deck_data)
       })
       .addCase(createAPIGetMemberShip3ResponseAction, (state, { payload }) => {
-        return mergeIndexifiedFleets(state, payload.body.api_deck_data as unknown as Fleet[])
+        return mergeIndexifiedFleets(state, payload.body.api_deck_data)
       })
       .addCase(createAPIReqHenseiPresetSelectResponseAction, (state, { payload }) => {
         const api_deck_id = Number(payload.postBody.api_deck_id)
         const newState = state.slice()
-        return compareUpdate(
-          newState,
-          buildArray([[api_deck_id - 1, payload.body as unknown as Fleet]]),
-          2,
-        )
+        const patch: Fleet[] = []
+        patch[api_deck_id - 1] = payload.body
+        return compareUpdate(newState, patch, 2)
       })
       .addCase(createAPIReqKousyouDestroyshipResponseAction, (state, { payload }) => {
         const fleets = state.slice()

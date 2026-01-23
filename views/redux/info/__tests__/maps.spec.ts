@@ -4,8 +4,8 @@ import {
   createAPIReqMapSelectEventmapRankResponseAction,
 } from '../../actions'
 
-import mapInfoFixture from './__fixtures__/api_get_member_mapinfo.json'
-import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank.json'
+import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
+import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank_sets_rank.json'
 
 import type { GameResponsePayload } from '../../actions'
 import type {
@@ -29,36 +29,25 @@ describe('maps reducer', () => {
   })
 
   it('should handle api_get_member/mapinfo', () => {
-    const result = reducer(
-      {},
-      createAPIGetMemberMapinfoResponseAction(
-        mapInfoFixture as unknown as GameResponsePayload<
-          APIGetMemberMapinfoResponse,
-          APIGetMemberMapinfoRequest
-        >,
-      ),
-    )
+    const payload: GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest> =
+      mapInfoFixture
+    const result = reducer({}, createAPIGetMemberMapinfoResponseAction(payload))
     expect(result).toMatchSnapshot()
   })
 
   it('should handle api_req_map/select_eventmap_rank', () => {
-    const before: MapsState = reducer(
-      {},
-      createAPIGetMemberMapinfoResponseAction(
-        mapInfoFixture as unknown as GameResponsePayload<
-          APIGetMemberMapinfoResponse,
-          APIGetMemberMapinfoRequest
-        >,
-      ),
-    )
+    const mapInfoPayload: GameResponsePayload<
+      APIGetMemberMapinfoResponse,
+      APIGetMemberMapinfoRequest
+    > = mapInfoFixture
+    const selectEventmapRankPayload: GameResponsePayload<
+      APIReqMapSelectEventmapRankResponse,
+      APIReqMapSelectEventmapRankRequest
+    > = selectEventmapRankFixture
+    const before: MapsState = reducer({}, createAPIGetMemberMapinfoResponseAction(mapInfoPayload))
     const after = reducer(
       before,
-      createAPIReqMapSelectEventmapRankResponseAction(
-        selectEventmapRankFixture as unknown as GameResponsePayload<
-          APIReqMapSelectEventmapRankResponse,
-          APIReqMapSelectEventmapRankRequest
-        >,
-      ),
+      createAPIReqMapSelectEventmapRankResponseAction(selectEventmapRankPayload),
     )
     expect(after).toMatchDiffSnapshot(before)
   })

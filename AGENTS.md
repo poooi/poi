@@ -207,12 +207,50 @@ describe('reducer name', () => {
 
 - If reducers are migrated to RTK `createSlice` with `extraReducers(builder.addCase(actionCreator, ...))`, tests should dispatch the real action creator from `views/redux/actions.ts` (not raw `{ type: '...' }` objects), since `addCase` matches on the action creator.
 
+### Avoiding `as unknown as` in Tests
+
+- Prefer letting TypeScript infer fixture types by assigning to a typed variable:
+
+```ts
+const payload: GameResponsePayload<APIGetMemberNdockResponse[], APIGetMemberNdockRequest> =
+  ndockFixture
+dispatch(createAPIGetMemberNdockResponseAction(payload))
+```
+
+- If a test intentionally constructs an invalid payload to cover a guard branch, prefer `@ts-expect-error` with the specific reason instead of `as unknown as`:
+
+```ts
+const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartRequest> = {
+  method: 'POST',
+  path: '/kcsapi/api_req_nyukyo/start',
+  body: { api_result: 1, api_result_msg: 'ok' },
+  // @ts-expect-error api_ship_id is missing; test invalid payload guard
+  postBody: { api_verno: '1', api_highspeed: '0', api_ndock_id: '1' },
+  time: 0,
+}
+```
+
+### Avoiding Unnecessary `as` (Reducers/Tests)
+
+- Before adding a type assertion (`as T`), try removing it; often a small runtime guard (e.g. `typeof x === 'number'`) is enough for TypeScript to narrow.
+- For guard-branch tests, prefer `@ts-expect-error <reason>` on the specific invalid field over asserting the whole object.
+
+### Arrays vs `kcsapi` Element Types
+
+- Some endpoints return arrays in practice, but the `kcsapi` package only exports the element type.
+- Prefer typing the action creator payload as `T[]` (array) and add a short NOTE like:
+  `kcsapi exports the element type; this endpoint's body is an array in practice.`
+
 ### Response-Saver Fixtures
 
 - Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
 - Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
 - For tests that require response-saver fixtures, prefer copying the JSON file into the repo fixture path unchanged (no reformatting/minifying). This helps keep the fixture byte-for-byte comparable with the original response-saver file.
-- When naming new fixtures, use descriptive filenames that encode the scenario/branch being tested (e.g. `api_req_nyukyo_start_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion.json`).
+- Fixture naming: prefer “behavior first” names (include the noteworthy scenario/branch/result, not just the endpoint), since many endpoints have multiple interesting shapes.
+  - When choosing the “behavior” wording, consult the API doc / field semantics (e.g. meaning of flags like `api_locked`, `api_state`, etc.) so the filename reflects what the payload actually means.
+  - Examples: `api_req_nyukyo_start_highspeed_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion_shows_empty.json`, `api_port_port_typical.json`.
+  - The endpoint path may still include `lock` (e.g. `api_req_hensei/lock`), but the _behavior_ can be unlock (`api_locked: 0`) or lock (`api_locked: 1`). Reflect the behavior in the filename (e.g. `api_req_hensei_lock_unlock_ship.json`).
+  - If you rename a fixture, also rename/update its import variable and path references in tests, then run `npm test -- --testPathPattern="views/redux/info/__tests__"`.
 
 ## Cross-Slice Patterns
 

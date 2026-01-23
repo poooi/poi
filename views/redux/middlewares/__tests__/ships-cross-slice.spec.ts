@@ -9,7 +9,7 @@ import type { GameResponsePayload } from 'views/redux/actions'
 
 import { shipsCrossSliceMiddleware } from '../ships-cross-slice'
 
-import speedchangeFixture from '../../info/__tests__/__fixtures__/api_req_nyukyo_speedchange.json'
+import speedchangeFixture from '../../info/__tests__/__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
 
 describe('shipsCrossSliceMiddleware', () => {
   it('dispatches RepairCompleted for nyukyo/speedchange based on repairs state', () => {

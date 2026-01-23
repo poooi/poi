@@ -4,8 +4,8 @@ import {
   createAPIPortPortResponseAction,
 } from '../../actions'
 
-import ndockFixture from './__fixtures__/api_get_member_ndock.json'
-import portFixture from './__fixtures__/api_port_port.json'
+import ndockFixture from './__fixtures__/api_get_member_ndock_one_active_dock.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
 
 import type { GameResponsePayload } from '../../actions'
 import type {
@@ -39,25 +39,15 @@ describe('repairs reducer', () => {
   })
 
   it('should handle api_get_member/ndock', () => {
-    const result = reducer(
-      [],
-      createAPIGetMemberNdockResponseAction(
-        ndockFixture as unknown as GameResponsePayload<
-          APIGetMemberNdockResponse[],
-          APIGetMemberNdockRequest
-        >,
-      ),
-    )
+    const payload: GameResponsePayload<APIGetMemberNdockResponse[], APIGetMemberNdockRequest> =
+      ndockFixture
+    const result = reducer([], createAPIGetMemberNdockResponseAction(payload))
     expect(result).toMatchSnapshot()
   })
 
   it('should handle api_port/port', () => {
-    const result = reducer(
-      [],
-      createAPIPortPortResponseAction(
-        portFixture as unknown as GameResponsePayload<APIPortPortResponse, APIPortPortRequest>,
-      ),
-    )
+    const payload: GameResponsePayload<APIPortPortResponse, APIPortPortRequest> = portFixture
+    const result = reducer([], createAPIPortPortResponseAction(payload))
     expect(result).toMatchSnapshot()
   })
 })

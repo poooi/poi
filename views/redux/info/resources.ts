@@ -49,23 +49,20 @@ const resourcesSlice = createSlice({
         return compareUpdate(state, map(payload.body.api_material, 'api_value'))
       })
       .addCase(createAPIGetMemberMaterialResponseAction, (state, { payload }) => {
-        return compareUpdate(
-          state,
-          map(payload.body as unknown as { api_value: number }[], 'api_value'),
-        )
+        return compareUpdate(state, map(payload.body, 'api_value'))
       })
       .addCase(createAPIReqHokyuChargeResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body.api_material as unknown as number[])
+        return compareUpdate(state, payload.body.api_material)
       })
       .addCase(createAPIReqKousyouDestroyshipResponseAction, (state, { payload }) => {
         // These apis give only 4 resources
-        return compareUpdate(state, payload.body.api_material as unknown as number[])
+        return compareUpdate(state, payload.body.api_material)
       })
       .addCase(createAPIReqKousyouCreateitemResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body.api_material as unknown as number[])
+        return compareUpdate(state, payload.body.api_material)
       })
       .addCase(createAPIReqKousyouRemodelSlotResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body.api_after_material as unknown as number[])
+        return compareUpdate(state, payload.body.api_after_material)
       })
       .addCase(createAPIReqKousyouCreateshipResponseAction, (state, { payload }) => {
         const newState = state.slice()
@@ -81,7 +78,7 @@ const resourcesSlice = createSlice({
         return newState
       })
       .addCase(createAPIReqKousyouDestroyitem2ResponseAction, (state, { payload }) => {
-        return addArrayResources(state, payload.body.api_get_material as unknown as number[])
+        return addArrayResources(state, payload.body.api_get_material)
       })
       .addCase(createAPIReqNyukyoSpeedchangeResponseAction, (state) => {
         const newState = state.slice()
@@ -89,21 +86,16 @@ const resourcesSlice = createSlice({
         return newState
       })
       .addCase(createAPIReqAirCorpsSetPlaneResponseAction, (state, { payload }) => {
-        const afterBauxite = (payload.body as unknown as { api_after_bauxite?: number })
-          .api_after_bauxite
-        if (!afterBauxite) return state
+        const { api_after_bauxite: afterBauxite } = payload.body
+        if (afterBauxite == null) return state
         const newState = state.slice()
         newState[3] = afterBauxite
         return newState
       })
       .addCase(createAPIReqAirCorpsSupplyResponseAction, (state, { payload }) => {
         const newState = state.slice()
-        newState[0] = Number(
-          (payload.body as unknown as { api_after_fuel?: number }).api_after_fuel,
-        )
-        newState[3] = Number(
-          (payload.body as unknown as { api_after_bauxite?: number }).api_after_bauxite,
-        )
+        newState[0] = payload.body.api_after_fuel
+        newState[3] = payload.body.api_after_bauxite
         return newState
       })
   },

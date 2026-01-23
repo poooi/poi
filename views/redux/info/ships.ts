@@ -141,7 +141,7 @@ const shipsSlice = createSlice({
       .addCase(createAPIReqKaisouPowerupResponseAction, (state, { payload }) => {
         if (!payload.postBody?.api_id_items) return state
 
-        const ship = payload.body?.api_ship as Ship | undefined
+        const ship = payload.body?.api_ship
         if (!ship || typeof ship.api_id !== 'number') return state
 
         const nextState: ShipsState = {
@@ -162,7 +162,7 @@ const shipsSlice = createSlice({
         }
       })
       .addCase(createAPIReqKaisouMarriageResponseAction, (state, { payload }) => {
-        const ship = payload.body as Ship
+        const ship = payload.body
         if (!ship || typeof ship.api_id !== 'number') return state
         return {
           ...state,

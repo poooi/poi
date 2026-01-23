@@ -3,7 +3,7 @@ import {
   createAPIGetMemberMaterialResponseAction,
   createAPIReqNyukyoSpeedchangeResponseAction,
 } from 'views/redux/actions'
-import apiPortPortFixture from './__fixtures__/api_port_port.json'
+import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
 
 import { reducer, ResourcesState } from '../resources'
 

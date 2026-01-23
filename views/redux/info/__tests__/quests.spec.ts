@@ -73,8 +73,10 @@ describe('saveQuestTracking', () => {
 
   beforeEach(() => {
     writeMock.mockReset()
-    ;(globalThis as unknown as { APPDATA_PATH: string }).APPDATA_PATH = 'C:\\tmp'
-    ;(globalThis as unknown as { window: { getStore: jest.Mock } }).window = {
+    // @ts-expect-error APPDATA_PATH is injected by poi runtime
+    globalThis.APPDATA_PATH = 'C:\\tmp'
+    // @ts-expect-error window.getStore is injected by poi runtime
+    globalThis.window = {
       getStore: jest.fn((path: string) => {
         if (path === 'info.quests') {
           return {

@@ -1,5 +1,5 @@
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { isArray, keyBy, filter } from 'lodash'
+import { keyBy, filter } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
 import {
   createAPIGetMemberSlotItemResponseAction,
@@ -19,7 +19,6 @@ export interface Equip {
   api_id: number
   api_slotitem_id?: number
   api_locked?: number
-  [key: string]: unknown
 }
 
 export interface EquipsState {
@@ -36,8 +35,6 @@ function removeEquips(equips: EquipsState, idList: (string | number)[]): EquipsS
   return equips
 }
 
-const ensureArray = <T>(x: T | T[]): T[] => (isArray(x) ? x : [x])
-
 const equipsSlice = createSlice({
   name: 'equips',
   initialState: {} as EquipsState,
@@ -45,18 +42,15 @@ const equipsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createAPIGetMemberSlotItemResponseAction, (state, { payload }) => {
-        const bodyEquips = indexify(payload.body as unknown as Equip[])
+        const bodyEquips = indexify<Equip>(payload.body)
         return pickExisting(compareUpdate(state, bodyEquips), bodyEquips)
       })
       .addCase(createAPIGetMemberRequireInfoAction, (state, { payload }) => {
-        const bodyEquips = indexify((payload.body.api_slot_item || []) as unknown as Equip[])
+        const bodyEquips = indexify<Equip>(payload.body.api_slot_item || [])
         return pickExisting(compareUpdate(state, bodyEquips), bodyEquips)
       })
       .addCase(createAPIReqKousyouCreateitemResponseAction, (state, { payload }) => {
-        const body = payload.body as unknown as {
-          api_create_flag?: number
-          api_get_items?: Equip[]
-        }
+        const body = payload.body
         if (body.api_create_flag !== 1) return state
         const items = keyBy(
           filter(body.api_get_items, (item) => item?.api_id > 0),
@@ -68,17 +62,11 @@ const equipsSlice = createSlice({
         }
       })
       .addCase(createAPIReqKousyouGetShipResponseAction, (state, { payload }) => {
-        const body = payload.body as unknown as { api_slotitem?: Equip | Equip[] }
-        if (!body.api_slotitem) return state
-        if (Array.isArray(body.api_slotitem)) {
-          return {
-            ...state,
-            ...indexify(body.api_slotitem as unknown as Equip[]),
-          }
-        }
+        const items = payload.body.api_slotitem
+        if (!items || items.length === 0) return state
         return {
           ...state,
-          ...indexify([body.api_slotitem] as unknown as Equip[]),
+          ...indexify<Equip>(items),
         }
       })
       .addCase(createAPIReqKousyouDestroyitem2ResponseAction, (state, { payload }) => {
@@ -86,7 +74,7 @@ const equipsSlice = createSlice({
       })
       .addCase(createAPIReqKaisouLockResponseAction, (state, { payload }) => {
         const api_slotitem_id = String(payload.postBody.api_slotitem_id)
-        const api_locked = (payload.body as { api_locked?: number }).api_locked
+        const api_locked = payload.body.api_locked
         return {
           ...state,
           [api_slotitem_id]: {
@@ -96,11 +84,7 @@ const equipsSlice = createSlice({
         }
       })
       .addCase(createAPIReqKousyouRemodelSlotResponseAction, (state, { payload }) => {
-        const body = payload.body as {
-          api_use_slot_id?: number[]
-          api_remodel_flag?: number
-          api_after_slot?: Equip
-        }
+        const body = payload.body
         let nextState = state
         if (body.api_use_slot_id != null) {
           nextState = removeEquips(nextState, body.api_use_slot_id)
@@ -114,11 +98,13 @@ const equipsSlice = createSlice({
         return nextState
       })
       .addCase(createAPIReqMemberItemuseResponseAction, (state, { payload }) => {
-        const body = payload.body as { api_slotitem?: Equip | Equip[] }
-        if (!body.api_slotitem) return state
+        const items = (payload.body.api_getitem || [])
+          .flatMap((g) => (g?.api_slotitem ? [g.api_slotitem] : []))
+          .filter((x) => x && typeof x.api_id === 'number')
+        if (items.length === 0) return state
         return {
           ...state,
-          ...indexify(ensureArray(body.api_slotitem)),
+          ...indexify<Equip>(items),
         }
       })
       .addCase(createInfoEquipsRemoveByIdsAction, (state, { payload }) => {
