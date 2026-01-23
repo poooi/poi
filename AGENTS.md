@@ -120,6 +120,10 @@ export const createAPIExampleResponseAction = createAction<
 ### Payload Shape Notes
 
 - Some endpoints return arrays even if `kcsapi` exports an item type (e.g. `api_get_member/ndock` is `APIGetMemberNdockResponse[]` in practice). Prefer matching the real response shape when typing `GameResponsePayload`.
+- Avoid dangerous double assertions like `as unknown as T` in reducers/middlewares.
+  - Prefer typing at the action creator boundary (`views/redux/actions.ts`) and carrying real types through.
+  - If the real payload is known to be partial/variant, introduce a small `*Compat` type (e.g. `Partial<APIShip> & { api_id: number }`) and use it consistently.
+  - If you must assert, do it once at the boundary and keep internal logic strongly typed.
 
 ### Finding Available Types
 
