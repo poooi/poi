@@ -39,25 +39,15 @@ describe('repairs reducer', () => {
   })
 
   it('should handle api_get_member/ndock', () => {
-    const result = reducer(
-      [],
-      createAPIGetMemberNdockResponseAction(
-        ndockFixture as unknown as GameResponsePayload<
-          APIGetMemberNdockResponse[],
-          APIGetMemberNdockRequest
-        >,
-      ),
-    )
+    const payload: GameResponsePayload<APIGetMemberNdockResponse[], APIGetMemberNdockRequest> =
+      ndockFixture
+    const result = reducer([], createAPIGetMemberNdockResponseAction(payload))
     expect(result).toMatchSnapshot()
   })
 
   it('should handle api_port/port', () => {
-    const result = reducer(
-      [],
-      createAPIPortPortResponseAction(
-        portFixture as unknown as GameResponsePayload<APIPortPortResponse, APIPortPortRequest>,
-      ),
-    )
+    const payload: GameResponsePayload<APIPortPortResponse, APIPortPortRequest> = portFixture
+    const result = reducer([], createAPIPortPortResponseAction(payload))
     expect(result).toMatchSnapshot()
   })
 })

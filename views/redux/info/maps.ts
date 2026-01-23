@@ -1,4 +1,5 @@
-import { mapValues } from 'lodash'
+import type { APIMaphp } from 'kcsapi/api_req_map/select_eventmap_rank/response'
+
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
 import { createSlice } from '@reduxjs/toolkit'
@@ -16,15 +17,15 @@ export type Action =
 
 export interface MapEventInfo {
   api_selected_rank?: number
+  api_gauge_num?: number
+  api_gauge_type?: number
   api_max_maphp?: number
   api_now_maphp?: number
-  [key: string]: unknown
 }
 
 export interface MapInfo {
   api_id?: number
   api_eventmap?: MapEventInfo
-  [key: string]: unknown
 }
 
 export interface MapsState {
@@ -33,8 +34,9 @@ export interface MapsState {
 
 function normalizeState(state: MapsState): MapsState {
   // Compatibility: old api arranges maps in array
-  if (Array.isArray(state as unknown)) {
-    return indexify((state as unknown as MapInfo[]).filter((e) => e && e.api_id))
+  const legacy = state as unknown
+  if (Array.isArray(legacy)) {
+    return indexify((legacy as MapInfo[]).filter((e) => e && e.api_id))
   }
   return state
 }
@@ -47,7 +49,7 @@ const mapsSlice = createSlice({
     builder
       .addCase(createAPIGetMemberMapinfoResponseAction, (state, { payload }) => {
         const normalized = normalizeState(state)
-        const newState = indexify(payload.body.api_map_info as unknown as MapInfo[])
+        const newState = indexify<MapInfo>(payload.body.api_map_info)
         // The 3rd arg shouldn't be 2, because defeated map has no defeat_count
         // and will remain its value in that case
         return pickExisting(compareUpdate(normalized, newState, 1), newState)
@@ -55,13 +57,17 @@ const mapsSlice = createSlice({
       .addCase(createAPIReqMapSelectEventmapRankResponseAction, (state, { payload }) => {
         const normalized = normalizeState(state)
         const id = `${payload.postBody.api_maparea_id}${payload.postBody.api_map_no}`
+        const maphp: APIMaphp = payload.body.api_maphp
         return compareUpdate(
           normalized,
           {
             [id]: {
               api_eventmap: {
                 api_selected_rank: parseInt(payload.postBody.api_rank),
-                ...mapValues(payload.body.api_maphp as unknown as Record<string, unknown>, Number),
+                api_gauge_num: Number(maphp.api_gauge_num),
+                api_gauge_type: Number(maphp.api_gauge_type),
+                api_max_maphp: Number(maphp.api_max_maphp),
+                api_now_maphp: Number(maphp.api_now_maphp),
               },
             },
           },

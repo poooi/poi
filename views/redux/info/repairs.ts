@@ -32,7 +32,7 @@ interface RootState {
 }
 
 // Preserved fields: api_id, api_member_id
-const emptyRepair: Partial<RepairData> = {
+const emptyRepair: Omit<RepairData, 'api_id' | 'api_member_id'> = {
   api_complete_time: 0,
   api_complete_time_str: '0',
   api_item1: 0,
@@ -50,18 +50,18 @@ const repairsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createAPIGetMemberNdockResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body as unknown as RepairsState)
+        return compareUpdate(state, payload.body)
       })
       .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
-        return compareUpdate(state, payload.body.api_ndock as unknown as RepairsState)
+        return compareUpdate(state, payload.body.api_ndock)
       })
       .addCase(createAPIReqNyukyoSpeedchangeResponseAction, (state, { payload }) => {
         const api_ndock_id = Number(payload.postBody.api_ndock_id)
         const newState = state.slice()
         newState[api_ndock_id - 1] = {
-          ...newState[api_ndock_id - 1],
+          ...(newState[api_ndock_id - 1] || ({} as RepairData)),
           ...emptyRepair,
-        } as RepairData
+        }
         return newState
       })
   },

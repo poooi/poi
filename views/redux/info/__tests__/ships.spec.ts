@@ -49,7 +49,6 @@ import type {
   APIReqKousyouGetshipRequest,
   APIReqKousyouGetshipResponse,
   APIReqMapAnchorageRepairRequest,
-  APIReqMapAnchorageRepairResponse,
   APIReqNyukyoStartRequest,
   APIReqNyukyoStartResponse,
 } from 'kcsapi'
@@ -294,7 +293,8 @@ describe('ships reducer', () => {
     > = {
       method: 'POST',
       path: '/kcsapi/api_req_kaisou/marriage',
-      body: { api_id: 'nope' } as unknown as APIReqKaisouMarriageResponse,
+      // @ts-expect-error api_id should be number; test invalid payload guard
+      body: { api_id: 'nope' },
       postBody: { api_verno: '1', api_id: '1' },
       time: 0,
     }
@@ -366,10 +366,11 @@ describe('ships reducer', () => {
           APIReqKaisouPowerupResponse,
           APIReqKaisouPowerupRequest
         >),
+        // @ts-expect-error api_id_items is missing; test invalid payload guard
         postBody: {
           api_verno: '1',
           api_id: '28341',
-        } as unknown as APIReqKaisouPowerupRequest,
+        },
       }
     const result = reducer(initialState, createAPIReqKaisouPowerupResponseAction(badPayload))
     expect(result).toBe(initialState)
@@ -430,11 +431,12 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_nyukyo/start',
       body: { api_result: 1, api_result_msg: '成功' },
+      // @ts-expect-error api_ship_id is missing; test invalid payload guard
       postBody: {
         api_verno: '1',
         api_highspeed: '0',
         api_ndock_id: '1',
-      } as unknown as APIReqNyukyoStartRequest,
+      },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqNyukyoStartResponseAction(badPayload))
@@ -468,7 +470,7 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_map/anchorage_repair',
       body: {} as APIReqMapAnchorageRepairResponseCompat,
-      postBody: { api_verno: '1' } as unknown as APIReqMapAnchorageRepairRequest,
+      postBody: { api_verno: '1' },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqMapAnchorageRepairResponseAction(badPayload))
@@ -499,7 +501,8 @@ describe('ships reducer', () => {
       method: 'POST',
       path: '/kcsapi/api_req_kaisou/open_exslot',
       body: { api_result: 1, api_result_msg: '成功' },
-      postBody: { api_verno: '1' } as unknown as APIReqKaisouOpenExslotRequest,
+      // @ts-expect-error api_id is missing; test invalid payload guard
+      postBody: { api_verno: '1' },
       time: 0,
     }
     const result = reducer(initialState, createAPIReqKaisouOpenExslotResponseAction(badPayload))

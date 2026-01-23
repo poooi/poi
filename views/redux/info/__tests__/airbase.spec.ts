@@ -67,16 +67,9 @@ describe('airbase reduer', () => {
   })
 
   it('createAPIReqMapNextResponseAction', () => {
+    const payload: GameResponsePayload<APIReqMapNextResponse, APIReqMapNextRequest> = nextFixture
     expect(initialState).toMatchDiffSnapshot(
-      reducer(
-        initialState,
-        createAPIReqMapNextResponseAction(
-          nextFixture as unknown as GameResponsePayload<
-            APIReqMapNextResponse,
-            APIReqMapNextRequest
-          >,
-        ),
-      ),
+      reducer(initialState, createAPIReqMapNextResponseAction(payload)),
     )
   })
 })

@@ -238,14 +238,17 @@ export const createAPIReqAirCorpsChangeDeploymentBaseResponseAction = createActi
 >('@@Response/kcsapi/api_req_air_corps/change_deployment_base')
 
 export const createAPIGetMemberDeckResponseAction = createAction<
-  GameResponsePayload<APIGetMemberDeckResponse, APIGetMemberDeckRequest>
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
+  GameResponsePayload<APIGetMemberDeckResponse[], APIGetMemberDeckRequest>
 >('@@Response/kcsapi/api_get_member/deck')
 
 export const createAPIGetMemberMaterialResponseAction = createAction<
-  GameResponsePayload<APIGetMemberMaterialResponse, APIGetMemberMaterialRequest>
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
+  GameResponsePayload<APIGetMemberMaterialResponse[], APIGetMemberMaterialRequest>
 >('@@Response/kcsapi/api_get_member/material')
 
 export const createAPIGetMemberNdockResponseAction = createAction<
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
   GameResponsePayload<APIGetMemberNdockResponse[], APIGetMemberNdockRequest>
 >('@@Response/kcsapi/api_get_member/ndock')
 
@@ -258,7 +261,7 @@ export const createAPIGetMemberQuestlistResponseAction = createAction<
 >('@@Response/kcsapi/api_get_member/questlist')
 
 export const createAPIGetMemberShip2ResponseAction = createAction<
-  // NOTE: despite kcsapi typing, this endpoint returns an array in practice.
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
   // NOTE: response-saver payloads may omit fields that kcsapi requires (e.g. api_sally_area).
   GameResponsePayload<
     Array<Partial<APIGetMemberShip2Response> & { api_id: number }>,
@@ -275,11 +278,13 @@ export const createAPIGetMemberShipDeckResponseAction = createAction<
 >('@@Response/kcsapi/api_get_member/ship_deck')
 
 export const createAPIGetMemberSlotItemResponseAction = createAction<
-  GameResponsePayload<APIGetMemberSlotItemResponse, APIGetMemberSlotItemRequest>
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
+  GameResponsePayload<APIGetMemberSlotItemResponse[], APIGetMemberSlotItemRequest>
 >('@@Response/kcsapi/api_get_member/slot_item')
 
 export const createAPIGetMemberUseitemResponseAction = createAction<
-  GameResponsePayload<APIGetMemberUseitemResponse, APIGetMemberUseitemRequest>
+  // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
+  GameResponsePayload<APIGetMemberUseitemResponse[], APIGetMemberUseitemRequest>
 >('@@Response/kcsapi/api_get_member/useitem')
 
 export const createAPIReqCombinedBattleBattleresultResponseAction = createAction<
@@ -370,9 +375,18 @@ export const createAPIReqKousyouRemodelSlotResponseAction = createAction<
   GameResponsePayload<APIReqKousyouRemodelSlotResponse, APIReqKousyouRemodelSlotRequest>
 >('@@Response/kcsapi/api_req_kousyou/remodel_slot')
 
+// NOTE: response-saver payloads include these optional fields, but kcsapi types do not.
+export type APIReqKousyouRemodelSlotlistDetailResponseCompat =
+  APIReqKousyouRemodelSlotlistDetailResponse & {
+    api_req_useitem_id?: number
+    api_req_useitem_num?: number
+    api_req_useitem_id2?: number
+    api_req_useitem_num2?: number
+  }
+
 export const createAPIReqKousyouRemodelSlotlistDetailResponseAction = createAction<
   GameResponsePayload<
-    APIReqKousyouRemodelSlotlistDetailResponse,
+    APIReqKousyouRemodelSlotlistDetailResponseCompat,
     APIReqKousyouRemodelSlotlistDetailRequest
   >
 >('@@Response/kcsapi/api_req_kousyou/remodel_slotlist_detail')
