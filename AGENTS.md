@@ -246,7 +246,10 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 - Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
 - Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
 - For tests that require response-saver fixtures, prefer copying the JSON file into the repo fixture path unchanged (no reformatting/minifying). This helps keep the fixture byte-for-byte comparable with the original response-saver file.
-- When naming new fixtures, use descriptive filenames that encode the scenario/branch being tested (e.g. `api_req_nyukyo_start_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion.json`).
+- Fixture naming: prefer “behavior first” names (include the noteworthy scenario/branch/result, not just the endpoint), since many endpoints have multiple interesting shapes.
+  - Examples: `api_req_nyukyo_start_highspeed_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion_shows_empty.json`, `api_port_port_typical.json`.
+  - The endpoint path may still include `lock` (e.g. `api_req_hensei/lock`), but the _behavior_ can be unlock (`api_locked: 0`) or lock (`api_locked: 1`). Reflect the behavior in the filename (e.g. `api_req_hensei_lock_unlock_ship.json`).
+  - If you rename a fixture, also rename/update its import variable and path references in tests, then run `npm test -- --testPathPattern="views/redux/info/__tests__"`.
 
 ## Cross-Slice Patterns
 

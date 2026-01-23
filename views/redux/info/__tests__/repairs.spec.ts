@@ -4,8 +4,8 @@ import {
   createAPIPortPortResponseAction,
 } from '../../actions'
 
-import ndockFixture from './__fixtures__/api_get_member_ndock.json'
-import portFixture from './__fixtures__/api_port_port.json'
+import ndockFixture from './__fixtures__/api_get_member_ndock_one_active_dock.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
 
 import type { GameResponsePayload } from '../../actions'
 import type {

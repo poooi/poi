@@ -4,8 +4,8 @@ import {
   createAPIReqMapSelectEventmapRankResponseAction,
 } from '../../actions'
 
-import mapInfoFixture from './__fixtures__/api_get_member_mapinfo.json'
-import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank.json'
+import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
+import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank_sets_rank.json'
 
 import type { GameResponsePayload } from '../../actions'
 import type {
