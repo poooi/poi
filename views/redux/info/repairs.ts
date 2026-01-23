@@ -7,6 +7,7 @@ import {
   createAPIGetMemberNdockResponseAction,
   createAPIPortPortResponseAction,
   createAPIReqNyukyoSpeedchangeResponseAction,
+  createInfoShipsRepairCompletedAction,
 } from '../actions'
 
 export interface RepairData {
@@ -98,10 +99,7 @@ export const dockingCompleteObserver = observer<RootState, RepairsState>(
         repairDataPrev.api_state === 1 &&
         repairDataCur.api_state === 0
       ) {
-        dispatch({
-          type: '@@info.ships@RepairCompleted',
-          body: { api_ship_id: rstId },
-        })
+        dispatch(createInfoShipsRepairCompletedAction({ api_ship_id: rstId }))
       }
     })
   },

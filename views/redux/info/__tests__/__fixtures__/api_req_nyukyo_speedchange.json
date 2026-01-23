@@ -1,0 +1,7 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_nyukyo/speedchange",
+  "body": { "api_result": 1, "api_result_msg": "成功" },
+  "postBody": { "api_verno": "1", "api_ndock_id": "2" },
+  "time": 1612987135285
+}

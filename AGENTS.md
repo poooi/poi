@@ -129,6 +129,11 @@ To see available types from kcsapi:
 cat node_modules/kcsapi/index.ts
 ```
 
+### Field Name Reference
+
+- For game API field naming and rough payload shape reference, `ElectronicObserver/Other/Information/apilist.txt` is often useful (may be outdated; treat as a hint, not a source of truth).
+- URL: `https://raw.githubusercontent.com/andanteyk/ElectronicObserver/develop/ElectronicObserver/Other/Information/apilist.txt`
+
 ### Custom Types for Missing APIs
 
 Some API endpoints are not typed in kcsapi. Define custom types with a `FIXME` comment:
@@ -202,6 +207,24 @@ describe('reducer name', () => {
 
 - Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
 - Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
+- For tests that require response-saver fixtures, prefer copying the JSON file into the repo fixture path unchanged (no reformatting/minifying). This helps keep the fixture byte-for-byte comparable with the original response-saver file.
+- When naming new fixtures, use descriptive filenames that encode the scenario/branch being tested (e.g. `api_req_nyukyo_start_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion.json`).
+
+## Cross-Slice Patterns
+
+- Some behaviors span multiple API endpoints and/or slices. Prefer implementing these as a small middleware that listens to API response actions and dispatches an internal domain action.
+- Example: `views/redux/middlewares/ships-cross-slice.ts` listens to `@@Response/kcsapi/api_req_nyukyo/speedchange` (use bucket) and dispatches an internal ships action to mark the relevant ship as repaired.
+
+## Internal Domain Actions
+
+- Prefer internal RTK actions (e.g. `@@info.ships@RepairCompleted`) for cross-slice updates instead of dispatching raw `{ type: '...' }` objects.
+- Define internal actions in `views/redux/actions.ts` alongside API response actions so they are easy to import and strongly typed.
+
+## Instant Docking Completion
+
+- There is an in-game edge case where docking completes in < 60 seconds and the subsequent `api_get_member/ndock` response shows the dock as empty (`api_ship_id === 0`, `api_state === 0`) as if docking never happened.
+- `views/redux/info/ships.ts` handles this using a short-lived module-level state (`instantDockingCompletionState`) that is set by `api_req_nyukyo/start` and then consumed/reset during the next `api_get_member/ndock`.
+- When adding tests for this behavior, use a real fixture pair (`api_req_nyukyo_start_*` + `api_get_member_ndock_*`) to validate the repair is applied exactly once.
 
 ### Mocking External Dependencies
 

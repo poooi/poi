@@ -1,6 +1,27 @@
-import { values, get } from 'lodash'
+import { values } from 'lodash'
 
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
+import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  createAPIPortPortResponseAction,
+  createAPIGetMemberShipDeckResponseAction,
+  createAPIGetMemberShip3ResponseAction,
+  createAPIGetMemberShip2ResponseAction,
+  createAPIReqHokyuChargeResponseAction,
+  createAPIReqHenseiLockResponseAction,
+  createAPIReqKaisouPowerupResponseAction,
+  createAPIReqKaisouSlotExchangeIndexResponseAction,
+  createAPIReqKaisouMarriageResponseAction,
+  createAPIReqKaisouSlotDepriveResponseAction,
+  createAPIReqKousyouDestroyshipResponseAction,
+  createAPIReqKousyouGetShipResponseAction,
+  createAPIReqNyukyoStartResponseAction,
+  createAPIGetMemberNdockResponseAction,
+  createAPIReqMapAnchorageRepairResponseAction,
+  createAPIReqKaisouOpenExslotResponseAction,
+  createInfoShipsRepairCompletedAction,
+} from '../actions'
 
 export interface Ship {
   api_id: number
@@ -9,7 +30,7 @@ export interface Ship {
   api_maxhp?: number
   api_cond?: number
   api_ndock_time?: number
-  api_ndock_item?: [number, number]
+  api_ndock_item?: number[]
   api_locked?: number
   api_slot?: number[]
   api_slot_ex?: number
@@ -25,27 +46,6 @@ interface DockInfo {
   api_ship_id: number
 }
 
-interface Action {
-  type: string
-  body?: {
-    api_ship?: Ship | Ship[]
-    api_ship_data?: Ship | Ship[]
-    api_locked?: number
-    api_id?: number
-    [key: string]: unknown
-  } & Ship[] &
-    Ship &
-    DockInfo[]
-  postBody?: {
-    api_ship_id?: string
-    api_highspeed?: string
-    api_ndock_id?: string
-    api_id_items?: string
-    api_id?: string
-    [key: string]: unknown
-  }
-}
-
 function getShipIdList(csv: string): number[] {
   return csv
     .split(',')
@@ -56,16 +56,6 @@ function getShipIdList(csv: string): number[] {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value != null && typeof value === 'object'
-}
-
-interface Store {
-  info?: {
-    repairs?: {
-      [key: string]: {
-        api_ship_id?: number
-      }
-    }
-  }
 }
 
 interface InstantDockingState {
@@ -127,195 +117,199 @@ function completeRepair(ship: Ship): Ship {
   })
 }
 
-export function reducer(
-  state: ShipsState = {},
-  { type, body, postBody }: Action,
-  store?: Store,
-): ShipsState {
-  switch (type) {
-    case '@@Response/kcsapi/api_port/port': {
-      const ships = body?.api_ship
-      const bodyShips = indexify(Array.isArray(ships) ? ships : [])
-      return pickExisting(compareUpdate(state, bodyShips), bodyShips)
-    }
-    case '@@Response/kcsapi/api_get_member/ship_deck':
-    case '@@Response/kcsapi/api_get_member/ship3':
-      return compareUpdate(
-        state,
-        indexify(Array.isArray(body?.api_ship_data) ? body.api_ship_data : []),
-      )
-    case '@@Response/kcsapi/api_get_member/ship2':
-      return compareUpdate(state, indexify(Array.isArray(body) ? body : []))
-    case '@@Response/kcsapi/api_req_hokyu/charge':
-      // Only partial info is given for each ship here
-      return compareUpdate(state, indexify(Array.isArray(body?.api_ship) ? body.api_ship : []), 2)
-    case '@@Response/kcsapi/api_req_hensei/lock': {
-      const api_ship_id = postBody?.api_ship_id
-      if (!api_ship_id) {
-        break
-      }
-      return {
-        ...state,
-        [api_ship_id]: {
-          ...state[api_ship_id],
-          api_locked: body?.api_locked,
-        },
-      }
-    }
-    case '@@Response/kcsapi/api_req_kaisou/powerup':
-      if (!isRecord(body) || !isRecord(body.api_ship)) {
-        break
-      }
-      if (!postBody?.api_id_items) {
-        break
-      }
-      state = {
-        ...state,
-        [body.api_ship.api_id as number]: body.api_ship as unknown as Ship,
-      }
-      getShipIdList(postBody.api_id_items).forEach((id) => {
-        delete state[id]
+const shipsSlice = createSlice({
+  name: 'ships',
+  initialState: {} as ShipsState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createAPIPortPortResponseAction, (state, { payload }) => {
+        const ships = payload.body?.api_ship as unknown
+        const bodyShips = indexify(Array.isArray(ships) ? (ships as Ship[]) : [])
+        return pickExisting(compareUpdate(state, bodyShips), bodyShips)
       })
-      return state
-    case '@@Response/kcsapi/api_req_kaisou/slot_exchange_index': {
-      const api_ship_data = isRecord(body) ? body.api_ship_data : undefined
-      if (!isRecord(api_ship_data) || typeof api_ship_data.api_id !== 'number') {
-        break
-      }
-      return {
-        ...state,
-        [api_ship_data.api_id]: api_ship_data as unknown as Ship,
-      }
-    }
-    case '@@Response/kcsapi/api_req_kaisou/marriage': {
-      if (!body || typeof body.api_id !== 'number') {
-        break
-      }
-      return {
-        ...state,
-        [body.api_id]: body as Ship,
-      }
-    }
-    case '@@Response/kcsapi/api_req_kaisou/slot_deprive':
-      if (!isRecord(body) || !isRecord(body.api_ship_data)) {
-        break
-      }
-      return {
-        ...state,
-        ...indexify(values(body.api_ship_data) as unknown as Ship[]),
-      }
-    case '@@Response/kcsapi/api_req_kousyou/destroyship':
-      if (!postBody?.api_ship_id) {
-        break
-      }
-      state = { ...state }
-      getShipIdList(postBody.api_ship_id).forEach((id) => {
-        delete state[id]
+      .addCase(createAPIGetMemberShipDeckResponseAction, (state, { payload }) => {
+        return compareUpdate(
+          state,
+          indexify(
+            Array.isArray(payload.body?.api_ship_data)
+              ? (payload.body.api_ship_data as unknown as Ship[])
+              : [],
+          ),
+        )
       })
-      return state
-    case '@@Response/kcsapi/api_req_kousyou/getship':
-      if (!isRecord(body) || !isRecord(body.api_ship)) {
-        break
-      }
-      return {
-        ...state,
-        [body.api_ship.api_id as number]: body.api_ship as unknown as Ship,
-      }
-    case '@@Response/kcsapi/api_req_nyukyo/start': {
-      const api_ship_id = postBody?.api_ship_id
-      const api_highspeed = postBody?.api_highspeed
-      const api_ndock_id = postBody?.api_ndock_id
-      if (!api_ship_id) {
-        break
-      }
-
-      if (api_highspeed === '1') {
-        const ship = state[api_ship_id]
-        if (!ship) {
-          break
-        }
+      .addCase(createAPIGetMemberShip3ResponseAction, (state, { payload }) => {
+        return compareUpdate(
+          state,
+          indexify(
+            Array.isArray(payload.body?.api_ship_data)
+              ? (payload.body.api_ship_data as unknown as Ship[])
+              : [],
+          ),
+        )
+      })
+      .addCase(createAPIGetMemberShip2ResponseAction, (state, { payload }) => {
+        return compareUpdate(
+          state,
+          indexify(Array.isArray(payload.body) ? (payload.body as unknown as Ship[]) : []),
+        )
+      })
+      .addCase(createAPIReqHokyuChargeResponseAction, (state, { payload }) => {
+        return compareUpdate(
+          state,
+          indexify(
+            Array.isArray(payload.body?.api_ship)
+              ? (payload.body.api_ship as unknown as Ship[])
+              : [],
+          ),
+          2,
+        )
+      })
+      .addCase(createAPIReqHenseiLockResponseAction, (state, { payload }) => {
+        const api_ship_id = payload.postBody?.api_ship_id
+        if (!api_ship_id) return state
         return {
           ...state,
-          [api_ship_id]: completeRepair(ship),
+          [api_ship_id]: {
+            ...state[api_ship_id],
+            api_locked: (payload.body as { api_locked?: number } | undefined)?.api_locked,
+          },
         }
-      } else {
-        if (!api_ndock_id) {
-          break
+      })
+      .addCase(createAPIReqKaisouPowerupResponseAction, (state, { payload }) => {
+        const body = payload.body as unknown as { api_ship?: Ship }
+        if (!isRecord(body) || !isRecord(body.api_ship)) return state
+        if (!payload.postBody?.api_id_items) return state
+
+        const nextState: ShipsState = {
+          ...state,
+          [body.api_ship.api_id as number]: body.api_ship as Ship,
         }
-        instantDockingCompletionState = {
-          rstId: api_ship_id,
-          dockId: Number(api_ndock_id),
-        }
-      }
-      break
-    }
-    case '@@Response/kcsapi/api_get_member/ndock': {
-      let newState = state
-      if (instantDockingCompletionState) {
-        const { rstId, dockId } = instantDockingCompletionState
-        const dockInfo = Array.isArray(body)
-          ? (body as unknown as DockInfo[]).find((x) => x.api_id === dockId)
+        getShipIdList(payload.postBody.api_id_items).forEach((id) => {
+          delete nextState[id]
+        })
+        return nextState
+      })
+      .addCase(createAPIReqKaisouSlotExchangeIndexResponseAction, (state, { payload }) => {
+        const api_ship_data = isRecord(payload.body)
+          ? (payload.body as Record<string, unknown>).api_ship_data
           : undefined
-        if (dockInfo && dockInfo.api_ship_id === 0 && state[rstId]) {
-          newState = {
+        if (!isRecord(api_ship_data) || typeof api_ship_data.api_id !== 'number') return state
+        return {
+          ...state,
+          [api_ship_data.api_id]: api_ship_data as unknown as Ship,
+        }
+      })
+      .addCase(createAPIReqKaisouMarriageResponseAction, (state, { payload }) => {
+        const body = payload.body as unknown
+        if (!body || typeof (body as { api_id?: unknown }).api_id !== 'number') return state
+        const api_id = (body as { api_id: number }).api_id
+        return {
+          ...state,
+          [api_id]: body as Ship,
+        }
+      })
+      .addCase(createAPIReqKaisouSlotDepriveResponseAction, (state, { payload }) => {
+        const body = payload.body as unknown
+        if (!isRecord(body) || !isRecord((body as Record<string, unknown>).api_ship_data))
+          return state
+        return {
+          ...state,
+          ...indexify(
+            values((body as { api_ship_data: unknown }).api_ship_data) as unknown as Ship[],
+          ),
+        }
+      })
+      .addCase(createAPIReqKousyouDestroyshipResponseAction, (state, { payload }) => {
+        const api_ship_id = payload.postBody?.api_ship_id
+        if (!api_ship_id) return state
+        const nextState: ShipsState = { ...state }
+        getShipIdList(api_ship_id).forEach((id) => {
+          delete nextState[id]
+        })
+        return nextState
+      })
+      .addCase(createAPIReqKousyouGetShipResponseAction, (state, { payload }) => {
+        const body = payload.body as unknown
+        if (!isRecord(body) || !isRecord((body as Record<string, unknown>).api_ship)) return state
+        const ship = (body as { api_ship: Ship }).api_ship
+        return {
+          ...state,
+          [ship.api_id]: ship,
+        }
+      })
+      .addCase(createAPIReqNyukyoStartResponseAction, (state, { payload }) => {
+        const api_ship_id = payload.postBody?.api_ship_id
+        const api_highspeed = payload.postBody?.api_highspeed
+        const api_ndock_id = payload.postBody?.api_ndock_id
+        if (!api_ship_id) return state
+
+        if (api_highspeed === '1') {
+          const ship = state[api_ship_id]
+          if (!ship) return state
+          return {
             ...state,
-            [rstId]: completeRepair(state[rstId]),
+            [api_ship_id]: completeRepair(ship),
           }
         }
-      }
 
-      instantDockingCompletionState = null
-      return newState
-    }
-    case '@@Response/kcsapi/api_req_nyukyo/speedchange': {
-      const dockId = postBody?.api_ndock_id
-      if (!dockId) {
-        break
-      }
-      const api_ship_id = get(store, `info.repairs.${dockId}.api_ship_id`) as number | undefined
-      if (api_ship_id) {
-        const ship = state[api_ship_id]
-        if (!ship) {
-          break
+        if (api_ndock_id) {
+          instantDockingCompletionState = {
+            rstId: api_ship_id,
+            dockId: Number(api_ndock_id),
+          }
         }
+
+        return state
+      })
+      .addCase(createAPIGetMemberNdockResponseAction, (state, { payload }) => {
+        let newState = state
+        if (instantDockingCompletionState) {
+          const { rstId, dockId } = instantDockingCompletionState
+          const dockInfo = Array.isArray(payload.body)
+            ? (payload.body as unknown as DockInfo[]).find((x) => x.api_id === dockId)
+            : undefined
+          if (dockInfo && dockInfo.api_ship_id === 0 && state[rstId]) {
+            newState = {
+              ...state,
+              [rstId]: completeRepair(state[rstId]),
+            }
+          }
+        }
+        instantDockingCompletionState = null
+        return newState
+      })
+      .addCase(createInfoShipsRepairCompletedAction, (state, { payload }) => {
+        const api_ship_id = payload.api_ship_id
+        const ship = state[api_ship_id]
+        if (!ship) return state
         return {
           ...state,
           [api_ship_id]: completeRepair(ship),
         }
-      }
-      break
-    }
-    case '@@info.ships@RepairCompleted': {
-      const api_ship_id = isRecord(body) ? body.api_ship_id : undefined
-      if (typeof api_ship_id !== 'number') {
-        break
-      }
-      const ship = state[api_ship_id]
-      if (!ship) {
-        break
-      }
-      return {
-        ...state,
-        [api_ship_id]: completeRepair(ship),
-      }
-    }
-    case '@@Response/kcsapi/api_req_map/anchorage_repair': {
-      const api_ship_data = isRecord(body) ? body.api_ship_data : undefined
-      return compareUpdate(state, indexify(Array.isArray(api_ship_data) ? api_ship_data : []))
-    }
-    case '@@Response/kcsapi/api_req_kaisou/open_exslot': {
-      const api_id = postBody?.api_id
-      if (!api_id) {
-        break
-      }
-      return {
-        ...state,
-        [api_id]: {
-          ...state[api_id],
-          api_slot_ex: -1, // 補強スロット 0=未解放, -1=未装備
-        },
-      }
-    }
-  }
-  return state
-}
+      })
+      .addCase(createAPIReqMapAnchorageRepairResponseAction, (state, { payload }) => {
+        const body = payload.body as unknown
+        const api_ship_data = isRecord(body)
+          ? (body as Record<string, unknown>).api_ship_data
+          : undefined
+        return compareUpdate(
+          state,
+          indexify(Array.isArray(api_ship_data) ? (api_ship_data as Ship[]) : []),
+        )
+      })
+      .addCase(createAPIReqKaisouOpenExslotResponseAction, (state, { payload }) => {
+        const api_id = payload.postBody?.api_id
+        if (!api_id) return state
+        return {
+          ...state,
+          [api_id]: {
+            ...state[api_id],
+            api_slot_ex: -1,
+          },
+        }
+      })
+  },
+})
+
+export const reducer = shipsSlice.reducer

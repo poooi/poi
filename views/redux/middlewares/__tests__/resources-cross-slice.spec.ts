@@ -11,7 +11,7 @@ import { resourcesCrossSliceMiddleware } from '../../middlewares/resources-cross
 type PreloadedInfoState = {
   info: {
     constructions: Array<{ api_item1?: number }>
-    ships: Record<string, { api_ndock_item?: [number, number] }>
+    ships: Record<string, { api_ndock_item?: number[] }>
   }
 }
 
