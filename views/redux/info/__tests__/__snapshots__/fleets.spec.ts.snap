@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`fleets reducer should handle api_port/port 1`] = `
+Array [
+  Object {
+    "api_flagship": "0",
+    "api_id": 1,
+    "api_member_id": 20221524,
+    "api_mission": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "api_name": "Mistral",
+    "api_name_id": "",
+    "api_ship": Array [
+      227,
+      30655,
+      40,
+      60,
+      30656,
+      31427,
+    ],
+  },
+  Object {
+    "api_flagship": "0",
+    "api_id": 2,
+    "api_member_id": 20221524,
+    "api_mission": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "api_name": "Gregale",
+    "api_name_id": "",
+    "api_ship": Array [
+      46,
+      19,
+      36,
+      2404,
+      30582,
+      1,
+    ],
+  },
+  Object {
+    "api_flagship": "0",
+    "api_id": 3,
+    "api_member_id": 20221524,
+    "api_mission": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "api_name": "Sirocco",
+    "api_name_id": "",
+    "api_ship": Array [
+      255,
+      30443,
+      86,
+      5,
+      9,
+      31447,
+    ],
+  },
+  Object {
+    "api_flagship": "0",
+    "api_id": 4,
+    "api_member_id": 20221524,
+    "api_mission": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "api_name": "Libeccio",
+    "api_name_id": "",
+    "api_ship": Array [
+      1356,
+      10179,
+      30570,
+      28,
+      35,
+      29560,
+    ],
+  },
+]
+`;

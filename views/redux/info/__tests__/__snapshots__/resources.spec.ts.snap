@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`resources reducer should handle api_port/port 1`] = `
+Array [
+  159951,
+  269440,
+  339830,
+  109016,
+  1391,
+  190,
+  2462,
+  195,
+]
+`;

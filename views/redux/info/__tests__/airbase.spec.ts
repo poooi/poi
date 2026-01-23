@@ -1,13 +1,12 @@
 import { reducer } from '../airbase'
 
-// FIXME: cannot find a good fixture for createAPIReqMapNextResponseAction
-
 import {
   createAPIGetMemberMapinfoResponseAction,
   createAPIReqAirCorpsSetPlaneResponseAction,
   createAPIReqAirCorpsChangeNameResponseAction,
   createAPIReqAirCorpsSetActionResponseAction,
   createAPIReqAirCorpsSupplyResponseAction,
+  createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
 } from '../../actions'
 
@@ -16,6 +15,10 @@ import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane.json'
 import changeNameFixture from './__fixtures__/api_req_air_corps_change_name.json'
 import setActionFixture from './__fixtures__/api_req_air_corps_set_action.json'
 import supplyFixture from './__fixtures__/api_req_air_corps_supply.json'
+import nextFixture from './__fixtures__/api_req_map_next.json'
+
+import type { GameResponsePayload } from '../../actions'
+import type { APIReqMapNextRequest, APIReqMapNextResponse } from 'kcsapi'
 
 describe('airbase reduer', () => {
   const initialState = reducer([], createAPIGetMemberMapinfoResponseAction(mapInfoFixture))
@@ -60,6 +63,20 @@ describe('airbase reduer', () => {
     expect(initialState).toMatchDiffSnapshot(
       // @ts-expect-error testing empty reducer
       reducer(initialState, createAPIPortPortResponseAction({})),
+    )
+  })
+
+  it('createAPIReqMapNextResponseAction', () => {
+    expect(initialState).toMatchDiffSnapshot(
+      reducer(
+        initialState,
+        createAPIReqMapNextResponseAction(
+          nextFixture as unknown as GameResponsePayload<
+            APIReqMapNextResponse,
+            APIReqMapNextRequest
+          >,
+        ),
+      ),
     )
   })
 })

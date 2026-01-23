@@ -9,13 +9,13 @@ Array [
       "api_base": 5,
       "api_bonus": 0,
     },
-    "api_name": "第一基地航空隊",
+    "api_name": "第2基地航空隊",
     "api_plane_info": Array [
       Object {
         "api_cond": 1,
-        "api_count": 18,
+        "api_count": 15,
         "api_max_count": 18,
-        "api_slotid": 26059,
+        "api_slotid": 52792,
         "api_squadron_id": 1,
         "api_state": 1,
       },
@@ -29,9 +29,9 @@ Array [
       },
       Object {
         "api_cond": 1,
-        "api_count": 15,
+        "api_count": 18,
         "api_max_count": 18,
-        "api_slotid": 52792,
+        "api_slotid": 26059,
         "api_squadron_id": 3,
         "api_state": 1,
       },
@@ -110,6 +110,38 @@ Array [
     ],
     "api_rid": 3,
   },
+  Object {
+    "api_action_kind": 0,
+    "api_area_id": 53,
+    "api_distance": Object {
+      "api_base": 0,
+      "api_bonus": 0,
+    },
+    "api_name": "第一基地航空隊",
+    "api_plane_info": Array [
+      Object {
+        "api_slotid": 0,
+        "api_squadron_id": 1,
+        "api_state": 0,
+      },
+      Object {
+        "api_slotid": 0,
+        "api_squadron_id": 2,
+        "api_state": 0,
+      },
+      Object {
+        "api_slotid": 0,
+        "api_squadron_id": 3,
+        "api_state": 0,
+      },
+      Object {
+        "api_slotid": 0,
+        "api_squadron_id": 4,
+        "api_state": 0,
+      },
+    ],
+    "api_rid": 1,
+  },
 ]
 `;
 
@@ -129,12 +161,12 @@ exports[`airbase reduer createAPIReqAirCorpsChangeNameResponseAction 1`] = `
         \\"api_base\\": 5,
         \\"api_bonus\\": 0,
       },
--     \\"api_name\\": \\"第一基地航空隊\\",
+-     \\"api_name\\": \\"第2基地航空隊\\",
 +     \\"api_name\\": \\"第1基地航空隊\\",
       \\"api_plane_info\\": Array [
         Object {
           \\"api_cond\\": 1,
-          \\"api_count\\": 18,
+          \\"api_count\\": 15,
           \\"api_max_count\\": 18,"
 `;
 
@@ -157,41 +189,7 @@ exports[`airbase reduer createAPIReqAirCorpsSetActionResponseAction 1`] = `
 
 exports[`airbase reduer createAPIReqAirCorpsSetPlaneResponseAction 1`] = `
 "Snapshot Diff:
-- First value
-+ Second value
-
-@@ -8,13 +8,13 @@
-      },
-      \\"api_name\\": \\"第一基地航空隊\\",
-      \\"api_plane_info\\": Array [
-        Object {
-          \\"api_cond\\": 1,
--         \\"api_count\\": 18,
-+         \\"api_count\\": 15,
-          \\"api_max_count\\": 18,
--         \\"api_slotid\\": 26059,
-+         \\"api_slotid\\": 52792,
-          \\"api_squadron_id\\": 1,
-          \\"api_state\\": 1,
-        },
-        Object {
-          \\"api_cond\\": 1,
-@@ -24,13 +24,13 @@
-          \\"api_squadron_id\\": 2,
-          \\"api_state\\": 1,
-        },
-        Object {
-          \\"api_cond\\": 1,
--         \\"api_count\\": 15,
-+         \\"api_count\\": 18,
-          \\"api_max_count\\": 18,
--         \\"api_slotid\\": 52792,
-+         \\"api_slotid\\": 26059,
-          \\"api_squadron_id\\": 3,
-          \\"api_state\\": 1,
-        },
-        Object {
-          \\"api_cond\\": 1,"
+Compared values have no visual difference."
 `;
 
 exports[`airbase reduer createAPIReqAirCorpsSupplyResponseAction 1`] = `
@@ -199,17 +197,22 @@ exports[`airbase reduer createAPIReqAirCorpsSupplyResponseAction 1`] = `
 - First value
 + Second value
 
-@@ -24,11 +24,11 @@
-          \\"api_squadron_id\\": 2,
-          \\"api_state\\": 1,
+@@ -26,11 +26,11 @@
         },
         Object {
           \\"api_cond\\": 1,
--         \\"api_count\\": 15,
-+         \\"api_count\\": 18,
+          \\"api_count\\": 18,
           \\"api_max_count\\": 18,
-          \\"api_slotid\\": 52792,
+-         \\"api_slotid\\": 26059,
++         \\"api_slotid\\": 52792,
           \\"api_squadron_id\\": 3,
           \\"api_state\\": 1,
-        },"
+        },
+        Object {
+          \\"api_cond\\": 1,"
+`;
+
+exports[`airbase reduer createAPIReqMapNextResponseAction 1`] = `
+"Snapshot Diff:
+Compared values have no visual difference."
 `;

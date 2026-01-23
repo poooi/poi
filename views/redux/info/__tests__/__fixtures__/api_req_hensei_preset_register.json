@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_hensei/preset_register","body":{"api_preset_no":1,"api_name":"Mistral","api_name_id":"","api_ship":[5392,30655,31490,1339,30656,31427]},"postBody":{"api_verno":"1","api_deck_id":"1","api_preset_no":"1","api_name":"Mistral","api_name_id":""},"time":1612556888039}

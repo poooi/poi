@@ -8,6 +8,8 @@ import { reducerFactory, onConfigChange } from './reducer-factory'
 import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
 import { dockingCompleteObserver } from './info/repairs'
 import { dispatchBattleResult } from './battle'
+import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-slice'
+import { equipsCrossSliceMiddleware } from './middlewares/equips-cross-slice'
 
 const cachePosition = '_storeCache'
 const targetPaths = ['const', 'info', 'fcd', 'wctf']
@@ -57,7 +59,9 @@ const composeEnhancers =
 export const store = createStore(
   reducerFactory(),
   storeCache,
-  composeEnhancers(applyMiddleware(thunk)),
+  composeEnhancers(
+    applyMiddleware(thunk, resourcesCrossSliceMiddleware, equipsCrossSliceMiddleware),
+  ),
 )
 window.dispatch = store.dispatch
 
