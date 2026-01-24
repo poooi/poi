@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_kaisou/lock","body":{"api_locked":1},"postBody":{"api_verno":"1","api_slotitem_id":"50634"},"time":1611433683045}

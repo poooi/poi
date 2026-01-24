@@ -1,0 +1,29 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_mission/result",
+  "body": {
+    "api_ship_id": [-1, 46, 19, 36, 2404, 87, 3222],
+    "api_clear_result": 1,
+    "api_get_exp": 20,
+    "api_member_lv": 120,
+    "api_member_exp": 16026752,
+    "api_get_ship_exp": [22, 15, 15, 15, 15, 15],
+    "api_get_exp_lvup": [
+      [527976, 545500],
+      [853898, 1000000],
+      [870273, 1000000],
+      [199070, 203400],
+      [447870, 458000],
+      [183909, 188500]
+    ],
+    "api_maparea_name": "鎮守府海域",
+    "api_detail": "外海まで足を延ばし、艦隊の練度<br>を高めよう！",
+    "api_quest_name": "長距離練習航海",
+    "api_quest_level": 1,
+    "api_get_material": [0, 115, 34, 0],
+    "api_useitem_flag": [1, 0],
+    "api_get_item1": { "api_useitem_id": -1, "api_useitem_name": null, "api_useitem_count": 1 }
+  },
+  "postBody": { "api_verno": "1", "api_deck_id": "2" },
+  "time": 1575801121375
+}

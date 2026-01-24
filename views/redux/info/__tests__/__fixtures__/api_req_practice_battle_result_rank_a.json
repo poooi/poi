@@ -1,0 +1,30 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_practice/battle_result",
+  "body": {
+    "api_ship_id": [364, 576, 1496, 276, 141, 399],
+    "api_win_rank": "A",
+    "api_get_exp": 45,
+    "api_member_lv": 120,
+    "api_member_exp": 16030615,
+    "api_get_base_exp": 608,
+    "api_mvp": 3,
+    "api_get_ship_exp": [-1, 1048, 699, 1398, 699, 699, 699],
+    "api_get_exp_lvup": [
+      [705489, 761500],
+      [2103951, 2115000],
+      [2923935, 3021000],
+      [5937, 6600, 7800],
+      [488197, 491500],
+      [956819, 1000000]
+    ],
+    "api_enemy_info": {
+      "api_user_name": "",
+      "api_level": 120,
+      "api_rank": "元帥",
+      "api_deck_name": "かかったなアホが！"
+    }
+  },
+  "postBody": { "api_verno": "1" },
+  "time": 1575895084416
+}

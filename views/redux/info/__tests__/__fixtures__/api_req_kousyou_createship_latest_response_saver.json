@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_kousyou/createship","body":{"api_result":1,"api_result_msg":"成功"},"postBody":{"api_verno":"1","api_kdock_id":"1","api_large_flag":"0","api_item1":"30","api_item2":"30","api_item3":"30","api_item4":"30","api_item5":"1","api_highspeed":"0"},"time":1634583298382}

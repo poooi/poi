@@ -1,0 +1,56 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_get_member/kdock",
+  "body": [
+    {
+      "api_id": 1,
+      "api_state": 2,
+      "api_created_ship_id": 53,
+      "api_complete_time": 1575823099088,
+      "api_complete_time_str": "2019-12-09 01:38:19",
+      "api_item1": 30,
+      "api_item2": 30,
+      "api_item3": 30,
+      "api_item4": 30,
+      "api_item5": 1
+    },
+    {
+      "api_id": 2,
+      "api_state": 3,
+      "api_created_ship_id": 41,
+      "api_complete_time": 0,
+      "api_complete_time_str": "0",
+      "api_item1": 30,
+      "api_item2": 30,
+      "api_item3": 30,
+      "api_item4": 30,
+      "api_item5": 1
+    },
+    {
+      "api_id": 3,
+      "api_state": -1,
+      "api_created_ship_id": 0,
+      "api_complete_time": 0,
+      "api_complete_time_str": "0",
+      "api_item1": 0,
+      "api_item2": 0,
+      "api_item3": 0,
+      "api_item4": 0,
+      "api_item5": 0
+    },
+    {
+      "api_id": 4,
+      "api_state": -1,
+      "api_created_ship_id": 0,
+      "api_complete_time": 0,
+      "api_complete_time_str": "0",
+      "api_item1": 0,
+      "api_item2": 0,
+      "api_item3": 0,
+      "api_item4": 0,
+      "api_item5": 0
+    }
+  ],
+  "postBody": { "api_verno": "1" },
+  "time": 1575819498866
+}

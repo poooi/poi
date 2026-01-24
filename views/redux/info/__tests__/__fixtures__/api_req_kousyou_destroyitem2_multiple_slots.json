@@ -1,0 +1,7 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_kousyou/destroyitem2",
+  "body": { "api_get_material": [0, 6, 6, 0] },
+  "postBody": { "api_verno": "1", "api_slotitem_ids": "46555,46569,46597,46624,46546,46357" },
+  "time": 1575819736703
+}
