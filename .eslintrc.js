@@ -10,7 +10,7 @@ const configExtends = [
 
 const configExtendsPrettier = ['prettier']
 
-/** @type { import("@types/eslint").Linter.Config } */
+/** @type { import("eslint").Linter.Config } */
 module.exports = {
   env: {
     browser: true,
@@ -64,6 +64,11 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         ...configExtendsPrettier,
       ],
+      rules: {
+        // Keep repo behavior: report but don't hard-fail on these.
+        '@typescript-eslint/no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
+        '@typescript-eslint/no-explicit-any': 'warn',
+      },
       settings: {
         'import/resolver': {
           node: {

@@ -151,6 +151,31 @@ export const createInfoShipsRepairCompletedAction = createAction<{ api_ship_id: 
 
 export type InfoShipsRepairCompletedAction = ReturnType<typeof createInfoShipsRepairCompletedAction>
 
+export interface QuestOptions {
+  shipname?: string[]
+  shiptype?: number[]
+  shipclass?: number[]
+  mission?: string
+  maparea?: number
+  mapcell?: number
+  slotitemType2?: number
+  times?: number
+  shipType?: number
+}
+
+export const createInfoQuestsDailyRefreshAction = createAction<{ now: number }>(
+  '@@info.quests@DailyRefresh',
+)
+
+export const createInfoQuestsApplyProgressAction = createAction<{
+  event: string
+  options: QuestOptions | null
+  delta: number
+}>('@@info.quests@ApplyProgress')
+
+export type InfoQuestsDailyRefreshAction = ReturnType<typeof createInfoQuestsDailyRefreshAction>
+export type InfoQuestsApplyProgressAction = ReturnType<typeof createInfoQuestsApplyProgressAction>
+
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
 >('@@Response/kcsapi/api_get_member/mapinfo')
