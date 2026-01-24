@@ -237,6 +237,15 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 - For guard-branch tests, prefer `@ts-expect-error <reason>` on the specific invalid field over asserting the whole object.
 - Treat `as` as a last resort: only use it when TypeScript cannot express a known runtime truth, and keep the asserted surface area as small as possible (assert one field at the boundary, not the whole payload).
 
+### How to Avoid `as` in Practice
+
+- Push typing to the boundary: type API response action creators in `views/redux/actions.ts` so reducers/middlewares can be strongly typed without assertions.
+- Prefer `unknown` + narrowing instead of asserting: use `typeof`, `Array.isArray`, `in`, null checks, and `Number.isFinite` to validate data before use.
+- Use small runtime-safe helpers over `as`: e.g. `const x = String(value ?? '')`, `const n = Number(v); if (!Number.isFinite(n)) return`.
+- Prefer `satisfies` for fixtures/objects: `const payload = fixture satisfies GameResponsePayload<...>` verifies shape at compile time without changing the value's type.
+- For intentionally-invalid fixtures in tests, use `@ts-expect-error` on the specific invalid field instead of casting the whole object.
+- If a structure is "almost" typed but missing fields (response-saver partials), introduce a named `*Compat` type (e.g. `Partial<T> & { api_id: number }`) rather than `as unknown as T`.
+
 ### Avoiding `any`
 
 - Avoid `any` as much as possible; prefer precise types, `unknown` + narrowing, or small `*Compat` types when payloads are partial/variant.

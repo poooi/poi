@@ -11,6 +11,7 @@ import { dispatchBattleResult } from './battle'
 import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-slice'
 import { equipsCrossSliceMiddleware } from './middlewares/equips-cross-slice'
 import { shipsCrossSliceMiddleware } from './middlewares/ships-cross-slice'
+import { questsCrossSliceMiddleware } from './middlewares/quests-cross-slice'
 
 const cachePosition = '_storeCache'
 const targetPaths = ['const', 'info', 'fcd', 'wctf']
@@ -66,6 +67,7 @@ export const store = createStore(
       resourcesCrossSliceMiddleware,
       equipsCrossSliceMiddleware,
       shipsCrossSliceMiddleware,
+      questsCrossSliceMiddleware,
     ),
   ),
 )

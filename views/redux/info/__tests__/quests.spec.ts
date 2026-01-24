@@ -1,8 +1,27 @@
-import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
+import {
+  getTanakalendarQuarterMonth,
+  saveQuestTracking,
+  reducer as questsReducer,
+  type SubgoalRecord,
+  type QuestsState,
+} from '../quests'
 import moment from 'moment-timezone'
 import { padStart } from 'lodash'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 // @ts-expect-error legacy .es module has no type declarations
 import Scheduler from 'views/services/scheduler'
+
+import {
+  createAPIReqKousyouCreateitemResponseAction,
+  createAPIReqKousyouDestroyitem2ResponseAction,
+  createAPIReqKousyouRemodelSlotResponseAction,
+  createAPIReqMapNextResponseAction,
+  createAPIReqMapStartResponseAction,
+  createAPIReqMissionResultResponseAction,
+  createAPIReqPracticeResultResponseAction,
+} from 'views/redux/actions'
+
+import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 
 import practiceResultFixture from './__fixtures__/api_req_practice_battle_result_rank_a.json'
 import missionResultFixture from './__fixtures__/api_req_mission_result_success.json'
@@ -11,8 +30,6 @@ import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_succ
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
 import mapStartFixture from './__fixtures__/api_req_map_start_updates_event_gauge_hp.json'
 import mapNextFixture from './__fixtures__/api_req_map_next_with_itemget.json'
-
-const responseType = (path: string): string => `@@Response/kcsapi${path.replace(/^\/kcsapi/, '')}`
 
 jest.mock('@electron/remote', () => ({
   require: (moduleName: string) => {
@@ -146,7 +163,95 @@ describe('saveQuestTracking', () => {
 })
 
 describe('quests reducer - questTrackingReducer paths', () => {
-  const baseState = {
+  type PayloadOf<AC> = AC extends (payload: infer P) => unknown ? P : never
+
+  function getSubgoal(state: QuestsState, questId: number, subgoalId: string): SubgoalRecord {
+    const record = state.records[questId]
+    if (!record) throw new Error(`Missing quest record ${questId}`)
+
+    const subgoal = record[subgoalId]
+    if (!subgoal || typeof subgoal !== 'object') {
+      throw new Error(`Missing subgoal ${subgoalId} for quest ${questId}`)
+    }
+    return subgoal
+  }
+
+  type RootStateShape = {
+    info: {
+      ships: Record<string, { api_ship_id?: number }>
+      fleets: Record<string, { api_ship?: number[] }>
+      equips: Record<string, { api_slotitem_id?: number }>
+    }
+    const: {
+      $ships: Record<string, { api_name?: string; api_stype?: number; api_ctype?: number }>
+      $equips: Record<string, { api_type?: number[] }>
+    }
+    sortie: { sortieStatus: boolean[] }
+    battle: { result: { deckShipId: number[] } }
+  }
+
+  type PreloadedState = {
+    info?: Partial<RootStateShape['info']>
+    const?: Partial<RootStateShape['const']>
+    sortie?: Partial<RootStateShape['sortie']>
+    battle?: Partial<RootStateShape['battle']>
+  }
+
+  function createTestStore(preloadedQuests: QuestsState, preloadedState: PreloadedState = {}) {
+    const defaults: RootStateShape = {
+      info: { ships: {}, fleets: {}, equips: {} },
+      const: { $ships: {}, $equips: {} },
+      sortie: { sortieStatus: [] },
+      battle: { result: { deckShipId: [] } },
+    }
+
+    const rootState = {
+      ...defaults,
+      ...preloadedState,
+      info: {
+        ...defaults.info,
+        ...(preloadedState.info || {}),
+      },
+      const: {
+        ...defaults.const,
+        ...(preloadedState.const || {}),
+      },
+      sortie: {
+        ...defaults.sortie,
+        ...(preloadedState.sortie || {}),
+      },
+      battle: {
+        ...defaults.battle,
+        ...(preloadedState.battle || {}),
+      },
+    }
+
+    const rootReducer = combineReducers({
+      info: combineReducers({
+        quests: questsReducer,
+        ships: (state = rootState.info.ships) => state,
+        fleets: (state = rootState.info.fleets) => state,
+        equips: (state = rootState.info.equips) => state,
+      }),
+      const: (state = rootState.const) => state,
+      sortie: (state = rootState.sortie) => state,
+      battle: (state = rootState.battle) => state,
+    })
+
+    return createStore(
+      rootReducer,
+      {
+        ...rootState,
+        info: {
+          ...rootState.info,
+          quests: preloadedQuests,
+        },
+      },
+      applyMiddleware(questsCrossSliceMiddleware),
+    )
+  }
+
+  const baseState: QuestsState = {
     records: {
       1: { id: 1, practice: { count: 0, required: 1 } },
       2: { id: 2, practice_win: { count: 0, required: 1 } },
@@ -206,69 +311,62 @@ describe('quests reducer - questTrackingReducer paths', () => {
   }
 
   it('practice + practice_win', () => {
-    const store = {
+    const store = createTestStore(baseState, {
       sortie: { sortieStatus: [true] },
       info: {
         fleets: { 0: { api_ship: [1] } },
         ships: { 1: { api_ship_id: 1 } },
       },
-      const: { $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } } },
-    }
+      const: { $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } }, $equips: {} },
+    })
 
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(practiceResultFixture.path),
-        body: practiceResultFixture.body,
-      },
-      store,
-    )
+    const payload = practiceResultFixture satisfies PayloadOf<
+      typeof createAPIReqPracticeResultResponseAction
+    >
+    store.dispatch(createAPIReqPracticeResultResponseAction(payload))
 
-    expect((after.records[1] as any).practice.count).toBe(1)
-    expect((after.records[2] as any).practice_win.count).toBe(1)
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 1, 'practice').count).toBe(1)
+    expect(getSubgoal(after, 2, 'practice_win').count).toBe(1)
   })
 
   it('mission_success', () => {
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(missionResultFixture.path),
-        body: missionResultFixture.body,
-      },
-      {},
-    )
-    expect((after.records[3] as any).mission_success.count).toBe(1)
+    const store = createTestStore(baseState)
+    const payload = missionResultFixture satisfies PayloadOf<
+      typeof createAPIReqMissionResultResponseAction
+    >
+    store.dispatch(createAPIReqMissionResultResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 3, 'mission_success').count).toBe(1)
   })
 
   it('create_item increments by api_get_items size', () => {
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(createItemFixture.path),
-        body: createItemFixture.body,
-      },
-      {},
-    )
-    expect((after.records[4] as any).create_item.count).toBe(
+    const store = createTestStore(baseState)
+    const payload = createItemFixture satisfies PayloadOf<
+      typeof createAPIReqKousyouCreateitemResponseAction
+    >
+    store.dispatch(createAPIReqKousyouCreateitemResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 4, 'create_item').count).toBe(
       createItemFixture.body.api_get_items.length,
     )
   })
 
   it('remodel_item', () => {
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(remodelSlotFixture.path),
-        body: remodelSlotFixture.body,
-        postBody: remodelSlotFixture.postBody,
-      },
-      {},
-    )
-    expect((after.records[5] as any).remodel_item.count).toBe(1)
+    const store = createTestStore(baseState)
+    const payload = remodelSlotFixture satisfies PayloadOf<
+      typeof createAPIReqKousyouRemodelSlotResponseAction
+    >
+    store.dispatch(createAPIReqKousyouRemodelSlotResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 5, 'remodel_item').count).toBe(1)
   })
 
   it('destory_item counts by slotitemType2 + times', () => {
-    const store = {
+    const store = createTestStore(baseState, {
       info: {
         equips: {
           46555: { api_slotitem_id: 10 },
@@ -280,54 +378,45 @@ describe('quests reducer - questTrackingReducer paths', () => {
         },
       },
       const: {
+        $ships: {},
         $equips: {
           10: { api_type: [0, 0, 2] },
         },
       },
-    }
+    })
 
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(destroyItemFixture.path),
-        postBody: destroyItemFixture.postBody,
-      },
-      store,
-    )
+    const payload = destroyItemFixture satisfies PayloadOf<
+      typeof createAPIReqKousyouDestroyitem2ResponseAction
+    >
+    store.dispatch(createAPIReqKousyouDestroyitem2ResponseAction(payload))
 
-    expect((after.records[6] as any).destory_item.count).toBe(2)
-    expect((after.records[6] as any)['destory_item@times'].count).toBe(1)
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 6, 'destory_item').count).toBe(2)
+    expect(getSubgoal(after, 6, 'destory_item@times').count).toBe(1)
   })
 
   it('sally', () => {
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(mapStartFixture.path),
-        body: mapStartFixture.body,
-      },
-      {},
-    )
-    expect((after.records[7] as any).sally.count).toBe(1)
+    const store = createTestStore(baseState)
+    const payload = mapStartFixture satisfies PayloadOf<typeof createAPIReqMapStartResponseAction>
+    store.dispatch(createAPIReqMapStartResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 7, 'sally').count).toBe(1)
   })
 
   it('reach_mapcell', () => {
-    const store = {
+    const store = createTestStore(baseState, {
       battle: { result: { deckShipId: [1] } },
       info: {
         ships: { 1: { api_ship_id: 1 } },
       },
-      const: { $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } } },
-    }
+      const: { $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } }, $equips: {} },
+    })
 
-    const after = questsReducer(
-      baseState,
-      {
-        type: responseType(mapNextFixture.path),
-        body: mapNextFixture.body,
-      },
-      store,
-    )
-    expect((after.records[8] as any).reach_mapcell.count).toBe(1)
+    const payload = mapNextFixture satisfies PayloadOf<typeof createAPIReqMapNextResponseAction>
+    store.dispatch(createAPIReqMapNextResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 8, 'reach_mapcell').count).toBe(1)
   })
 })
