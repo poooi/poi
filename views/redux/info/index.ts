@@ -36,9 +36,17 @@ export interface InfoState {
 
 interface Action {
   type: string
+  // Legacy reducers used `action.body`, RTK action creators use `action.payload.body`.
   body?: {
     api_basic?: {
       api_member_id: string | number
+    }
+  }
+  payload?: {
+    body?: {
+      api_basic?: {
+        api_member_id: string | number
+      }
     }
   }
 }
@@ -47,7 +55,8 @@ export const reducer = reduceReducers(
   (state: InfoState | undefined, action: Action): InfoState | Partial<InfoState> => {
     if (action.type === '@@Response/kcsapi/api_get_member/require_info') {
       const oldAdmiralId = get(state, 'basic.api_member_id')
-      const admiralId = action.body?.api_basic?.api_member_id
+      const admiralId =
+        action.body?.api_basic?.api_member_id ?? action.payload?.body?.api_basic?.api_member_id
       if (oldAdmiralId != admiralId) {
         return pick(state, ['basic']) as Partial<InfoState>
       }

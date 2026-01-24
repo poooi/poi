@@ -11,6 +11,7 @@ poi is an Electron-based game assistant for Kantai Collection (KanColle). It use
 - **TypeScript** for type safety
 - **Jest** for testing
 - **ESLint** with Prettier for code formatting
+- **npm** as the package manager
 
 ## Project Structure
 
@@ -234,6 +235,17 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 
 - Before adding a type assertion (`as T`), try removing it; often a small runtime guard (e.g. `typeof x === 'number'`) is enough for TypeScript to narrow.
 - For guard-branch tests, prefer `@ts-expect-error <reason>` on the specific invalid field over asserting the whole object.
+- Treat `as` as a last resort: only use it when TypeScript cannot express a known runtime truth, and keep the asserted surface area as small as possible (assert one field at the boundary, not the whole payload).
+
+### Avoiding `any`
+
+- Avoid `any` as much as possible; prefer precise types, `unknown` + narrowing, or small `*Compat` types when payloads are partial/variant.
+
+### Privacy / Redaction
+
+- Do not include user-specific identifiers or local absolute paths in anything that will be sent outside this machine (commit messages, PR titles/bodies, issue comments, release notes, etc.).
+- Examples to avoid: usernames, `%APPDATA%` expansions like `C:\Users\<name>\...`, machine names, home directory paths.
+- Prefer repo-relative paths (e.g. `views/redux/info/__tests__/...`) and generic wording (e.g. “from response-saver capture”) instead.
 
 ### Arrays vs `kcsapi` Element Types
 
@@ -246,6 +258,7 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 - Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
 - Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
 - For tests that require response-saver fixtures, prefer copying the JSON file into the repo fixture path unchanged (no reformatting/minifying). This helps keep the fixture byte-for-byte comparable with the original response-saver file.
+- If you don't know where the response-saver fixtures live on this machine, ask the user (it's machine-specific). Once you have the location, prefer searching there for a real capture before writing a synthetic payload.
 - Fixture naming: prefer “behavior first” names (include the noteworthy scenario/branch/result, not just the endpoint), since many endpoints have multiple interesting shapes.
   - When choosing the “behavior” wording, consult the API doc / field semantics (e.g. meaning of flags like `api_locked`, `api_state`, etc.) so the filename reflects what the payload actually means.
   - Examples: `api_req_nyukyo_start_highspeed_bucket_repairs_immediately.json`, `api_get_member_ndock_instant_completion_shows_empty.json`, `api_port_port_typical.json`.
@@ -331,3 +344,8 @@ The main store structure under `info`:
 4. **Export types** from reducers for use by components
 5. **Use null guards** for potentially undefined values from API responses
 6. **Keep FIXME comments** for custom types that should be added to kcsapi
+
+## Conversation Context Marker
+
+- Append the exact phrase `This is Chiba assisting` to every assistant response.
+- If that phrase is missing, treat it as a context-loss signal and re-load `AGENTS.md` into the working context.

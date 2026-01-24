@@ -81,10 +81,16 @@ const airBaseSlice = createSlice({
         const indexSrc = findSquadronIndex(api_base_id_src)
         const indexDst = findSquadronIndex(api_base_id)
 
+        const squadronSrc = state[indexSrc]
+        const squadronDst = state[indexDst]
+        if (!squadronSrc || !squadronDst) {
+          return state
+        }
+
         // The equip in question should exist.
         if (
           findIndex(
-            state[indexSrc].api_plane_info,
+            squadronSrc.api_plane_info || [],
             (squad) => squad.api_slotid === +api_item_id,
           ) === -1
         ) {
@@ -98,8 +104,8 @@ const airBaseSlice = createSlice({
 
         const convertItem = ({ api_distance, api_plane_info }: APIBaseItem) => {
           const squadrons = constructArray(
-            api_plane_info.map((p) => p.api_squadron_id - 1),
-            api_plane_info,
+            (api_plane_info || []).map((p) => p.api_squadron_id - 1),
+            api_plane_info || [],
           )
           return {
             api_distance,

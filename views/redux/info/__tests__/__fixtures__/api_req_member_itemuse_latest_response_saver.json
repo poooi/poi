@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_member/itemuse","body":{"api_caution_flag":0,"api_flag":1,"api_getitem":[{"api_usemst":5,"api_mst_id":44,"api_getcount":1400}]},"postBody":{"api_verno":"1","api_useitem_id":"12","api_force_flag":"0","api_exchange_type":"41"},"time":1613123035531}

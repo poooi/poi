@@ -1,0 +1,1 @@
+{"method":"POST","path":"/kcsapi/api_req_kousyou/createitem","body":{"api_create_flag":0,"api_material":[160002,269502,339830,109016,1391,190,2462,195],"api_get_items":[{"api_id":-1,"api_slotitem_id":-1}],"api_unset_items":null},"postBody":{"api_verno":"1","api_item1":"10","api_item2":"10","api_item3":"10","api_item4":"10","api_multiple_flag":"0"},"time":1634583302640}

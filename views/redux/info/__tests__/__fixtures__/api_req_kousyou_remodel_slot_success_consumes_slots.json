@@ -1,0 +1,15 @@
+{
+  "method": "POST",
+  "path": "/kcsapi/api_req_kousyou/remodel_slot",
+  "body": {
+    "api_remodel_flag": 1,
+    "api_remodel_id": [104, 104],
+    "api_after_material": [170703, 299613, 299700, 167982, 2593, 661, 2947, 31],
+    "api_voice_ship_id": 151,
+    "api_voice_id": 9,
+    "api_after_slot": { "api_id": 4497, "api_slotitem_id": 104, "api_locked": 1, "api_level": 8 },
+    "api_use_slot_id": [42888, 43345]
+  },
+  "postBody": { "api_verno": "1", "api_id": "241", "api_slot_id": "4497", "api_certain_flag": "0" },
+  "time": 1575819686218
+}
