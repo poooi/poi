@@ -241,6 +241,12 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 
 - Avoid `any` as much as possible; prefer precise types, `unknown` + narrowing, or small `*Compat` types when payloads are partial/variant.
 
+### Privacy / Redaction
+
+- Do not include user-specific identifiers or local absolute paths in anything that will be sent outside this machine (commit messages, PR titles/bodies, issue comments, release notes, etc.).
+- Examples to avoid: usernames, `%APPDATA%` expansions like `C:\Users\<name>\...`, machine names, home directory paths.
+- Prefer repo-relative paths (e.g. `views/redux/info/__tests__/...`) and generic wording (e.g. “from response-saver capture”) instead.
+
 ### Arrays vs `kcsapi` Element Types
 
 - Some endpoints return arrays in practice, but the `kcsapi` package only exports the element type.
