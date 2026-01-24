@@ -151,6 +151,31 @@ export const createInfoShipsRepairCompletedAction = createAction<{ api_ship_id: 
 
 export type InfoShipsRepairCompletedAction = ReturnType<typeof createInfoShipsRepairCompletedAction>
 
+export type QuestEvent =
+  | 'practice'
+  | 'practice_win'
+  | 'practice_win_a'
+  | 'practice_win_s'
+  | 'mission_success'
+  | 'repair'
+  | 'supply'
+  | 'create_item'
+  | 'create_ship'
+  | 'destroy_ship'
+  | 'remodel_item'
+  | 'remodel_ship'
+  | 'destory_item'
+  | 'sally'
+  | 'reach_mapcell'
+  | 'battle'
+  | 'battle_win'
+  | 'battle_rank_s'
+  | 'battle_boss'
+  | 'battle_boss_win'
+  | 'battle_boss_win_rank_a'
+  | 'battle_boss_win_rank_s'
+  | 'sinking'
+
 export interface QuestOptions {
   shipname?: string[]
   shiptype?: number[]
@@ -168,7 +193,7 @@ export const createInfoQuestsDailyRefreshAction = createAction<{ now: number }>(
 )
 
 export const createInfoQuestsApplyProgressAction = createAction<{
-  event: string
+  event: QuestEvent
   options: QuestOptions | null
   delta: number
 }>('@@info.quests@ApplyProgress')

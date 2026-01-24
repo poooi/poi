@@ -125,38 +125,6 @@ function filterObjectValue<T extends Record<string, unknown>>(
   return obj
 }
 
-// Assert one of a and b is a number, and the other is a string
-function stringNumberEqual(a: string | number, b: string | number): boolean {
-  if (typeof a === 'string') [a, b] = [b, a]
-  b = parseFloat(b as string)
-  return a === b
-}
-
-// Update all key/val pair of items into obj with Object.assign({}, obj, items)
-// If non of items needs updating, return the original obj.
-// Will handle parseInt.
-function updateObject<T extends Record<string, unknown>>(obj: T, items: Partial<T>): T {
-  const originalObj = obj
-  forEach(items, (v, k) => {
-    let thisUpdate: boolean
-    const typeNew = typeof v
-    const typeOld = typeof obj[k as keyof T]
-    if (
-      (typeNew === 'string' && typeOld === 'number') ||
-      (typeNew === 'number' && typeOld === 'string')
-    ) {
-      thisUpdate = !stringNumberEqual(v as string | number, obj[k as keyof T] as string | number)
-    } else {
-      thisUpdate = v !== obj[k as keyof T]
-    }
-    if (thisUpdate) {
-      obj = copyIfSame(obj, originalObj)
-      ;(obj as Record<string, unknown>)[k] = v
-    }
-  })
-  return obj
-}
-
 function isDifferentDay(time1: number, time2: number): boolean {
   const day1 = Math.floor((time1 + FOUR_HOUR_OFFSET) / ONE_DAY)
   const day2 = Math.floor((time2 + FOUR_HOUR_OFFSET) / ONE_DAY)
@@ -453,7 +421,24 @@ function updateQuestRecordFactory(
           shipclass: options?.shipclass || [],
         }
         if (!satisfyShip(subgoal, { ...options, ...shipOptions })) return
-        const subrecord = { ...(record[_event] as SubgoalRecord) }
+        const existing = record[_event]
+        if (!existing || typeof existing !== 'object') {
+          return
+        }
+        const existingSubrecord = existing as Partial<SubgoalRecord>
+        if (
+          typeof existingSubrecord.count !== 'number' ||
+          typeof existingSubrecord.required !== 'number' ||
+          !Number.isFinite(existingSubrecord.count) ||
+          !Number.isFinite(existingSubrecord.required)
+        ) {
+          return
+        }
+        const subrecord: SubgoalRecord = {
+          count: existingSubrecord.count,
+          required: existingSubrecord.required,
+          description: existingSubrecord.description,
+        }
         subrecord.count = Math.min(subrecord.required, subrecord.count + delta)
         records[api_no] = {
           ...record,
@@ -745,7 +730,7 @@ export function saveQuestTracking(records: Record<string | number, QuestRecord>)
   const { activeQuests } = window.getStore('info.quests') as {
     activeQuests: Record<string | number, ActiveQuest>
   }
-  const admiralId = window.getStore('info.basic.api_member_id') as string
+  const admiralId = String(window.getStore('info.basic.api_member_id') ?? '')
   fileWriter.write(
     questTrackingPath(admiralId),
     CSON.stringify(processQuestRecords(records, activeQuests)),

@@ -76,6 +76,10 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
   const state = store.getState() as RootState
   const a = action as AnyAction
 
+  // This middleware intentionally dispatches progress actions based on the pre-action state.
+  // Some quest conditions (e.g. counting equips by type when destroying them) need access to
+  // state that will be mutated by the original action's reducers.
+
   if (a.type === createAPIReqPracticeResultResponseAction.type) {
     const body = a.payload?.body || {}
     const winRank = String(body.api_win_rank || '')
