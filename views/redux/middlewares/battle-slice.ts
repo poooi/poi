@@ -13,6 +13,10 @@ type AnyAction = {
 export const battleSliceMiddleware: Middleware = (store) => (next) => (action) => {
   const a = action as AnyAction
 
+  // Let reducers/middlewares process the original API response first so any
+  // upstream state (info/sortie/etc.) is up to date when building battle state.
+  const result = next(action)
+
   switch (a.type) {
     case '@@Response/kcsapi/api_port/port':
       store.dispatch(battleActions.port())
@@ -68,5 +72,5 @@ export const battleSliceMiddleware: Middleware = (store) => (next) => (action) =
       break
   }
 
-  return next(action)
+  return result
 }

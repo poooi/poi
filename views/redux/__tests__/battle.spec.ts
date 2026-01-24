@@ -584,6 +584,56 @@ describe('views/redux/battleSlice + middleware', () => {
 
     expect(store.getState().battle._status.result?.deckShipId).toEqual([])
   })
+
+  it('uses post-reduction rootState when other reducers update on the same action', () => {
+    type RootState = {
+      info?: { fleets?: Record<string, { api_ship?: number[] }>; ships?: Record<string, unknown> }
+      const?: { $ships?: Record<string, unknown> }
+      sortie?: { combinedFlag?: number; sortieStatus?: boolean[] }
+      battle?: BattleSliceState
+    }
+
+    const initBattle = battleSlice.reducer(undefined, { type: '@@INIT' })
+    const initialState: RootState = {
+      info: { fleets: {}, ships: {} },
+      const: { $ships: { 10: { api_name: 'TestShip' } } },
+      sortie: { combinedFlag: 0, sortieStatus: [true] },
+      battle: initBattle,
+    }
+
+    const rootReducer: Reducer<RootState, AnyAction> = (state = initialState, action) => {
+      const nextState: RootState = { ...state }
+
+      // Simulate another reducer updating info state on the same API action.
+      if (action.type === '@@Response/kcsapi/api_req_sortie/battle') {
+        nextState.info = {
+          fleets: { 0: { api_ship: [100] } },
+          ships: {
+            100: {
+              api_id: 100,
+              api_ship_id: 10,
+              api_nowhp: 9,
+              api_maxhp: 12,
+              api_slot: [],
+            },
+          },
+        }
+      }
+
+      nextState.battle = battleSlice.reducer(state.battle!, action)
+      return nextState
+    }
+
+    const store = createStore(rootReducer, initialState, applyMiddleware(battleSliceMiddleware))
+    store.dispatch({
+      type: '@@Response/kcsapi/api_req_sortie/battle',
+      path: '/kcsapi/api_req_sortie/battle',
+      time: 123,
+      body: { api_formation: [1, 2, 3], api_deck_id: 1 },
+    })
+
+    expect((store.getState().battle as BattleSliceState)._status.result?.deckShipId).toEqual([100])
+  })
 })
 
 describe('dispatchBattleResult', () => {
