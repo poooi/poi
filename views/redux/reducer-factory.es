@@ -7,7 +7,7 @@ import { reducer as sortie } from './sortie'
 import { reducer as timers } from './timers'
 import { reducer as config } from './config'
 import { reducer as layout } from './layout'
-import { reducer as battle } from './battle'
+import { battleSlice } from './battle'
 import { reducer as plugins } from './plugins'
 import { reducer as fcd } from './fcd'
 import { reducer as ui } from './ui'
@@ -48,7 +48,7 @@ export function reducerFactory(extensionConfig) {
     sortie,
     timers,
     config,
-    battle,
+    battle: battleSlice.reducer,
     misc,
     fcd,
     plugins: window.isMain ? plugins : () => emptyObject,
