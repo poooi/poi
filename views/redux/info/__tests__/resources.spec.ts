@@ -24,6 +24,15 @@ import createshipFixture from './__fixtures__/api_req_kousyou_createship_latest_
 import { reducer, ResourcesState } from '../resources'
 
 describe('resources reducer', () => {
+  const ResourceIndex = {
+    fuel: 0,
+    ammo: 1,
+    steel: 2,
+    bauxite: 3,
+    bucket: 5,
+    // Index 6 is typically screw, but this suite only asserts it via createship spend.
+  } as const
+
   it('should return initial state', () => {
     expect(reducer(undefined, { type: '@@INIT' })).toEqual([])
   })
@@ -42,7 +51,7 @@ describe('resources reducer', () => {
   it('should handle api_get_member/material', () => {
     const result = reducer([], createAPIGetMemberMaterialResponseAction(materialFixture))
     expect(result.length).toBe(8)
-    expect(result[0]).toBe(169106)
+    expect(result[ResourceIndex.fuel]).toBe(169106)
     expect(result[7]).toBe(34)
   })
 
@@ -52,7 +61,7 @@ describe('resources reducer', () => {
       currentState,
       createAPIReqNyukyoSpeedchangeResponseAction(speedchangeFixture),
     )
-    expect(result[5]).toBe(99) // Bucket decremented by 1
+    expect(result[ResourceIndex.bucket]).toBe(99) // Bucket decremented by 1
   })
 
   it('should handle api_req_hokyu/charge', () => {
@@ -141,7 +150,7 @@ describe('resources reducer', () => {
       createAPIReqAirCorpsSetPlaneResponseAction(setPlaneFixture),
     )
     // Fixture doesn't include api_after_bauxite; reducer should no-op.
-    expect(result[3]).toBe(100)
+    expect(result[ResourceIndex.bauxite]).toBe(100)
   })
 
   it('should handle api_req_air_corps/supply - updates fuel and bauxite', () => {
@@ -149,8 +158,8 @@ describe('resources reducer', () => {
       [100, 1, 1, 200, 1, 1, 1, 1],
       createAPIReqAirCorpsSupplyResponseAction(supplyFixture),
     )
-    expect(result[0]).toBe(102760)
-    expect(result[3]).toBe(71894)
+    expect(result[ResourceIndex.fuel]).toBe(102760)
+    expect(result[ResourceIndex.bauxite]).toBe(71894)
   })
 
   it('should handle @@info.resources@ApplyDelta', () => {

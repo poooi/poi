@@ -171,6 +171,14 @@ describe('equips reducer', () => {
     })
   })
 
+  it('should handle @@info.equips@RemoveByIds - no change for unknown ids', () => {
+    const initialState: EquipsState = {
+      '1': createEquip(1, 1),
+    }
+    const result = reducer(initialState, createInfoEquipsRemoveByIdsAction({ ids: ['999'] }))
+    expect(result).toEqual(initialState)
+  })
+
   it('should handle api_req_kaisou/lock', () => {
     const initialState: EquipsState = {
       '1': createEquip(1, 1),

@@ -136,6 +136,38 @@ describe('useitems reducer', () => {
     expect(result['99'].api_count).toBe(-1)
   })
 
+  it('should handle api_req_kousyou/remodel_slotlist_detail - creates missing items when consumed', () => {
+    const initialState: UseItemsState = {}
+
+    const payload: GameResponsePayload<
+      APIReqKousyouRemodelSlotlistDetailResponseCompat,
+      APIReqKousyouRemodelSlotlistDetailRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_req_kousyou/remodel_slotlist_detail',
+      body: {
+        api_certain_buildkit: 0,
+        api_certain_remodelkit: 0,
+        api_change_flag: 0,
+        api_req_buildkit: 0,
+        api_req_remodelkit: 0,
+        api_req_slot_id: 0,
+        api_req_slot_num: 0,
+        api_req_useitem_id: 1,
+        api_req_useitem_num: 3,
+      },
+      postBody: { api_verno: '1', api_id: '1', api_slot_id: '1' },
+      time: 0,
+    }
+
+    const result = reducer(
+      initialState,
+      createAPIReqKousyouRemodelSlotlistDetailResponseAction(payload),
+    )
+
+    expect(result['1'].api_count).toBe(-3)
+  })
+
   it('should handle api_req_mission/result - award increments', () => {
     const initialState: UseItemsState = {
       '4': { api_id: 4, api_count: 0 },
