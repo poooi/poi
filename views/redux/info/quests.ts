@@ -636,21 +636,6 @@ const questsSlice = createSlice({
           delete activeQuests[api_quest_id]
           state.activeQuests = activeQuests
         }
-
-        const bonus = (action.payload.body as { api_bounus?: unknown }).api_bounus
-        let maybeCapacity: number | undefined
-        if (bonus && typeof bonus === 'object' && !Array.isArray(bonus)) {
-          const api_count = (bonus as { api_count?: unknown }).api_count
-          if (typeof api_count === 'number') {
-            maybeCapacity = api_count
-          }
-        } else if (Array.isArray(bonus)) {
-          const api_count = (bonus[0] as { api_count?: unknown } | undefined)?.api_count
-          if (typeof api_count === 'number') {
-            maybeCapacity = api_count
-          }
-        }
-        if (typeof maybeCapacity === 'number') state.activeCapacity = maybeCapacity
       })
       .addCase(createInfoQuestsApplyProgressAction, (state, action) => {
         const { event, options, delta } = action.payload
