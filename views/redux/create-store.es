@@ -8,6 +8,7 @@ import { reducerFactory, onConfigChange } from './reducer-factory'
 import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
 import { dockingCompleteObserver } from './info/repairs'
 import { dispatchBattleResult } from './battle'
+import { battleSliceMiddleware } from './middlewares/battle-slice'
 import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-slice'
 import { equipsCrossSliceMiddleware } from './middlewares/equips-cross-slice'
 import { shipsCrossSliceMiddleware } from './middlewares/ships-cross-slice'
@@ -64,6 +65,7 @@ export const store = createStore(
   composeEnhancers(
     applyMiddleware(
       thunk,
+      battleSliceMiddleware,
       resourcesCrossSliceMiddleware,
       equipsCrossSliceMiddleware,
       shipsCrossSliceMiddleware,
