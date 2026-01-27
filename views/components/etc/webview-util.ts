@@ -39,7 +39,7 @@ export const webviewEvents = [
   'update-target-url',
 ] as const
 
-type EventName = typeof webviewEvents[number]
+type EventName = (typeof webviewEvents)[number]
 type HandlerName<T extends EventName> = CamelCase<`on-${T}`>
 
 export type HandlerFields = {

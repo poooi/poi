@@ -373,76 +373,76 @@ export class KanGameWrapper extends Component {
             percent: 0,
           }
         : overlayPanel
-        ? {
-            px: 0,
-            percent: 100,
-          }
-        : isHorizontal
-        ? {
-            px: 0,
-            percent: ((windowHeight - poiControlHeight) * 500) / (windowWidth * 3),
-          }
-        : {
-            px: windowWidth,
-            percent: 0,
-          }
+          ? {
+              px: 0,
+              percent: 100,
+            }
+          : isHorizontal
+            ? {
+                px: 0,
+                percent: ((windowHeight - poiControlHeight) * 500) / (windowWidth * 3),
+              }
+            : {
+                px: windowWidth,
+                percent: 0,
+              }
       const defaultHeight = useFixedResolution
         ? {
             px: getZoomedSize(720) + poiControlHeight,
             percent: 0,
           }
         : overlayPanel
-        ? {
-            px: 0,
-            percent: 100,
-          }
-        : isHorizontal
-        ? {
-            px: windowHeight,
-            percent: 0,
-          }
-        : {
-            px: poiControlHeight,
-            percent: (windowWidth * 60) / windowHeight,
-          }
+          ? {
+              px: 0,
+              percent: 100,
+            }
+          : isHorizontal
+            ? {
+                px: windowHeight,
+                percent: 0,
+              }
+            : {
+                px: poiControlHeight,
+                percent: (windowWidth * 60) / windowHeight,
+              }
       this.resizableAreaWidth = useFixedResolution
         ? {
             px: webviewWidth,
             percent: 0,
           }
         : overlayPanel
-        ? {
-            px: 0,
-            percent: 100,
-          }
-        : isHorizontal
-        ? {
-            px: 0,
-            percent: horizontalRatio,
-          }
-        : {
-            px: 0,
-            percent: 100,
-          }
+          ? {
+              px: 0,
+              percent: 100,
+            }
+          : isHorizontal
+            ? {
+                px: 0,
+                percent: horizontalRatio,
+              }
+            : {
+                px: 0,
+                percent: 100,
+              }
       this.resizableAreaHeight = useFixedResolution
         ? {
             px: webviewHeight + poiControlHeight,
             percent: 0,
           }
         : overlayPanel
-        ? {
-            px: 0,
-            percent: 100,
-          }
-        : isHorizontal
-        ? {
-            px: 0,
-            percent: 100,
-          }
-        : {
-            px: poiControlHeight,
-            percent: verticalRatio,
-          }
+          ? {
+              px: 0,
+              percent: 100,
+            }
+          : isHorizontal
+            ? {
+                px: 0,
+                percent: 100,
+              }
+            : {
+                px: poiControlHeight,
+                percent: verticalRatio,
+              }
       const disableWidth = !editable || useFixedResolution || overlayPanel || !isHorizontal
       const disableHeight = !editable || useFixedResolution || overlayPanel || isHorizontal
 

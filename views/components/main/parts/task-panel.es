@@ -261,8 +261,8 @@ const TaskRow = withNamespaces(['resources'])(
     const questContent = translation
       ? translation
       : quest
-      ? quest.api_detail.replace(/<br\s*\/?>/gi, '')
-      : '...'
+        ? quest.api_detail.replace(/<br\s*\/?>/gi, '')
+        : '...'
     const [count, required] = sumSubgoals(record)
     const progressIntent = record
       ? getIntentByPercent(count / required)

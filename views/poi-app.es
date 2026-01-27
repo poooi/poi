@@ -70,10 +70,9 @@ const OverlayPanelTrigger = styled.a`
   font-size: 15px;
   bottom: 0;
   border-top-left-radius: 5px;
-  ${({ isDarkTheme }) =>
-    css`
-      background: ${isDarkTheme ? 'rgb(32 43 51 / 0.9)' : 'rgb(245 248 250 / 0.9)'};
-    `}
+  ${({ isDarkTheme }) => css`
+    background: ${isDarkTheme ? 'rgb(32 43 51 / 0.9)' : 'rgb(245 248 250 / 0.9)'};
+  `}
 
   & > svg {
     margin: auto;

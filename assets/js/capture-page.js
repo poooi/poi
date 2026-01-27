@@ -6,10 +6,10 @@ window.capture = async function () {
           .contentDocument.querySelector('#htmlWrap')
           .contentDocument.querySelector('canvas')
       : document.querySelector('#htmlWrap')
-      ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
-      : document.querySelector('canvas')
-      ? document.querySelector('canvas')
-      : null
+        ? document.querySelector('#htmlWrap').contentDocument.querySelector('canvas')
+        : document.querySelector('canvas')
+          ? document.querySelector('canvas')
+          : null
     if (!canvas || !ImageCapture) return undefined
     const imageCapture = new ImageCapture(canvas.captureStream(0).getVideoTracks()[0])
     const imageBitmap = await imageCapture.grabFrame()

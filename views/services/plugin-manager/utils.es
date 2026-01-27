@@ -508,8 +508,8 @@ export const getNpmConfig = (prefix) => {
   const mirrorName = Object.keys(MIRRORS).includes(mirrorConf)
     ? mirrorConf
     : navigator.language === 'zh-CN'
-    ? 'taobao'
-    : 'npm'
+      ? 'taobao'
+      : 'npm'
   const registry = MIRRORS[mirrorName].server
   const npmConfig = {
     registry,

@@ -106,7 +106,9 @@ export const ShipItem = styled.div`
     const nameWidth = shipName ? 'minmax(95px, 150px)' : '32px'
     const fbWidth = isLBAC ? 0 : 'minmax(30px, 3fr)'
     return css`
-      grid-template-columns: ${avatarWidth} ${nameWidth} minmax(60px, 4fr) 18px 42px ${fbWidth} 172px;
+      grid-template-columns:
+        ${avatarWidth} ${nameWidth} minmax(60px, 4fr)
+        18px 42px ${fbWidth} 172px;
       grid-template-rows: 16px 10px 16px 16px;
       grid-column-gap: 6px;
     `

@@ -1,7 +1,7 @@
 /**
  * FIXME: remove this polyfill when react-bootstrap is no longer used
  */
-/* eslint-disable import/namespace */
+/* eslint-disable import-x/namespace */
 
 import React, { cloneElement, useContext, useState } from 'react'
 import ReactDOM from 'react-dom'

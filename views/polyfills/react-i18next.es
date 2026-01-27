@@ -1,7 +1,7 @@
 /**
  * FIXME: remove this polyfill when plugins begin to use react-i18next@>10
  */
-/* eslint-disable import/namespace */
+/* eslint-disable import-x/namespace */
 import * as ReactI18next from 'react-i18next'
 
 /* eslint-disable no-import-assign */
