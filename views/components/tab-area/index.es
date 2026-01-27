@@ -726,8 +726,8 @@ export class ControlledTabArea extends PureComponent {
             const handleClick = plugin.handleClick
               ? plugin.handleClick
               : this.isWindowMode(plugin)
-              ? (e) => this.openWindow(plugin)
-              : (e) => this.handleSelectTab(plugin.id)
+                ? (e) => this.openWindow(plugin)
+                : (e) => this.handleSelectTab(plugin.id)
             return (
               <PluginDropdownMenuItem
                 onClick={handleClick}

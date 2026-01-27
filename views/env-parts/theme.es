@@ -55,7 +55,8 @@ export function loadStyle(
 
   const div = document.createElement('div')
   div.id = 'custom-bg'
-  ;(div.style.position = 'fixed'), (div.style.top = '-15px')
+  div.style.position = 'fixed'
+  div.style.top = '-15px'
   div.style.left = '-15px'
   div.style.height = 'calc(100vh + 30px)'
   div.style.width = 'calc(100vw + 30px)'

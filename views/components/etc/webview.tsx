@@ -193,34 +193,30 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     useWebviewEventListener('update-target-url', props, view)
 
     // Custom ref
-    useImperativeHandle(
-      ref,
-      () => {
-        if (!view) {
-          return undefined
+    useImperativeHandle(ref, () => {
+      if (!view) {
+        return undefined
+      }
+      const viewToReturn = view as ExtendedWebviewTag
+      viewToReturn.getWebContents = () => {
+        const id = view?.getWebContentsId()
+        if (!id) {
+          throw new Error('view not ready')
         }
-        const viewToReturn = view as ExtendedWebviewTag
-        viewToReturn.getWebContents = () => {
-          const id = view?.getWebContentsId()
-          if (!id) {
-            throw new Error('view not ready')
-          }
-          const wc = webContents.fromId(id)
-          if (!wc) {
-            throw new Error('view destroyed')
-          }
-          return wc
+        const wc = webContents.fromId(id)
+        if (!wc) {
+          throw new Error('view destroyed')
         }
-        viewToReturn.isReady = () => isReady
-        viewToReturn.forceSyncZoom = () => {
-          if (view && zoomFactor) {
-            view.setZoomFactor(zoomFactor)
-          }
+        return wc
+      }
+      viewToReturn.isReady = () => isReady
+      viewToReturn.forceSyncZoom = () => {
+        if (view && zoomFactor) {
+          view.setZoomFactor(zoomFactor)
         }
-        return viewToReturn
-      },
-      [view, isReady, zoomFactor],
-    )
+      }
+      return viewToReturn
+    }, [view, isReady, zoomFactor])
 
     return (
       <div style={style} className={className}>

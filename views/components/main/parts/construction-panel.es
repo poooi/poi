@@ -33,12 +33,12 @@ const getTagIntent = ({ isLSC }, timeRemaining) =>
   timeRemaining > 600 && isLSC
     ? Intent.DANGER
     : timeRemaining > 600
-    ? Intent.PRIMARY
-    : timeRemaining > 0
-    ? Intent.WARNING
-    : timeRemaining == 0
-    ? Intent.SUCCESS
-    : Intent.NONE
+      ? Intent.PRIMARY
+      : timeRemaining > 0
+        ? Intent.WARNING
+        : timeRemaining == 0
+          ? Intent.SUCCESS
+          : Intent.NONE
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
@@ -75,8 +75,8 @@ export class ConstructionPanel extends Component {
               dock.api_state == -1
                 ? this.props.t('main:Locked')
                 : dock.api_state == 0
-                ? this.props.t('main:Empty')
-                : this.getDockShipName(i, '???')
+                  ? this.props.t('main:Empty')
+                  : this.getDockShipName(i, '???')
             const completeTime = isInUse ? dock.api_complete_time : -1
             const tooltipTitleClassname = isLSC
               ? { color: '#D9534F', fontWeight: 'bold' }

@@ -217,7 +217,7 @@ const MapRoutes = connect((state) => ({
                 passed
               />
             ) : (
-              <span />
+              <span key={i} />
             ),
           )
         }
@@ -254,7 +254,7 @@ const MapRoutes = connect((state) => ({
                 passed={id != activeSpot}
               />
             ) : (
-              <span />
+              <span key={id} />
             ),
           )
         }

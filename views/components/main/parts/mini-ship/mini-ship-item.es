@@ -370,8 +370,8 @@ export class MiniShipRow extends Component {
       level < remodelLevel
         ? t('main:RemodelLv', { remodelLevel })
         : remodelLevel
-        ? t('main:RemodelReady')
-        : ''
+          ? t('main:RemodelReady')
+          : ''
     return (
       <ShipTile
         as={Tooltip}

@@ -89,10 +89,10 @@ const getTagIntent = (props, timeRemaining) =>
   timeRemaining > 600
     ? Intent.PRIMARY
     : timeRemaining > 60
-    ? Intent.WARNING
-    : timeRemaining >= 0
-    ? Intent.SUCCESS
-    : Intent.NONE
+      ? Intent.WARNING
+      : timeRemaining >= 0
+        ? Intent.SUCCESS
+        : Intent.NONE
 
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
