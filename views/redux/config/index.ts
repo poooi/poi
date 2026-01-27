@@ -1,9 +1,9 @@
+import { createSlice } from '@reduxjs/toolkit'
 import { cloneDeep } from 'lodash'
 import { type Config, config } from 'views/env-parts/config'
-
 import { reduxSet } from 'views/utils/tools'
+
 import { createConfigAction } from '../actions'
-import { createSlice } from '@reduxjs/toolkit'
 
 const configSlice = createSlice({
   name: 'config',

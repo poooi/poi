@@ -1,13 +1,13 @@
-/* global config, getStore */
-import React, { PureComponent } from 'react'
-import { shell } from 'electron'
 import * as remote from '@electron/remote'
+import themes from 'assets/data/theme.json'
+import { shell } from 'electron'
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import { reduxSet } from 'views/utils/tools'
 import { get, capitalize } from 'lodash'
 import path from 'path'
+/* global config, getStore */
+import React, { PureComponent } from 'react'
 import i18next from 'views/env-parts/i18next'
-import themes from 'assets/data/theme.json'
+import { reduxSet } from 'views/utils/tools'
 
 const { Menu } = remote.require('electron')
 const { openExternal } = shell

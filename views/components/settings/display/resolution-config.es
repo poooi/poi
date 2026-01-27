@@ -1,14 +1,13 @@
+import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ipcRenderer } from 'electron'
+import { debounce, get } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { debounce, get } from 'lodash'
 import { Trans } from 'react-i18next'
-import { ipcRenderer } from 'electron'
-import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
+import { connect } from 'react-redux'
 import { styled } from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 
 const Icon = styled.div`

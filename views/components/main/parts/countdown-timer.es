@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { Tag, Intent } from '@blueprintjs/core'
-
-import { resolveTime } from 'views/utils/tools'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { CountdownNotifier } from 'views/utils/notifiers'
+import { resolveTime } from 'views/utils/tools'
 
 class Ticker {
   constructor() {

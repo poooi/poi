@@ -1,7 +1,8 @@
-/* global ROOT, config, language, toast */
-import { omit, get, each, isArray } from 'lodash'
 import * as remote from '@electron/remote'
-import { join, basename } from 'path-extra'
+import FontAwesome from '@skagami/react-fontawesome'
+import { promisify } from 'bluebird'
+import child_process from 'child_process'
+import crypto from 'crypto'
 import {
   createReadStream,
   readJson,
@@ -12,19 +13,17 @@ import {
   remove,
   lstatSync,
 } from 'fs-extra'
-import React from 'react'
-import FontAwesome from '@skagami/react-fontawesome'
-import semver from 'semver'
-import { Module } from 'module'
-import { promisify } from 'bluebird'
 import glob from 'glob'
-import crypto from 'crypto'
-import child_process from 'child_process'
+/* global ROOT, config, language, toast */
+import { omit, get, each, isArray } from 'lodash'
+import { Module } from 'module'
 import path from 'path'
+import { join, basename } from 'path-extra'
+import React from 'react'
+import semver from 'semver'
+import { extendReducer } from 'views/create-store'
 import i18next, { addGlobalI18n, addResourceBundleDebounce } from 'views/env-parts/i18next'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
-
-import { extendReducer } from 'views/create-store'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 

@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import * as remote from '@electron/remote'
 import { ProgressBar, Intent } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
 import { throttle } from 'lodash'
+import React, { Component } from 'react'
 import { withNamespaces } from 'react-i18next'
 import { styled } from 'styled-components'
 

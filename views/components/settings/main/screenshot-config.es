@@ -1,11 +1,11 @@
-import React from 'react'
-import * as remote from '@electron/remote'
-import { withNamespaces } from 'react-i18next'
 import { FormGroup } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
+import React from 'react'
+import { withNamespaces } from 'react-i18next'
 
-import { Section, Wrapper, FillAvailable } from '../components/section'
 import { FolderPickerConfig } from '../components/folder-picker'
 import { RadioConfig } from '../components/radio'
+import { Section, Wrapper, FillAvailable } from '../components/section'
 import { SwitchConfig } from '../components/switch'
 
 const screenshotPathExclude = [window.ROOT]

@@ -1,7 +1,8 @@
 import type { WebviewTag } from 'electron'
+import type { CamelCase } from 'yargs'
+
 import { camelCase } from 'lodash'
 import { useEffect } from 'react'
-import type { CamelCase } from 'yargs'
 
 export const webviewEvents = [
   'load-commit',

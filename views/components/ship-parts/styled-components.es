@@ -1,6 +1,6 @@
-import { Avatar } from 'views/components/etc/avatar'
-import { styled, css } from 'styled-components'
 import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
+import { styled, css } from 'styled-components'
+import { Avatar } from 'views/components/etc/avatar'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 
 export const ShipCard = styled(Card)`

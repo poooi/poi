@@ -1,5 +1,6 @@
-import config from './config'
 import { nativeTheme } from 'electron'
+
+import config from './config'
 
 const getThemeSource = (value: string) => (value === 'dark' ? 'dark' : 'light')
 

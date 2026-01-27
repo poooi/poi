@@ -1,5 +1,5 @@
 declare module 'socks5-client' {
-  import net from 'net'
+  import type net from 'net'
   interface ConnectionOptions {
     socksHost: string
     socksPort: string | number

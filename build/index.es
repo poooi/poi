@@ -1,11 +1,11 @@
-import path from 'path-extra'
 import Promise, { promisify } from 'bluebird'
 import fs from 'fs-extra'
-import tar from 'tar-fs'
 import gitArchive from 'git-archive'
-import { log, npmInstall } from './utils'
+import path from 'path-extra'
+import tar from 'tar-fs'
 
 import compileToJs from './compile-to-js'
+import { log, npmInstall } from './utils'
 
 const { ROOT } = global
 

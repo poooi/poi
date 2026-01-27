@@ -1,23 +1,23 @@
+import { Button, ResizeSensor } from '@blueprintjs/core'
+import { get, memoize } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 /* global getStore */
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { get, memoize } from 'lodash'
 import { createSelector } from 'reselect'
-import { Button, ResizeSensor } from '@blueprintjs/core'
 import { styled } from 'styled-components'
-
-import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
-import { LandbaseButton } from '../../../ship-parts/landbase-button'
-import { fleetStateSelectorFactory } from 'views/utils/selectors'
-import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import {
   FleetNameButtonContainer,
   FleetNameButton as FleetNameButtonLarge,
   ShipDeck,
   ShipTabContent,
 } from 'views/components/ship-parts/styled-components'
+import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
+import { fleetStateSelectorFactory } from 'views/utils/selectors'
+
+import { LandbaseButton } from '../../../ship-parts/landbase-button'
 import { CardWrapper as CardWrapperL } from '../styled-components'
+import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
   .bp5-button {

@@ -1,16 +1,6 @@
-import {
-  getTanakalendarQuarterMonth,
-  saveQuestTracking,
-  reducer as questsReducer,
-  type SubgoalRecord,
-  type QuestsState,
-} from '../quests'
-import moment from 'moment-timezone'
 import { padStart } from 'lodash'
+import moment from 'moment-timezone'
 import { applyMiddleware, combineReducers, createStore } from 'redux'
-// @ts-expect-error legacy .es module has no type declarations
-import Scheduler from 'views/services/scheduler'
-
 import {
   createAPIReqKousyouCreateitemResponseAction,
   createAPIReqKousyouDestroyitem2ResponseAction,
@@ -20,16 +10,24 @@ import {
   createAPIReqMissionResultResponseAction,
   createAPIReqPracticeResultResponseAction,
 } from 'views/redux/actions'
-
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
+// @ts-expect-error legacy .es module has no type declarations
+import Scheduler from 'views/services/scheduler'
 
-import practiceResultFixture from './__fixtures__/api_req_practice_battle_result_rank_a.json'
-import missionResultFixture from './__fixtures__/api_req_mission_result_success.json'
+import {
+  getTanakalendarQuarterMonth,
+  saveQuestTracking,
+  reducer as questsReducer,
+  type SubgoalRecord,
+  type QuestsState,
+} from '../quests'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
-import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
-import mapStartFixture from './__fixtures__/api_req_map_start_updates_event_gauge_hp.json'
+import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
 import mapNextFixture from './__fixtures__/api_req_map_next_with_itemget.json'
+import mapStartFixture from './__fixtures__/api_req_map_start_updates_event_gauge_hp.json'
+import missionResultFixture from './__fixtures__/api_req_mission_result_success.json'
+import practiceResultFixture from './__fixtures__/api_req_practice_battle_result_rank_a.json'
 
 jest.mock('@electron/remote', () => ({
   require: (moduleName: string) => {

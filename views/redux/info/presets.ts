@@ -1,9 +1,8 @@
-import { reduxSet, compareUpdate } from 'views/utils/tools'
-import { omit } from 'lodash'
+import type { APIDeck as KcsapiPresetDeck } from 'kcsapi/api_get_member/preset_deck/response'
 
 import { createSlice } from '@reduxjs/toolkit'
-
-import { APIDeck as KcsapiPresetDeck } from 'kcsapi/api_get_member/preset_deck/response'
+import { omit } from 'lodash'
+import { reduxSet, compareUpdate } from 'views/utils/tools'
 
 import {
   createAPIGetMemberPresetDeckResponseAction,

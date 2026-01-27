@@ -1,9 +1,3 @@
-/* global config, dispatch, ipc */
-import classNames from 'classnames'
-import { connect } from 'react-redux'
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
 import {
   Classes,
   Colors,
@@ -16,22 +10,27 @@ import {
   Menu,
   MenuItem,
 } from '@blueprintjs/core'
-import { Popover } from 'views/components/etc/overlay'
 import { IconNames } from '@blueprintjs/icons'
-import { get } from 'lodash'
-import { ResizableArea } from 'react-resizable-area'
-import { withNamespaces } from 'react-i18next'
 import * as remote from '@electron/remote'
-import { styled, css } from 'styled-components'
 import * as Sentry from '@sentry/electron'
-
+/* global config, dispatch, ipc */
+import classNames from 'classnames'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
+import FontAwesome from 'react-fontawesome'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
+import { ResizableArea } from 'react-resizable-area'
+import { styled, css } from 'styled-components'
+import { Popover } from 'views/components/etc/overlay'
 import { isInGame } from 'views/utils/game-utils'
 
-import * as SETTINGS_VIEW from '../settings'
 import * as MAIN_VIEW from '../main'
+import * as SETTINGS_VIEW from '../settings'
 import * as SHIP_VIEW from '../ship'
-import { PluginWrap } from './plugin-wrapper'
 import { PluginWindowWrap } from './plugin-window-wrapper'
+import { PluginWrap } from './plugin-wrapper'
 import { TabContentsUnion } from './tab-contents-union'
 
 const emptyObj = {}

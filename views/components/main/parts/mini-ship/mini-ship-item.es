@@ -1,20 +1,19 @@
-import { join } from 'path-extra'
-import { connect } from 'react-redux'
+import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
 import shallowEqual from 'fbjs/lib/shallowEqual'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { createSelector } from 'reselect'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
+import { join } from 'path-extra'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import { styled, css } from 'styled-components'
-
-import { StatusLabel } from 'views/components/ship-parts/statuslabel'
-import { LandbaseSlotitems } from 'views/components/ship/slotitems'
-import { SlotitemIcon } from 'views/components/etc/icon'
 import { Avatar } from 'views/components/etc/avatar'
-
+import { SlotitemIcon } from 'views/components/etc/icon'
+import { StatusLabel } from 'views/components/ship-parts/statuslabel'
+import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
+import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import {
   selectShipAvatarColor,
   getCondStyle,
@@ -36,8 +35,6 @@ import {
   landbaseEquipDataSelectorFactory,
   fcdShipTagColorSelector,
 } from 'views/utils/selectors'
-
-import { SlotItemContainer, ALevel } from 'views/components/ship-parts/styled-components'
 
 const SlotItemContainerMini = styled.div`
   align-items: center;

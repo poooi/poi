@@ -1,5 +1,8 @@
+import type { APIBasic as PortAPIBasic } from 'kcsapi/api_port/port/response'
+
 import { createSlice } from '@reduxjs/toolkit'
 import { compareUpdate } from 'views/utils/tools'
+
 import {
   createAPIGetMemberRequireInfoAction,
   createAPIPortPortResponseAction,
@@ -7,7 +10,6 @@ import {
   createAPIReqPracticeResultResponseAction,
   createAPIReqSortieBattleResultResponseAction,
 } from '../actions'
-import { APIBasic as PortAPIBasic } from 'kcsapi/api_port/port/response'
 
 type BasicState = Partial<PortAPIBasic>
 

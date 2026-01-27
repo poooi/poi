@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 // Process Command Line Arguments
 import chalk from 'chalk'
-import Debug from './debug'
 import { app } from 'electron'
-import { warn } from './utils'
 import yargs from 'yargs'
+
+import Debug from './debug'
+import { warn } from './utils'
 
 declare global {
   namespace NodeJS {

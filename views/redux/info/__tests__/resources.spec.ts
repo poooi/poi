@@ -11,17 +11,19 @@ import {
   createAPIReqAirCorpsSupplyResponseAction,
   createInfoResourcesApplyDeltaAction,
 } from 'views/redux/actions'
+
+import type { ResourcesState } from '../resources'
+
+import { reducer } from '../resources'
+import materialFixture from './__fixtures__/api_get_member_material_typical.json'
 import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
-import speedchangeFixture from './__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
-import chargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
 import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane_assign_planes.json'
 import supplyFixture from './__fixtures__/api_req_air_corps_supply_resupply_squadron.json'
-import materialFixture from './__fixtures__/api_get_member_material_typical.json'
+import chargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
-import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
 import createshipFixture from './__fixtures__/api_req_kousyou_createship_latest_response_saver.json'
-
-import { reducer, ResourcesState } from '../resources'
+import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
+import speedchangeFixture from './__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
 
 describe('resources reducer', () => {
   const ResourceIndex = {

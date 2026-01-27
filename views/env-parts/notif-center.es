@@ -1,7 +1,7 @@
-/* global config, ROOT */
-import path from 'path-extra'
 import * as remote from '@electron/remote'
 import { get, memoize, throttle, debounce, pickBy } from 'lodash'
+/* global config, ROOT */
+import path from 'path-extra'
 
 const NOTIFY_DEFAULT_ICON = path.join(ROOT, 'assets', 'icons', 'icon.png')
 

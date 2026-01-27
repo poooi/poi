@@ -1,16 +1,18 @@
 /* global config */
 
-import React, { Component } from 'react'
 import { ProgressBar, Position, PopoverInteractionKind, Intent, Button } from '@blueprintjs/core'
-import { createSelector } from 'reselect'
-import { connect } from 'react-redux'
-import { get, map, zip, each } from 'lodash'
-import { withNamespaces } from 'react-i18next'
-import { styled, css, keyframes } from 'styled-components'
-import { rgba } from 'polished'
 import classNames from 'classnames'
-
+import { get, map, zip, each } from 'lodash'
+import { rgba } from 'polished'
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
+import { styled, css, keyframes } from 'styled-components'
+import { Avatar } from 'views/components/etc/avatar'
+import { CustomTag } from 'views/components/etc/custom-tag'
 import { MaterialIcon } from 'views/components/etc/icon'
+import { Popover } from 'views/components/etc/overlay'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
@@ -18,9 +20,6 @@ import {
   fcdSelector,
   currentNodeSelector,
 } from 'views/utils/selectors'
-import { Avatar } from 'views/components/etc/avatar'
-import { CustomTag } from 'views/components/etc/custom-tag'
-import { Popover } from 'views/components/etc/overlay'
 
 const PoiMapReminderTag = styled(CustomTag)`
   width: 0;

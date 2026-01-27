@@ -1,17 +1,16 @@
+import { FormGroup, Button, Intent } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
 /* global config */
 import React from 'react'
-import { FormGroup, Button, Intent } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import * as remote from '@electron/remote'
-
-import { checkUpdate } from 'views/services/update'
+import { styled } from 'styled-components'
 import { Section, Wrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
+import { checkUpdate } from 'views/services/update'
 
 import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
-import { styled } from 'styled-components'
 
 const { changeChannel } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 

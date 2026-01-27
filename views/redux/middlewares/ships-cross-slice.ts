@@ -1,9 +1,9 @@
+import type { Middleware } from 'redux'
+
 import {
   createAPIReqNyukyoSpeedchangeResponseAction,
   createInfoShipsRepairCompletedAction,
 } from '../actions'
-
-import type { Middleware } from 'redux'
 
 /**
  * shipsCrossSliceMiddleware

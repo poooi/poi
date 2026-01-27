@@ -1,12 +1,11 @@
+import { Button, Intent, Tooltip } from '@blueprintjs/core'
+import { sync as globSync } from 'glob'
+import { get, entries, map, max, values } from 'lodash'
+import fetch from 'node-fetch'
 /* global ROOT */
 import React, { Component } from 'react'
-import { Button, Intent, Tooltip } from '@blueprintjs/core'
-import { connect } from 'react-redux'
-import { get, entries, map, max, values } from 'lodash'
-import { sync as globSync } from 'glob'
-import fetch from 'node-fetch'
 import { withNamespaces } from 'react-i18next'
-
+import { connect } from 'react-redux'
 import {
   InfoTooltip,
   InfoTooltipEntry,

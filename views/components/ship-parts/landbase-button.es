@@ -1,11 +1,11 @@
-import { connect } from 'react-redux'
+import { Button, ButtonGroup, Tag, Intent, Position, Tooltip } from '@blueprintjs/core'
+import _, { get, map } from 'lodash'
+import memoizeOne from 'memoize-one'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import _, { get, map } from 'lodash'
 import { withNamespaces, Trans } from 'react-i18next'
-import { Button, ButtonGroup, Tag, Intent, Position, Tooltip } from '@blueprintjs/core'
+import { connect } from 'react-redux'
 import { styled, css } from 'styled-components'
-import memoizeOne from 'memoize-one'
 
 const AirbaseLabel = styled(Tag)`
   margin: 2px;

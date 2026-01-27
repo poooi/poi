@@ -1,18 +1,3 @@
-import {
-  createAPIGetMemberKdockResponseAction,
-  createAPIGetMemberRequireInfoAction,
-  createAPIReqKousyouCreateShipSpeedChangeResponseAction,
-  createAPIReqKousyouGetShipResponseAction,
-} from 'views/redux/actions'
-
-import { reducer } from '../constructions'
-
-import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
-import kdockFixture from './__fixtures__/api_get_member_kdock_mixed_states.json'
-import requireInfoKdockFixture from './__fixtures__/api_get_member_require_info_includes_kdock.json'
-import speedchangeFixture from './__fixtures__/api_req_kousyou_createship_speedchange_kdock2_complete.json'
-
-import type { GameResponsePayload } from 'views/redux/actions'
 import type {
   APIGetMemberKdockRequest,
   APIGetMemberKdockResponse,
@@ -21,6 +6,20 @@ import type {
   APIReqKousyouCreateshipSpeedchangeRequest,
   APIReqKousyouCreateshipSpeedchangeResponse,
 } from 'kcsapi'
+import type { GameResponsePayload } from 'views/redux/actions'
+
+import {
+  createAPIGetMemberKdockResponseAction,
+  createAPIGetMemberRequireInfoAction,
+  createAPIReqKousyouCreateShipSpeedChangeResponseAction,
+  createAPIReqKousyouGetShipResponseAction,
+} from 'views/redux/actions'
+
+import { reducer } from '../constructions'
+import kdockFixture from './__fixtures__/api_get_member_kdock_mixed_states.json'
+import requireInfoKdockFixture from './__fixtures__/api_get_member_require_info_includes_kdock.json'
+import speedchangeFixture from './__fixtures__/api_req_kousyou_createship_speedchange_kdock2_complete.json'
+import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
 
 describe('constructions reducer', () => {
   it('should return initial state', () => {

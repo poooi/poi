@@ -1,4 +1,6 @@
-import React, { ReactNode, FC } from 'react'
+import type { ReactNode, FC } from 'react'
+
+import React from 'react'
 
 interface CustomTagProps {
   tag?: keyof JSX.IntrinsicElements

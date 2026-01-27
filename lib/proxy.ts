@@ -1,5 +1,6 @@
-import config from './config'
 import { app, session } from 'electron'
+
+import config from './config'
 import { log } from './utils'
 
 const getProxyUri = () => {

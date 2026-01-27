@@ -1,17 +1,16 @@
+import { HTMLSelect, FormGroup, Callout } from '@blueprintjs/core'
+import { get, cloneDeep } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get, cloneDeep } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { HTMLSelect, FormGroup, Callout } from '@blueprintjs/core'
-
+import { connect } from 'react-redux'
 import { Section, Wrapper } from 'views/components/settings/components/section'
 import { TextConfig } from 'views/components/settings/components/text'
 
-import { ProxyConfig } from './proxy-config'
 import { ConnectionTest } from './connection-test'
 import { CustomCertificateAuthority } from './custom-certificate-authority'
+import { ProxyConfig } from './proxy-config'
 
 @withNamespaces(['setting'])
 @connect((state) => ({

@@ -1,7 +1,7 @@
-import glob from 'glob'
-import _rimraf from 'rimraf'
 import { promisify } from 'bluebird'
+import glob from 'glob'
 import path from 'path-extra'
+import _rimraf from 'rimraf'
 
 const { ROOT } = global
 

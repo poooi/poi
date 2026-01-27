@@ -1,17 +1,17 @@
-/* global config */
-import React, { useState, useEffect, useCallback } from 'react'
-import { connect, useSelector } from 'react-redux'
+import type { FileFilter } from 'electron'
+
+import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
 import fs from 'fs-extra'
 import { get, split, map, size } from 'lodash'
-import * as remote from '@electron/remote'
 import path from 'path'
-import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
-import { useTranslation } from 'react-i18next'
-import { styled } from 'styled-components'
+/* global config */
+import React, { useState, useEffect, useCallback } from 'react'
 import FA from 'react-fontawesome'
-
+import { useTranslation } from 'react-i18next'
+import { connect, useSelector } from 'react-redux'
+import { styled } from 'styled-components'
 import { isSubdirectory } from 'views/utils/tools'
-import { FileFilter } from 'electron'
 
 const { dialog } = remote.require('electron')
 

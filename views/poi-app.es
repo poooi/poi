@@ -1,8 +1,8 @@
+import { get } from 'lodash'
 /* global $, config */
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { get } from 'lodash'
 import FontAwesome from 'react-fontawesome'
+import { connect } from 'react-redux'
 import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
 

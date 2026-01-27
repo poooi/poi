@@ -1,12 +1,11 @@
-import React from 'react'
 import { FormGroup } from '@blueprintjs/core'
-import { withNamespaces } from 'react-i18next'
 import { map, entries } from 'lodash'
 import path from 'path'
-
-import { SwitchConfig } from 'views/components/settings/components/switch'
-import { Section, Wrapper } from 'views/components/settings/components/section'
+import React from 'react'
+import { withNamespaces } from 'react-i18next'
 import { RadioConfig } from 'views/components/settings/components/radio'
+import { Section, Wrapper } from 'views/components/settings/components/section'
+import { SwitchConfig } from 'views/components/settings/components/switch'
 
 const MIRROR_JSON_PATH = path.join(global.ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS = require(MIRROR_JSON_PATH)

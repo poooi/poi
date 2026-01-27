@@ -1,20 +1,11 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { createSelector } from 'reselect'
-import {
-  getHpStyle,
-  getTyku,
-  LBAC_INTENTS,
-  LBAC_STATUS_NAMES,
-  LBAC_STATUS_AVATAR_COLOR,
-} from 'views/utils/game-utils'
-import { LandbaseSlotitems } from './slotitems'
-import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
-import { withNamespaces } from 'react-i18next'
-import { get } from 'lodash'
 import { Tag, ProgressBar, Tooltip, Position } from '@blueprintjs/core'
-import { compose } from 'redux'
 import memoize from 'fast-memoize'
+import { get } from 'lodash'
+import React from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
+import { compose } from 'redux'
+import { createSelector } from 'reselect'
 import {
   ShipItem,
   ShipAvatar,
@@ -27,6 +18,16 @@ import {
   ShipSlot,
   Gradient,
 } from 'views/components/ship-parts/styled-components'
+import {
+  getHpStyle,
+  getTyku,
+  LBAC_INTENTS,
+  LBAC_STATUS_NAMES,
+  LBAC_STATUS_AVATAR_COLOR,
+} from 'views/utils/game-utils'
+import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
+
+import { LandbaseSlotitems } from './slotitems'
 
 const SquadSelectorFactory = memoize((squardId) =>
   createSelector(

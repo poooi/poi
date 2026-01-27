@@ -1,8 +1,8 @@
 import type { APIMaphp } from 'kcsapi/api_req_map/select_eventmap_rank/response'
 
+import { createSlice } from '@reduxjs/toolkit'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
-import { createSlice } from '@reduxjs/toolkit'
 import {
   createAPIGetMemberMapinfoResponseAction,
   createAPIReqMapSelectEventmapRankResponseAction,

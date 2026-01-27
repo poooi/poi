@@ -1,7 +1,7 @@
-import { map } from 'lodash'
-
-import { compareUpdate } from 'views/utils/tools'
 import { createSlice } from '@reduxjs/toolkit'
+import { map } from 'lodash'
+import { compareUpdate } from 'views/utils/tools'
+
 import {
   createAPIPortPortResponseAction,
   createAPIGetMemberMaterialResponseAction,

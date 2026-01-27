@@ -1,11 +1,10 @@
+import { Slider } from '@blueprintjs/core'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get } from 'lodash'
-import { Slider } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-
+import { connect } from 'react-redux'
 import { Section } from 'views/components/settings/components/section'
 
 @withNamespaces(['setting'])

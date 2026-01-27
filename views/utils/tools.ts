@@ -6,6 +6,10 @@
   eslint-disable @typescript-eslint/no-explicit-any
 */
 
+import type { PopoverProps } from '@blueprintjs/core'
+import type { Dictionary } from 'lodash'
+
+import { readJsonSync } from 'fs-extra'
 import _, {
   isEqual,
   forEach,
@@ -15,16 +19,13 @@ import _, {
   sum,
   isString,
   toString,
-  Dictionary,
   padStart,
   setWith,
   clone,
 } from 'lodash'
 import pangu from 'pangu'
 import path from 'path'
-import { readJsonSync } from 'fs-extra'
 import url from 'url'
-import { PopoverProps } from '@blueprintjs/core'
 
 /**
  * Sums up each position for each position for a 2-dimension array (matrix)

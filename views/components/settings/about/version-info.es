@@ -1,12 +1,12 @@
+import { Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
+import { FontAwesomeIcon as FA } from '@fortawesome/react-fontawesome'
+import { shell } from 'electron'
+import { map, capitalize, memoize, size, throttle, isString, toUpper } from 'lodash'
+import osName from 'os-name'
 /* global ROOT, POI_VERSION, LATEST_COMMIT */
 import React from 'react'
-import { styled } from 'styled-components'
-import { map, capitalize, memoize, size, throttle, isString, toUpper } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { Tooltip, AnchorButton, Intent } from '@blueprintjs/core'
-import { shell } from 'electron'
-import { FontAwesomeIcon as FA } from '@fortawesome/react-fontawesome'
-import osName from 'os-name'
+import { styled } from 'styled-components'
 
 import { Section } from '../components/section'
 

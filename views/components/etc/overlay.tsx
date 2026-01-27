@@ -1,4 +1,5 @@
-import React, { useContext, Children, ReactNode } from 'react'
+import type { ReactNode } from 'react'
+
 import {
   Alert as BAlert,
   Dialog as BDialog,
@@ -11,6 +12,8 @@ import {
   type PopoverProps,
   type TooltipProps,
 } from '@blueprintjs/core'
+import React, { useContext, Children } from 'react'
+
 import { WindowEnv } from './window-env'
 
 const getSecondChildren = (children: ReactNode) =>

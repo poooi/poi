@@ -1,13 +1,3 @@
-/* global config, toggleModal, EXROOT */
-import path from 'path-extra'
-import fs from 'fs-extra'
-import { shell } from 'electron'
-import { connect } from 'react-redux'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { get, map } from 'lodash'
-import { fileUrl } from 'views/utils/tools'
-import { withNamespaces } from 'react-i18next'
 import {
   HTMLSelect,
   Button,
@@ -18,12 +8,21 @@ import {
   Tooltip,
   Label,
 } from '@blueprintjs/core'
+import themes from 'assets/data/theme.json'
+import { shell } from 'electron'
+import fs from 'fs-extra'
+import { get, map } from 'lodash'
+/* global config, toggleModal, EXROOT */
+import path from 'path-extra'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
 import { styled } from 'styled-components'
-
+import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
-import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
-import themes from 'assets/data/theme.json'
+import { fileUrl } from 'views/utils/tools'
 
 const { openPath } = shell
 

@@ -1,16 +1,20 @@
-import React from 'react'
-import { join } from 'path-extra'
+import { Tooltip, Intent, Position } from '@blueprintjs/core'
 import classNames from 'classnames'
-import { connect } from 'react-redux'
-import { createSelector } from 'reselect'
 import { memoize } from 'lodash'
+import { join } from 'path-extra'
+import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import { Tooltip, Intent, Position } from '@blueprintjs/core'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
-
+import { createSelector } from 'reselect'
 import { SlotitemIcon } from 'views/components/etc/icon'
-import { getItemData } from './slotitems-data'
+import {
+  SlotItems,
+  SlotItemContainer,
+  OnSlotMini,
+  ALevel,
+} from 'views/components/ship-parts/styled-components'
 import { equipIsAircraft } from 'views/utils/game-utils'
 import {
   shipDataSelectorFactory,
@@ -18,12 +22,8 @@ import {
   landbaseSelectorFactory,
   landbaseEquipDataSelectorFactory,
 } from 'views/utils/selectors'
-import {
-  SlotItems,
-  SlotItemContainer,
-  OnSlotMini,
-  ALevel,
-} from 'views/components/ship-parts/styled-components'
+
+import { getItemData } from './slotitems-data'
 
 const slotitemsDataSelectorFactory = memoize((shipId) =>
   createSelector(

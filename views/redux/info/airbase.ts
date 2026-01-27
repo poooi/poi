@@ -1,7 +1,10 @@
-import { trimArray, compareUpdate, constructArray } from 'views/utils/tools'
-import { zip, findIndex, get, map, omit, unzip } from 'lodash'
+import type { APIAirBase } from 'kcsapi/api_get_member/mapinfo/response'
+
 import { createSlice } from '@reduxjs/toolkit'
-import { APIAirBase } from 'kcsapi/api_get_member/mapinfo/response'
+import { zip, findIndex, get, map, omit, unzip } from 'lodash'
+import { trimArray, compareUpdate, constructArray } from 'views/utils/tools'
+
+import type { APIBaseItem } from '../actions'
 
 import {
   createAPIGetMemberMapinfoResponseAction,
@@ -12,7 +15,6 @@ import {
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
   createAPIReqAirCorpsChangeDeploymentBaseResponseAction,
-  APIBaseItem,
 } from '../actions'
 
 export interface AirBase extends Partial<APIAirBase> {

@@ -1,5 +1,4 @@
 import { applyMiddleware, createStore } from 'redux'
-
 import {
   createAPIReqKousyouDestroyitem2ResponseAction,
   createAPIReqMapNextResponseAction,
@@ -7,11 +6,10 @@ import {
   createAPIReqPracticeResultResponseAction,
   createInfoQuestsApplyProgressAction,
 } from 'views/redux/actions'
-
-import practiceResultFixture from 'views/redux/info/__tests__/__fixtures__/api_req_practice_battle_result_rank_a.json'
-import missionResultFixture from 'views/redux/info/__tests__/__fixtures__/api_req_mission_result_success.json'
 import destroyItemFixture from 'views/redux/info/__tests__/__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
 import mapNextFixture from 'views/redux/info/__tests__/__fixtures__/api_req_map_next_with_itemget.json'
+import missionResultFixture from 'views/redux/info/__tests__/__fixtures__/api_req_mission_result_success.json'
+import practiceResultFixture from 'views/redux/info/__tests__/__fixtures__/api_req_practice_battle_result_rank_a.json'
 
 import { questsCrossSliceMiddleware } from '../quests-cross-slice'
 

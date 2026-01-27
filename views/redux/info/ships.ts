@@ -1,8 +1,8 @@
-import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { createSlice } from '@reduxjs/toolkit'
-
 import type { APIGetMemberNdockResponse } from 'kcsapi'
 import type { APIShip } from 'kcsapi/api_port/port/response'
+
+import { createSlice } from '@reduxjs/toolkit'
+import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
 
 import {
   createAPIPortPortResponseAction,

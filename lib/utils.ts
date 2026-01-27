@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Rectangle } from 'electron'
+
 import chalk from 'chalk'
-import { Rectangle } from 'electron'
 import { map, get, mapValues, isPlainObject, isNumber, isArray, isString, isBoolean } from 'lodash'
 
 const stringify = (payload: any) => {

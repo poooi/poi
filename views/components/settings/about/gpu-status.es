@@ -1,10 +1,9 @@
-/* global ROOT */
-import React, { PureComponent } from 'react'
+import { Button, Intent } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import path from 'path-extra'
-import { Button, Intent } from '@blueprintjs/core'
+/* global ROOT */
+import React, { PureComponent } from 'react'
 import { withNamespaces } from 'react-i18next'
-
 import { Section } from 'views/components/settings/components/section'
 import { fileUrl } from 'views/utils/tools'
 

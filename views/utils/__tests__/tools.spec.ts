@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import path from 'path'
+
 import { isSubdirectory, compareUpdate, cjkSpacing, constructArray } from '../tools'
 
 type Pattern = [string, string, boolean]

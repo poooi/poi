@@ -1,4 +1,6 @@
-import { reducer, ServerState } from '../server'
+import type { ServerState } from '../server'
+
+import { reducer } from '../server'
 
 describe('server reducer', () => {
   const initialState: ServerState = {

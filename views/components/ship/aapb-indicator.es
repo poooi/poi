@@ -1,14 +1,13 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { createSelector } from 'reselect'
-import { memoize, compact, isFinite } from 'lodash'
-import { withNamespaces } from 'react-i18next'
 import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
+import { memoize, compact, isFinite } from 'lodash'
+import React from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
-
-import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { getShipAAPB } from 'views/utils/aapb'
+import { createSelector } from 'reselect'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
+import { getShipAAPB } from 'views/utils/aapb'
+import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 const AAPBSelectorFactory = memoize((shipId) =>
   createSelector(

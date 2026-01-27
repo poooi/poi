@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import path from 'path'
 import { app, Tray, systemPreferences, nativeTheme } from 'electron'
+import path from 'path'
 
 declare global {
   namespace NodeJS {

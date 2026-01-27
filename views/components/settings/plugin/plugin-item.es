@@ -1,16 +1,15 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
-import ReactMarkdown from 'react-remarkable'
-import { Trans, withNamespaces } from 'react-i18next'
 import { ButtonGroup, Button, Tooltip, Position, Intent, AnchorButton } from '@blueprintjs/core'
-import { styled, css } from 'styled-components'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
+import FontAwesome from 'react-fontawesome'
+import { Trans, withNamespaces } from 'react-i18next'
+import ReactMarkdown from 'react-remarkable'
 import Transition from 'react-transition-group/Transition'
+import { styled, css } from 'styled-components'
+import PluginManager from 'views/services/plugin-manager'
 
 import { CheckboxLabelConfig } from '../components/checkbox'
 import { Section } from '../components/section'
-import PluginManager from 'views/services/plugin-manager'
-
 import { PluginSettingWrapper } from './plugin-setting-wrapper'
 
 const Header = styled.div`

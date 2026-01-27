@@ -10,17 +10,18 @@ import {
   createInfoEquipsRemoveByIdsAction,
 } from 'views/redux/actions'
 
-import { reducer, EquipsState, Equip } from '../equips'
+import type { EquipsState, Equip } from '../equips'
 
-import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
-import slotItemFixture from './__fixtures__/api_get_member_slot_item_large_snapshot.json'
+import { reducer } from '../equips'
 import requireInfoLargeFixture from './__fixtures__/api_get_member_require_info_large_snapshot.json'
-import destroyitem2Fixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
-import createitemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
+import slotItemFixture from './__fixtures__/api_get_member_slot_item_large_snapshot.json'
+import lockFixture from './__fixtures__/api_req_kaisou_lock_latest_response_saver.json'
 import createitemFailureFixture from './__fixtures__/api_req_kousyou_createitem_latest_response_saver.json'
+import createitemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
+import destroyitem2Fixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
+import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
 import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
 import itemuseFixture from './__fixtures__/api_req_member_itemuse_latest_response_saver.json'
-import lockFixture from './__fixtures__/api_req_kaisou_lock_latest_response_saver.json'
 
 describe('equips reducer', () => {
   const createEquip = (id: number, slotitemId: number): Equip => ({

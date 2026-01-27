@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { styled } from 'styled-components'
 
-import { VersionInfo } from './version-info'
 import { AppMetrics } from './app-metrics'
-import { OpenCollective } from './open-collective'
-import { GPUStatus } from './gpu-status'
-import { Update } from './update'
 import { Contributors } from './contributors'
+import { GPUStatus } from './gpu-status'
+import { OpenCollective } from './open-collective'
 import { ThanksTo } from './thanks-to'
+import { Update } from './update'
+import { VersionInfo } from './version-info'
 
 const TopSentinel = styled.div`
   position: relative;

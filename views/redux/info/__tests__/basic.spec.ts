@@ -7,9 +7,8 @@ import {
 } from 'views/redux/actions'
 
 import { reducer } from '../basic'
-
-import portFixture from './__fixtures__/api_port_port_typical.json'
 import requireInfoFixture from './__fixtures__/api_get_member_require_info_includes_kdock.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
 import missionResultFixture from './__fixtures__/api_req_mission_result_success.json'
 import practiceResultFixture from './__fixtures__/api_req_practice_battle_result_rank_a.json'
 import sortieBattleResultFixture from './__fixtures__/api_req_sortie_battleresult_includes_member_exp.json'

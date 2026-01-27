@@ -1,9 +1,9 @@
+import { Switch } from '@blueprintjs/core'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
-import { Switch } from '@blueprintjs/core'
 import { styled } from 'styled-components'
 
 const SwitchWithMargin = styled(Switch)`

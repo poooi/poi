@@ -1,15 +1,13 @@
+import { Position, Intent, Tooltip } from '@blueprintjs/core'
+import { join as joinString, map, get, range, isEqual } from 'lodash'
+import { join } from 'path-extra'
 /* global ROOT, getStore */
 import React, { Component } from 'react'
-import { join } from 'path-extra'
-import { createSelector } from 'reselect'
-import { join as joinString, map, get, range, isEqual } from 'lodash'
-import { connect } from 'react-redux'
 import { withNamespaces } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
-import { Position, Intent, Tooltip } from '@blueprintjs/core'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import { styled, css } from 'styled-components'
-
-import { CountdownNotifierLabel } from './countdown-timer'
+import i18next from 'views/env-parts/i18next'
 import {
   fleetsSelector,
   configSelector,
@@ -17,6 +15,8 @@ import {
   fleetInBattleSelectorFactory,
 } from 'views/utils/selectors'
 import { timeToString } from 'views/utils/tools'
+
+import { CountdownNotifierLabel } from './countdown-timer'
 import { CardWrapper } from './styled-components'
 
 export const ExpeditionItem = styled.div`

@@ -1,17 +1,15 @@
-/* global ROOT, getStore */
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { Position, Intent, Tooltip } from '@blueprintjs/core'
+import cls from 'classnames'
 import { join as joinString, range, get } from 'lodash'
 import { join } from 'path-extra'
-import { createSelector } from 'reselect'
-import cls from 'classnames'
+/* global ROOT, getStore */
+import React, { Component } from 'react'
 import FA from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import { Position, Intent, Tooltip } from '@blueprintjs/core'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
-
 import { Avatar } from 'views/components/etc/avatar'
-import { CountdownNotifierLabel } from './countdown-timer'
 import {
   repairsSelector,
   constSelector,
@@ -21,6 +19,8 @@ import {
   createDeepCompareArraySelector,
 } from 'views/utils/selectors'
 import { indexify, timeToString } from 'views/utils/tools'
+
+import { CountdownNotifierLabel } from './countdown-timer'
 import {
   DockPanelCardWrapper,
   PanelItemTooltip,

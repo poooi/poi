@@ -1,5 +1,4 @@
-import { createAction } from '@reduxjs/toolkit'
-import {
+import type {
   APIGetMemberMapinfoRequest,
   APIGetMemberMapinfoResponse,
   APIReqAirCorpsSetPlaneRequest,
@@ -99,9 +98,10 @@ import {
   APIReqQuestStopRequest,
   APIReqQuestStopResponse,
 } from 'kcsapi'
-
-import { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
+import type { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
 import type { APIShipDatum } from 'kcsapi/api_req_map/anchorage_repair/response'
+
+import { createAction } from '@reduxjs/toolkit'
 
 export interface GameResponsePayload<Body, PostBody> {
   method: string

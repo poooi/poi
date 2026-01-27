@@ -1,9 +1,9 @@
+import { Checkbox } from '@blueprintjs/core'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
-import { Checkbox } from '@blueprintjs/core'
 
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue),

@@ -1,9 +1,9 @@
-import fs from 'fs-extra'
-import path from 'path-extra'
-import child_process from 'child_process'
-import Seven from 'node-7z'
 import sevenBin from '7zip-bin'
+import child_process from 'child_process'
+import fs from 'fs-extra'
 import { map } from 'lodash'
+import Seven from 'node-7z'
+import path from 'path-extra'
 
 const pathTo7zip = sevenBin.path7za
 

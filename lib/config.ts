@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { set, get, isEqual, keys } from 'lodash'
-import EventEmitter from 'events'
 import CSON from 'cson'
+import EventEmitter from 'events'
 import fs from 'fs-extra'
+import { set, get, isEqual, keys } from 'lodash'
 import path from 'path'
+
 import dbg from './debug'
 import defaultConfig from './default-config'
 import { mergeConfig, warn } from './utils'

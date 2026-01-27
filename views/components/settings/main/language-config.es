@@ -1,11 +1,11 @@
+import { HTMLSelect } from '@blueprintjs/core'
+import { get, each, map } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get, each, map } from 'lodash'
-import i18next from 'views/env-parts/i18next'
-import { HTMLSelect } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
+import i18next from 'views/env-parts/i18next'
 
 import { Section } from '../components/section'
 

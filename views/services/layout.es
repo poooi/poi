@@ -1,6 +1,6 @@
+import * as remote from '@electron/remote'
 /* global $, config, getStore, dispatch */
 import { debounce } from 'lodash'
-import * as remote from '@electron/remote'
 
 import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
 

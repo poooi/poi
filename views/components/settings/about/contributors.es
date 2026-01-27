@@ -1,9 +1,8 @@
-import React from 'react'
+import { shell } from 'electron'
 import { map, memoize } from 'lodash'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
-import { shell } from 'electron'
+import React from 'react'
 import { styled } from 'styled-components'
-
 import { Section } from 'views/components/settings/components/section'
 
 const getAvatarUrl = (url) => (/.*githubusercontent.com\/u\/.*/.test(url) ? `${url}&s=160` : url)

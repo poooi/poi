@@ -1,6 +1,7 @@
-import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
-import { keyBy, filter } from 'lodash'
 import { createSlice } from '@reduxjs/toolkit'
+import { keyBy, filter } from 'lodash'
+import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
+
 import {
   createAPIGetMemberSlotItemResponseAction,
   createAPIGetMemberRequireInfoAction,

@@ -1,16 +1,15 @@
-/* global APPDATA_PATH */
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import _, { get } from 'lodash'
-import path from 'path'
+import { Button, Intent } from '@blueprintjs/core'
+import Promise from 'bluebird'
 import fs from 'fs-extra'
 import glob from 'glob'
-import Promise from 'bluebird'
-import { Button, Intent } from '@blueprintjs/core'
+import _, { get } from 'lodash'
+import path from 'path'
+/* global APPDATA_PATH */
+import React, { Component } from 'react'
 import { Trans } from 'react-i18next'
-
-import { wctfSelector } from 'views/utils/selectors'
+import { connect } from 'react-redux'
 import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
+import { wctfSelector } from 'views/utils/selectors'
 
 const PACKAGE_NAME = 'whocallsthefleet-database'
 const DB_ROOT = path.join(APPDATA_PATH, 'wctf-db')

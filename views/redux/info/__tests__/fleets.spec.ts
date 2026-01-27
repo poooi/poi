@@ -4,9 +4,11 @@ import {
   createAPIReqMemberUpdatedecknameResponseAction,
   createAPIReqKousyouDestroyshipResponseAction,
 } from 'views/redux/actions'
-import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
 
-import { reducer, FleetsState, Fleet } from '../fleets'
+import type { FleetsState, Fleet } from '../fleets'
+
+import { reducer } from '../fleets'
+import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
 
 describe('fleets reducer', () => {
   const createFleet = (id: number, ships: number[] = [-1, -1, -1, -1, -1, -1]): Fleet => ({

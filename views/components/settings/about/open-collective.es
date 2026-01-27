@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
-import { range, debounce } from 'lodash'
 import { ResizeSensor } from '@blueprintjs/core'
+import { range, debounce } from 'lodash'
+import React, { Component } from 'react'
 import { styled } from 'styled-components'
-
 import { Section } from 'views/components/settings/components/section'
 
 const floor = (x) => Math.floor(x / 10) * 10

@@ -1,22 +1,22 @@
-import { reducer, RepairsState } from '../repairs'
-import {
-  createAPIGetMemberNdockResponseAction,
-  createAPIPortPortResponseAction,
-  createAPIReqNyukyoSpeedchangeResponseAction,
-} from '../../actions'
-
-import ndockFixture from './__fixtures__/api_get_member_ndock_one_active_dock.json'
-import portFixture from './__fixtures__/api_port_port_typical.json'
-
-import speedchangeFixture from './__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
-
-import type { GameResponsePayload } from '../../actions'
 import type {
   APIGetMemberNdockRequest,
   APIGetMemberNdockResponse,
   APIPortPortRequest,
   APIPortPortResponse,
 } from 'kcsapi'
+
+import type { GameResponsePayload } from '../../actions'
+import type { RepairsState } from '../repairs'
+
+import {
+  createAPIGetMemberNdockResponseAction,
+  createAPIPortPortResponseAction,
+  createAPIReqNyukyoSpeedchangeResponseAction,
+} from '../../actions'
+import { reducer } from '../repairs'
+import ndockFixture from './__fixtures__/api_get_member_ndock_one_active_dock.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
+import speedchangeFixture from './__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
 
 describe('repairs reducer', () => {
   it('should return initial state', () => {

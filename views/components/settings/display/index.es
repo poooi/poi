@@ -1,11 +1,11 @@
 /* global config, toggleModal */
 import React from 'react'
+import { Trans } from 'react-i18next'
 
 import { LayoutConfig } from './layout-config'
+import { ResolutionConfig } from './resolution-config'
 import { ThemeConfig } from './theme-config'
 import { ZoomingConfig } from './zooming-config'
-import { ResolutionConfig } from './resolution-config'
-import { Trans } from 'react-i18next'
 
 const toggleModalWithDelay = (...arg) => setTimeout(() => toggleModal(...arg), 1500)
 

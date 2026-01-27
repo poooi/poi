@@ -1,16 +1,14 @@
+import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
+import { get, map, capitalize } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get, map, capitalize } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
-
-import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
-import { IntegerConfig } from 'views/components/settings/components/integer'
-import { SwitchConfig } from 'views/components/settings/components/switch'
-
+import { connect } from 'react-redux'
 import { styled } from 'styled-components'
+import { IntegerConfig } from 'views/components/settings/components/integer'
+import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
+import { SwitchConfig } from 'views/components/settings/components/switch'
 
 const InlineFormGroup = styled(FormGroup)`
   .bp5-form-content {

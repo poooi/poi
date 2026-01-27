@@ -1,15 +1,13 @@
+import type { APIReqNyukyoSpeedchangeRequest, APIReqNyukyoSpeedchangeResponse } from 'kcsapi'
+import type { GameResponsePayload } from 'views/redux/actions'
+
 import {
   createAPIReqNyukyoSpeedchangeResponseAction,
   createInfoShipsRepairCompletedAction,
 } from 'views/redux/actions'
 
-import type { APIReqNyukyoSpeedchangeRequest, APIReqNyukyoSpeedchangeResponse } from 'kcsapi'
-
-import type { GameResponsePayload } from 'views/redux/actions'
-
-import { shipsCrossSliceMiddleware } from '../ships-cross-slice'
-
 import speedchangeFixture from '../../info/__tests__/__fixtures__/api_req_nyukyo_speedchange_use_bucket.json'
+import { shipsCrossSliceMiddleware } from '../ships-cross-slice'
 
 describe('shipsCrossSliceMiddleware', () => {
   it('dispatches RepairCompleted for nyukyo/speedchange based on repairs state', () => {

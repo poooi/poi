@@ -1,6 +1,8 @@
-import React, { useState, useEffect, FC } from 'react'
-import { ipcRenderer } from 'electron'
+import type { FC } from 'react'
+
 import { Dialog, FormGroup, InputGroup, Classes, Button, Intent } from '@blueprintjs/core'
+import { ipcRenderer } from 'electron'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 const BALogin = (usr: string, pwd: string) => {

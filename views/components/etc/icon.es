@@ -1,9 +1,9 @@
+import classnames from 'classnames'
 /* global ROOT, config */
 import fs from 'fs-extra'
-import classnames from 'classnames'
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
 import { memoize } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 
 const getClassName = (props, isSVG) => {
   const type = isSVG ? 'svg' : 'png'

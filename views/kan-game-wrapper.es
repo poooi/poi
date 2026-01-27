@@ -1,24 +1,24 @@
+import * as remote from '@electron/remote'
+import classnames from 'classnames'
+import { createHash, X509Certificate } from 'crypto'
+import fs from 'fs-extra'
+import { get, memoize } from 'lodash'
 /* global getStore, toggleModal */
 import React, { Component } from 'react'
-import * as remote from '@electron/remote'
 import { connect } from 'react-redux'
-import { get, memoize } from 'lodash'
-import { ResizableArea } from 'react-resizable-area'
-import classnames from 'classnames'
-import { styled } from 'styled-components'
-import { createHash, X509Certificate } from 'crypto'
 import ReactMarkdown from 'react-remarkable'
-
-import { PoiAlert } from './components/info/alert'
-import { PoiToast } from './components/info/toast'
-import { PoiMapReminder } from './components/info/map-reminder'
-import { PoiControl } from './components/info/control'
-import { fileUrl } from 'views/utils/tools'
+import { ResizableArea } from 'react-resizable-area'
+import { styled } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import WebView from 'views/components/etc/webview'
-import { getRealSize, getYOffset } from 'views/services/utils'
 import i18next from 'views/env-parts/i18next'
-import fs from 'fs-extra'
+import { getRealSize, getYOffset } from 'views/services/utils'
+import { fileUrl } from 'views/utils/tools'
+
+import { PoiAlert } from './components/info/alert'
+import { PoiControl } from './components/info/control'
+import { PoiMapReminder } from './components/info/map-reminder'
+import { PoiToast } from './components/info/toast'
 
 const config = remote.require('./lib/config')
 const ipc = remote.require('./lib/ipc')

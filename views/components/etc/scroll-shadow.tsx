@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { compact } from 'lodash'
+import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { styled } from 'styled-components'
 
 interface ScrollShadowProps {

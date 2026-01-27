@@ -1,6 +1,6 @@
+import * as remote from '@electron/remote'
 /* global dispatch */
 import { onGameRequest, onGameResponse } from 'views/redux/reducer-factory'
-import * as remote from '@electron/remote'
 
 const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 

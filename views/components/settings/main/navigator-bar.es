@@ -1,8 +1,3 @@
-/* global config, getStore */
-import React from 'react'
-import FontAwesome from 'react-fontawesome'
-import { withNamespaces } from 'react-i18next'
-import { styled } from 'styled-components'
 import {
   Button,
   ButtonGroup,
@@ -12,9 +7,13 @@ import {
   Position,
   FormGroup,
 } from '@blueprintjs/core'
-
-import { gameRefreshPage, gameReload } from 'views/services/utils'
+/* global config, getStore */
+import React from 'react'
+import FontAwesome from 'react-fontawesome'
+import { withNamespaces } from 'react-i18next'
+import { styled } from 'styled-components'
 import ContextButtonTooltip from 'views/components/etc/context-button-tooltip'
+import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 import { Section } from '../components/section'
 

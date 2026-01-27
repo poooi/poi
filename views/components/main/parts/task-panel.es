@@ -1,21 +1,20 @@
-/* global config */
-import { connect } from 'react-redux'
-import { get, map, range, forEach, values, sortBy } from 'lodash'
 import { Tag, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
-import { createSelector } from 'reselect'
+import { get, map, range, forEach, values, sortBy } from 'lodash'
 import React from 'react'
 import { withNamespaces, Trans } from 'react-i18next'
+/* global config */
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import { styled, css } from 'styled-components'
-
-import { escapeI18nKey } from 'views/utils/tools'
-import { CardWrapper as CardWrapperL } from './styled-components'
 import i18next from 'views/env-parts/i18next'
-
 import {
   configLayoutSelector,
   configReverseLayoutSelector,
   extensionSelectorFactory,
 } from 'views/utils/selectors'
+import { escapeI18nKey } from 'views/utils/tools'
+
+import { CardWrapper as CardWrapperL } from './styled-components'
 
 const defaultLayout = config.getDefault('poi.mainpanel.layout')
 

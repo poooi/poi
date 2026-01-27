@@ -3,8 +3,8 @@ eslint-disable no-console
 */
 
 import chalk from 'chalk'
-import moment from 'moment'
 import _ from 'lodash'
+import moment from 'moment'
 
 type LogType = 'assert' | 'debug' | 'error' | 'info' | 'log' | 'table' | 'trace' | 'warn'
 

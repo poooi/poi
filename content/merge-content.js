@@ -4,12 +4,12 @@
  */
 
 require('@babel/register')(require('../babel-register.config'))
+const Promise = require('bluebird')
+const fs = require('fs-extra')
 const glob = require('glob')
 const matter = require('gray-matter')
-const Promise = require('bluebird')
-const path = require('path')
-const fs = require('fs-extra')
 const _ = require('lodash')
+const path = require('path')
 const assert = require('assert').strict
 const { compareUpdate } = require('../views/utils/tools')
 
