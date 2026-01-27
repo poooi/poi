@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import {
-  BrowserWindow,
-  Display,
-  screen,
-  webContents,
-  BrowserWindowConstructorOptions,
-  Menu,
-} from 'electron'
+import type { Display, BrowserWindowConstructorOptions, Menu } from 'electron'
+
 import * as electronRemote from '@electron/remote/main'
+import { BrowserWindow, screen, webContents } from 'electron'
 import path from 'path-extra'
 const windows: typeof global.windows = (global.windows = [])
 const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})

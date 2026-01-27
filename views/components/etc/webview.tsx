@@ -1,14 +1,12 @@
-import React, {
-  CSSProperties,
-  useEffect,
-  useMemo,
-  useState,
-  forwardRef,
-  useImperativeHandle,
-} from 'react'
 import type { DidFailLoadEvent, WebviewTag, WebContents } from 'electron'
+import type { CSSProperties } from 'react'
+
 import { webContents } from '@electron/remote'
-import { HandlerFields, useWebviewEventListener } from './webview-util'
+import React, { useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react'
+
+import type { HandlerFields } from './webview-util'
+
+import { useWebviewEventListener } from './webview-util'
 
 type WebviewTagDOMAttrs = Partial<
   Pick<

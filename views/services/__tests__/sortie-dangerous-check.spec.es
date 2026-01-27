@@ -1,7 +1,6 @@
 import { keyBy, range, random, sampleSize, times, shuffle } from 'lodash'
 
 import { damagedCheck } from '../utils'
-
 const start2 = require('./fixtures/start2.json')
 const $ships = keyBy(start2.api_mst_ship, 'api_id')
 const $equips = keyBy(start2.api_mst_slotitem, 'api_id')

@@ -3,12 +3,13 @@
  */
 /* eslint-disable import-x/namespace */
 
-import React, { cloneElement, useContext, useState } from 'react'
-import ReactDOM from 'react-dom'
-import * as ReactBootstrap from 'react-bootstrap'
 import { contains } from 'dom-helpers'
-import { WindowEnv } from '../components/etc/window-env'
 import { includes, debounce } from 'lodash'
+import React, { cloneElement, useContext, useState } from 'react'
+import * as ReactBootstrap from 'react-bootstrap'
+import ReactDOM from 'react-dom'
+
+import { WindowEnv } from '../components/etc/window-env'
 
 /* eslint-disable no-import-assign */
 ReactBootstrap.OrigOverlayTrigger = ReactBootstrap.OverlayTrigger

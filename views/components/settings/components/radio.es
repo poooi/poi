@@ -1,9 +1,9 @@
+import { Radio, RadioGroup } from '@blueprintjs/core'
+import { get, map } from 'lodash'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { get, map } from 'lodash'
-import { Radio, RadioGroup } from '@blueprintjs/core'
 
 @connect((state, props) => ({
   value: get(state.config, props.configName, props.defaultValue),

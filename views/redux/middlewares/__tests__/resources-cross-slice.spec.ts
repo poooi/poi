@@ -1,10 +1,11 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux'
+import type { ResourcesState } from 'views/redux/info/resources'
 
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 import {
   createAPIReqKousyouCreateShipSpeedChangeResponseAction,
   createAPIReqNyukyoStartResponseAction,
 } from 'views/redux/actions'
-import { reducer as resourcesReducer, ResourcesState } from 'views/redux/info/resources'
+import { reducer as resourcesReducer } from 'views/redux/info/resources'
 
 import { resourcesCrossSliceMiddleware } from '../../middlewares/resources-cross-slice'
 

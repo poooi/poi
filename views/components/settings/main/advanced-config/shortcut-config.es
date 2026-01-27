@@ -1,13 +1,13 @@
+import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
+import cls from 'classnames'
+import { ipcRenderer } from 'electron'
+import { get } from 'lodash'
+import mousetrap from 'mousetrap'
+import PropTypes from 'prop-types'
 /* global config */
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { ipcRenderer } from 'electron'
-import mousetrap from 'mousetrap'
-import { get } from 'lodash'
-import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
 import { withNamespaces } from 'react-i18next'
-import cls from 'classnames'
+import { connect } from 'react-redux'
 import { styled } from 'styled-components'
 
 const BorderlessDialog = styled(Dialog)`

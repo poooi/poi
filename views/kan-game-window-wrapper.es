@@ -1,16 +1,17 @@
+import * as remote from '@electron/remote'
+import { TitleBar } from 'electron-react-titlebar/renderer'
+import { debounce } from 'lodash'
+import path from 'path-extra'
 /* global config, ROOT, getStore, dispatch */
 import React, { PureComponent } from 'react'
 import ReactDOM from 'react-dom'
-import path from 'path-extra'
-import { TitleBar } from 'electron-react-titlebar/renderer'
-import * as remote from '@electron/remote'
-import { fileUrl, loadScript } from 'views/utils/tools'
-import { WindowEnv } from 'views/components/etc/window-env'
-import { KanGameWrapper } from './kan-game-wrapper'
-import { debounce } from 'lodash'
 import { styled, StyleSheetManager } from 'styled-components'
-import { loadStyle } from './env-parts/theme'
 import { appMenu } from 'views/components/etc/menu'
+import { WindowEnv } from 'views/components/etc/window-env'
+import { fileUrl, loadScript } from 'views/utils/tools'
+
+import { loadStyle } from './env-parts/theme'
+import { KanGameWrapper } from './kan-game-wrapper'
 
 const pickOptions = [
   'ROOT',

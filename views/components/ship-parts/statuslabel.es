@@ -1,10 +1,10 @@
+import { Tooltip, Tag, Intent, Position } from '@blueprintjs/core'
+import { isEqual, get } from 'lodash'
 /* global language */
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
-import { connect } from 'react-redux'
-import { isEqual, get } from 'lodash'
 import { withNamespaces } from 'react-i18next'
-import { Tooltip, Tag, Intent, Position } from '@blueprintjs/core'
+import { connect } from 'react-redux'
 
 const TEXTS = [['Retreated'], ['Repairing'], ['Resupply Needed']]
 const INTENTS = [Intent.WARNING, Intent.NONE, Intent.WARNING]

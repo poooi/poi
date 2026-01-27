@@ -1,5 +1,6 @@
-import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 import { createSlice } from '@reduxjs/toolkit'
+import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
+
 import {
   createAPIGetMemberRequireInfoAction,
   createAPIGetMemberUseitemResponseAction,

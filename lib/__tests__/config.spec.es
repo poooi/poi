@@ -5,9 +5,10 @@ jest.mock('fs-extra', () => ({
 }))
 jest.mock('cson')
 jest.mock('../default-config.ts', () => ({ foo: 'bar' }))
-import config from '../config'
-import fs from 'fs-extra'
 import CSON from 'cson'
+import fs from 'fs-extra'
+
+import config from '../config'
 
 describe('config', () => {
   it('initially, should be filled with default value', () => {

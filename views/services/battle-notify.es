@@ -1,9 +1,10 @@
 /* global config, notify, ROOT */
 import * as remote from '@electron/remote'
-import { ResourceNotifier } from './resource-notifier'
-import { parse } from 'url'
 import { join } from 'path-extra'
+import { parse } from 'url'
 import i18next from 'views/env-parts/i18next'
+
+import { ResourceNotifier } from './resource-notifier'
 
 let inBattle = false
 

@@ -1,4 +1,6 @@
-import { Message, messageInstance } from 'views/components/info/alert'
+import type { Message } from 'views/components/info/alert'
+
+import { messageInstance } from 'views/components/info/alert'
 
 const DEFAULT_STICKYFOR = 3 * 1000 // Milliseconds
 

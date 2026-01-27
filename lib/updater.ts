@@ -1,7 +1,7 @@
-import { autoUpdater } from 'electron-updater'
-import config from './config'
-
 import Logger from 'electron-log'
+import { autoUpdater } from 'electron-updater'
+
+import config from './config'
 
 autoUpdater.logger = Logger
 ;(autoUpdater.logger as typeof Logger).transports.file.level = 'info'

@@ -1,18 +1,18 @@
+import { Button, Position } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
+import { shell, clipboard, nativeImage, ipcRenderer } from 'electron'
 /* global config, toggleModal, getStore, toast */
 import fs from 'fs-extra'
-import path from 'path-extra'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { shell, clipboard, nativeImage, ipcRenderer } from 'electron'
-import * as remote from '@electron/remote'
-import { Button, Position } from '@blueprintjs/core'
-import { connect } from 'react-redux'
 import { get, padStart } from 'lodash'
-import { gameRefreshPage, gameReload } from 'views/services/utils'
+import path from 'path-extra'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { withNamespaces, Trans } from 'react-i18next'
+import { connect } from 'react-redux'
 import { styled, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
+import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 const { openExternal } = shell
 

@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
 import { FormGroup, ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core'
 import { trim, last } from 'lodash'
 import npa from 'npm-package-arg'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { withNamespaces } from 'react-i18next'
 
 /**

@@ -1,24 +1,3 @@
-import { reducer, ShipsState, Ship } from '../ships'
-import {
-  createAPIPortPortResponseAction,
-  createAPIGetMemberShipDeckResponseAction,
-  createAPIGetMemberShip3ResponseAction,
-  createAPIGetMemberShip2ResponseAction,
-  createAPIReqHenseiLockResponseAction,
-  createAPIReqHokyuChargeResponseAction,
-  createAPIReqKaisouPowerupResponseAction,
-  createAPIReqKaisouSlotExchangeIndexResponseAction,
-  createAPIReqKaisouMarriageResponseAction,
-  createAPIReqKaisouSlotDepriveResponseAction,
-  createAPIReqKousyouDestroyshipResponseAction,
-  createAPIReqKousyouGetShipResponseAction,
-  createAPIReqNyukyoStartResponseAction,
-  createAPIGetMemberNdockResponseAction,
-  createAPIReqMapAnchorageRepairResponseAction,
-  createAPIReqKaisouOpenExslotResponseAction,
-  createInfoShipsRepairCompletedAction,
-} from '../../actions'
-
 import type {
   APIGetMemberNdockRequest,
   APIGetMemberNdockResponse,
@@ -54,24 +33,44 @@ import type {
 } from 'kcsapi'
 
 import type { APIReqMapAnchorageRepairResponseCompat, GameResponsePayload } from '../../actions'
+import type { ShipsState, Ship } from '../ships'
 
-import lockFixture from './__fixtures__/api_req_hensei_lock_unlock_ship.json'
-import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
-import portFixture from './__fixtures__/api_port_port_typical.json'
-
-import hokyuChargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
+import {
+  createAPIPortPortResponseAction,
+  createAPIGetMemberShipDeckResponseAction,
+  createAPIGetMemberShip3ResponseAction,
+  createAPIGetMemberShip2ResponseAction,
+  createAPIReqHenseiLockResponseAction,
+  createAPIReqHokyuChargeResponseAction,
+  createAPIReqKaisouPowerupResponseAction,
+  createAPIReqKaisouSlotExchangeIndexResponseAction,
+  createAPIReqKaisouMarriageResponseAction,
+  createAPIReqKaisouSlotDepriveResponseAction,
+  createAPIReqKousyouDestroyshipResponseAction,
+  createAPIReqKousyouGetShipResponseAction,
+  createAPIReqNyukyoStartResponseAction,
+  createAPIGetMemberNdockResponseAction,
+  createAPIReqMapAnchorageRepairResponseAction,
+  createAPIReqKaisouOpenExslotResponseAction,
+  createInfoShipsRepairCompletedAction,
+} from '../../actions'
+import { reducer } from '../ships'
+import ndockInstantCompletionFixture from './__fixtures__/api_get_member_ndock_instant_completion_shows_empty.json'
 import shipDeckFixture from './__fixtures__/api_get_member_ship_deck_deck1_two_ships.json'
-import ship3Fixture from './__fixtures__/api_get_member_ship3_with_slot_data.json'
 import ship2Fixture from './__fixtures__/api_get_member_ship2_full_list.json'
-import slotExchangeIndexFixture from './__fixtures__/api_req_kaisou_slot_exchange_index_swap_slots.json'
+import ship3Fixture from './__fixtures__/api_get_member_ship3_with_slot_data.json'
+import portFixture from './__fixtures__/api_port_port_typical.json'
+import lockFixture from './__fixtures__/api_req_hensei_lock_unlock_ship.json'
+import hokyuChargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
 import marriageFixture from './__fixtures__/api_req_kaisou_marriage_level_100.json'
-import slotDepriveFixture from './__fixtures__/api_req_kaisou_slot_deprive_move_equip.json'
+import openExslotFixture from './__fixtures__/api_req_kaisou_open_exslot_unlock_exslot.json'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
+import slotDepriveFixture from './__fixtures__/api_req_kaisou_slot_deprive_move_equip.json'
+import slotExchangeIndexFixture from './__fixtures__/api_req_kaisou_slot_exchange_index_swap_slots.json'
+import getShipFixture from './__fixtures__/api_req_kousyou_getship_receive_new_ship.json'
+import anchorageRepairFixture from './__fixtures__/api_req_map_anchorage_repair_repairs_multiple_ships.json'
 import nyukyoStartHighspeedFixture from './__fixtures__/api_req_nyukyo_start_highspeed_bucket_repairs_immediately.json'
 import nyukyoStartInstantCompletionFixture from './__fixtures__/api_req_nyukyo_start_instant_completion_under_60s.json'
-import ndockInstantCompletionFixture from './__fixtures__/api_get_member_ndock_instant_completion_shows_empty.json'
-import anchorageRepairFixture from './__fixtures__/api_req_map_anchorage_repair_repairs_multiple_ships.json'
-import openExslotFixture from './__fixtures__/api_req_kaisou_open_exslot_unlock_exslot.json'
 
 describe('ships reducer', () => {
   const createShip = (id: number, shipId: number): Ship => ({

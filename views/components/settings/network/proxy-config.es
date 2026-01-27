@@ -1,14 +1,13 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get, mapValues } from 'lodash'
 import { FormGroup } from '@blueprintjs/core'
+import { get, mapValues } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { PureComponent } from 'react'
 import { withNamespaces } from 'react-i18next'
-
-import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
-import { TextConfig } from 'views/components/settings/components/text'
-import { SwitchConfig } from 'views/components/settings/components/switch'
+import { connect } from 'react-redux'
 import { IntegerConfig } from 'views/components/settings/components/integer'
+import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
+import { SwitchConfig } from 'views/components/settings/components/switch'
+import { TextConfig } from 'views/components/settings/components/text'
 
 const DEFAULT = {
   http: {

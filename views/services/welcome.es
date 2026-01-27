@@ -1,10 +1,9 @@
+import { Tabs, Tab } from '@blueprintjs/core'
+import { map } from 'lodash'
 /* global config, POI_VERSION */
 import React from 'react'
-import { Tabs, Tab } from '@blueprintjs/core'
-import ReactMarkdown from 'react-remarkable'
-import { map } from 'lodash'
 import { useTranslation, Trans } from 'react-i18next'
-
+import ReactMarkdown from 'react-remarkable'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { ResolutionConfig } from 'views/components/settings/display/resolution-config'
 import { ProxiesConfig } from 'views/components/settings/network'

@@ -1,11 +1,12 @@
+import { Intent } from '@blueprintjs/core'
+import _, { get } from 'lodash'
 /*
  * This file contains utility functions that is related to the game mechanism,
  * or formatting instructions to game data.
  */
 import { ProgressBar } from 'react-bootstrap'
 import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
-import _, { get } from 'lodash'
-import { Intent } from '@blueprintjs/core'
+
 import { shipAvatarColor } from './color'
 
 addStyle(ProgressBar, 'green')

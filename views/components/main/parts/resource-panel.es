@@ -1,11 +1,11 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get, isEqual, range } from 'lodash'
 import { ResizeSensor } from '@blueprintjs/core'
+import { get, isEqual, range } from 'lodash'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { connect } from 'react-redux'
 import { styled, css } from 'styled-components'
-
 import { MaterialIcon } from 'views/components/etc/icon'
+
 import { CardWrapper as CardWrapperL } from './styled-components'
 
 const CardWrapper = styled(CardWrapperL)`

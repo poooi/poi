@@ -1,10 +1,11 @@
+import { transformFile } from '@babel/core'
+import Promise, { promisify } from 'bluebird'
 import fs from 'fs-extra'
 import path from 'path-extra'
-import Promise, { promisify } from 'bluebird'
-import { log } from './utils'
-import { transformFile } from '@babel/core'
-import BabelConfig from '../babel.config'
 import walk from 'walk'
+
+import BabelConfig from '../babel.config'
+import { log } from './utils'
 
 const changeExt = (srcPath, ext) => {
   const srcDir = path.dirname(srcPath)

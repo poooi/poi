@@ -1,15 +1,19 @@
-// @ts-check
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
 
-const path = require('node:path')
+import type { Linter } from 'eslint'
+import { includeIgnoreFile } from '@eslint/compat'
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
+import globals from 'globals'
+import perfectionist from 'eslint-plugin-perfectionist'
 
-const { includeIgnoreFile } = require('@eslint/compat')
-const { FlatCompat } = require('@eslint/eslintrc')
-const js = require('@eslint/js')
-const globals = require('globals')
+import babelParser from '@babel/eslint-parser'
+import tsParser from '@typescript-eslint/parser'
+import tsEslint from '@typescript-eslint/eslint-plugin'
 
-const babelParser = require('@babel/eslint-parser')
-const tsParser = require('@typescript-eslint/parser')
-const tsEslint = require('@typescript-eslint/eslint-plugin')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -17,10 +21,9 @@ const compat = new FlatCompat({
   allConfig: js.configs.all,
 })
 
-/** @type {import('eslint').Linter.Config[]} */
-module.exports = [
+const config: Linter.Config[] = [
   // Keep behavior in sync with the previous CLI use of --ignore-path .gitignore
-  includeIgnoreFile(path.join(__dirname, '.gitignore')),
+  includeIgnoreFile(join(__dirname, '.gitignore')),
 
   ...compat.extends(
     'eslint:recommended',
@@ -40,7 +43,7 @@ module.exports = [
         },
         requireConfigFile: false,
         babelOptions: {
-          configFile: path.join(__dirname, 'babel.config.js'),
+          configFile: join(__dirname, 'babel.config.js'),
         },
       },
       globals: {
@@ -71,7 +74,7 @@ module.exports = [
     },
     settings: {
       react: {
-        version: require('react').version,
+        version: 'detect',
       },
       'import-x/parsers': {
         '@typescript-eslint/parser': ['.ts', '.tsx'],
@@ -82,7 +85,7 @@ module.exports = [
           paths: [__dirname],
         },
         typescript: {
-          project: path.join(__dirname, 'tsconfig.json'),
+          project: join(__dirname, 'tsconfig.json'),
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.es', '.json'],
         },
       },
@@ -93,30 +96,30 @@ module.exports = [
     },
   },
 
-  // Mirror the legacy TS override (ts parser + @typescript-eslint recommended configs).
-  ...compat
-    .extends(
-      'plugin:import-x/typescript',
-      'plugin:@typescript-eslint/eslint-recommended',
-      'plugin:@typescript-eslint/recommended',
-    )
-    .map((config) => ({
-      ...config,
-      files: ['**/*.{ts,tsx}'],
-    })),
+  // TypeScript/TSX files configuration
+  ...compat.extends('plugin:import-x/typescript').map((config) => ({
+    ...config,
+    files: ['**/*.{ts,tsx}'],
+  })),
+
+  // Spread the TypeScript ESLint recommended configs (array)
+  ...tsEslint.configs['flat/recommended'].map((config) => ({
+    ...config,
+    files: ['**/*.{ts,tsx}'],
+  })),
 
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
+      parserOptions: {
+        project: join(__dirname, 'tsconfig.json'),
+      },
       globals: {
         ...globals.browser,
         ...globals.node,
         ...globals.jest,
       },
-    },
-    plugins: {
-      '@typescript-eslint': tsEslint,
     },
     rules: {
       // Keep repo behavior: report but don't hard-fail on these.
@@ -130,6 +133,7 @@ module.exports = [
 
       // TS/DOM types are compile-time only.
       'no-undef': 'off',
+      '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
 
@@ -155,4 +159,14 @@ module.exports = [
       'no-import-assign': 'off',
     },
   },
+  {
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      'perfectionist/sort-imports': 'error',
+    },
+  },
 ]
+
+export default config

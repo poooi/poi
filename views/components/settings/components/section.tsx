@@ -1,9 +1,11 @@
 /**
  * section is a group of settings on certain subject
  */
-import React, { ReactNode, FunctionComponent } from 'react'
-import PropTypes from 'prop-types'
+import type { ReactNode, FunctionComponent } from 'react'
+
 import { Card, H3 } from '@blueprintjs/core'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { styled } from 'styled-components'
 
 interface SectionProps {

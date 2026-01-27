@@ -1,16 +1,3 @@
-import { reducer, MapsState } from '../maps'
-import {
-  createAPIGetMemberMapinfoResponseAction,
-  createAPIReqMapSelectEventmapRankResponseAction,
-  createAPIReqMapStartResponseAction,
-} from '../../actions'
-
-import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
-import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank_sets_rank.json'
-
-import startFixture from './__fixtures__/api_req_map_start_updates_event_gauge_hp.json'
-
-import type { GameResponsePayload } from '../../actions'
 import type {
   APIGetMemberMapinfoRequest,
   APIGetMemberMapinfoResponse,
@@ -19,6 +6,19 @@ import type {
   APIReqMapStartRequest,
   APIReqMapStartResponse,
 } from 'kcsapi'
+
+import type { GameResponsePayload } from '../../actions'
+import type { MapsState } from '../maps'
+
+import {
+  createAPIGetMemberMapinfoResponseAction,
+  createAPIReqMapSelectEventmapRankResponseAction,
+  createAPIReqMapStartResponseAction,
+} from '../../actions'
+import { reducer } from '../maps'
+import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
+import selectEventmapRankFixture from './__fixtures__/api_req_map_select_eventmap_rank_sets_rank.json'
+import startFixture from './__fixtures__/api_req_map_start_updates_event_gauge_hp.json'
 
 describe('maps reducer', () => {
   it('should return initial state', () => {

@@ -1,10 +1,11 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux'
+import type { EquipsState } from 'views/redux/info/equips'
 
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 import {
   createAPIReqKaisouPowerupResponseAction,
   createAPIReqKousyouDestroyshipResponseAction,
 } from 'views/redux/actions'
-import { reducer as equipsReducer, EquipsState } from 'views/redux/info/equips'
+import { reducer as equipsReducer } from 'views/redux/info/equips'
 
 import { equipsCrossSliceMiddleware } from '../equips-cross-slice'
 

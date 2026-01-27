@@ -1,18 +1,18 @@
+import classnames from 'classnames'
+import { remove } from 'fs-extra'
+import { get } from 'lodash'
+import { join } from 'path-extra'
+import PropTypes from 'prop-types'
 /* global APPDATA_PATH */
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
-import PropTypes from 'prop-types'
-import { join } from 'path-extra'
-import { remove } from 'fs-extra'
+import { styled, css } from 'styled-components'
 import {
   getShipImgPath,
   getShipBackgroundPath,
   getSlotItemImgPath,
   getSlotItemBackgroundPath,
 } from 'views/utils/ship-img'
-import classnames from 'classnames'
-import { styled, css } from 'styled-components'
 
 const ShipAvatarContainer = styled.div`
   align-items: center;

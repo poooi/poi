@@ -1,8 +1,8 @@
-import React, { createRef } from 'react'
 import { Position, OverlayToaster, Intent } from '@blueprintjs/core'
-import { styled, css } from 'styled-components'
-import { connect } from 'react-redux'
 import { get } from 'lodash'
+import React, { createRef } from 'react'
+import { connect } from 'react-redux'
+import { styled, css } from 'styled-components'
 
 const intentTypes = new Set(Object.values(Intent))
 const map = {

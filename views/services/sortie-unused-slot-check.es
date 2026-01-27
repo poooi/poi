@@ -1,7 +1,8 @@
+import { get } from 'lodash'
+import i18next from 'views/env-parts/i18next'
+
 /* global getStore, config */
 import { fleetStateSelectorFactory } from '../utils/selectors'
-import i18next from 'views/env-parts/i18next'
-import { get } from 'lodash'
 
 window.addEventListener('game.response', ({ detail: { path, body } }) => {
   if (path !== '/kcsapi/api_get_member/mapinfo') return

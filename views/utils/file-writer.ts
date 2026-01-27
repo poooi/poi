@@ -1,4 +1,6 @@
-import { writeFile, ensureDir, WriteFileOptions } from 'fs-extra'
+import type { WriteFileOptions } from 'fs-extra'
+
+import { writeFile, ensureDir } from 'fs-extra'
 import { dirname } from 'path'
 
 // A stream of async file writing. `write` queues the task which will be executed

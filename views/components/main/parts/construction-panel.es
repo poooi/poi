@@ -1,15 +1,15 @@
+import { Intent, Position } from '@blueprintjs/core'
+import { join as joinString, range, get, map } from 'lodash'
 /* global getStore */
 import { join } from 'path-extra'
-import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { MaterialIcon } from 'views/components/etc/icon'
-import { join as joinString, range, get, map } from 'lodash'
 import FA from 'react-fontawesome'
 import { withNamespaces } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
-import { Intent, Position } from '@blueprintjs/core'
-
+import { connect } from 'react-redux'
 import { Avatar } from 'views/components/etc/avatar'
+import { MaterialIcon } from 'views/components/etc/icon'
+import i18next from 'views/env-parts/i18next'
+
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
   DockPanelCardWrapper,

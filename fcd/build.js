@@ -1,10 +1,10 @@
-const Promise = require('bluebird')
-const fs = require('fs-extra')
-const path = require('path')
-const moment = require('moment')
-const CSON = require('cson')
-const { isEqual, last, padStart, size } = require('lodash')
 const assert = require('assert')
+const Promise = require('bluebird')
+const CSON = require('cson')
+const fs = require('fs-extra')
+const { isEqual, last, padStart, size } = require('lodash')
+const moment = require('moment')
+const path = require('path')
 
 const DEST = path.resolve(__dirname, '../assets/data/fcd')
 

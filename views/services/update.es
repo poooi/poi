@@ -1,10 +1,10 @@
+import * as remote from '@electron/remote'
+import { shell } from 'electron'
+import fetch from 'node-fetch'
 /* global POI_VERSION, toggleModal, config, language */
 import React from 'react'
-import { shell } from 'electron'
-import * as remote from '@electron/remote'
-import semver from 'semver'
 import Markdown from 'react-remarkable'
-import fetch from 'node-fetch'
+import semver from 'semver'
 import i18next from 'views/env-parts/i18next'
 
 const fetchHeader = new Headers()

@@ -1,5 +1,7 @@
-import React, { useCallback, useRef, useState, FunctionComponent } from 'react'
+import type { FunctionComponent } from 'react'
+
 import { Button, Intent } from '@blueprintjs/core'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 enum ErrorMessage {

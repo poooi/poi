@@ -1,6 +1,9 @@
-import React, { useState, useEffect, ReactNode, useCallback } from 'react'
+import type { Intent } from '@blueprintjs/core'
+import type { ReactNode } from 'react'
+
+import { Dialog, Button, DialogBody, DialogFooter } from '@blueprintjs/core'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Dialog, Button, Intent, DialogBody, DialogFooter } from '@blueprintjs/core'
 import { EventEmitter } from 'views/utils/event-emitter'
 
 export interface ButtonData {

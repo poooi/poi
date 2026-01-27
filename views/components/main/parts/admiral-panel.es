@@ -1,20 +1,20 @@
-/* global getStore */
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { createSelector } from 'reselect'
+import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
 import { get, map } from 'lodash'
 import moment from 'moment-timezone'
+/* global getStore */
+import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { withNamespaces, Trans } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
-import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
+import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import i18next from 'views/env-parts/i18next'
+import { getSlotitemCount } from 'views/utils/game-utils'
+import { configSelector, basicSelector } from 'views/utils/selectors'
 
 import { CountdownNotifierLabel } from './countdown-timer'
-import { configSelector, basicSelector } from 'views/utils/selectors'
-import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
-import { getSlotitemCount } from 'views/utils/game-utils'
 import { CardWrapper as CardWrapperL } from './styled-components'
 
 const rankName = [

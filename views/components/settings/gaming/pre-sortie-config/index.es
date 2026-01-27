@@ -1,9 +1,9 @@
+import { FormGroup } from '@blueprintjs/core'
 import React from 'react'
 import { withNamespaces } from 'react-i18next'
-import { FormGroup } from '@blueprintjs/core'
-
-import { SwitchConfig } from 'views/components/settings/components/switch'
 import { Section } from 'views/components/settings/components/section'
+import { SwitchConfig } from 'views/components/settings/components/switch'
+
 import { SlotCheckConfig } from './slot-check-config'
 import { UnusedSlotCheckConfig } from './unused-slot-check-config'
 

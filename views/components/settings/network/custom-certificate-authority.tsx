@@ -1,13 +1,15 @@
-import React, { useCallback } from 'react'
-import { FolderPickerConfig } from '../components/folder-picker'
-import { useTranslation } from 'react-i18next'
+import type { FileFilter } from 'electron'
+
 import { Button, Callout, Intent } from '@blueprintjs/core'
-import { get } from 'lodash'
-import { useSelector } from 'react-redux'
-import { FileFilter } from 'electron'
-import fs from 'fs-extra'
-import { X509Certificate } from 'crypto'
 import assert from 'assert'
+import { X509Certificate } from 'crypto'
+import fs from 'fs-extra'
+import { get } from 'lodash'
+import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+
+import { FolderPickerConfig } from '../components/folder-picker'
 
 const filters: FileFilter[] = [{ name: 'PEM', extensions: ['pem'] }]
 

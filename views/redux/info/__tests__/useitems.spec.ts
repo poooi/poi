@@ -1,18 +1,3 @@
-import {
-  createAPIGetMemberRequireInfoAction,
-  createAPIGetMemberUseitemResponseAction,
-  createAPIReqKousyouRemodelSlotlistDetailResponseAction,
-  createAPIReqMissionResultResponseAction,
-  createAPIReqSortieBattleResultResponseAction,
-  createAPIReqCombinedBattleBattleresultResponseAction,
-} from 'views/redux/actions'
-
-import { reducer, UseItemsState } from '../useitems'
-
-import type {
-  APIReqKousyouRemodelSlotlistDetailResponseCompat,
-  GameResponsePayload,
-} from 'views/redux/actions'
 import type {
   APIGetMemberRequireInfoRequest,
   APIGetMemberRequireInfoResponse,
@@ -24,7 +9,23 @@ import type {
   APIReqMissionResultResponse,
   APIReqSortieBattleresultResponse,
 } from 'kcsapi'
+import type {
+  APIReqKousyouRemodelSlotlistDetailResponseCompat,
+  GameResponsePayload,
+} from 'views/redux/actions'
 
+import {
+  createAPIGetMemberRequireInfoAction,
+  createAPIGetMemberUseitemResponseAction,
+  createAPIReqKousyouRemodelSlotlistDetailResponseAction,
+  createAPIReqMissionResultResponseAction,
+  createAPIReqSortieBattleResultResponseAction,
+  createAPIReqCombinedBattleBattleresultResponseAction,
+} from 'views/redux/actions'
+
+import type { UseItemsState } from '../useitems'
+
+import { reducer } from '../useitems'
 import apiReqMissionResultSuccessFixture from './__fixtures__/api_req_mission_result_success.json'
 import apiReqSortieBattleresultFixture from './__fixtures__/api_req_sortie_battleresult_includes_member_exp.json'
 

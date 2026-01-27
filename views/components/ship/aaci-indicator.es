@@ -1,19 +1,18 @@
+import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
+import { memoize, get } from 'lodash'
 import React from 'react'
+import { withNamespaces, Trans } from 'react-i18next'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { memoize, get } from 'lodash'
-import { withNamespaces, Trans } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
-import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
-
-import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
-import { ShipLabel, AACITypeName } from 'views/components/ship-parts/styled-components'
 import {
   InfoTooltip,
   InfoTooltipEntry,
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
+import { ShipLabel, AACITypeName } from 'views/components/ship-parts/styled-components'
+import i18next from 'views/env-parts/i18next'
+import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
+import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 const getAvailableTranslation = memoize((str) =>
   i18next.translator.exists(`main:${str}`) ? (

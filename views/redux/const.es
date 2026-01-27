@@ -1,5 +1,5 @@
-import { indexify } from 'views/utils/tools'
 import { keyBy } from 'lodash'
+import { indexify } from 'views/utils/tools'
 
 function dataFromBody(body) {
   return {

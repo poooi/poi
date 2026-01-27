@@ -1,5 +1,5 @@
-import { Colors } from '@blueprintjs/core'
 import { LegacyColors } from '@blueprintjs/colors'
+import { Colors } from '@blueprintjs/core'
 
 export const darkTheme = {
   ...LegacyColors,

@@ -1,11 +1,11 @@
 require('@babel/register')(require('../babel-register.config'))
-import path from 'path-extra'
-import fs from 'fs-extra'
 import * as remote from '@electron/remote'
+import fs from 'fs-extra'
 import lodash from 'lodash'
-import { init } from '../lib/sentry'
-import { setAllowedPath } from '../lib/module-path'
+import path from 'path-extra'
 
+import { setAllowedPath } from '../lib/module-path'
+import { init } from '../lib/sentry'
 import './polyfills/react-i18next'
 import './polyfills/react-fontawesome'
 import './polyfills/react-bootstrap'

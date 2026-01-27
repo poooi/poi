@@ -1,10 +1,10 @@
+import type { Middleware } from 'redux'
+
 import {
   createAPIReqKousyouCreateShipSpeedChangeResponseAction,
   createAPIReqNyukyoStartResponseAction,
   createInfoResourcesApplyDeltaAction,
 } from '../actions'
-
-import type { Middleware } from 'redux'
 
 /**
  * resourcesCrossSliceMiddleware

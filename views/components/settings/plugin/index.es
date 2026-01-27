@@ -1,13 +1,3 @@
-/* global PLUGIN_PATH, config */
-import path from 'path-extra'
-import { shell } from 'electron'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
-import { get, memoize } from 'lodash'
-import { connect } from 'react-redux'
-import { withNamespaces } from 'react-i18next'
-import Promise from 'bluebird'
 import {
   Callout,
   Intent,
@@ -18,8 +8,17 @@ import {
   Position,
   MenuItem,
 } from '@blueprintjs/core'
+import Promise from 'bluebird'
+import { shell } from 'electron'
+import { get, memoize } from 'lodash'
+/* global PLUGIN_PATH, config */
+import path from 'path-extra'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import FontAwesome from 'react-fontawesome'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
 import { styled } from 'styled-components'
-
 import PluginManager from 'views/services/plugin-manager'
 
 import { Section } from '../components/section'

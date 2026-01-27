@@ -1,8 +1,8 @@
+import * as remote from '@electron/remote'
+import fs from 'fs-extra'
 /* global config */
 import { padStart } from 'lodash'
-import * as remote from '@electron/remote'
 import path from 'path-extra'
-import fs from 'fs-extra'
 import url from 'url'
 
 const getCachePath = (pathname = '') => {

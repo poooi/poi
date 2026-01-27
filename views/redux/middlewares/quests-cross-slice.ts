@@ -1,3 +1,5 @@
+import type { Middleware } from 'redux'
+
 import { countBy, get } from 'lodash'
 
 import {
@@ -15,8 +17,6 @@ import {
   createAPIReqMapNextResponseAction,
   createInfoQuestsApplyProgressAction,
 } from '../actions'
-
-import type { Middleware } from 'redux'
 
 type RootState = {
   info?: {

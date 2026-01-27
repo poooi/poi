@@ -1,36 +1,13 @@
-import { connect } from 'react-redux'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import shallowEqual from 'fbjs/lib/shallowEqual'
-import { createSelector } from 'reselect'
-import { isEqual, pick, omit, memoize, get } from 'lodash'
-import { withNamespaces } from 'react-i18next'
 import { ProgressBar, Tooltip, Position, Tag, Intent } from '@blueprintjs/core'
+import shallowEqual from 'fbjs/lib/shallowEqual'
+import { isEqual, pick, omit, memoize, get } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
+import { createSelector } from 'reselect'
 import { MaterialIcon } from 'views/components/etc/icon'
-
-import { Slotitems } from './slotitems'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
-import { AACIIndicator } from './aaci-indicator'
-import { AAPBIndicator } from './aapb-indicator'
-import { OASWIndicator } from './oasw-indicator'
-import {
-  getCondStyle,
-  getHpStyle,
-  getStatusStyle,
-  getShipLabelStatus,
-  getSpeedLabel,
-  getMaterialStyle,
-  selectShipAvatarColor,
-} from 'views/utils/game-utils'
-import { resolveTime } from 'views/utils/tools'
-import {
-  shipDataSelectorFactory,
-  shipRepairDockSelectorFactory,
-  constSelector,
-  escapeStatusSelectorFactory,
-  fcdShipTagColorSelector,
-} from 'views/utils/selectors'
-
 import {
   ShipItem,
   ShipAvatar,
@@ -49,6 +26,28 @@ import {
   ShipHPProgress,
   Gradient,
 } from 'views/components/ship-parts/styled-components'
+import {
+  getCondStyle,
+  getHpStyle,
+  getStatusStyle,
+  getShipLabelStatus,
+  getSpeedLabel,
+  getMaterialStyle,
+  selectShipAvatarColor,
+} from 'views/utils/game-utils'
+import {
+  shipDataSelectorFactory,
+  shipRepairDockSelectorFactory,
+  constSelector,
+  escapeStatusSelectorFactory,
+  fcdShipTagColorSelector,
+} from 'views/utils/selectors'
+import { resolveTime } from 'views/utils/tools'
+
+import { AACIIndicator } from './aaci-indicator'
+import { AAPBIndicator } from './aapb-indicator'
+import { OASWIndicator } from './oasw-indicator'
+import { Slotitems } from './slotitems'
 
 const shipRowDataSelectorFactory = memoize((shipId) =>
   createSelector(

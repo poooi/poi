@@ -1,4 +1,17 @@
-import { reducer, type AirBase } from '../airbase'
+import type {
+  APIReqMapNextRequest,
+  APIReqMapNextResponse,
+  APIGetMemberMapinfoResponse,
+  APIGetMemberMapinfoRequest,
+  APIPortPortRequest,
+  APIPortPortResponse,
+} from 'kcsapi'
+
+import type {
+  APIReqAirCorpsChangeDeploymentBaseRequest,
+  APIReqAirCorpsChangeDeploymentBaseResponse,
+  GameResponsePayload,
+} from '../../actions'
 
 import {
   createAPIGetMemberMapinfoResponseAction,
@@ -10,29 +23,15 @@ import {
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
 } from '../../actions'
-
+import { reducer, type AirBase } from '../airbase'
 import mapInfoFixture from './__fixtures__/api_get_member_mapinfo_typical.json'
-import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane_assign_planes.json'
+import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
 import changeNameFixture from './__fixtures__/api_req_air_corps_change_name_rename_base.json'
 import setActionFixture from './__fixtures__/api_req_air_corps_set_action_bulk_update.json'
+import setPlaneFixture from './__fixtures__/api_req_air_corps_set_plane_assign_planes.json'
 import supplyFixture from './__fixtures__/api_req_air_corps_supply_resupply_squadron.json'
-import nextFixture from './__fixtures__/api_req_map_next_with_itemget.json'
 import nextDestructionBattleFixture from './__fixtures__/api_req_map_next_destruction_battle_applies_base_damage.json'
-import apiPortPortFixture from './__fixtures__/api_port_port_typical.json'
-
-import type {
-  APIReqAirCorpsChangeDeploymentBaseRequest,
-  APIReqAirCorpsChangeDeploymentBaseResponse,
-  GameResponsePayload,
-} from '../../actions'
-import type {
-  APIReqMapNextRequest,
-  APIReqMapNextResponse,
-  APIGetMemberMapinfoResponse,
-  APIGetMemberMapinfoRequest,
-  APIPortPortRequest,
-  APIPortPortResponse,
-} from 'kcsapi'
+import nextFixture from './__fixtures__/api_req_map_next_with_itemget.json'
 
 describe('airbase reduer', () => {
   const initialState = reducer([], createAPIGetMemberMapinfoResponseAction(mapInfoFixture))

@@ -1,12 +1,11 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { get } from 'lodash'
-import { withNamespaces } from 'react-i18next'
 import { FormGroup } from '@blueprintjs/core'
-
-import { SwitchConfig } from 'views/components/settings/components/switch'
+import { get } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
 import { Wrapper } from 'views/components/settings/components/section'
+import { SwitchConfig } from 'views/components/settings/components/switch'
 
 @withNamespaces(['setting'])
 @connect((state, props) => ({

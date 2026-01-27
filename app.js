@@ -1,8 +1,8 @@
-const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
 const electronRemote = require('@electron/remote/main')
-const path = require('path-extra')
-const fs = require('fs-extra')
 const { X509Certificate, createHash } = require('crypto')
+const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
+const fs = require('fs-extra')
+const path = require('path-extra')
 
 // Environment
 global.POI_VERSION = app.getVersion()
@@ -29,11 +29,12 @@ electronRemote.initialize()
 
 require('./lib/proxy')
 require('./lib/module-path').setAllowedPath(global.ROOT)
+const { memoize } = require('lodash')
+
 const config = require('./lib/config')
+const dbg = require('./lib/debug')
 const shortcut = require('./lib/shortcut')
 const { warn, error } = require('./lib/utils')
-const dbg = require('./lib/debug')
-const { memoize } = require('lodash')
 require('./lib/updater')
 require('./lib/tray')
 require('./lib/screenshot')

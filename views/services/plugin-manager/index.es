@@ -1,13 +1,13 @@
-/* global PLUGIN_PATH, PLUGIN_EXTRA_PATH, dispatch, config, getStore, toast, ROOT */
-import { join } from 'path-extra'
-import semver from 'semver'
+import * as remote from '@electron/remote'
 import EventEmitter from 'events'
+import { access } from 'fs'
 import { readJsonSync, accessSync, ensureDir, writeJSON } from 'fs-extra'
 import glob from 'glob'
 import { fromPairs, map } from 'lodash'
-import * as remote from '@electron/remote'
 import fetch from 'node-fetch'
-
+/* global PLUGIN_PATH, PLUGIN_EXTRA_PATH, dispatch, config, getStore, toast, ROOT */
+import { join } from 'path-extra'
+import semver from 'semver'
 import i18next from 'views/env-parts/i18next'
 import { sortPlugins } from 'views/redux/plugins'
 
@@ -23,7 +23,6 @@ import {
   findInstalledTarball,
   getNpmConfig,
 } from './utils'
-import { access } from 'fs'
 
 const fetchHeader = new Headers()
 fetchHeader.set('Cache-Control', 'max-age=0')

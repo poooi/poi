@@ -1,16 +1,15 @@
-/* global toggleModal, config, APPDATA_PATH */
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { Button, FormGroup, Intent, Callout } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { withNamespaces } from 'react-i18next'
 import { remove } from 'fs-extra'
 import { join } from 'path'
-import { Button, FormGroup, Intent, Callout } from '@blueprintjs/core'
+import PropTypes from 'prop-types'
+/* global toggleModal, config, APPDATA_PATH */
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
 import { styled } from 'styled-components'
-
-import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { IntegerConfig } from 'views/components/settings/components/integer'
+import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 
 const { session } = remote.require('electron')
 

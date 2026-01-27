@@ -1,5 +1,5 @@
-import { styled } from 'styled-components'
 import { Card, Tooltip } from '@blueprintjs/core'
+import { styled } from 'styled-components'
 
 export const CardWrapper = styled(Card)`
   height: 100%;

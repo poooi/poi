@@ -1,4 +1,6 @@
-import { ipcMain, Rectangle, ResizeOptions, webContents } from 'electron'
+import type { Rectangle, ResizeOptions } from 'electron'
+
+import { ipcMain, webContents } from 'electron'
 
 ipcMain.handle(
   'screenshot::get',

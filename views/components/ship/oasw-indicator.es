@@ -1,13 +1,12 @@
+import { Tag, Intent } from '@blueprintjs/core'
+import { memoize } from 'lodash'
 import React from 'react'
+import { withNamespaces } from 'react-i18next'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
-import { memoize } from 'lodash'
-import { Tag, Intent } from '@blueprintjs/core'
-
-import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
-import { isOASW } from 'views/utils/oasw'
-import { withNamespaces } from 'react-i18next'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
+import { isOASW } from 'views/utils/oasw'
+import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 const OASWSelectorFactory = memoize((shipId) =>
   createSelector(

@@ -1,7 +1,7 @@
-import { isEqual } from 'lodash'
-
-import { compareUpdate, constructArray } from 'views/utils/tools'
 import { createSlice } from '@reduxjs/toolkit'
+import { isEqual } from 'lodash'
+import { compareUpdate, constructArray } from 'views/utils/tools'
+
 import {
   createAPIPortPortResponseAction,
   createAPIGetMemberDeckResponseAction,

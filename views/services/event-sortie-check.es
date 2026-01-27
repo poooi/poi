@@ -1,6 +1,7 @@
-import { fleetShipsDataSelectorFactory, fleetStateSelectorFactory } from '../utils/selectors'
 import _ from 'lodash'
 import i18next from 'views/env-parts/i18next'
+
+import { fleetShipsDataSelectorFactory, fleetStateSelectorFactory } from '../utils/selectors'
 
 const { config } = window
 

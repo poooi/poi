@@ -1,13 +1,12 @@
 require('@babel/register')(require('./babel-register.config'))
-const gulp = require('gulp')
 const childProcess = require('child_process')
+const gulp = require('gulp')
 const { trim } = require('lodash')
 
 global.ROOT = __dirname
 
-const { log } = require('./build/utils')
 const { build, installPlugins, cleanFiles, packWinRelease, deployNightlies } = require('./build')
-
+const { log } = require('./build/utils')
 const packageMeta = require('./package.json')
 
 let poiVersion = null

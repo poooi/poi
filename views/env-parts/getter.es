@@ -1,9 +1,8 @@
+import * as remote from '@electron/remote'
+import { map, get, mapValues } from 'lodash'
 /* global config, getStore */
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
-import { map, get, mapValues } from 'lodash'
-import * as remote from '@electron/remote'
-
 import { store } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'
 

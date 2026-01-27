@@ -1,12 +1,10 @@
+import { Slider, FormGroup } from '@blueprintjs/core'
+import { get } from 'lodash'
 /* global config */
 import React, { useState } from 'react'
 import { withNamespaces } from 'react-i18next'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
 import { compose } from 'redux'
-
-import { Slider, FormGroup } from '@blueprintjs/core'
-
 import { Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 

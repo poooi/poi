@@ -1,15 +1,15 @@
-import { connect } from 'react-redux'
-import { ShipRow } from '../../../ship/ship-item'
-import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
-import React, { Fragment } from 'react'
 import { get } from 'lodash'
+import React, { Fragment } from 'react'
 import { withNamespaces } from 'react-i18next'
+import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { styled } from 'styled-components'
-
-import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
+import { FleetStat } from 'views/components/ship-parts/fleet-stat'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
+
+import { ShipRow } from '../../../ship/ship-item'
+import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
 
 const miniShipRowWidthSelector = (state) => get(state, 'layout.minishippane.width', 250)
 

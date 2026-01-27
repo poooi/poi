@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { clipboard } from 'electron'
-import { withNamespaces } from 'react-i18next'
 import { Card, TextArea, Button, Intent } from '@blueprintjs/core'
 import * as Sentry from '@sentry/electron'
+import { clipboard } from 'electron'
+import React, { Component } from 'react'
+import { withNamespaces } from 'react-i18next'
 
 @withNamespaces()
 export class PluginWrap extends Component {

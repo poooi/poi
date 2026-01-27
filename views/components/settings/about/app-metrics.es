@@ -1,9 +1,8 @@
-import React, { PureComponent } from 'react'
-import * as remote from '@electron/remote'
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
+import * as remote from '@electron/remote'
 import { sortBy, round, sumBy, map } from 'lodash'
+import React, { PureComponent } from 'react'
 import { withNamespaces } from 'react-i18next'
-
 import { Section } from 'views/components/settings/components/section'
 
 @withNamespaces(['setting'])

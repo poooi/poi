@@ -1,7 +1,7 @@
 import EventEmitter from 'events'
-import querystring from 'querystring'
 import fs from 'fs-extra'
 import path from 'path'
+import querystring from 'querystring'
 import { URL } from 'url'
 
 type RequestOrigin = string | undefined

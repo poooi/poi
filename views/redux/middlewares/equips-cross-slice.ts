@@ -1,3 +1,5 @@
+import type { Middleware } from 'redux'
+
 import { flatMap, get } from 'lodash'
 
 import {
@@ -5,8 +7,6 @@ import {
   createAPIReqKousyouDestroyshipResponseAction,
   createInfoEquipsRemoveByIdsAction,
 } from '../actions'
-
-import type { Middleware } from 'redux'
 
 /**
  * equipsCrossSliceMiddleware

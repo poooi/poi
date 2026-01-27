@@ -1,7 +1,10 @@
-import { webContents, shell, BrowserWindowConstructorOptions, webFrameMain } from 'electron'
+import type { BrowserWindowConstructorOptions } from 'electron'
+
 import * as electronRemote from '@electron/remote/main'
-import os from 'os'
+import { webContents, shell, webFrameMain } from 'electron'
 import _ from 'lodash'
+import os from 'os'
+
 import config from './config'
 import { warn } from './utils'
 

@@ -1,14 +1,16 @@
+import type { TFunction } from 'i18next'
+
+import { readJSONSync, writeFileSync } from 'fs-extra'
+import glob from 'glob'
+import { createInstance } from 'i18next'
+import { toString, each, debounce } from 'lodash'
 /* global ROOT */
 import path from 'path'
-import glob from 'glob'
-import { toString, each, debounce } from 'lodash'
-import { TFunction, createInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { format } from 'util'
-import { readJSONSync, writeFileSync } from 'fs-extra'
-import { config } from './config'
-
 import { readI18nResources, escapeI18nKey, cjkSpacing } from 'views/utils/tools'
+
+import { config } from './config'
 import { dbg } from './dbg'
 
 const LOCALES = [

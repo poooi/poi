@@ -1,11 +1,13 @@
-import { APIKdock } from 'kcsapi/api_get_member/require_info/response'
+import type { APIKdock } from 'kcsapi/api_get_member/require_info/response'
+
+import { createSlice } from '@reduxjs/toolkit'
+
 import {
   createAPIGetMemberKdockResponseAction,
   createAPIGetMemberRequireInfoAction,
   createAPIReqKousyouCreateShipSpeedChangeResponseAction,
   createAPIReqKousyouGetShipResponseAction,
 } from '../actions'
-import { createSlice } from '@reduxjs/toolkit'
 
 const completeConstruction = {
   api_complete_time: 0,

@@ -1,20 +1,24 @@
+import { Tooltip, Position } from '@blueprintjs/core'
+import { get, join as joinString, memoize } from 'lodash'
+import { join } from 'path-extra'
+import PropTypes from 'prop-types'
+import React, { Component, useId } from 'react'
+import { withNamespaces } from 'react-i18next'
 /* global ROOT, getStore */
 import { connect } from 'react-redux'
-import React, { Component, useId } from 'react'
-import PropTypes from 'prop-types'
-import { join } from 'path-extra'
-import { get, join as joinString, memoize } from 'lodash'
-import { createSelector } from 'reselect'
-import { withNamespaces } from 'react-i18next'
-import i18next from 'views/env-parts/i18next'
-import { Tooltip, Position } from '@blueprintjs/core'
 import { compose } from 'redux'
+import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
-
+import {
+  InfoTooltip,
+  InfoTooltipEntry,
+  InfoTooltipItem,
+} from 'views/components/etc/styled-components'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
-import { CountdownNotifier } from 'views/utils/notifiers'
+import i18next from 'views/env-parts/i18next'
 import { recoveryEndTime } from 'views/redux/timers/cond'
 import { getTyku, getSaku33, getFleetSpeed, getSpeedLabel } from 'views/utils/game-utils'
+import { CountdownNotifier } from 'views/utils/notifiers'
 import {
   fleetInBattleSelectorFactory,
   fleetInExpeditionSelectorFactory,
@@ -29,11 +33,6 @@ import {
   miscSelector,
   fleetSlotCountSelectorFactory,
 } from 'views/utils/selectors'
-import {
-  InfoTooltip,
-  InfoTooltipEntry,
-  InfoTooltipItem,
-} from 'views/components/etc/styled-components'
 
 const isActive = () => ['ship-view', 'main-view'].includes(getStore('ui.activeMainTab'))
 

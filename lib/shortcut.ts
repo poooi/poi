@@ -1,7 +1,8 @@
 import { globalShortcut } from 'electron'
+
 import config from './config'
-import windowManager from './window'
 import dbg from './debug'
+import windowManager from './window'
 
 const registerShortcut = (acc: Electron.Accelerator, desc: string, func: () => void) => {
   dbg.log(`Registering shortcut: ${acc}\t=> ${desc}`)

@@ -19,8 +19,8 @@ jest.spyOn(console, 'warn').mockImplementation(() => undefined)
 // combineReducers.es references `window.getStore` in node tests.
 ;(globalThis as any).window = {}
 
-import { reducer } from '../index'
 import { createAPIGetMemberRequireInfoAction } from '../../actions'
+import { reducer } from '../index'
 
 describe('info root reducer', () => {
   it('should keep only basic slice when admiral changes on require_info', () => {

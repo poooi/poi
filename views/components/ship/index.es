@@ -1,25 +1,14 @@
+import { Button, ResizeSensor } from '@blueprintjs/core'
+import { get, memoize, times } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
+import FontAwesome from 'react-fontawesome'
+import { withNamespaces, Trans } from 'react-i18next'
 /* global getStore */
 import { connect } from 'react-redux'
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
-import { get, memoize, times } from 'lodash'
-import { createSelector } from 'reselect'
-import { withNamespaces, Trans } from 'react-i18next'
-import { Button, ResizeSensor } from '@blueprintjs/core'
 import { compose } from 'redux'
-
-import { ShipRow } from './ship-item'
-import { SquardRow } from './lbac-view'
-import { LandbaseButton } from '../ship-parts/landbase-button'
+import { createSelector } from 'reselect'
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
-import {
-  fleetNameSelectorFactory,
-  fleetStateSelectorFactory,
-  fleetShipsIdSelectorFactory,
-  fleetShipsDataWithEscapeSelectorFactory,
-} from 'views/utils/selectors'
-import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import {
   ShipCard,
   ShipWrapper,
@@ -31,7 +20,18 @@ import {
   FleetNameButtonContainer,
   FleetNameButton,
 } from 'views/components/ship-parts/styled-components'
+import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
+import {
+  fleetNameSelectorFactory,
+  fleetStateSelectorFactory,
+  fleetShipsIdSelectorFactory,
+  fleetShipsDataWithEscapeSelectorFactory,
+} from 'views/utils/selectors'
 import { isSpAttackAvailable } from 'views/utils/sp_attack'
+
+import { LandbaseButton } from '../ship-parts/landbase-button'
+import { SquardRow } from './lbac-view'
+import { ShipRow } from './ship-item'
 
 const shipRowWidthSelector = (state) => get(state, 'layout.shippane.width', 450)
 

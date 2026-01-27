@@ -1,7 +1,7 @@
-import glob from 'glob'
 import Promise from 'bluebird'
-import path from 'path'
 import child_process from 'child_process'
+import glob from 'glob'
+import path from 'path'
 
 import { log } from './utils'
 

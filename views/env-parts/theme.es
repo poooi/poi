@@ -1,11 +1,12 @@
 /* global config, ROOT */
 import * as remote from '@electron/remote'
-import { fileUrl } from '../utils/tools'
-import { accessSync, ensureFileSync } from 'fs-extra'
-import { join } from 'path-extra'
 import themes from 'assets/data/theme.json'
 import classNames from 'classnames'
+import { accessSync, ensureFileSync } from 'fs-extra'
+import { join } from 'path-extra'
 import { isBoolean } from 'util'
+
+import { fileUrl } from '../utils/tools'
 
 const EXROOT = remote.getGlobal('EXROOT')
 

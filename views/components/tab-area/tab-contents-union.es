@@ -1,8 +1,8 @@
-import { connect } from 'react-redux'
-import React, { Component, Children } from 'react'
-import PropTypes from 'prop-types'
-import { isEqual, omit, get } from 'lodash'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+import { isEqual, omit, get } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { Component, Children } from 'react'
+import { connect } from 'react-redux'
 import { styled, css } from 'styled-components'
 
 const PoiTabContents = styled.div`

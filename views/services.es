@@ -1,9 +1,9 @@
 /* global getStore, config, toggleModal, log, error, dbg */
 import * as remote from '@electron/remote'
-import { isInGame } from 'views/utils/game-utils'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
+import { isInGame } from 'views/utils/game-utils'
 
 const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 import './services/update'

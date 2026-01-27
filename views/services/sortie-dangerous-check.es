@@ -1,6 +1,7 @@
-import { damagedCheck } from './utils'
-import { Trans } from 'react-i18next'
 import React from 'react'
+import { Trans } from 'react-i18next'
+
+import { damagedCheck } from './utils'
 
 const { getStore, toggleModal } = window
 

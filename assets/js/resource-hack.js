@@ -1,7 +1,7 @@
-const fs = require('fs')
-const url = require('url')
-const path = require('path-extra')
 const remote = require('@electron/remote')
+const fs = require('fs')
+const path = require('path-extra')
+const url = require('url')
 
 const config = remote.require('./lib/config')
 

@@ -1,8 +1,10 @@
-import _ from 'lodash'
-import { compareUpdate } from 'views/utils/tools'
-import { observer } from 'redux-observers'
-import { Dispatch } from 'redux'
+import type { Dispatch } from 'redux'
+
 import { createSlice } from '@reduxjs/toolkit'
+import _ from 'lodash'
+import { observer } from 'redux-observers'
+import { compareUpdate } from 'views/utils/tools'
+
 import {
   createAPIGetMemberNdockResponseAction,
   createAPIPortPortResponseAction,
