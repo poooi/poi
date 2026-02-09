@@ -9,7 +9,7 @@ import path from 'path'
 import React, { useState, useEffect, useCallback } from 'react'
 import FA from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { isSubdirectory } from 'views/utils/tools'
 
@@ -52,6 +52,10 @@ interface FolderPickerConfigOwnProps {
 
 type FolderPickerConfigProps = FolderPickerConfigOwnProps
 
+type ConfigState = {
+  config?: Record<string, unknown>
+}
+
 export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   label,
   configName,
@@ -65,7 +69,10 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   const [locked, setLocked] = useState(false)
 
   const { t } = useTranslation('setting')
-  const value = useSelector((state: any) => get(state.config, configName, defaultValue))
+  const value = useSelector((state: ConfigState) =>
+    get(state.config, configName, defaultValue),
+  )
+  const valueStr = typeof value === 'string' ? value : defaultValue ?? ''
 
   const emitErrorMessage = useCallback(() => {
     window.toast(t('setting:DirectoryNotAvailable', { path: label }), {
@@ -86,11 +93,11 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   )
 
   useEffect(() => {
-    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, value))) {
+    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, valueStr))) {
       emitErrorMessage()
       config.set(configName, defaultValue)
     }
-  }, []) // Only run on mount
+  }, [configName, defaultValue, emitErrorMessage, exclude, valueStr])
 
   const handleOnDrag = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -99,9 +106,12 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   const handleOnDrop = useCallback(
     (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault()
-      const droppedFiles = e.dataTransfer.files
-      if (fs.statSync(droppedFiles[0].path).isDirectory() || !isFolder) {
-        setPath(droppedFiles[0].path)
+      const droppedFile = e.dataTransfer.files[0] as File & { path?: string }
+      if (!droppedFile?.path) {
+        return
+      }
+      if (fs.statSync(droppedFile.path).isDirectory() || !isFolder) {
+        setPath(droppedFile.path)
       }
     },
     [isFolder, setPath],
@@ -116,10 +126,10 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
     let defaultPath: string | undefined
     try {
       if (isFolder) {
-        fs.ensureDirSync(value)
-        defaultPath = value
+        fs.ensureDirSync(valueStr)
+        defaultPath = valueStr
       }
-    } catch (e) {
+    } catch {
       defaultPath = remote.app.getPath('desktop')
     }
 
@@ -135,7 +145,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
     }
 
     setLocked(false)
-  }, [locked, isFolder, value, label, setPath, filters])
+  }, [locked, isFolder, valueStr, label, setPath, filters])
 
   const parseBreadcrumb = useCallback(
     (value: string) =>
@@ -173,10 +183,10 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
       onDragOver={handleOnDrag}
       onDragLeave={handleOnDrag}
     >
-      {value ? (
+      {valueStr ? (
         <OverflowList
           className={Classes.BREADCRUMBS}
-          items={parseBreadcrumb(value)}
+          items={parseBreadcrumb(valueStr)}
           overflowRenderer={renderOverflow}
           visibleItemRenderer={renderBreadcrumb}
         />
@@ -184,7 +194,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
         placeholder
       )}
       <Button disabled={locked} onClick={handleOnClick} minimal intent={Intent.PRIMARY}>
-        {t(value ? 'Change' : 'Select')}
+        {t(valueStr ? 'Change' : 'Select')}
       </Button>
       {extraControl}
     </PickerBox>

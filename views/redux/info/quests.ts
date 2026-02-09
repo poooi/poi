@@ -532,7 +532,7 @@ const questsSlice = createSlice({
         let questGoals: Record<string | number, QuestGoal> = {}
         try {
           questGoals = JSON.parse(JSON.stringify(CSON.parseCSONFile(questGoalsPath)))
-        } catch (e) {
+        } catch {
           console.warn('No quest goal data!')
         }
 
@@ -550,7 +550,7 @@ const questsSlice = createSlice({
               Date.now(),
             ) as typeof records
           }
-        } catch (e) {
+        } catch {
           console.warn('No quest tracking data!')
         }
         delete records.time // Time is added ad-hoc upon saving

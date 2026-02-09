@@ -5,7 +5,18 @@ import installExtension, {
 
 import { log, error } from './utils'
 
-installExtension([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
+type InstallExtensionOptions = {
+  loadExtensionOptions?: {
+    allowFileAccess: boolean
+  }
+}
+
+const installExtensionWithOptions = installExtension as (
+  extensionReference: Parameters<typeof installExtension>[0],
+  options?: InstallExtensionOptions | boolean,
+) => Promise<string>
+
+installExtensionWithOptions([REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS], {
   loadExtensionOptions: { allowFileAccess: true },
 })
   .then((name) => log(`${name} is added`))

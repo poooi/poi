@@ -3,7 +3,7 @@ import type { Display, BrowserWindowConstructorOptions, Menu } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
 import { BrowserWindow, screen, webContents } from 'electron'
-import path from 'path-extra'
+import * as path from 'path'
 const windows: typeof global.windows = (global.windows = [])
 const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
 

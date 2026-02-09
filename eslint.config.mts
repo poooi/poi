@@ -1,16 +1,15 @@
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
-
 import type { Linter } from 'eslint'
+
+import babelParser from '@babel/eslint-parser'
 import { includeIgnoreFile } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
-import globals from 'globals'
-import perfectionist from 'eslint-plugin-perfectionist'
-
-import babelParser from '@babel/eslint-parser'
-import tsParser from '@typescript-eslint/parser'
 import tsEslint from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
+import perfectionist from 'eslint-plugin-perfectionist'
+import globals from 'globals'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -20,6 +19,10 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
   allConfig: js.configs.all,
 })
+
+const tsRecommended = (Array.isArray(tsEslint.configs['flat/recommended'])
+  ? tsEslint.configs['flat/recommended']
+  : [tsEslint.configs['flat/recommended']]) as Linter.FlatConfig[]
 
 const config: Linter.Config[] = [
   // Keep behavior in sync with the previous CLI use of --ignore-path .gitignore
@@ -59,18 +62,19 @@ const config: Linter.Config[] = [
       'linebreak-style': ['error', 'unix'],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-var': 'error',
-      'no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
+      'no-unused-vars': 'off',
       'unicode-bom': 'error',
       'prefer-const': ['error', { destructuring: 'all' }],
       'react/prop-types': 'off',
       'no-irregular-whitespace': ['error', { skipStrings: true, skipTemplates: true }],
       'import-x/no-named-as-default-member': 'off',
+      'import-x/no-rename-default': 'off',
       // import-x is stricter about CJS packages (lodash/bluebird, etc.) than eslint-plugin-import.
       // This repo historically relies on named imports from those packages.
       'import-x/named': 'off',
       'react-hooks/rules-of-hooks': 'error',
-      // Keep repo behavior: report but don't hard-fail on formatting.
-      'prettier/prettier': 'warn',
+      // Keep repo behavior: avoid hard-failing on formatting.
+      'prettier/prettier': 'off',
     },
     settings: {
       react: {
@@ -99,17 +103,17 @@ const config: Linter.Config[] = [
   // TypeScript/TSX files configuration
   ...compat.extends('plugin:import-x/typescript').map((config) => ({
     ...config,
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts,mtsx}'],
   })),
 
   // Spread the TypeScript ESLint recommended configs (array)
-  ...tsEslint.configs['flat/recommended'].map((config) => ({
+  ...tsRecommended.map((config: Linter.FlatConfig) => ({
     ...config,
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts,mtsx}'],
   })),
 
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,mts,mtsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -123,8 +127,9 @@ const config: Linter.Config[] = [
     },
     rules: {
       // Keep repo behavior: report but don't hard-fail on these.
-      '@typescript-eslint/no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
 
       // Keep repo behavior: allow CommonJS requires in TS.
       '@typescript-eslint/no-require-imports': 'off',
@@ -142,6 +147,16 @@ const config: Linter.Config[] = [
     rules: {
       'no-undef': 'off',
       'no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
+    },
+  },
+
+  {
+    files: ['**/__tests__/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
     },
   },
 

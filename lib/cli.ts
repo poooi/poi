@@ -73,7 +73,7 @@ if (argv.d) {
 }
 
 if (argv.extra) {
-  argv.extra.forEach((extra) => Debug.enableExtra(extra))
+  argv.extra.forEach((extra) => Debug.enableExtra(String(extra)))
 }
 
 // safe mode

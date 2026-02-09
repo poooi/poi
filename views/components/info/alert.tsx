@@ -71,25 +71,21 @@ const AlertContainer = styled(Alert)`
   z-index: 2;
 `
 
-const AlertLog = styled.div`
+const AlertLog = styled.div<{
+  $toggle: boolean
+  $height: number
+  $containerHeight: number
+}>`
   overflow: hidden;
   transition: 0.3s;
   z-index: 1;
   backdrop-filter: blur(5px);
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  ${({
-    toggle,
-    height,
-    containerHeight,
-  }: {
-    toggle: boolean
-    height: number
-    containerHeight: number
-  }) =>
-    toggle
+  ${({ $toggle, $height, $containerHeight }) =>
+    $toggle
       ? css`
-          transform: translate3d(0, ${-Math.round(containerHeight + height)}px, 0);
+          transform: translate3d(0, ${-Math.round($containerHeight + $height)}px, 0);
           pointer-events: auto;
         `
       : css`
@@ -113,11 +109,11 @@ const OverflowScroll = keyframes`
   }
 `
 
-const AlertArea = styled.div`
+const AlertArea = styled.div<{ $overflow: boolean }>`
   cursor: pointer;
   display: flex;
-  ${({ overflow }: { overflow: boolean }) =>
-    overflow &&
+  ${({ $overflow }) =>
+    $overflow &&
     css`
       animation-delay: 2s;
       animation-duration: 18s;
@@ -222,7 +218,7 @@ export const PoiAlert: React.FC = () => {
               className="alert-position"
               style={{ width: msgWidth + (isOverflow ? 50 : 0) }}
             >
-              <AlertArea id="alert-area" overflow={isOverflow}>
+              <AlertArea id="alert-area" $overflow={isOverflow}>
                 <ResizeSensor onResize={handleMsgCntResize}>
                   <MsgMainCnt>
                     <span>{current.content}</span>
@@ -238,9 +234,9 @@ export const PoiAlert: React.FC = () => {
             <AlertLog
               id="alert-log"
               className="alert-log bp5-popover-content"
-              toggle={showHistory}
-              height={historyHeight}
-              containerHeight={containerHeight}
+              $toggle={showHistory}
+              $height={historyHeight}
+              $containerHeight={containerHeight}
               onClick={toggleHistory}
               key={history[0]?.ts || 0}
             >

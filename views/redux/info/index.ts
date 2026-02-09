@@ -65,13 +65,13 @@ interface Action {
 }
 
 export const reducer = reduceReducers(
-  (state: InfoState | undefined, action: Action): InfoState | Partial<InfoState> => {
+  (state: InfoState | undefined, action: Action): InfoState => {
     if (action.type === '@@Response/kcsapi/api_get_member/require_info') {
       const oldAdmiralId = get(state, 'basic.api_member_id')
       const admiralId =
         action.body?.api_basic?.api_member_id ?? action.payload?.body?.api_basic?.api_member_id
       if (oldAdmiralId != admiralId) {
-        return pick(state, ['basic']) as Partial<InfoState>
+        return pick(state, ['basic']) as InfoState
       }
     }
     return state || ({} as InfoState)

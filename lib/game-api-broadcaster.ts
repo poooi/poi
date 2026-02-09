@@ -81,7 +81,7 @@ class GameAPIBroadcaster extends EventEmitter {
           const parsed = bodyStr?.startsWith('svdata=') ? bodyStr.substring(7) : bodyStr
           JSON.parse(parsed || '')
           return parsed
-        } catch (e) {
+        } catch {
           return undefined
         }
       }

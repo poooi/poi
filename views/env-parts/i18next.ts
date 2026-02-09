@@ -114,7 +114,7 @@ i18next.use(initReactI18next).init({
         }
         cnt[key] = val
         writeFileSync(p, JSON.stringify(cnt, undefined, 2) + '\n')
-      } catch (e) {
+      } catch {
         return
       }
     }

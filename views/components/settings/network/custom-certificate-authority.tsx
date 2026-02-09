@@ -13,12 +13,17 @@ import { FolderPickerConfig } from '../components/folder-picker'
 
 const filters: FileFilter[] = [{ name: 'PEM', extensions: ['pem'] }]
 
+type ConfigState = {
+  config?: Record<string, unknown>
+}
+
 export const CustomCertificateAuthority = () => {
   const { t } = useTranslation('setting')
 
-  const value = useSelector((state: any) =>
+  const value = useSelector((state: ConfigState) =>
     get(state.config, 'poi.network.customCertificateAuthority', ''),
   )
+  const valueStr = typeof value === 'string' ? value : ''
 
   const handleDelete = useCallback(() => {
     config.set('poi.network.customCertificateAuthority', '')
@@ -26,7 +31,7 @@ export const CustomCertificateAuthority = () => {
 
   const handleTest = useCallback(async () => {
     try {
-      const ca = await fs.readFile(value, 'utf8')
+      const ca = await fs.readFile(valueStr, 'utf8')
       const cert = new X509Certificate(ca)
       assert(cert.ca)
       window.toast(t('setting:Certificate is valid'), {
@@ -40,7 +45,7 @@ export const CustomCertificateAuthority = () => {
         title: t('setting:Custom Certificate Authority test'),
       })
     }
-  }, [value, t])
+  }, [valueStr, t])
 
   return (
     <div>
@@ -50,7 +55,7 @@ export const CustomCertificateAuthority = () => {
         isFolder={false}
         filters={filters}
         extraControl={
-          value && (
+          valueStr && (
             <>
               <Button intent={Intent.PRIMARY} minimal onClick={handleTest}>
                 {t('setting:Test')}
