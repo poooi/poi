@@ -12,12 +12,9 @@ Key features include:
 - Notification
 - Plugin support for extensive functionalities, [see plugin List](https://github.com/poooi/poi/wiki/List-of-available-plugins)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b239a37253a3486c946b047acae5f1ac)](https://www.codacy.com/app/KochiyaOcean/poi?utm_source=github.com&utm_medium=referral&utm_content=poooi/poi&utm_campaign=badger)
+
 [![Dependencies](https://img.shields.io/librariesio/github/poooi/poi)](https://libraries.io/github/poooi/poi)
 
-[![Build Status](https://travis-ci.org/poooi/poi.svg?branch=master)](https://travis-ci.org/poooi/poi)
-[![Build status](https://ci.appveyor.com/api/projects/status/apv2xngtej1m17he?svg=true)](https://ci.appveyor.com/project/KochiyaOcean/poi)
-[![Azure Pipelines](https://vsrm.dev.azure.com/poooi/_apis/public/Release/badge/5b8293df-7d09-4edf-9f44-ce14e18b1701/1/1)](https://dev.azure.com/poooi/poi/_build)
 
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors)
