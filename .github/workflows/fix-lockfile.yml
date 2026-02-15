@@ -1,0 +1,34 @@
+name: Fix package-lock.json
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to fix'
+        required: true
+        default: 'update-stylelint-to-v16'
+
+jobs:
+  fix-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+      
+      - name: Update package-lock.json
+        run: |
+          npm install
+      
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          git diff --cached --quiet || (git commit -m "chore: update package-lock.json" && git push)
