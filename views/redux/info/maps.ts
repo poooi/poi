@@ -34,9 +34,9 @@ export interface MapsState {
 
 function normalizeState(state: MapsState): MapsState {
   // Compatibility: old api arranges maps in array
-  const legacy = state as unknown
-  if (Array.isArray(legacy)) {
-    return indexify((legacy as MapInfo[]).filter((e) => e && e.api_id))
+  if (Array.isArray(state)) {
+    const legacy = state satisfies unknown as MapInfo[]
+    return indexify(legacy.filter((e) => e && e.api_id))
   }
   return state
 }

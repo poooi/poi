@@ -48,7 +48,7 @@ const useitemsSlice = createSlice({
     builder
       // info from login
       .addCase(createAPIGetMemberRequireInfoAction, (state, { payload }) => {
-        const newState = indexify((payload.body.api_useitem || []) as UseItem[])
+        const newState = indexify((payload.body.api_useitem || []) satisfies UseItem[])
         return compareUpdate(pickExisting(state, newState), newState)
       })
       // info from login
@@ -78,7 +78,7 @@ const useitemsSlice = createSlice({
       })
       // mission award
       .addCase(createAPIReqMissionResultResponseAction, (state, { payload }) => {
-        const body = payload.body as {
+        const body = payload.body satisfies {
           api_get_item1?: { api_useitem_id?: number; api_useitem_count?: number }
         }
         const { api_get_item1 } = body
@@ -93,7 +93,7 @@ const useitemsSlice = createSlice({
       })
       // sortie award
       .addCase(createAPIReqCombinedBattleBattleresultResponseAction, (state, { payload }) => {
-        const body = payload.body as {
+        const body = payload.body satisfies {
           api_get_useitem?: { api_useitem_id?: number }
           api_get_exmap_useitem_id?: number
         }
@@ -108,7 +108,7 @@ const useitemsSlice = createSlice({
         return compareUpdate(state, nextState)
       })
       .addCase(createAPIReqSortieBattleResultResponseAction, (state, { payload }) => {
-        const body = payload.body as {
+        const body = payload.body satisfies {
           api_get_useitem?: { api_useitem_id?: number }
           api_get_exmap_useitem_id?: number
         }
