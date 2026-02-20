@@ -152,10 +152,15 @@ export function indexify<T = any>(array: any[], key = 'api_id'): Dictionary<T> {
  * @param obj the source
  * @param to another instance to compare
  */
-export function copyIfSame<T = any>(obj: T, to: any): T {
+export function copyIfSame<T>(obj: T[], to: any): T[]
+export function copyIfSame<T extends object>(obj: T, to: any): T
+export function copyIfSame<T>(obj: T, to: any): T {
   // assert(typeof obj === 'object')
   if (obj === to) {
-    return Array.isArray(obj) ? (obj.slice() as unknown as T) : { ...obj }
+    if (Array.isArray(obj)) {
+      return obj.slice()
+    }
+    return { ...obj }
   }
   return obj
 }
@@ -168,9 +173,11 @@ export function copyIfSame<T = any>(obj: T, to: any): T {
 export function pickExisting<T extends object>(state: T, body: object): T {
   const stateBackup = state
   forEach(state, (_, k) => {
-    if (!(k in body)) {
+    const key = String(k)
+    if (!(key in body)) {
       state = copyIfSame(state, stateBackup)
-      delete state[k as keyof T]
+      const stateRecord: Record<string, unknown> = state
+      delete stateRecord[key]
     }
   })
   return state
@@ -218,13 +225,18 @@ export function compareUpdate<T = any>(prevState: T, newState: T, depth = 1): T 
   const prevStateBackup = prevState
   // Update existing properties
   const nextDepth = depth - 1
-  forEach(newState as unknown as object, (v, k) => {
-    const newV = compareUpdate(prevState[k as keyof T], v, nextDepth)
+  if (typeof newState !== 'object' || newState === null) {
+    return prevState
+  }
+  const prevStateRecord: Record<string, unknown> = prevState
+  forEach(newState as object, (v, k) => {
+    const key = String(k)
+    const newV = compareUpdate(prevStateRecord[key], v, nextDepth)
     // ATTENTION: Any null properties are ignored
-    if (newV != null && prevState[k as keyof T] !== newV) {
+    if (newV != null && prevStateRecord[key] !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
       if (newV != null) {
-        prevState[k as keyof T] = newV
+        prevStateRecord[key] = newV
       }
     }
   })
@@ -271,7 +283,7 @@ export function timeToString(milliseconds: number): string {
  */
 export function trimArray<T extends any[]>(state: T, comparator: any[]): T {
   if (Array.isArray(state) && Array.isArray(comparator) && comparator.length < state.length)
-    return state.slice(0, comparator.length) as T
+    return state.slice(0, comparator.length) satisfies T
   return state
 }
 
