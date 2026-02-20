@@ -125,8 +125,11 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       const callback = (e: DidFailLoadEvent) => {
         if (e.errorCode !== -3 && e.isMainFrame) {
           const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
-          const target = e.target as WebviewTag
-          target.executeJavaScript(errorScript)
+          const target = e.target
+          if (target && 'executeJavaScript' in target) {
+            const webviewTarget = target satisfies WebviewTag
+            webviewTarget.executeJavaScript(errorScript)
+          }
         }
       }
       if (view) {
@@ -195,24 +198,25 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       if (!view) {
         return undefined
       }
-      const viewToReturn = view as ExtendedWebviewTag
-      viewToReturn.getWebContents = () => {
-        const id = view?.getWebContentsId()
-        if (!id) {
-          throw new Error('view not ready')
-        }
-        const wc = webContents.fromId(id)
-        if (!wc) {
-          throw new Error('view destroyed')
-        }
-        return wc
-      }
-      viewToReturn.isReady = () => isReady
-      viewToReturn.forceSyncZoom = () => {
-        if (view && zoomFactor) {
-          view.setZoomFactor(zoomFactor)
-        }
-      }
+      const viewToReturn = Object.assign(view, {
+        getWebContents: () => {
+          const id = view?.getWebContentsId()
+          if (!id) {
+            throw new Error('view not ready')
+          }
+          const wc = webContents.fromId(id)
+          if (!wc) {
+            throw new Error('view destroyed')
+          }
+          return wc
+        },
+        isReady: () => isReady,
+        forceSyncZoom: () => {
+          if (view && zoomFactor) {
+            view.setZoomFactor(zoomFactor)
+          }
+        },
+      }) satisfies ExtendedWebviewTag
       return viewToReturn
     }, [view, isReady, zoomFactor])
 
