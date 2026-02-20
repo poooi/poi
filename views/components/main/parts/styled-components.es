@@ -37,7 +37,7 @@ export const DockName = styled.div`
   margin-right: auto;
   overflow: hidden;
   padding-right: 10px;
-  text-overflow: ecilpse;
+  text-overflow: ellipsis;
   white-space: nowrap;
   opacity: 0;
 
@@ -57,12 +57,10 @@ export const Panel = styled.div`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-wrap: wrap;
   overflow: scroll;
   justify-content: center;
   vertical-align: middle;
   align-items: center;
-
   grid-template-columns: repeat(1, 1fr);
 
   @container (min-width: 256px) {
