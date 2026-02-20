@@ -42,8 +42,8 @@ type Action = {
 export const resourcesCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
   // Compute deltas based on *current* store before reducers handle the action.
   // This mirrors the previous behavior where reducers received the root state.
-  const state = store.getState() as RootState
-  const a = action as Action
+  const state = store.getState() satisfies RootState
+  const a = action satisfies Action
 
   if (a.type === createAPIReqKousyouCreateShipSpeedChangeResponseAction.type) {
     // api_req_kousyou/createship_speedchange
