@@ -134,6 +134,7 @@ const config: Linter.Config[] = [
       // TS/DOM types are compile-time only.
       'no-undef': 'off',
       '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-unsafe-type-assertion': 'error',
     },
   },
 

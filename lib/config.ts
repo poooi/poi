@@ -25,7 +25,7 @@ class PoiConfig extends EventEmitter {
     this.configData = {}
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as Config
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) satisfies Config
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
