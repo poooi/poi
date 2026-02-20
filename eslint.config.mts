@@ -59,7 +59,7 @@ const config: Linter.Config[] = [
       'linebreak-style': ['error', 'unix'],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       'no-var': 'error',
-      'no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
+      'no-unused-vars': ['error', { args: 'none', ignoreRestSiblings: true, varsIgnorePattern: '^_', caughtErrors: 'all', caughtErrorsIgnorePattern: '^_' }],
       'unicode-bom': 'error',
       'prefer-const': ['error', { destructuring: 'all' }],
       'react/prop-types': 'off',
@@ -123,7 +123,7 @@ const config: Linter.Config[] = [
     },
     rules: {
       // Keep repo behavior: report but don't hard-fail on these.
-      '@typescript-eslint/no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { args: 'none', ignoreRestSiblings: true, varsIgnorePattern: '^_', caughtErrors: 'all', caughtErrorsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
 
       // Keep repo behavior: allow CommonJS requires in TS.

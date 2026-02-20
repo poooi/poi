@@ -349,7 +349,7 @@ export const readI18nResources = (filePath: string): object => {
       .fromPairs()
       .value()
     return data
-  } catch (e) {
+  } catch (_e) {
     return {}
   }
 }

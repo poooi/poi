@@ -9,7 +9,7 @@ import path from 'path'
 import React, { useState, useEffect, useCallback } from 'react'
 import FA from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { isSubdirectory } from 'views/utils/tools'
 
@@ -119,7 +119,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
         fs.ensureDirSync(value)
         defaultPath = value
       }
-    } catch (e) {
+    } catch (_e) {
       defaultPath = remote.app.getPath('desktop')
     }
 
