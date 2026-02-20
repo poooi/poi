@@ -110,7 +110,7 @@ export const ShipItem = styled.div`
         ${avatarWidth} ${nameWidth} minmax(60px, 4fr)
         18px 42px ${fbWidth} 172px;
       grid-template-rows: 16px 10px 16px 16px;
-      grid-column-gap: 6px;
+      column-gap: 6px;
     `
   }}
 
@@ -152,7 +152,7 @@ export const ShipBasic = styled.div`
       font-weight: 500;
       color: white;
       opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -181,7 +181,7 @@ export const ShipSubText = styled.div`
       font-weight: 500;
       color: white;
       opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -199,7 +199,7 @@ export const ShipName = styled.span`
       padding-right: 6px;
       font-weight: 600;
       color: white;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -217,7 +217,7 @@ export const LBACName = styled.span`
       padding-right: 6px;
       font-weight: 600;
       color: white;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -238,7 +238,7 @@ export const LBACRange = styled.div`
       font-weight: 500;
       color: white;
       opacity: 1;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -272,8 +272,7 @@ export const StatusLabelContainer = styled.div`
 export const ShipStatusContainer = styled.div`
   grid-column: 5 / 6;
   grid-row: 2 / 4;
-  align-self: flex-end;
-  justify-self: flex-end;
+  place-self: flex-end flex-end;
 `
 
 export const ShipHPProgress = styled.div`
@@ -314,6 +313,7 @@ export const ShipLabel = styled.span`
     css`
       position: relative;
       top: -1px;
+
       .bp5-tag {
         overflow: visible;
         max-width: initial;

@@ -1,11 +1,6 @@
-const postCssSyntax = require('postcss-syntax')
-
-module.exports = {
-  extends: [
-    'stylelint-config-standard',
-    'stylelint-config-prettier',
-    'stylelint-config-styled-components',
-  ],
+/** @type {import('stylelint').Config} */
+export default {
+  extends: ['stylelint-config-standard'],
   rules: {
     'alpha-value-notation': 'number',
     'selector-type-no-unknown': [
@@ -15,7 +10,6 @@ module.exports = {
       },
     ],
     'block-no-empty': null,
-    'declaration-colon-newline-after': null,
     'value-keyword-case': ['lower', { ignoreKeywords: [/dummyValue/] }],
     'keyframes-name-pattern': null,
     'function-no-unknown': [true, { ignoreFunctions: ['-webkit-gradient', 'from', 'to'] }],
@@ -23,9 +17,7 @@ module.exports = {
   overrides: [
     {
       files: ['**/*.es', '**/*.tsx'],
-      customSyntax: postCssSyntax({
-        'styled-components': true,
-      }),
+      customSyntax: 'postcss-styled-syntax',
     },
   ],
 }
