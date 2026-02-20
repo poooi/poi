@@ -49,7 +49,7 @@ describe('constructions reducer', () => {
     const payload: GameResponsePayload<
       APIGetMemberRequireInfoResponse,
       APIGetMemberRequireInfoRequest
-    > = requireInfoKdockFixture as GameResponsePayload<
+    > = requireInfoKdockFixture satisfies GameResponsePayload<
       APIGetMemberRequireInfoResponse,
       APIGetMemberRequireInfoRequest
     >
