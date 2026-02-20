@@ -134,11 +134,11 @@ export function updateI18n(plugin) {
     try {
       accessSync(join(plugin.pluginPath, 'i18n'))
       i18nFile = join(plugin.pluginPath, 'i18n')
-    } catch (error) {
+    } catch (_) {
       try {
         accessSync(join(plugin.pluginPath, 'assets', 'i18n'))
         i18nFile = join(plugin.pluginPath, 'assets', 'i18n')
-      } catch (error) {
+      } catch (_error) {
         console.warn(`${plugin.packageName}: No translate file found.`)
       }
     }
@@ -458,7 +458,7 @@ export async function repairDep(brokenList, npmConfig) {
   depList.forEach((p) => {
     try {
       require(p)
-    } catch (e) {
+    } catch (_) {
       safePhysicallyRemove(p, npmConfig)
     }
   })
@@ -474,7 +474,7 @@ export const safePhysicallyRemove = async (packagePath) => {
   let packageStat
   try {
     packageStat = await promisify(lstat)(packagePath)
-  } catch (e) {
+  } catch (_) {
     // No longer exists
     return
   }
@@ -491,7 +491,7 @@ export const safePhysicallyRemove = async (packagePath) => {
       )
       return
     }
-  } catch (e) {
+  } catch (_) {
     return await remove(packagePath)
   }
 }

@@ -164,7 +164,7 @@ export class PoiControl extends Component {
       fs.ensureDirSync(path.join(dir, 'FlowerKnightGirls'))
       fs.ensureDirSync(path.join(dir, 'ToukenRanbu'))
       openItemAsync(dir, 'handleOpenCacheFolder')
-    } catch (e) {
+    } catch (_) {
       window.toggleModal(this.props.t('Open cache dir'), this.props.t('NoPermission'))
     }
   }
@@ -175,7 +175,7 @@ export class PoiControl extends Component {
     try {
       fs.ensureDirSync(dir)
       openItemAsync(dir, 'handleOpenMakaiFolder')
-    } catch (e) {
+    } catch (_) {
       window.toggleModal(this.props.t('Open makai dir'), this.props.t('NoPermission'))
     }
   }
@@ -188,7 +188,7 @@ export class PoiControl extends Component {
       )
       fs.ensureDirSync(screenshotPath)
       openItemAsync(screenshotPath, 'handleOpenScreenshotFolder')
-    } catch (e) {
+    } catch (_) {
       window.toggleModal(this.props.t('Open screenshot dir'), this.props.t('NoPermission'))
     }
   }

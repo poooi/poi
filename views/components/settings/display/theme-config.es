@@ -103,7 +103,7 @@ export class ThemeConfig extends Component {
       const d = path.join(EXROOT, 'hack', 'custom.css')
       fs.ensureFileSync(d)
       return openPath(d)
-    } catch (e) {
+    } catch (_) {
       return toggleModalWithDelay(
         this.props.t('setting:Edit custom CSS'),
         this.props.t('NoPermission'),

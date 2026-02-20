@@ -66,7 +66,7 @@ export class NavigatorBar extends React.Component {
         webview.getWebContents().addListener('did-fail-load', this.onFailLoad)
         webview.getWebContents().addListener('will-navigate', this.onWillNavigate)
         this.webview = webview
-      } catch (e) {
+      } catch (_) {
         setTimeout(load, 1000)
       }
     }
@@ -80,7 +80,7 @@ export class NavigatorBar extends React.Component {
       webview.getWebContents().removeListener('did-stop-loading', this.onStopLoading)
       webview.getWebContents().removeListener('did-fail-load', this.onFailLoad)
       webview.getWebContents().removeListener('will-navigate', this.onWillNavigate)
-    } catch (e) {
+    } catch (_) {
       return
     }
   }

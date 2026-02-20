@@ -23,7 +23,7 @@ const doUpdate = async () => {
     try {
       await updater.checkForUpdates()
       await updater.downloadUpdate()
-    } catch (e) {
+    } catch (_) {
       window.toast(i18next.t('Please try again or download manually.'), {
         type: 'danger',
         title: i18next.t('Update failed'),
