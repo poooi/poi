@@ -125,6 +125,6 @@ export function reducer(
     case createAPIReqKousyouDestroyshipResponseAction.type:
       return state
     default:
-      return equipsSlice.reducer(state, action as never) // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
+      return equipsSlice.reducer(state, action)
   }
 }

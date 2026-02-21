@@ -21,7 +21,7 @@ class IPC extends EventEmitter {
     }
     this.unregister(scope, Object.keys(opts))
     for (const key of Object.keys(opts)) {
-      this.data[scope][key] = opts[key] as IPCFunction
+      this.data[scope][key] = opts[key]
     }
     this.emit('update', { type: '@@registerIPC', value: { scope, opts } })
     return

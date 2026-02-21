@@ -127,7 +127,8 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
           const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
           const target = e.target
           if (target && 'executeJavaScript' in target) {
-            const webviewTarget = target satisfies WebviewTag
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+            const webviewTarget = target as WebviewTag
             webviewTarget.executeJavaScript(errorScript)
           }
         }
