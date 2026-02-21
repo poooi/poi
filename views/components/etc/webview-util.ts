@@ -1,8 +1,13 @@
 import type { WebviewTag } from 'electron'
-import type { CamelCase } from 'yargs'
 
 import { camelCase } from 'lodash'
 import { useEffect } from 'react'
+
+// Local CamelCase type implementation to avoid yargs dependency
+// This converts kebab-case strings to camelCase
+type CamelCase<S extends string> = S extends `${infer T}-${infer U}${infer V}`
+  ? `${T}${Uppercase<U>}${CamelCase<V>}`
+  : S
 
 export const webviewEvents = [
   'load-commit',
