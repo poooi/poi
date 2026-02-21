@@ -22,11 +22,11 @@ const findHackFilePath = (pathname = '') => {
   try {
     fs.accessSync(hackedFilePath, fs.constants.R_OK)
     return hackedFilePath
-  } catch (e) {
+  } catch (_) {
     try {
       fs.accessSync(originFilePath, fs.constants.R_OK)
       return originFilePath
-    } catch (e) {
+    } catch (_) {
       return undefined
     }
   }

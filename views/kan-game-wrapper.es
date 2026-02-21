@@ -115,7 +115,7 @@ export class KanGameWrapper extends Component {
   alignWebview = () => {
     try {
       this.webview.current.executeJavaScript('window.align()')
-    } catch (e) {
+    } catch (_) {
       return
     }
   }

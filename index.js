@@ -1,6 +1,6 @@
 try {
   require('./lib/cli')
-} catch (e) {
+} catch (_e) {
   require('@babel/register')(require('./babel-register.config'))
   require('./lib/cli')
 } finally {

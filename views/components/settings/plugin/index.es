@@ -262,7 +262,7 @@ export class PluginConfig extends Component {
     try {
       await this.handleInstall(name)()
       this.setState({ manuallyInstallStatus: 2 })
-    } catch (error) {
+    } catch (_) {
       this.setState({ manuallyInstallStatus: 3 })
     }
   }

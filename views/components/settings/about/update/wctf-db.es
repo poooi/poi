@@ -91,7 +91,7 @@ export class WctfDB extends Component {
 
     try {
       meta = await fs.readJSON(DB_META_PATH)
-    } catch (e) {
+    } catch (_) {
       updateFlag = true
     }
 
