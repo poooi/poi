@@ -71,10 +71,10 @@ export const reducer = reduceReducers(
       const admiralId =
         action.body?.api_basic?.api_member_id ?? action.payload?.body?.api_basic?.api_member_id
       if (oldAdmiralId != admiralId) {
-        return pick(state, ['basic']) as Partial<InfoState>
+        return pick(state, ['basic']) as Partial<InfoState>  // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
       }
     }
-    return state || ({} as InfoState)
+    return state || ({} as InfoState)  // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
   },
   combineReducers({
     basic,

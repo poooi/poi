@@ -1,5 +1,4 @@
 import type { WebviewTag } from 'electron'
-import type { CamelCase } from 'yargs'
 
 import { camelCase } from 'lodash'
 import { useEffect } from 'react'
@@ -41,18 +40,15 @@ export const webviewEvents = [
 ] as const
 
 type EventName = (typeof webviewEvents)[number]
-type HandlerName<T extends EventName> = CamelCase<`on-${T}`>
 
-export type HandlerFields = {
-  [key in HandlerName<EventName>]?: () => void
-}
+export type HandlerFields = Record<string, (() => void) | undefined>
 
 export const useWebviewEventListener = (
   eventName: EventName,
   handlers: HandlerFields,
   view?: WebviewTag,
 ) => {
-  const handlerName = camelCase(`on-${eventName}`) as HandlerName<typeof eventName>
+  const handlerName = camelCase(`on-${eventName}`)
   const handler = handlers[handlerName]
 
   useEffect(() => {

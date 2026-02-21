@@ -77,7 +77,10 @@ class GameAPIBroadcaster extends EventEmitter {
       case 'text':
       default: {
         try {
-          const bodyStr = (rawResBody as string) || undefined
+          if (typeof rawResBody !== 'string') {
+            return undefined
+          }
+          const bodyStr = rawResBody || undefined
           const parsed = bodyStr?.startsWith('svdata=') ? bodyStr.substring(7) : bodyStr
           JSON.parse(parsed || '')
           return parsed

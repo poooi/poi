@@ -112,10 +112,17 @@ export function reducer(
     case createAPIReqNyukyoStartResponseAction.type:
       return state
     case createInfoResourcesApplyDeltaAction.type: {
-      const delta = (action as ReturnType<typeof createInfoResourcesApplyDeltaAction>).payload.delta
+      const isApplyDeltaAction = (
+        a: typeof action,
+      ): a is ReturnType<typeof createInfoResourcesApplyDeltaAction> =>
+        a.type === createInfoResourcesApplyDeltaAction.type
+      if (!isApplyDeltaAction(action)) {
+        return state
+      }
+      const delta = action.payload.delta
       return addArrayResources(state, delta)
     }
     default:
-      return resourcesSlice.reducer(state, action as never)
+      return resourcesSlice.reducer(state, action)
   }
 }

@@ -7,7 +7,7 @@ import { createConfigAction } from '../actions'
 
 const configSlice = createSlice({
   name: 'config',
-  initialState: cloneDeep(config.get('')) as Config,
+  initialState: cloneDeep(config.get('')) satisfies Config,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createConfigAction, (state, { payload }) => {

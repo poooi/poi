@@ -16,10 +16,8 @@ import React, { useContext, Children } from 'react'
 
 import { WindowEnv } from './window-env'
 
-const getSecondChildren = (children: ReactNode) =>
-  Children.count(children) > 1
-    ? (Children.toArray(children)[1] as PopoverProps['content'])
-    : undefined
+const getSecondChildren = (children: ReactNode): ReactNode =>
+  Children.count(children) > 1 ? Children.toArray(children)[1] : undefined
 
 export const Alert: React.FC<AlertProps> = ({ children, ...props }) => (
   <BAlert portalContainer={useContext(WindowEnv).mountPoint} {...props}>

@@ -61,11 +61,11 @@ describe('equipsCrossSliceMiddleware', () => {
         body: {
           api_result: 1,
           api_result_msg: 'success',
-        } as never,
+        } satisfies never,
         postBody: {
           api_slot_dest_flag: '1',
           api_id_items: '1,2',
-        } as never,
+        } satisfies never,
         time: 0,
       }),
     )
@@ -94,11 +94,11 @@ describe('equipsCrossSliceMiddleware', () => {
         body: {
           api_result: 1,
           api_result_msg: 'success',
-        } as never,
+        } satisfies never,
         postBody: {
           api_slot_dest_flag: '0',
           api_id_items: '1',
-        } as never,
+        } satisfies never,
         time: 0,
       }),
     )
@@ -129,11 +129,11 @@ describe('equipsCrossSliceMiddleware', () => {
         body: {
           api_result: 1,
           api_result_msg: 'success',
-        } as never,
+        } satisfies never,
         postBody: {
           api_slot_dest_flag: '1',
           api_ship_id: '10,20',
-        } as never,
+        } satisfies never,
         time: 0,
       }),
     )

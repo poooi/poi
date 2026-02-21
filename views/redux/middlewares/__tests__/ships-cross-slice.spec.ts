@@ -23,13 +23,13 @@ describe('shipsCrossSliceMiddleware', () => {
         },
       }),
       dispatch: jest.fn(),
-    } as unknown as TestStore
+    } satisfies TestStore
 
     const next = jest.fn()
 
-    shipsCrossSliceMiddleware(store as never)(next)(
+    shipsCrossSliceMiddleware(store satisfies TestStore as TestStore)(next)(
       createAPIReqNyukyoSpeedchangeResponseAction(
-        speedchangeFixture as GameResponsePayload<
+        speedchangeFixture satisfies GameResponsePayload<
           APIReqNyukyoSpeedchangeResponse,
           APIReqNyukyoSpeedchangeRequest
         >,
@@ -55,13 +55,13 @@ describe('shipsCrossSliceMiddleware', () => {
         },
       }),
       dispatch: jest.fn(),
-    } as unknown as TestStore
+    } satisfies TestStore
 
     const next = jest.fn()
 
-    shipsCrossSliceMiddleware(store as never)(next)(
+    shipsCrossSliceMiddleware(store satisfies TestStore as TestStore)(next)(
       createAPIReqNyukyoSpeedchangeResponseAction(
-        speedchangeFixture as GameResponsePayload<
+        speedchangeFixture satisfies GameResponsePayload<
           APIReqNyukyoSpeedchangeResponse,
           APIReqNyukyoSpeedchangeRequest
         >,

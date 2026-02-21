@@ -320,7 +320,7 @@ describe('ships reducer', () => {
     > = {
       method: 'POST',
       path: '/kcsapi/api_req_kaisou/slot_deprive',
-      body: {} as APIReqKaisouSlotDepriveResponse,
+      body: {} satisfies APIReqKaisouSlotDepriveResponse,
       postBody: {
         api_verno: '1',
         api_unset_idx: '0',
@@ -468,7 +468,7 @@ describe('ships reducer', () => {
     > = {
       method: 'POST',
       path: '/kcsapi/api_req_map/anchorage_repair',
-      body: {} as APIReqMapAnchorageRepairResponseCompat,
+      body: {} satisfies APIReqMapAnchorageRepairResponseCompat,
       postBody: { api_verno: '1' },
       time: 0,
     }

@@ -28,7 +28,9 @@ type Action = {
 }
 
 export const shipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
   const a = action as Action
 
   if (a.type === createAPIReqNyukyoSpeedchangeResponseAction.type) {

@@ -17,7 +17,8 @@ jest.mock('views/services/scheduler', () => ({
 jest.spyOn(console, 'warn').mockImplementation(() => undefined)
 
 // combineReducers.es references `window.getStore` in node tests.
-;(globalThis as any).window = {}
+const globalRecord = globalThis as Record<string, unknown>
+globalRecord.window = {}
 
 import { createAPIGetMemberRequireInfoAction } from '../../actions'
 import { reducer } from '../index'
@@ -57,10 +58,12 @@ describe('info root reducer', () => {
     // Compatibility: some reducers still read legacy `action.body`.
     // @ts-expect-error Partial payload; test is about legacy compat logic
     const action = createAPIGetMemberRequireInfoAction(payload)
-    ;(action as any).body = payload.body
-    ;(action as any).postBody = payload.postBody
+    const extendedAction = Object.assign(action, {
+      body: payload.body,
+      postBody: payload.postBody,
+    })
 
-    const result = (reducer as any)(state, action)
+    const result = reducer(state, extendedAction)
 
     expect(result.basic.api_member_id).toBe('200')
     expect(result.ships).toEqual({})

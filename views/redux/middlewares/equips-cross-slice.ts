@@ -35,7 +35,9 @@ type Action = {
 }
 
 export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
   const a = action as Action
 
   if (a.type === createAPIReqKaisouPowerupResponseAction.type) {
@@ -46,7 +48,11 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
       const ids = String(a.payload?.postBody?.api_id_items || '')
         .split(',')
         .filter(Boolean)
-        .flatMap((shipId) => (get(state, `info.ships.${shipId}.api_slot`) as number[]) || [])
+        .flatMap(
+          (shipId) =>
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_slot is known to be number[]
+            (get(state, `info.ships.${shipId}.api_slot`) as number[]) || [],
+        )
 
       if (ids.length) {
         store.dispatch(createInfoEquipsRemoveByIdsAction({ ids }))
@@ -62,6 +68,7 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         .filter(Boolean)
 
       const ids = flatMap(shipIds, (shipId) =>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_slot is known to be number[]
         ((get(state, `info.ships.${shipId}.api_slot`) as number[]) || []).filter((x) => x != null),
       )
 

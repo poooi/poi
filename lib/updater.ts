@@ -4,7 +4,11 @@ import { autoUpdater } from 'electron-updater'
 import config from './config'
 
 autoUpdater.logger = Logger
-;(autoUpdater.logger as typeof Logger).transports.file.level = 'info'
+const logger = autoUpdater.logger
+if (!logger) {
+  throw new Error('Logger not initialized')
+}
+logger.transports.file.level = 'info'
 
 autoUpdater.setFeedURL({
   provider: 'generic',

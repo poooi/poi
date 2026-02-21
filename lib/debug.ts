@@ -37,6 +37,11 @@ const logLevels = {
   },
 }
 
+type ConsoleLogMethod = 'log' | 'debug' | 'info' | 'warn' | 'error' | 'trace'
+
+const isConsoleLogMethod = (level: LogType): level is ConsoleLogMethod =>
+  ['log', 'debug', 'info', 'warn', 'error', 'trace'].includes(level)
+
 const getLogformatArgs = (logLevel: LogType = 'log', prefix: string) => [
   `%c${moment().format('YYYY-MM-DD HH:mm:ss')} <${logLevel.toUpperCase()}> ${prefix.toUpperCase()}`,
   `
@@ -138,8 +143,8 @@ class ExtraDebugger extends BaseDebugger {
   }
 
   protected getLogFunc(level: LogType = 'log') {
-    if (this.prefix != null) {
-      return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
+    if (this.prefix != null && isConsoleLogMethod(level)) {
+      return console[level].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
       return console[level].bind(console)
     }
@@ -274,10 +279,10 @@ class DebuggerMain extends DebuggerBase {
   }
 
   public getLogFunc(level: LogType = 'log') {
-    return console[level as 'log'].bind(
-      console,
-      chalk.cyan(`${this.prefix} %s`),
-    ) as Console[LogType]
+    if (isConsoleLogMethod(level)) {
+      return console[level].bind(console, chalk.cyan(`${this.prefix} %s`)) as Console[LogType]
+    }
+    return console.log.bind(console, chalk.cyan(`${this.prefix} %s`)) as Console[LogType]
   }
 }
 
@@ -311,8 +316,8 @@ class DebuggerRenderer extends DebuggerBase {
   }
 
   protected getLogFunc(level: LogType = 'log'): Console[LogType] {
-    if (this.prefix != null) {
-      return console[level as 'log'].bind(console, ...getLogformatArgs(level, this.prefix))
+    if (this.prefix != null && isConsoleLogMethod(level)) {
+      return console[level].bind(console, ...getLogformatArgs(level, this.prefix))
     } else {
       return console[level].bind(console)
     }

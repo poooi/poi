@@ -54,10 +54,10 @@ describe('resourcesCrossSliceMiddleware', () => {
         body: {
           api_result: 1,
           api_result_msg: 'success',
-        } as never,
+        } satisfies never,
         postBody: {
           api_kdock_id: '1',
-        } as never,
+        } satisfies never,
         time: 0,
       }),
     )
@@ -84,11 +84,11 @@ describe('resourcesCrossSliceMiddleware', () => {
         body: {
           api_result: 1,
           api_result_msg: 'success',
-        } as never,
+        } satisfies never,
         postBody: {
           api_ship_id: '123',
           api_highspeed: '1',
-        } as never,
+        } satisfies never,
         time: 0,
       }),
     )
