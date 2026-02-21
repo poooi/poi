@@ -108,19 +108,25 @@ const shipRowDataSelectorFactory = memoize((shipId: number) =>
       (state: Record<string, unknown>) => get(state, 'config.poi.appearance.avatarType'),
     ],
     (
-      [ship, $ship] = [{}, {}] as [Ship, Ship],
+      shipData: [Ship, Ship] | undefined,
       repairDock: RepairDock | undefined,
       { $shipTypes }: ConstData,
       escaped: boolean,
       shipTagColor: string[],
       avatarType: string,
-    ): ShipRowData => ({
-      ship: ship || ({} as Ship),
-      $ship: $ship || ({} as Ship),
-      $shipTypes,
-      labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
-      shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
-    }),
+    ): ShipRowData => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const [ship, $ship] = shipData ?? [{} as Ship, {} as Ship]
+      return {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        ship: ship || ({} as Ship),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        $ship: $ship || ({} as Ship),
+        $shipTypes,
+        labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
+        shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
+      }
+    },
   ),
 )
 
@@ -146,7 +152,9 @@ class ShipRowComponent extends Component<ShipRowProps> {
 
   render(): React.ReactNode {
     const {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       ship = {} as Ship,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       $ship = {} as Ship,
       $shipTypes = {},
       labelStatus = 0,
@@ -171,7 +179,8 @@ class ShipRowComponent extends Component<ShipRowProps> {
           ` (-${Math.max(
             1,
             Math.floor(
-              (($ship?.api_fuel_max || 0) - ship.api_fuel) * (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
+              (($ship?.api_fuel_max || 0) - ship.api_fuel) *
+                (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
             ),
           )})`}
       </span>
@@ -185,7 +194,8 @@ class ShipRowComponent extends Component<ShipRowProps> {
           ` (-${Math.max(
             1,
             Math.floor(
-              (($ship?.api_bull_max || 0) - ship.api_bull) * (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
+              (($ship?.api_bull_max || 0) - ship.api_bull) *
+                (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
             ),
           )})`}
       </span>
@@ -195,8 +205,10 @@ class ShipRowComponent extends Component<ShipRowProps> {
       <>
         <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
         <ShipLabel className="ship-type">
+          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
           {$shipTypes[$ship?.api_stype as number]?.api_name
-            ? t(`resources:${$shipTypes[$ship?.api_stype as number].api_name}`)
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+              t(`resources:${$shipTypes[$ship?.api_stype as number].api_name}`)
             : '??'}
         </ShipLabel>
       </>
@@ -243,6 +255,7 @@ class ShipRowComponent extends Component<ShipRowProps> {
           {enableAvatar && (
             <>
               <ShipAvatar
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
                 mstId={$ship?.api_id as number}
                 isDamaged={hpPercentage <= 50}
                 height={58}
@@ -355,4 +368,6 @@ const mapStateToProps = (state: unknown, ownProps: { shipId: number }): Partial<
   ...shipRowDataSelectorFactory(ownProps.shipId)(state),
 })
 
-export const ShipRow = connect(mapStateToProps)(withTranslation(['main', 'resources'])(ShipRowComponent))
+export const ShipRow = connect(mapStateToProps)(
+  withTranslation(['main', 'resources'])(ShipRowComponent),
+)

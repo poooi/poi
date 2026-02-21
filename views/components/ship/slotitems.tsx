@@ -36,6 +36,7 @@ interface Equip {
 
 interface Ship {
   api_slot_ex: number
+  api_maxeq?: number[]
   [key: string]: unknown
 }
 
@@ -77,27 +78,38 @@ interface LandbaseSlotitemsProps {
 
 type LandbaseSlotitemsStateProps = LandbaseSlotitemsData
 
-interface LandbaseSlotitemsComponentProps extends LandbaseSlotitemsProps, LandbaseSlotitemsStateProps {}
+interface LandbaseSlotitemsComponentProps
+  extends LandbaseSlotitemsProps, LandbaseSlotitemsStateProps {}
 
 const slotitemsDataSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
-    ([ship, $ship] = [{}, {}] as [Ship, Ship], equipsData) => ({
-      api_maxeq: $ship.api_maxeq,
-      equipsData,
-      exslotUnlocked: ship.api_slot_ex !== 0,
-    }),
+    (
+      shipData: [Ship, Ship] | undefined,
+      equipsData: ([Equip, Equip, number] | undefined)[] | undefined,
+    ): SlotitemsData => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const [ship, $ship] = shipData ?? [{} as Ship, {} as Ship]
+      return {
+        api_maxeq: $ship?.api_maxeq ?? [],
+        equipsData: equipsData ?? [],
+        exslotUnlocked: ship?.api_slot_ex !== 0,
+      }
+    },
   ),
 )
 
 const landbaseSlotitemsDataSelectorFactory = memoize((landbaseId: number) =>
   createSelector(
     [landbaseSelectorFactory(landbaseId), landbaseEquipDataSelectorFactory(landbaseId)],
-    (landbase: Landbase = {} as Landbase, equipsData) => ({
-      api_maxeq: (landbase.api_plane_info || []).map((l) => l.api_max_count),
-      api_cond: (landbase.api_plane_info || []).map((l) => l.api_cond),
-      api_state: (landbase.api_plane_info || []).map((l) => l.api_state),
-      equipsData,
+    (
+      landbase: Landbase | undefined,
+      equipsData: ([Equip, Equip, number] | undefined)[] | undefined,
+    ): LandbaseSlotitemsData => ({
+      api_maxeq: (landbase?.api_plane_info || []).map((l) => l.api_max_count),
+      api_cond: (landbase?.api_plane_info || []).map((l) => l.api_cond),
+      api_state: (landbase?.api_plane_info || []).map((l) => l.api_state),
+      equipsData: equipsData ?? [],
     }),
   ),
 )
@@ -139,16 +151,20 @@ const SlotitemsComponent: React.FC<SlotitemsComponentProps> = ({
                     />
                   )}
                 </div>
-                {$equip && getItemData($equip as Equip).map((data, propId) => <div key={propId}>{data}</div>)}
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                {$equip &&
+                  getItemData($equip as Equip).map((data, propId) => (
+                    <div key={propId}>{data}</div>
+                  ))}
               </div>
             </div>
           )
 
           const equipIconId = equipData ? $equip?.api_type?.[3] : 0
           const showOnslot = !equipData || isExslot || equipIsAircraft($equip)
-          const maxOnslot = isExslot ? 0 : api_maxeq?.[equipIdx] ?? 0
+          const maxOnslot = isExslot ? 0 : (api_maxeq?.[equipIdx] ?? 0)
           const onslotText = isExslot ? '+' : equipData ? `${onslot}` : `${maxOnslot}`
-          const onslotWarning = !!equipData && !!onslot && onslot < maxOnslot
+          const onslotWarning = !!equipData && typeof onslot === 'number' && onslot < maxOnslot
 
           return (
             <Tooltip
@@ -193,7 +209,7 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
           const equipIconId = equipData ? $equip?.api_type?.[3] : 0
           const showOnslot = !equipData || equipIsAircraft($equip)
           const maxOnslot = api_maxeq?.[equipIdx] ?? 0
-          const onslotWarning = !!equipData && !!onslot && onslot < maxOnslot
+          const onslotWarning = !!equipData && typeof onslot === 'number' && onslot < maxOnslot
           const onslotText = equipData ? onslot : maxOnslot
           const iconStyle: React.CSSProperties = {
             opacity: api_state?.[equipIdx] === 2 ? 0.5 : undefined,
@@ -209,21 +225,36 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
                   {$equip?.api_name
                     ? t(`resources:${$equip.api_name}`, { keySeparator: 'chiba' })
                     : '??'}
-                  {equip && (equip as Equip).api_level && (equip as Equip).api_level! > 0 && (
-                    <strong style={{ color: '#45A9A5' }}>
-                      {' '}
-                      <FontAwesome name="star" />
-                      {(equip as Equip).api_level}
-                    </strong>
+                  {equip && (
+                    <>
+                      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                      {(equip as Equip).api_level && (equip as Equip).api_level! > 0 && (
+                        <strong style={{ color: '#45A9A5' }}>
+                          {' '}
+                          <FontAwesome name="star" />
+                          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                          {(equip as Equip).api_level}
+                        </strong>
+                      )}
+                      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                      {(equip as Equip)?.api_alv &&
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                        (equip as Equip).api_alv! >= 1 &&
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                        (equip as Equip).api_alv! <= 7 && (
+                          <ALevel
+                            className="alv-img"
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                            src={join(
+                              'assets',
+                              'img',
+                              'airplane',
+                              `alv${(equip as Equip).api_alv}.png`,
+                            )}
+                          />
+                        )}
+                    </>
                   )}
-                  {(equip as Equip)?.api_alv &&
-                    (equip as Equip).api_alv! >= 1 &&
-                    (equip as Equip).api_alv! <= 7 && (
-                      <ALevel
-                        className="alv-img"
-                        src={join('assets', 'img', 'airplane', `alv${(equip as Equip).api_alv}.png`)}
-                      />
-                    )}
                   {isMini && (
                     <OnSlotMini
                       className="slotitem-onslot-mini"
@@ -234,9 +265,15 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
                       {onslotText}
                     </OnSlotMini>
                   )}
-                  <FontAwesome name="dot-circle-o" /> {(equip as Equip)?.api_distance}
+                  <FontAwesome name="dot-circle-o" />{' '}
+                  {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                  {(equip as Equip)?.api_distance}
                 </div>
-                {$equip && getItemData($equip as Equip).map((data, propId) => <div key={propId}>{data}</div>)}
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                {$equip &&
+                  getItemData($equip as Equip).map((data, propId) => (
+                    <div key={propId}>{data}</div>
+                  ))}
               </div>
             </div>
           )
@@ -264,11 +301,17 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
   )
 }
 
-const mapStateToPropsSlotitems = (state: unknown, ownProps: SlotitemsProps): SlotitemsStateProps => ({
+const mapStateToPropsSlotitems = (
+  state: unknown,
+  ownProps: SlotitemsProps,
+): SlotitemsStateProps => ({
   ...slotitemsDataSelectorFactory(ownProps.shipId)(state),
 })
 
-const mapStateToPropsLandbase = (state: unknown, ownProps: LandbaseSlotitemsProps): LandbaseSlotitemsStateProps => ({
+const mapStateToPropsLandbase = (
+  state: unknown,
+  ownProps: LandbaseSlotitemsProps,
+): LandbaseSlotitemsStateProps => ({
   ...landbaseSlotitemsDataSelectorFactory(ownProps.landbaseId)(state),
 })
 
