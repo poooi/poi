@@ -541,7 +541,7 @@ export async function isInGame() {
         .querySelector('webview')
         ?.executeJavaScript("document.querySelector('embed') !== null")) ?? false
     return exists
-  } catch (e) {
+  } catch (_) {
     return false
   }
 }

@@ -6,7 +6,7 @@ let download
 try {
   SentryCli = require('@sentry/cli')
   download = require('electron-download')
-} catch (e) {
+} catch (_e) {
   console.error('ERROR: Missing required packages, please run:')
   console.error('npm install --save-dev @sentry/cli electron-download')
   process.exit(1)

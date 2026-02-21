@@ -89,7 +89,7 @@ class PluginManager extends EventEmitter {
   async ensurePackageJson(plugins) {
     try {
       await access(PACKAGE_JSON_PATH)
-    } catch (e) {
+    } catch (_) {
       const packageJsonContent = {
         dependencies: fromPairs(
           plugins
@@ -332,7 +332,7 @@ class PluginManager extends EventEmitter {
       try {
         accessSync(packageSource)
         false
-      } catch (e) {
+      } catch (_) {
         true
       }
     }

@@ -20,7 +20,7 @@ const storeCache = (function () {
     // clears store when in safe mode
     const item = !window.isSafeMode ? localStorage.getItem(cachePosition) : '{}'
     return JSON.parse(item || '{}')
-  } catch (e) {
+  } catch (_) {
     return {}
   }
 })()

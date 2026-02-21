@@ -105,7 +105,7 @@ const playPoiAudio = throttle(() => audio.play(), 3000, { trailing: false })
 const os = do {
   try {
     osName()
-  } catch (e) {
+  } catch (_) {
     switch (process.platform) {
       case 'win32': {
         ;('Windows')

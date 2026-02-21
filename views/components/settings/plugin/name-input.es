@@ -20,7 +20,7 @@ const validate = (packageName) => {
     if (!resolved.registry || !/^poi-plugin-.+$/.test(last(resolved.name.split('/')))) {
       return false
     }
-  } catch (e) {
+  } catch (_) {
     return false
   }
   return true
