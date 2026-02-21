@@ -125,6 +125,6 @@ export function reducer(
     case createAPIReqKousyouDestroyshipResponseAction.type:
       return state
     default:
-      return equipsSlice.reducer(state, action satisfies typeof action as typeof action)
+      return equipsSlice.reducer(state, action as never)
   }
 }

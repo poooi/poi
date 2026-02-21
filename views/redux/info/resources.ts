@@ -123,6 +123,6 @@ export function reducer(
       return addArrayResources(state, delta)
     }
     default:
-      return resourcesSlice.reducer(state, action satisfies typeof action as typeof action)
+      return resourcesSlice.reducer(state, action as never)
   }
 }

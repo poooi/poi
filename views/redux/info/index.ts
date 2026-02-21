@@ -74,7 +74,7 @@ export const reducer = reduceReducers(
         return pick(state, ['basic']) satisfies Partial<InfoState>
       }
     }
-    return state || ({} satisfies InfoState)
+    return state || ({} as InfoState)
   },
   combineReducers({
     basic,

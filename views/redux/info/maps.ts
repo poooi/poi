@@ -32,11 +32,12 @@ export interface MapsState {
   [key: string]: MapInfo
 }
 
-function normalizeState(state: MapsState): MapsState {
+function normalizeState(state: MapsState): MapsState
+function normalizeState(state: MapInfo[]): MapsState
+function normalizeState(state: MapsState | MapInfo[]): MapsState {
   // Compatibility: old api arranges maps in array
   if (Array.isArray(state)) {
-    const legacy = state satisfies unknown as MapInfo[]
-    return indexify(legacy.filter((e) => e && e.api_id))
+    return indexify(state.filter((e) => e && e.api_id))
   }
   return state
 }
