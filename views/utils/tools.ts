@@ -221,6 +221,7 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
     typeof newState !== 'object' ||
     newState === null
   ) {
+    /* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */
     return isEqual(prevState, newState) ? prevState : (newState as T)
   }
   if (prevState === newState) {
@@ -234,6 +235,7 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
   const isRecord = (val: unknown): val is Record<string, unknown> =>
     typeof val === 'object' && val !== null
 
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
   forEach(newState as Record<string, unknown>, (v, k) => {
     const prevValue = (prevState as Record<string, unknown>)[k]
     let newV: unknown
@@ -247,6 +249,7 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
     if (newV != null && prevValue !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
       ;(prevState as Record<string, unknown>)[k] = newV
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
     }
   })
 
