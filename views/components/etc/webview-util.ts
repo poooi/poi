@@ -3,6 +3,13 @@ import type { WebviewTag } from 'electron'
 import { camelCase } from 'lodash'
 import { useEffect } from 'react'
 
+// Local CamelCase type to convert kebab-case event names to camelCase handler names
+// e.g., 'load-commit' → 'onLoadCommit', 'did-finish-load' → 'onDidFinishLoad'
+type CamelCase<S extends string> = S extends `${infer T}-${infer U}${infer V}`
+  ? `${T}${Uppercase<U>}${CamelCase<V>}`
+  : S
+type HandlerName<T extends string> = CamelCase<`on-${T}`>
+
 export const webviewEvents = [
   'load-commit',
   'did-attach',
@@ -41,15 +48,21 @@ export const webviewEvents = [
 
 type EventName = (typeof webviewEvents)[number]
 
-export type HandlerFields = Record<string, (() => void) | undefined>
+// HandlerFields uses CamelCase to map event names to their handler names
+// e.g., 'load-commit' → 'onLoadCommit'
+export type HandlerFields = {
+  [K in EventName as HandlerName<K>]?: () => void
+}
 
 export const useWebviewEventListener = (
   eventName: EventName,
   handlers: HandlerFields,
   view?: WebviewTag,
 ) => {
+  // camelCase returns string, but HandlerFields has specific keys
+  // We use a type-safe index access pattern
   const handlerName = camelCase(`on-${eventName}`)
-  const handler = handlers[handlerName]
+  const handler = (handlers as Record<string, (() => void) | undefined>)[handlerName]
 
   useEffect(() => {
     if (view && handler) {

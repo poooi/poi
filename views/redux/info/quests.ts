@@ -733,7 +733,7 @@ declare global {
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- window.getStore is an untyped global store accessor, so we assert the expected slice shape here
   const { activeQuests } = window.getStore('info.quests') as {
     activeQuests: Record<string | number, ActiveQuest>
   }
