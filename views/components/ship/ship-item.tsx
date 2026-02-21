@@ -1,9 +1,8 @@
 import { ProgressBar, Tooltip, Position, Tag, Intent } from '@blueprintjs/core'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { withNamespaces } from 'react-i18next'
+import { type WithTranslation, withTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import { MaterialIcon } from 'views/components/etc/icon'
@@ -49,7 +48,56 @@ import { AAPBIndicator } from './aapb-indicator'
 import { OASWIndicator } from './oasw-indicator'
 import { Slotitems } from './slotitems'
 
-const shipRowDataSelectorFactory = memoize((shipId) =>
+interface Ship {
+  api_lv?: number
+  api_exp?: [number, number, number]
+  api_id: number
+  api_ship_id?: number
+  api_nowhp: number
+  api_maxhp: number
+  api_cond: number
+  api_fuel: number
+  api_bull: number
+  api_soku: number
+  api_ndock_time: number
+  [key: string]: unknown
+}
+
+interface ShipType {
+  api_name?: string
+  [key: string]: unknown
+}
+
+interface ConstData {
+  $shipTypes: Record<number, ShipType>
+  [key: string]: unknown
+}
+
+interface RepairDock {
+  [key: string]: unknown
+}
+
+interface ShipRowData {
+  ship: Ship
+  $ship: Ship
+  $shipTypes: Record<number, ShipType>
+  labelStatus: number
+  shipAvatarColor: string
+}
+
+interface ShipRowProps extends WithTranslation {
+  shipId: number
+  ship?: Ship
+  $ship?: Ship
+  $shipTypes?: Record<number, ShipType>
+  labelStatus?: number
+  enableAvatar?: boolean
+  compact?: boolean
+  shipAvatarColor?: string
+  showSpAttackLabel?: boolean
+}
+
+const shipRowDataSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [
       shipDataSelectorFactory(shipId),
@@ -57,11 +105,18 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
       constSelector,
       escapeStatusSelectorFactory(shipId),
       fcdShipTagColorSelector,
-      (state) => get(state, 'config.poi.appearance.avatarType'),
+      (state: Record<string, unknown>) => get(state, 'config.poi.appearance.avatarType'),
     ],
-    ([ship, $ship] = [], repairDock, { $shipTypes }, escaped, shipTagColor, avatarType) => ({
-      ship: ship || {},
-      $ship: $ship || {},
+    (
+      [ship, $ship] = [{}, {}] as [Ship, Ship],
+      repairDock: RepairDock | undefined,
+      { $shipTypes }: ConstData,
+      escaped: boolean,
+      shipTagColor: string[],
+      avatarType: string,
+    ): ShipRowData => ({
+      ship: ship || ({} as Ship),
+      $ship: $ship || ({} as Ship),
       $shipTypes,
       labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
       shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
@@ -69,20 +124,8 @@ const shipRowDataSelectorFactory = memoize((shipId) =>
   ),
 )
 
-@withNamespaces(['main', 'resources'])
-@connect((state, { shipId }) => shipRowDataSelectorFactory(shipId)(state))
-export class ShipRow extends Component {
-  static propTypes = {
-    ship: PropTypes.object,
-    $ship: PropTypes.object,
-    $shipTypes: PropTypes.object,
-    labelStatus: PropTypes.number,
-    enableAvatar: PropTypes.bool,
-    compact: PropTypes.bool,
-    shipAvatarColor: PropTypes.string,
-  }
-
-  shouldComponentUpdate(nextProps) {
+class ShipRowComponent extends Component<ShipRowProps> {
+  shouldComponentUpdate(nextProps: ShipRowProps): boolean {
     // Remember to expand the list in case you add new properties to display
     const shipPickProps = [
       'api_lv',
@@ -101,55 +144,64 @@ export class ShipRow extends Component {
     )
   }
 
-  render() {
+  render(): React.ReactNode {
     const {
-      ship,
-      $ship,
-      $shipTypes,
-      labelStatus,
+      ship = {} as Ship,
+      $ship = {} as Ship,
+      $shipTypes = {},
+      labelStatus = 0,
       enableAvatar,
       shipAvatarColor,
       showSpAttackLabel,
       compact,
       t,
     } = this.props
+
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
     const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
-    const fuelPercentage = (ship.api_fuel / $ship.api_fuel_max) * 100
-    const ammoPercentage = (ship.api_bull / $ship.api_bull_max) * 100
+    const fuelPercentage = (ship.api_fuel / ($ship?.api_fuel_max || 1)) * 100
+    const ammoPercentage = (ship.api_bull / ($ship?.api_bull_max || 1)) * 100
+
     const fuelTip = (
       <span>
         <MaterialIcon materialId={1} className="material-icon" />
-        {ship.api_fuel} / {$ship.api_fuel_max}
+        {ship.api_fuel} / {$ship?.api_fuel_max}
         {fuelPercentage < 100 &&
           ` (-${Math.max(
             1,
-            Math.floor(($ship.api_fuel_max - ship.api_fuel) * (ship.api_lv > 99 ? 0.85 : 1)),
+            Math.floor(
+              (($ship?.api_fuel_max || 0) - ship.api_fuel) * (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
+            ),
           )})`}
       </span>
     )
+
     const ammoTip = (
       <span>
         <MaterialIcon materialId={2} className="material-icon" />
-        {ship.api_bull} / {$ship.api_bull_max}
+        {ship.api_bull} / {$ship?.api_bull_max}
         {ammoPercentage < 100 &&
           ` (-${Math.max(
             1,
-            Math.floor(($ship.api_bull_max - ship.api_bull) * (ship.api_lv > 99 ? 0.85 : 1)),
+            Math.floor(
+              (($ship?.api_bull_max || 0) - ship.api_bull) * (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
+            ),
           )})`}
       </span>
     )
+
     const shipBasicContent = (
       <>
         <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
         <ShipLabel className="ship-type">
-          {$shipTypes[$ship.api_stype] && $shipTypes[$ship.api_stype].api_name
-            ? t(`resources:${$shipTypes[$ship.api_stype].api_name}`)
+          {$shipTypes[$ship?.api_stype as number]?.api_name
+            ? t(`resources:${$shipTypes[$ship?.api_stype as number].api_name}`)
             : '??'}
         </ShipLabel>
       </>
     )
+
     const shipIndicatorsContent = (
       <>
         <ShipLabel className="ship-speed">{t(`main:${getSpeedLabel(ship.api_soku)}`)}</ShipLabel>
@@ -165,6 +217,7 @@ export class ShipRow extends Component {
         )}
       </>
     )
+
     return (
       <Tooltip
         position={Position.TOP}
@@ -173,7 +226,7 @@ export class ShipRow extends Component {
         targetTagName="div"
         content={
           <div className="ship-tooltip-info">
-            <div>{$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}</div>
+            <div>{$ship?.api_name ? t(`resources:${$ship.api_name}`) : '??'}</div>
             <div>
               Lv. {ship.api_lv || '??'} Next. {(ship.api_exp || [])[1]}
             </div>
@@ -190,7 +243,7 @@ export class ShipRow extends Component {
           {enableAvatar && (
             <>
               <ShipAvatar
-                mstId={$ship.api_id}
+                mstId={$ship?.api_id as number}
                 isDamaged={hpPercentage <= 50}
                 height={58}
                 useDefaultBG={false}
@@ -217,7 +270,7 @@ export class ShipRow extends Component {
           {!hideShipName && (
             <>
               <ShipName className="ship-name" avatar={enableAvatar}>
-                {$ship.api_name
+                {$ship?.api_name
                   ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
                   : '??'}
               </ShipName>
@@ -297,3 +350,9 @@ export class ShipRow extends Component {
     )
   }
 }
+
+const mapStateToProps = (state: unknown, ownProps: { shipId: number }): Partial<ShipRowProps> => ({
+  ...shipRowDataSelectorFactory(ownProps.shipId)(state),
+})
+
+export const ShipRow = connect(mapStateToProps)(withTranslation(['main', 'resources'])(ShipRowComponent))
