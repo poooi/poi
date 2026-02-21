@@ -145,6 +145,10 @@ class ExtraDebugger extends BaseDebugger {
   protected getLogFunc(level: LogType = 'log') {
     if (this.prefix != null && isConsoleLogMethod(level)) {
       return console[level].bind(console, ...getLogformatArgs(level, this.prefix))
+    } else if (level === 'assert' || level === 'table') {
+      // 'assert' and 'table' have different signatures than standard log methods
+      // Fallback to console.log for these special cases
+      return console.log.bind(console)
     } else {
       return console[level].bind(console)
     }
