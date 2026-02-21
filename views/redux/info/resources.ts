@@ -123,6 +123,6 @@ export function reducer(
       return addArrayResources(state, delta)
     }
     default:
-      return resourcesSlice.reducer(state, action as never)
+      return resourcesSlice.reducer(state, action as never // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion)
   }
 }
