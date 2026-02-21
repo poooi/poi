@@ -73,7 +73,9 @@ function getFleetInfo(
 }
 
 export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
   const a = action as AnyAction
 
   // This middleware intentionally dispatches progress actions based on the pre-action state.
@@ -84,8 +86,12 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const winRank = String(body.api_win_rank || '')
 
-    const fleetId = (get(state, 'sortie.sortieStatus', []) as boolean[]).findIndex((x) => x)
-    const deckShipId = (get(state, `info.fleets.${fleetId}.api_ship`, []) as number[]) || []
+    const fleetId =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- sortieStatus is known to be boolean[]
+      (get(state, 'sortie.sortieStatus', []) as boolean[]).findIndex((x) => x)
+    const deckShipId =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_ship is known to be number[]
+      (get(state, `info.fleets.${fleetId}.api_ship`, []) as number[]) || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
 
     store.dispatch(
@@ -144,6 +150,7 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     )
   } else if (a.type === createAPIReqKousyouCreateitemResponseAction.type) {
     const body = a.payload?.body || {}
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response items are known to be unknown[]
     const items = (body.api_get_items as unknown[]) || []
     store.dispatch(
       createInfoQuestsApplyProgressAction({
@@ -215,7 +222,9 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const mapcell = Number(body.api_no)
     const maparea = Number(body.api_maparea_id) * 10 + Number(body.api_mapinfo_no)
-    const deckShipId = (get(state, 'battle.result.deckShipId', []) as number[]) || []
+    const deckShipId =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- deckShipId is known to be number[]
+      (get(state, 'battle.result.deckShipId', []) as number[]) || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     store.dispatch(
       createInfoQuestsApplyProgressAction({
@@ -230,9 +239,15 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const boss = Boolean(result.boss)
     const maparea = Number(result.map)
     const mapcell = Number(result.mapCell)
-    const enemyHp = (result.enemyHp || []) as number[]
-    const enemyShipId = (result.enemyShipId || []) as number[]
-    const deckShipId = (result.deckShipId || []) as number[]
+    const enemyHp =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- enemyHp is known to be number[]
+      (result.enemyHp || []) as number[]
+    const enemyShipId =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- enemyShipId is known to be number[]
+      (result.enemyShipId || []) as number[]
+    const deckShipId =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- deckShipId is known to be number[]
+      (result.deckShipId || []) as number[]
 
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     const battleMeta = { shipname, shiptype, shipclass, mapcell, maparea }

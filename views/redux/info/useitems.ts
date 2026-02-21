@@ -93,6 +93,7 @@ const useitemsSlice = createSlice({
       })
       // sortie award
       .addCase(createAPIReqCombinedBattleBattleresultResponseAction, (state, { payload }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response type definition
         const body = payload.body as {
           api_get_useitem?: { api_useitem_id?: number }
           api_get_exmap_useitem_id?: number
@@ -108,6 +109,7 @@ const useitemsSlice = createSlice({
         return compareUpdate(state, nextState)
       })
       .addCase(createAPIReqSortieBattleResultResponseAction, (state, { payload }) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response type definition
         const body = payload.body as {
           api_get_useitem?: { api_useitem_id?: number }
           api_get_exmap_useitem_id?: number

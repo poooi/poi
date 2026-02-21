@@ -21,5 +21,11 @@ const initState: ServerState = {
   name: null,
 }
 
-export const reducer = (state: ServerState = initState, action: Action): ServerState =>
-  action.type === '@@ServerReady' ? (action as ServerReadyAction).serverInfo : state
+export const reducer = (state: ServerState = initState, action: Action): ServerState => {
+  if (action.type === '@@ServerReady') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Type guard ensures this is ServerReadyAction
+    const serverAction = action as ServerReadyAction
+    return serverAction.serverInfo
+  }
+  return state
+}

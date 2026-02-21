@@ -152,10 +152,15 @@ export function indexify<T = any>(array: any[], key = 'api_id'): Dictionary<T> {
  * @param obj the source
  * @param to another instance to compare
  */
-export function copyIfSame<T = any>(obj: T, to: any): T {
+export function copyIfSame<T>(obj: T[], to: any): T[]
+export function copyIfSame<T extends object>(obj: T, to: any): T
+export function copyIfSame<T>(obj: T, to: any): T {
   // assert(typeof obj === 'object')
   if (obj === to) {
-    return Array.isArray(obj) ? (obj.slice() as unknown as T) : { ...obj }
+    if (Array.isArray(obj)) {
+      return obj.slice()
+    }
+    return { ...obj }
   }
   return obj
 }
@@ -165,12 +170,12 @@ export function copyIfSame<T = any>(obj: T, to: any): T {
  * @param state the state object
  * @param body the incoming new state
  */
-export function pickExisting<T extends object>(state: T, body: object): T {
+export function pickExisting<T extends Record<string, unknown>>(state: T, body: Record<string, unknown>): T {
   const stateBackup = state
   forEach(state, (_, k) => {
     if (!(k in body)) {
       state = copyIfSame(state, stateBackup)
-      delete state[k as keyof T]
+      delete state[k]
     }
   })
   return state
@@ -205,29 +210,49 @@ export function reduxSet<T extends Record<string, unknown>>(
  * @param depth
  * @returns updated result mixed of previous and new state
  */
-export function compareUpdate<T = any>(prevState: T, newState: T, depth = 1): T {
-  if (typeof prevState !== typeof newState) {
-    return newState
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T {
+  // Handle non-object cases
+  if (
+    depth === 0 ||
+    typeof depth !== 'number' ||
+    typeof prevState !== 'object' ||
+    prevState === null ||
+    typeof newState !== 'object' ||
+    newState === null
+  ) {
+    /* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */
+    return isEqual(prevState, newState) ? prevState : (newState as T)
   }
   if (prevState === newState) {
     return prevState
   }
-  if (depth == 0 || typeof depth !== 'number' || typeof prevState !== 'object') {
-    return isEqual(prevState, newState) ? prevState : newState
-  }
+
   const prevStateBackup = prevState
-  // Update existing properties
   const nextDepth = depth - 1
-  forEach(newState as unknown as object, (v, k) => {
-    const newV = compareUpdate(prevState[k as keyof T], v, nextDepth)
-    // ATTENTION: Any null properties are ignored
-    if (newV != null && prevState[k as keyof T] !== newV) {
+
+  // Use type predicates for safer narrowing
+  const isRecord = (val: unknown): val is Record<string, unknown> =>
+    typeof val === 'object' && val !== null
+
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+  forEach(newState as Record<string, unknown>, (v, k) => {
+    const prevValue = (prevState as Record<string, unknown>)[k]
+    let newV: unknown
+
+    if (isRecord(prevValue) && isRecord(v)) {
+      newV = compareUpdate(prevValue, v, nextDepth)
+    } else {
+      newV = isEqual(prevValue, v) ? prevValue : v
+    }
+
+    if (newV != null && prevValue !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
-      if (newV != null) {
-        prevState[k as keyof T] = newV
-      }
+      ;(prevState as Record<string, unknown>)[k] = newV
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
     }
   })
+
   return prevState
 }
 
@@ -269,9 +294,10 @@ export function timeToString(milliseconds: number): string {
  * @param state original array
  * @param comparator the array as reference
  */
-export function trimArray<T extends any[]>(state: T, comparator: any[]): T {
-  if (Array.isArray(state) && Array.isArray(comparator) && comparator.length < state.length)
-    return state.slice(0, comparator.length) as T
+export function trimArray<T>(state: T[], comparator: unknown[]): T[] {
+  if (comparator.length < state.length) {
+    return state.slice(0, comparator.length)
+  }
   return state
 }
 

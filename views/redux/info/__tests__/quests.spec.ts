@@ -149,14 +149,23 @@ describe('saveQuestTracking', () => {
 
     expect(writeMock).toHaveBeenCalledTimes(1)
     const [, serialized] = writeMock.mock.calls[0]
-    const saved = JSON.parse(serialized as string) as Record<string, unknown>
+    const saved = JSON.parse(String(serialized)) satisfies Record<string, unknown>
 
     expect(saved.time).toEqual(expect.any(Number))
 
-    const savedRecord = saved['1'] as Record<string, unknown>
-    expect(savedRecord.active).toBe(true)
-    expect(savedRecord.count).toBe(3)
-    expect(savedRecord.required).toBe(5)
+    const savedRecord = saved['1']
+    if (typeof savedRecord !== 'object' || savedRecord === null) {
+      throw new Error('savedRecord should be an object')
+    }
+    const isValidRecord = (r: unknown): r is Record<string, unknown> =>
+      typeof r === 'object' && r !== null
+    if (!isValidRecord(savedRecord)) {
+      throw new Error('savedRecord should be a Record')
+    }
+    const record = savedRecord
+    expect(record.active).toBe(true)
+    expect(record.count).toBe(3)
+    expect(record.required).toBe(5)
   })
 })
 
