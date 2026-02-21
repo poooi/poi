@@ -153,11 +153,13 @@ export function indexify<T = any>(array: any[], key = 'api_id'): Dictionary<T> {
  * @param to another instance to compare
  */
 export function copyIfSame<T = any>(obj: T, to: any): T {
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
   // assert(typeof obj === 'object')
   if (obj === to) {
     return Array.isArray(obj) ? (obj.slice() as unknown as T) : { ...obj }
   }
   return obj
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
 }
 
 /**
@@ -166,6 +168,7 @@ export function copyIfSame<T = any>(obj: T, to: any): T {
  * @param body the incoming new state
  */
 export function pickExisting<T extends object>(state: T, body: object): T {
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
   const stateBackup = state
   forEach(state, (_, k) => {
     if (!(k in body)) {
@@ -174,6 +177,7 @@ export function pickExisting<T extends object>(state: T, body: object): T {
     }
   })
   return state
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
 }
 
 /**
@@ -205,7 +209,9 @@ export function reduxSet<T extends Record<string, unknown>>(
  * @param depth
  * @returns updated result mixed of previous and new state
  */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 export function compareUpdate<T = any>(prevState: T, newState: T, depth = 1): T {
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
   if (typeof prevState !== typeof newState) {
     return newState
   }
@@ -229,6 +235,7 @@ export function compareUpdate<T = any>(prevState: T, newState: T, depth = 1): T 
     }
   })
   return prevState
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
 }
 
 /**
@@ -270,9 +277,11 @@ export function timeToString(milliseconds: number): string {
  * @param comparator the array as reference
  */
 export function trimArray<T extends any[]>(state: T, comparator: any[]): T {
+  /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
   if (Array.isArray(state) && Array.isArray(comparator) && comparator.length < state.length)
     return state.slice(0, comparator.length) as T
   return state
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
 }
 
 /**
