@@ -59,14 +59,13 @@ interface SquadRowProps extends SquadSelectorProps {
   compact: boolean
 }
 
-type SquadRowStateProps = SquadStateProps
-
 const SquadSelectorFactory = memoize((squardId: number) =>
   createSelector(
     [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
-    (landbase: Landbase, equipsData: EquipData[]) => ({
-      landbase,
-      equipsData,
+    (landbase: Landbase | undefined, equipsData: EquipData[] | undefined): SquadStateProps => ({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      landbase: landbase ?? ({} as Landbase),
+      equipsData: equipsData ?? [],
       squardId,
     }),
   ),
@@ -81,13 +80,7 @@ const SquadRowComponent: React.FC<SquadRowProps & SquadStateProps> = ({
 }) => {
   const { t } = useTranslation(['main'])
 
-  const {
-    api_action_kind,
-    api_distance,
-    api_name,
-    api_nowhp = 200,
-    api_maxhp = 200,
-  } = landbase
+  const { api_action_kind, api_distance, api_name, api_nowhp = 200, api_maxhp = 200 } = landbase
 
   const { api_base = 0, api_bonus = 0 } = api_distance || {}
   const tyku = getTyku([equipsData], api_action_kind)
