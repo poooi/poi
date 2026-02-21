@@ -42,7 +42,9 @@ type Action = {
 export const resourcesCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
   // Compute deltas based on *current* store before reducers handle the action.
   // This mirrors the previous behavior where reducers received the root state.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
   const a = action as Action
 
   if (a.type === createAPIReqKousyouCreateShipSpeedChangeResponseAction.type) {

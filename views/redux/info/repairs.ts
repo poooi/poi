@@ -61,6 +61,7 @@ const repairsSlice = createSlice({
         const api_ndock_id = Number(payload.postBody.api_ndock_id)
         const newState = state.slice()
         newState[api_ndock_id - 1] = {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Providing default empty object when undefined
           ...(newState[api_ndock_id - 1] || ({} as RepairData)),
           ...emptyRepair,
         }

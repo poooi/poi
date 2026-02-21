@@ -201,8 +201,7 @@ function limitActiveQuests(
   activeQuests: Record<string | number, ActiveQuest>,
   n: number,
 ): Record<number, ActiveQuest> {
-  if (Object.keys(activeQuests).length <= n)
-    return activeQuests as Record<number, ActiveQuest>
+  if (Object.keys(activeQuests).length <= n) return activeQuests as Record<number, ActiveQuest>
   // Remove the ones with earliest time
   const quests = sortBy(values(activeQuests), 'time')
   quests.splice(0, quests.length - n)
@@ -236,34 +235,38 @@ function outdateRecords(
   if (!isDifferentDay(now, then)) {
     return records
   }
-  records = mapValues(records, resetQuestRecordDaily(questGoals)) as Record<
-    string | number,
-    QuestRecord
-  >
+  records =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
+    mapValues(records, resetQuestRecordDaily(questGoals)) as Record<string | number, QuestRecord>
   if (isDifferentWeek(now, then)) {
-    records = mapValues(records, resetQuestRecordWeekly(questGoals)) as Record<
-      string | number,
-      QuestRecord
-    >
+    records =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
+      mapValues(records, resetQuestRecordWeekly(questGoals)) as Record<string | number, QuestRecord>
   }
   if (isDifferentMonth(now, then)) {
-    records = mapValues(records, resetQuestRecordMonthly(questGoals)) as Record<
-      string | number,
-      QuestRecord
-    >
+    records =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
+      mapValues(records, resetQuestRecordMonthly(questGoals)) as Record<
+        string | number,
+        QuestRecord
+      >
   }
   if (isDifferentQuarter(now, then)) {
-    records = mapValues(records, resetQuestRecordQuarterly(questGoals)) as Record<
-      string | number,
-      QuestRecord
-    >
+    records =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
+      mapValues(records, resetQuestRecordQuarterly(questGoals)) as Record<
+        string | number,
+        QuestRecord
+      >
   }
   for (const resetMonth of range(1, 13)) {
     if (isDifferentYear(now, then, resetMonth)) {
-      records = mapValues(
-        records,
-        resetQuestRecordYearlyFactory(resetMonth)(questGoals),
-      ) as Record<string | number, QuestRecord>
+      records =
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
+        mapValues(records, resetQuestRecordYearlyFactory(resetMonth)(questGoals)) as Record<
+          string | number,
+          QuestRecord
+        >
     }
   }
   return filterObjectValue(records) as Record<string | number, QuestRecord>
@@ -272,6 +275,7 @@ function outdateRecords(
 function filterActiveQuestFactory(now: number) {
   return (activeQuest: Partial<ActiveQuest> = {}): boolean => {
     const { time, detail: { api_type, api_no, api_label_type } = {} } =
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Required for destructuring from Partial type
       activeQuest as ActiveQuest
     if (!time || !api_type) return false
     if (!isDifferentDay(now, time)) return true
@@ -301,14 +305,22 @@ function outdateActiveQuests(
 ): Record<number, ActiveQuest> {
   const activeQuestList = values(activeQuests).filter(filterActiveQuestFactory(now))
   if (activeQuestList.length === Object.keys(activeQuests).length)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Type narrowing when no change
     return activeQuests as Record<number, ActiveQuest>
   return formActiveQuests(activeQuestList)
 }
 
 function satisfyGoal(req: string, goal: QuestGoalSubgoal, options: QuestOptions | null): boolean {
-  const goalReq = goal[req] as unknown[] | undefined
+  const goalReq =
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Goal value can be an array
+    goal[req] as unknown[] | undefined
   const unsatisfy =
-    goalReq && (!options || !goalReq.includes((options as Record<string, unknown>)[req]))
+    goalReq &&
+    (!options ||
+      !goalReq.includes(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Index access on QuestOptions
+        (options as Record<string, unknown>)[req],
+      ))
   return !unsatisfy
 }
 
@@ -392,6 +404,7 @@ function updateQuestRecordFactory(
   return (event: string, options: QuestOptions | null, delta: number): boolean => {
     let changed = false
     forEach(activeQuests, (activeQuest) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Default empty object for destructuring
       const quest = (activeQuest || ({} as ActiveQuest)).detail
       if (typeof quest !== 'object') return
       const { api_no } = quest
@@ -407,6 +420,7 @@ function updateQuestRecordFactory(
         match = Object.keys(goal).filter((x) => x.startsWith(`${event}@`))
       }
       forEach([...match, event], (_event) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const subgoal = goal[_event] as QuestGoalSubgoal | undefined
         if (!subgoal) {
           return
@@ -491,6 +505,7 @@ function updateRecordProgress(record: QuestRecord, bodyQuest: QuestDetail): Ques
     }
   })
   if (subgoalKey !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- subgoalKey corresponds to SubgoalRecord type
     const subgoal = record[subgoalKey] as SubgoalRecord
     const count = limitProgress(
       subgoal.count,
@@ -583,13 +598,17 @@ const questsSlice = createSlice({
       .addCase(createAPIGetMemberQuestlistResponseAction, (state, action) => {
         const body = action.payload.body
         const activeNum = Number(body.api_exec_count) || 0
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- State type narrowing
         let activeQuests = state.activeQuests as Record<string | number, ActiveQuest>
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- State type narrowing
         let records = state.records as Record<string | number, QuestRecord>
         const questGoals = state.questGoals
         const now = Date.now()
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response type definition
         ;((body as { api_list?: unknown[] }).api_list || []).forEach((quest) => {
           if (!quest || typeof quest !== 'object') return
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Type narrowing after check
           const q = quest as QuestDetail
           const api_state = Number(q.api_state)
           const api_no = q.api_no
@@ -689,10 +708,7 @@ function processQuestRecords(
     const [count, required] = arraySum(
       map(record, (subgoal) => {
         if (!subgoal || typeof subgoal !== 'object') return [0, 0]
-        return [
-          (subgoal as SubgoalRecord).count || 0,
-          (subgoal as SubgoalRecord).required || 0,
-        ]
+        return [(subgoal as SubgoalRecord).count || 0, (subgoal as SubgoalRecord).required || 0]
       }),
     )
     record.count = count || 0
@@ -717,6 +733,7 @@ declare global {
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const { activeQuests } = window.getStore('info.quests') as {
     activeQuests: Record<string | number, ActiveQuest>
   }
