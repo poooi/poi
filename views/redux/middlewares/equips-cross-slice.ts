@@ -35,8 +35,8 @@ type Action = {
 }
 
 export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
-  const state = store.getState() satisfies RootState
-  const a = action satisfies Action
+  const state = store.getState() as RootState
+  const a = action as Action
 
   if (a.type === createAPIReqKaisouPowerupResponseAction.type) {
     // api_req_kaisou/powerup
@@ -46,7 +46,7 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
       const ids = String(a.payload?.postBody?.api_id_items || '')
         .split(',')
         .filter(Boolean)
-        .flatMap((shipId) => (get(state, `info.ships.${shipId}.api_slot`) satisfies number[]) || [])
+        .flatMap((shipId) => (get(state, `info.ships.${shipId}.api_slot`) as number[]) || [])
 
       if (ids.length) {
         store.dispatch(createInfoEquipsRemoveByIdsAction({ ids }))
@@ -62,7 +62,7 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         .filter(Boolean)
 
       const ids = flatMap(shipIds, (shipId) =>
-        ((get(state, `info.ships.${shipId}.api_slot`) satisfies number[]) || []).filter(
+        ((get(state, `info.ships.${shipId}.api_slot`) as number[]) || []).filter(
           (x) => x != null,
         ),
       )

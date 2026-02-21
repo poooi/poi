@@ -61,7 +61,7 @@ const repairsSlice = createSlice({
         const api_ndock_id = Number(payload.postBody.api_ndock_id)
         const newState = state.slice()
         newState[api_ndock_id - 1] = {
-          ...(newState[api_ndock_id - 1] || ({} satisfies RepairData)),
+          ...(newState[api_ndock_id - 1] || ({} as RepairData)),
           ...emptyRepair,
         }
         return newState

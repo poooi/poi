@@ -28,8 +28,8 @@ type Action = {
 }
 
 export const shipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
-  const state = store.getState() satisfies RootState
-  const a = action satisfies Action
+  const state = store.getState() as RootState
+  const a = action as Action
 
   if (a.type === createAPIReqNyukyoSpeedchangeResponseAction.type) {
     const dockId = Number(a.payload?.postBody?.api_ndock_id)

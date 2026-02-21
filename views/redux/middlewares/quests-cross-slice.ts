@@ -73,8 +73,8 @@ function getFleetInfo(
 }
 
 export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
-  const state = store.getState() satisfies RootState
-  const a = action satisfies AnyAction
+  const state = store.getState() as RootState
+  const a = action as AnyAction
 
   // This middleware intentionally dispatches progress actions based on the pre-action state.
   // Some quest conditions (e.g. counting equips by type when destroying them) need access to
@@ -84,8 +84,8 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const winRank = String(body.api_win_rank || '')
 
-    const fleetId = (get(state, 'sortie.sortieStatus', []) satisfies boolean[]).findIndex((x) => x)
-    const deckShipId = (get(state, `info.fleets.${fleetId}.api_ship`, []) satisfies number[]) || []
+    const fleetId = (get(state, 'sortie.sortieStatus', []) as boolean[]).findIndex((x) => x)
+    const deckShipId = (get(state, `info.fleets.${fleetId}.api_ship`, []) as number[]) || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
 
     store.dispatch(
@@ -144,7 +144,7 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     )
   } else if (a.type === createAPIReqKousyouCreateitemResponseAction.type) {
     const body = a.payload?.body || {}
-    const items = (body.api_get_items satisfies unknown[]) || []
+    const items = (body.api_get_items as unknown[]) || []
     store.dispatch(
       createInfoQuestsApplyProgressAction({
         event: 'create_item',
@@ -215,7 +215,7 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const mapcell = Number(body.api_no)
     const maparea = Number(body.api_maparea_id) * 10 + Number(body.api_mapinfo_no)
-    const deckShipId = (get(state, 'battle.result.deckShipId', []) satisfies number[]) || []
+    const deckShipId = (get(state, 'battle.result.deckShipId', []) as number[]) || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     store.dispatch(
       createInfoQuestsApplyProgressAction({
@@ -230,9 +230,9 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const boss = Boolean(result.boss)
     const maparea = Number(result.map)
     const mapcell = Number(result.mapCell)
-    const enemyHp = (result.enemyHp || []) satisfies number[]
-    const enemyShipId = (result.enemyShipId || []) satisfies number[]
-    const deckShipId = (result.deckShipId || []) satisfies number[]
+    const enemyHp = (result.enemyHp || []) as number[]
+    const enemyShipId = (result.enemyShipId || []) as number[]
+    const deckShipId = (result.deckShipId || []) as number[]
 
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     const battleMeta = { shipname, shiptype, shipclass, mapcell, maparea }

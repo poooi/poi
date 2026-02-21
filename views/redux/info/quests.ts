@@ -184,9 +184,9 @@ function newQuestRecord(
       return
     }
     record[k] = {
-      count: (v satisfies QuestGoalSubgoal).init || 0,
-      required: (v satisfies QuestGoalSubgoal).required || 0,
-      description: (v satisfies QuestGoalSubgoal).description,
+      count: (v as QuestGoalSubgoal).init || 0,
+      required: (v as QuestGoalSubgoal).required || 0,
+      description: (v as QuestGoalSubgoal).description,
     }
   })
   return record
@@ -202,7 +202,7 @@ function limitActiveQuests(
   n: number,
 ): Record<number, ActiveQuest> {
   if (Object.keys(activeQuests).length <= n)
-    return activeQuests satisfies Record<number, ActiveQuest>
+    return activeQuests as Record<number, ActiveQuest>
   // Remove the ones with earliest time
   const quests = sortBy(values(activeQuests), 'time')
   quests.splice(0, quests.length - n)
@@ -236,24 +236,24 @@ function outdateRecords(
   if (!isDifferentDay(now, then)) {
     return records
   }
-  records = mapValues(records, resetQuestRecordDaily(questGoals)) satisfies Record<
+  records = mapValues(records, resetQuestRecordDaily(questGoals)) as Record<
     string | number,
     QuestRecord
   >
   if (isDifferentWeek(now, then)) {
-    records = mapValues(records, resetQuestRecordWeekly(questGoals)) satisfies Record<
+    records = mapValues(records, resetQuestRecordWeekly(questGoals)) as Record<
       string | number,
       QuestRecord
     >
   }
   if (isDifferentMonth(now, then)) {
-    records = mapValues(records, resetQuestRecordMonthly(questGoals)) satisfies Record<
+    records = mapValues(records, resetQuestRecordMonthly(questGoals)) as Record<
       string | number,
       QuestRecord
     >
   }
   if (isDifferentQuarter(now, then)) {
-    records = mapValues(records, resetQuestRecordQuarterly(questGoals)) satisfies Record<
+    records = mapValues(records, resetQuestRecordQuarterly(questGoals)) as Record<
       string | number,
       QuestRecord
     >
@@ -263,16 +263,16 @@ function outdateRecords(
       records = mapValues(
         records,
         resetQuestRecordYearlyFactory(resetMonth)(questGoals),
-      ) satisfies Record<string | number, QuestRecord>
+      ) as Record<string | number, QuestRecord>
     }
   }
-  return filterObjectValue(records) satisfies Record<string | number, QuestRecord>
+  return filterObjectValue(records) as Record<string | number, QuestRecord>
 }
 
 function filterActiveQuestFactory(now: number) {
   return (activeQuest: Partial<ActiveQuest> = {}): boolean => {
     const { time, detail: { api_type, api_no, api_label_type } = {} } =
-      activeQuest satisfies ActiveQuest
+      activeQuest as ActiveQuest
     if (!time || !api_type) return false
     if (!isDifferentDay(now, time)) return true
     // Daily
@@ -301,14 +301,14 @@ function outdateActiveQuests(
 ): Record<number, ActiveQuest> {
   const activeQuestList = values(activeQuests).filter(filterActiveQuestFactory(now))
   if (activeQuestList.length === Object.keys(activeQuests).length)
-    return activeQuests satisfies Record<number, ActiveQuest>
+    return activeQuests as Record<number, ActiveQuest>
   return formActiveQuests(activeQuestList)
 }
 
 function satisfyGoal(req: string, goal: QuestGoalSubgoal, options: QuestOptions | null): boolean {
-  const goalReq = goal[req] satisfies unknown[] | undefined
+  const goalReq = goal[req] as unknown[] | undefined
   const unsatisfy =
-    goalReq && (!options || !goalReq.includes((options satisfies Record<string, unknown>)[req]))
+    goalReq && (!options || !goalReq.includes((options as Record<string, unknown>)[req]))
   return !unsatisfy
 }
 
@@ -392,7 +392,7 @@ function updateQuestRecordFactory(
   return (event: string, options: QuestOptions | null, delta: number): boolean => {
     let changed = false
     forEach(activeQuests, (activeQuest) => {
-      const quest = (activeQuest || ({} satisfies ActiveQuest)).detail
+      const quest = (activeQuest || ({} as ActiveQuest)).detail
       if (typeof quest !== 'object') return
       const { api_no } = quest
       const record = records[api_no]
@@ -407,7 +407,7 @@ function updateQuestRecordFactory(
         match = Object.keys(goal).filter((x) => x.startsWith(`${event}@`))
       }
       forEach([...match, event], (_event) => {
-        const subgoal = goal[_event] satisfies QuestGoalSubgoal | undefined
+        const subgoal = goal[_event] as QuestGoalSubgoal | undefined
         if (!subgoal) {
           return
         }
@@ -427,7 +427,7 @@ function updateQuestRecordFactory(
         if (!existing || typeof existing !== 'object') {
           return
         }
-        const existingSubrecord = existing satisfies Partial<SubgoalRecord>
+        const existingSubrecord = existing as Partial<SubgoalRecord>
         if (
           typeof existingSubrecord.count !== 'number' ||
           typeof existingSubrecord.required !== 'number' ||
@@ -491,7 +491,7 @@ function updateRecordProgress(record: QuestRecord, bodyQuest: QuestDetail): Ques
     }
   })
   if (subgoalKey !== null) {
-    const subgoal = record[subgoalKey] satisfies SubgoalRecord
+    const subgoal = record[subgoalKey] as SubgoalRecord
     const count = limitProgress(
       subgoal.count,
       subgoal.required,
@@ -550,7 +550,7 @@ const questsSlice = createSlice({
               records,
               records.time,
               Date.now(),
-            ) satisfies typeof records
+            ) as typeof records
           }
         } catch (_e) {
           console.warn('No quest tracking data!')
@@ -583,14 +583,14 @@ const questsSlice = createSlice({
       .addCase(createAPIGetMemberQuestlistResponseAction, (state, action) => {
         const body = action.payload.body
         const activeNum = Number(body.api_exec_count) || 0
-        let activeQuests = state.activeQuests satisfies Record<string | number, ActiveQuest>
-        let records = state.records satisfies Record<string | number, QuestRecord>
+        let activeQuests = state.activeQuests as Record<string | number, ActiveQuest>
+        let records = state.records as Record<string | number, QuestRecord>
         const questGoals = state.questGoals
         const now = Date.now()
 
-        ;((body satisfies { api_list?: unknown[] }).api_list || []).forEach((quest) => {
+        ;((body as { api_list?: unknown[] }).api_list || []).forEach((quest) => {
           if (!quest || typeof quest !== 'object') return
-          const q = quest satisfies QuestDetail
+          const q = quest as QuestDetail
           const api_state = Number(q.api_state)
           const api_no = q.api_no
           if (api_no == null) return
@@ -690,8 +690,8 @@ function processQuestRecords(
       map(record, (subgoal) => {
         if (!subgoal || typeof subgoal !== 'object') return [0, 0]
         return [
-          (subgoal satisfies SubgoalRecord).count || 0,
-          (subgoal satisfies SubgoalRecord).required || 0,
+          (subgoal as SubgoalRecord).count || 0,
+          (subgoal as SubgoalRecord).required || 0,
         ]
       }),
     )
@@ -703,7 +703,7 @@ function processQuestRecords(
       delete record.active
     }
   })
-  return { ...newRecords, time: Date.now() } satisfies ProcessedRecords
+  return { ...newRecords, time: Date.now() } as ProcessedRecords
 }
 
 const fileWriter = new FileWriter()
@@ -717,7 +717,7 @@ declare global {
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {
-  const { activeQuests } = window.getStore('info.quests') satisfies {
+  const { activeQuests } = window.getStore('info.quests') as {
     activeQuests: Record<string | number, ActiveQuest>
   }
   const admiralId = String(window.getStore('info.basic.api_member_id') ?? '')

@@ -23,7 +23,7 @@ const initState: ServerState = {
 
 export const reducer = (state: ServerState = initState, action: Action): ServerState => {
   if (action.type === '@@ServerReady') {
-    const serverAction = action satisfies ServerReadyAction
+    const serverAction = action as ServerReadyAction
     return serverAction.serverInfo
   }
   return state
