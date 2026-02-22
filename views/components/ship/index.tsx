@@ -105,7 +105,6 @@ interface ReactClassState {
 }
 
 /* global getStore */
-declare function getStore(key: string): unknown
 
 const shipRowWidthSelector = (state: StateData) => get(state, 'layout.shippane.width', 450)
 
@@ -137,8 +136,9 @@ const ShipViewSwitchButton: React.FC<ShipViewSwitchButtonProps> = ({
   </Button>
 )
 
-const ConnectedShipViewSwitchButton = connect((state: StateData, { fleetId }: { fleetId: number }) =>
-  shipViewSwitchButtonDataSelectorFactory(fleetId)(state),
+const ConnectedShipViewSwitchButton = connect(
+  (state: StateData, { fleetId }: { fleetId: number }) =>
+    shipViewSwitchButtonDataSelectorFactory(fleetId)(state),
 )(ShipViewSwitchButton)
 
 const fleetShipViewDataSelectorFactory = memoize((fleetId: number) =>
@@ -274,7 +274,9 @@ class ReactClassComponent extends Component<ReactClassProps, ReactClassState> {
       if (
         width !== 0 &&
         height !== 0 &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         (width !== (getStore('layout.shippane.width') as number) ||
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           height !== (getStore('layout.shippane.height') as number))
       ) {
         this.props.dispatch({
@@ -381,3 +383,5 @@ export const displayName = (
 )
 
 export const icon = <FontAwesome key={0} name="bars" />
+
+export const name = 'ship-view'

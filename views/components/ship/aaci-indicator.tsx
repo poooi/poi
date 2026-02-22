@@ -31,12 +31,6 @@ const __t = (name: string[]) =>
     </AACITypeName>
   ))
 
-interface AACIInfo {
-  fixed: number
-  modifier: number
-  name: string[]
-}
-
 interface AACISelectorResult {
   AACIs: number[]
   maxShotdown: number
@@ -67,11 +61,7 @@ const maxAACIShotdownSelectorFactory = memoize((shipId: number) =>
   }),
 )
 
-const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({
-  AACIs,
-  maxShotdown,
-  shipId,
-}) => {
+const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdown, shipId }) => {
   const { t } = useTranslation(['main'])
   const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
 
@@ -81,11 +71,7 @@ const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({
         <InfoTooltipEntry className="info-tooltip-entry" key={id}>
           <InfoTooltipItem className="info-tooltip-item">
             {t('main:AACIType', { count: id })}
-            <span>
-              {get(AACITable, `${id}.name.length`, 0) > 0
-                ? __t(AACITable[id].name)
-                : ''}
-            </span>
+            <span>{get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : ''}</span>
           </InfoTooltipItem>
           <span>{t('main:Shot down', { count: AACITable[id].fixed })}</span>
           <span style={{ marginLeft: '2ex' }}>

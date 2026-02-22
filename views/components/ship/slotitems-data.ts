@@ -39,12 +39,10 @@ interface SlotItem {
 export function getItemData(slotitem: SlotItem): string[] {
   const data: string[] = []
   for (const type in types) {
-    const value = slotitem[type] as number | undefined
+    const value = slotitem[type] as number | undefined // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
     if (value && value != 0) {
       if (type == 'api_leng') {
-        data.push(
-          `${i18next.t('data:' + types[type])} ${i18next.t('data:' + range[value - 1])}`,
-        )
+        data.push(`${i18next.t('data:' + types[type])} ${i18next.t('data:' + range[value - 1])}`)
       } else if (
         [48].includes(slotitem.api_type[2]) &&
         ['api_houk', 'api_houm'].includes(type) &&
