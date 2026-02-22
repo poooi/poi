@@ -143,12 +143,11 @@ class ExtraDebugger extends BaseDebugger {
   }
 
   protected getLogFunc(level: LogType = 'log') {
-    // 'assert' and 'table' are handled in getLeveledLog, so this only receives ConsoleLogMethod levels
-    if (isConsoleLogMethod(level)) {
+    if (this.prefix != null && isConsoleLogMethod(level)) {
       return console[level].bind(console, ...getLogformatArgs(level, this.prefix))
+    } else {
+      return console[level].bind(console)
     }
-    // Type-safe fallback - unreachable due to getLeveledLog handling but satisfies TypeScript
-    return console.log.bind(console)
   }
 }
 
