@@ -73,9 +73,9 @@ const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdo
             {t('main:AACIType', { count: id })}
             <span>{get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : ''}</span>
           </InfoTooltipItem>
-          <span>{t('main:Shot down', { count: AACITable[id].fixed })}</span>
+          <span>{t('main:Shot down', { count: get(AACITable, `${id}.fixed`, 0) })}</span>
           <span style={{ marginLeft: '2ex' }}>
-            {t('main:Modifier', { count: AACITable[id].modifier })}
+            {t('main:Modifier', { count: get(AACITable, `${id}.modifier`, 0) })}
           </span>
         </InfoTooltipEntry>
       ))}

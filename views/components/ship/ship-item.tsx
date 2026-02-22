@@ -167,19 +167,19 @@ class ShipRowComponent extends Component<ShipRowProps> {
 
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
-    const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
-    const fuelPercentage = (ship.api_fuel / ($ship?.api_fuel_max || 1)) * 100
-    const ammoPercentage = (ship.api_bull / ($ship?.api_bull_max || 1)) * 100
+    const hpPercentage = ship.api_maxhp ? (ship.api_nowhp / ship.api_maxhp) * 100 : 0
+    const fuelPercentage = ((ship.api_fuel ?? 0) / ($ship?.api_fuel_max || 1)) * 100
+    const ammoPercentage = ((ship.api_bull ?? 0) / ($ship?.api_bull_max || 1)) * 100
 
     const fuelTip = (
       <span>
         <MaterialIcon materialId={1} className="material-icon" />
-        {ship.api_fuel} / {$ship?.api_fuel_max}
+        {ship.api_fuel ?? 0} / {$ship?.api_fuel_max}
         {fuelPercentage < 100 &&
           ` (-${Math.max(
             1,
             Math.floor(
-              (($ship?.api_fuel_max || 0) - ship.api_fuel) *
+              (($ship?.api_fuel_max || 0) - (ship.api_fuel ?? 0)) *
                 (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
             ),
           )})`}
@@ -189,12 +189,12 @@ class ShipRowComponent extends Component<ShipRowProps> {
     const ammoTip = (
       <span>
         <MaterialIcon materialId={2} className="material-icon" />
-        {ship.api_bull} / {$ship?.api_bull_max}
+        {ship.api_bull ?? 0} / {$ship?.api_bull_max}
         {ammoPercentage < 100 &&
           ` (-${Math.max(
             1,
             Math.floor(
-              (($ship?.api_bull_max || 0) - ship.api_bull) *
+              (($ship?.api_bull_max || 0) - (ship.api_bull ?? 0)) *
                 (ship.api_lv && ship.api_lv > 99 ? 0.85 : 1),
             ),
           )})`}

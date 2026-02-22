@@ -93,7 +93,7 @@ const slotitemsDataSelectorFactory = memoize((shipId: number) =>
       return {
         api_maxeq: $ship?.api_maxeq ?? [],
         equipsData: equipsData ?? [],
-        exslotUnlocked: ship?.api_slot_ex !== 0,
+        exslotUnlocked: (ship?.api_slot_ex ?? 0) !== 0,
       }
     },
   ),
