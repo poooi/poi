@@ -88,7 +88,7 @@ const slotitemsDataSelectorFactory = memoize((shipId: number) =>
       shipData: [Ship, Ship] | undefined,
       equipsData: ([Equip, Equip, number] | undefined)[] | undefined,
     ): SlotitemsData => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- provide default empty Ship objects when shipData is undefined
       const [ship, $ship] = shipData ?? [{} as Ship, {} as Ship]
       return {
         api_maxeq: $ship?.api_maxeq ?? [],
@@ -151,7 +151,7 @@ const SlotitemsComponent: React.FC<SlotitemsComponentProps> = ({
                     />
                   )}
                 </div>
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- $equip from selector conforms to Equip shape when truthy */}
                 {$equip &&
                   getItemData($equip as Equip).map((data, propId) => (
                     <div key={propId}>{data}</div>
@@ -225,36 +225,35 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
                   {$equip?.api_name
                     ? t(`resources:${$equip.api_name}`, { keySeparator: 'chiba' })
                     : '??'}
-                  {equip && (
-                    <>
-                      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
-                      {(equip as Equip).api_level && (equip as Equip).api_level! > 0 && (
-                        <strong style={{ color: '#45A9A5' }}>
-                          {' '}
-                          <FontAwesome name="star" />
-                          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
-                          {(equip as Equip).api_level}
-                        </strong>
-                      )}
-                      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
-                      {(equip as Equip)?.api_alv &&
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-                        (equip as Equip).api_alv! >= 1 &&
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-                        (equip as Equip).api_alv! <= 7 && (
-                          <ALevel
-                            className="alv-img"
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-                            src={join(
-                              'assets',
-                              'img',
-                              'airplane',
-                              `alv${(equip as Equip).api_alv}.png`,
+                  {equip &&
+                    (() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- equip from equipData tuple is typed loosely, assert once for property access
+                      const typedEquip = equip as Equip
+                      return (
+                        <>
+                          {typedEquip.api_level && typedEquip.api_level > 0 && (
+                            <strong style={{ color: '#45A9A5' }}>
+                              {' '}
+                              <FontAwesome name="star" />
+                              {typedEquip.api_level}
+                            </strong>
+                          )}
+                          {typedEquip?.api_alv &&
+                            typedEquip.api_alv >= 1 &&
+                            typedEquip.api_alv <= 7 && (
+                              <ALevel
+                                className="alv-img"
+                                src={join(
+                                  'assets',
+                                  'img',
+                                  'airplane',
+                                  `alv${typedEquip.api_alv}.png`,
+                                )}
+                              />
                             )}
-                          />
-                        )}
-                    </>
-                  )}
+                        </>
+                      )
+                    })()}
                   {isMini && (
                     <OnSlotMini
                       className="slotitem-onslot-mini"
@@ -266,10 +265,10 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
                     </OnSlotMini>
                   )}
                   <FontAwesome name="dot-circle-o" />{' '}
-                  {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                  {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- equip from equipData tuple needs assertion for api_distance access */}
                   {(equip as Equip)?.api_distance}
                 </div>
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- $equip from selector conforms to Equip shape when truthy */}
                 {$equip &&
                   getItemData($equip as Equip).map((data, propId) => (
                     <div key={propId}>{data}</div>

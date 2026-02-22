@@ -63,7 +63,7 @@ const SquadSelectorFactory = memoize((squardId: number) =>
   createSelector(
     [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
     (landbase: Landbase | undefined, equipsData: EquipData[] | undefined): SquadStateProps => ({
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- default empty Landbase when selector returns undefined
       landbase: landbase ?? ({} as Landbase),
       equipsData: equipsData ?? [],
       squardId,

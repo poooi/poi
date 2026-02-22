@@ -274,9 +274,9 @@ class ReactClassComponent extends Component<ReactClassProps, ReactClassState> {
       if (
         width !== 0 &&
         height !== 0 &&
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- getStore returns unknown, layout values are known to be numbers
         (width !== (getStore('layout.shippane.width') as number) ||
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- getStore returns unknown, layout values are known to be numbers
           height !== (getStore('layout.shippane.height') as number))
       ) {
         this.props.dispatch({

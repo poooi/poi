@@ -115,12 +115,12 @@ const shipRowDataSelectorFactory = memoize((shipId: number) =>
       shipTagColor: string[],
       avatarType: string,
     ): ShipRowData => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- default empty Ship when shipData is undefined
       const [ship, $ship] = shipData ?? [{} as Ship, {} as Ship]
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- fallback empty Ship when ship is falsy
         ship: ship || ({} as Ship),
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- fallback empty Ship when $ship is falsy
         $ship: $ship || ({} as Ship),
         $shipTypes,
         labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
@@ -152,9 +152,9 @@ class ShipRowComponent extends Component<ShipRowProps> {
 
   render(): React.ReactNode {
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- default empty Ship for destructuring default value
       ship = {} as Ship,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- default empty Ship for destructuring default value
       $ship = {} as Ship,
       $shipTypes = {},
       labelStatus = 0,
@@ -205,9 +205,9 @@ class ShipRowComponent extends Component<ShipRowProps> {
       <>
         <span className="ship-lv">Lv. {ship.api_lv || '??'}</span>
         <ShipLabel className="ship-type">
-          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */}
+          {/* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_stype is a number key used for $shipTypes lookup */}
           {$shipTypes[$ship?.api_stype as number]?.api_name
-            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+            ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- same api_stype assertion for translation key
               t(`resources:${$shipTypes[$ship?.api_stype as number].api_name}`)
             : '??'}
         </ShipLabel>
@@ -255,7 +255,7 @@ class ShipRowComponent extends Component<ShipRowProps> {
           {enableAvatar && (
             <>
               <ShipAvatar
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_id is a number when $ship exists, required by Avatar component
                 mstId={$ship?.api_id as number}
                 isDamaged={hpPercentage <= 50}
                 height={58}
