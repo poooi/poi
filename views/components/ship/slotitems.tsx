@@ -215,7 +215,7 @@ const LandbaseSlotitemsComponent: React.FC<LandbaseSlotitemsComponentProps> = ({
             opacity: api_state?.[equipIdx] === 2 ? 0.5 : undefined,
             filter:
               api_cond?.[equipIdx] > 1
-                ? `drop-shadow(0px 0px 4px ${api_cond[equipIdx] === 2 ? '#FB8C00' : '#E53935'})`
+                ? `drop-shadow(0px 0px 4px ${api_cond?.[equipIdx] === 2 ? '#FB8C00' : '#E53935'})`
                 : undefined,
           }
           const itemOverlay = equipData && (

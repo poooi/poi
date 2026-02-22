@@ -61,7 +61,7 @@ const maxAACIShotdownSelectorFactory = memoize((shipId: number) =>
   }),
 )
 
-const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdown, shipId }) => {
+const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdown }) => {
   const { t } = useTranslation(['main'])
   const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
 

@@ -30,7 +30,7 @@ const OASWSelectorFactory = memoize((shipId: number) =>
   ),
 )
 
-const OASWIndicatorComponent: React.FC<OASWIndicatorProps> = ({ isOASW, shipId }) => {
+const OASWIndicatorComponent: React.FC<OASWIndicatorProps> = ({ isOASW }) => {
   const { t } = useTranslation(['main'])
   return (
     <>
