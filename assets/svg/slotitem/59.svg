@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="640px" height="640px" viewBox="0 0 640 640" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 46.2 (44496) - http://www.bohemiancoding.com/sketch -->
+    <title>59</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-2.8%" y="-5.8%" width="111.1%" height="123.5%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+        <linearGradient x1="0%" y1="50%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#a5a7a7" offset="0%"></stop>
+            <stop stop-color="#737276" offset="100%"></stop>
+        </linearGradient>
+        <path d="M420,155 L640,375 L420,595 L200,375 L420,155 Z M 437.79 275 L 451.59 275 C 456.18 275.57 456.47 277.3 452.45 280.17 L 452.45 290.52 L 505.04 290.52 L 505.04 304.31 L 452.45 304.31 L 452.45 317.24 L 437.79 317.24 L 437.79 304.31 L 388.66 304.31 L 388.66 290.52 L 437.79 290.52 L 437.79 275 z M 324 301.72 L 374 301.72 L 374 428.45 L 359.35 428.45 L 359.35 416.38 L 338.65 416.38 L 338.65 437.93 L 324 437.93 L 324 301.72 z M 408.48 311.21 L 422.28 311.21 C 426.87 311.78 427.16 313.51 423.14 316.38 L 423.14 325 L 467.96 325 L 467.96 311.21 L 481.76 311.21 C 486.36 311.78 486.64 313.51 482.62 316.38 L 482.62 325 L 515.38 325 L 515.38 338.79 L 482.62 338.79 L 482.62 350 L 497.28 350 L 497.28 439.66 L 470.55 439.66 C 481.47 447.7 496.7 453.45 516.24 456.9 L 509.35 474.14 C 488.66 471.27 470.55 462.93 455.04 449.14 L 464.52 439.66 L 417.96 439.66 L 427.45 450.86 C 428.6 453.74 427.16 454.6 423.14 453.45 C 408.2 464.94 390.67 472.13 370.55 475 L 364.52 458.62 C 382.91 456.32 399.86 450 415.38 439.66 L 394.69 439.66 L 394.69 350 L 408.48 350 L 408.48 338.79 L 380.04 338.79 L 380.04 325 L 408.48 325 L 408.48 311.21 z M 338.65 318.1 L 338.65 400 L 359.35 400 L 359.35 318.1 L 338.65 318.1 z M 423.14 338.79 L 423.14 350 L 467.96 350 L 467.96 338.79 L 423.14 338.79 z M 409.35 363.79 L 409.35 375 L 482.62 375 L 482.62 363.79 L 409.35 363.79 z M 409.35 388.79 L 409.35 399.14 L 482.62 399.14 L 482.62 388.79 L 409.35 388.79 z M 409.35 412.93 L 409.35 425.86 L 482.62 425.86 L 482.62 412.93 L 409.35 412.93 z" id="path-3"></path>
+        <filter x="-3.4%" y="-3.4%" width="113.6%" height="113.6%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="20" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.25 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="7">
+            <g id="Group" filter="url(#filter-1)" fill="#39B74E">
+                <path id="Path-35" d="M 73.33,269.09 41.21,47.27 c 5.29,-10.53 26.73,-9.89 37.58,-2.42 l 97.57,102.42 c 26.44,25.21 116.99,15.03 178.18,11.52 -30.98,31.67 -47.56,67.9 20,87.27 L 292.73,300 Z"></path>
+            </g>
+            <g id="Combined-Shape">
+                <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                <use fill="url(#linearGradient-2)" fill-rule="evenodd" xlink:href="#path-3"></use>
+            </g>
+        </g>
+    </g>
+</svg>
