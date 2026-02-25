@@ -1,7 +1,7 @@
 import { Tooltip, Tag, Position, Intent } from '@blueprintjs/core'
 import { memoize, get } from 'lodash'
 import React from 'react'
-import { withNamespaces, Trans } from 'react-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import {
@@ -14,7 +14,7 @@ import i18next from 'views/env-parts/i18next'
 import { getShipAACIs, getShipAllAACIs, AACITable } from 'views/utils/aaci'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
-const getAvailableTranslation = memoize((str) =>
+const getAvailableTranslation = memoize((str: string) =>
   i18next.translator.exists(`main:${str}`) ? (
     <Trans>main:{str}</Trans>
   ) : i18next.translator.exists(`resources:${str}`) ? (
@@ -24,14 +24,23 @@ const getAvailableTranslation = memoize((str) =>
   ),
 )
 
-const __t = (name) =>
+const __t = (name: string[]) =>
   name.map((n, i) => (
     <AACITypeName className="aaci-type-name" key={i}>
       {getAvailableTranslation(n)}
     </AACITypeName>
   ))
 
-const AACISelectorFactory = memoize((shipId) =>
+interface AACISelectorResult {
+  AACIs: number[]
+  maxShotdown: number
+}
+
+interface AACIIndicatorProps extends AACISelectorResult {
+  shipId: number
+}
+
+const AACISelectorFactory = memoize((shipId: number) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     ([_ship = {}, $ship = {}] = [], _equips = []) => {
@@ -45,42 +54,38 @@ const AACISelectorFactory = memoize((shipId) =>
   ),
 )
 
-const maxAACIShotdownSelectorFactory = memoize((shipId) =>
+const maxAACIShotdownSelectorFactory = memoize((shipId: number) =>
   createSelector([shipDataSelectorFactory(shipId)], ([_ship = {}, $ship = {}] = []) => {
     const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
     return Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
   }),
 )
 
-export const AACIIndicator = withNamespaces(['main'])(
-  connect((state, { shipId }) => ({
-    AACIs: AACISelectorFactory(shipId)(state) || [],
-    maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
-  }))(({ AACIs, maxShotdown, shipId, t }) => {
-    const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
+const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdown }) => {
+  const { t } = useTranslation(['main'])
+  const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
 
-    const tooltip = AACIs.length && (
-      <InfoTooltip className="info-tooltip">
-        {AACIs.map((id) => (
-          <InfoTooltipEntry className="info-tooltip-entry" key={id}>
-            <InfoTooltipItem className="info-tooltip-item">
-              {t('main:AACIType', { count: id })}
-              <span>
-                {get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : ''}
-              </span>
-            </InfoTooltipItem>
-            <span>{t('main:Shot down', { count: AACITable[id].fixed })}</span>
-            <span style={{ marginLeft: '2ex' }}>
-              {t('main:Modifier', { count: AACITable[id].modifier })}
-            </span>
-          </InfoTooltipEntry>
-        ))}
-        {currentMax < maxShotdown && <span>{t('main:Max shot down not reached')}</span>}
-      </InfoTooltip>
-    )
+  const tooltip = AACIs.length > 0 && (
+    <InfoTooltip className="info-tooltip">
+      {AACIs.map((id) => (
+        <InfoTooltipEntry className="info-tooltip-entry" key={id}>
+          <InfoTooltipItem className="info-tooltip-item">
+            {t('main:AACIType', { count: id })}
+            <span>{get(AACITable, `${id}.name.length`, 0) > 0 ? __t(AACITable[id].name) : ''}</span>
+          </InfoTooltipItem>
+          <span>{t('main:Shot down', { count: get(AACITable, `${id}.fixed`, 0) })}</span>
+          <span style={{ marginLeft: '2ex' }}>
+            {t('main:Modifier', { count: get(AACITable, `${id}.modifier`, 0) })}
+          </span>
+        </InfoTooltipEntry>
+      ))}
+      {currentMax < maxShotdown && <span>{t('main:Max shot down not reached')}</span>}
+    </InfoTooltip>
+  )
 
-    return (
-      !!AACIs.length && (
+  return (
+    <>
+      {AACIs.length > 0 && (
         <ShipLabel className="ship-skill-indicator ship-aaci" isTag>
           <Tooltip position={Position.TOP} content={tooltip}>
             <Tag minimal intent={Intent.WARNING}>
@@ -88,7 +93,14 @@ export const AACIIndicator = withNamespaces(['main'])(
             </Tag>
           </Tooltip>
         </ShipLabel>
-      )
-    )
-  }),
-)
+      )}
+    </>
+  )
+}
+
+const mapStateToProps = (state: unknown, { shipId }: { shipId: number }): AACISelectorResult => ({
+  AACIs: AACISelectorFactory(shipId)(state) || [],
+  maxShotdown: maxAACIShotdownSelectorFactory(shipId)(state),
+})
+
+export const AACIIndicator = connect(mapStateToProps)(AACIIndicatorComponent)
