@@ -36,9 +36,6 @@ interface AACISelectorResult {
   maxShotdown: number
 }
 
-interface AACIIndicatorProps extends AACISelectorResult {
-  shipId: number
-}
 
 const AACISelectorFactory = memoize((shipId: number) =>
   createSelector(
@@ -61,7 +58,7 @@ const maxAACIShotdownSelectorFactory = memoize((shipId: number) =>
   }),
 )
 
-const AACIIndicatorComponent: React.FC<AACIIndicatorProps> = ({ AACIs, maxShotdown }) => {
+const AACIIndicatorComponent: React.FC<AACISelectorResult> = ({ AACIs, maxShotdown }) => {
   const { t } = useTranslation(['main'])
   const currentMax = Math.max(...AACIs.map((id) => AACITable[id].fixed || 0))
 

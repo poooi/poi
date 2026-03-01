@@ -12,9 +12,6 @@ interface OASWSelectorResult {
   isOASW: boolean
 }
 
-interface OASWIndicatorProps extends OASWSelectorResult {
-  shipId: number
-}
 
 const OASWSelectorFactory = memoize((shipId: number) =>
   createSelector(
@@ -30,7 +27,7 @@ const OASWSelectorFactory = memoize((shipId: number) =>
   ),
 )
 
-const OASWIndicatorComponent: React.FC<OASWIndicatorProps> = ({ isOASW }) => {
+const OASWIndicatorComponent: React.FC<OASWSelectorResult> = ({ isOASW }) => {
   const { t } = useTranslation(['main'])
   return (
     <>
