@@ -2,9 +2,8 @@ import { Tag, ProgressBar, Tooltip, Position } from '@blueprintjs/core'
 import memoize from 'fast-memoize'
 import { get } from 'lodash'
 import React from 'react'
-import { withNamespaces } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { connect } from 'react-redux'
-import { compose } from 'redux'
 import { createSelector } from 'reselect'
 import {
   ShipItem,
@@ -29,26 +28,65 @@ import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views
 
 import { LandbaseSlotitems } from './slotitems'
 
-const SquadSelectorFactory = memoize((squardId) =>
+interface EquipData {
+  [key: string]: unknown
+}
+
+interface Landbase {
+  api_action_kind: number
+  api_distance: {
+    api_base: number
+    api_bonus: number
+  }
+  api_name: string
+  api_nowhp?: number
+  api_maxhp?: number
+  [key: string]: unknown
+}
+
+interface SquadSelectorProps {
+  squardId: number
+}
+
+interface SquadStateProps {
+  landbase: Landbase
+  equipsData: EquipData[]
+  squardId: number
+}
+
+interface SquadRowProps extends SquadSelectorProps {
+  enableAvatar: boolean
+  compact: boolean
+}
+
+const SquadSelectorFactory = memoize((squardId: number) =>
   createSelector(
     [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
-    (landbase, equipsData) => ({
-      landbase,
-      equipsData,
+    (landbase: Landbase | undefined, equipsData: EquipData[] | undefined): SquadStateProps => ({
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- default empty Landbase when selector returns undefined
+      landbase: landbase ?? ({} as Landbase),
+      equipsData: equipsData ?? [],
       squardId,
     }),
   ),
 )
 
-export const SquardRow = compose(
-  withNamespaces(['main']),
-  connect((state, { squardId }) => SquadSelectorFactory(squardId)),
-)(({ landbase, equipsData, squardId, t, enableAvatar, compact }) => {
+const SquadRowComponent: React.FC<SquadRowProps & SquadStateProps> = ({
+  landbase,
+  equipsData,
+  squardId,
+  enableAvatar,
+  compact,
+}) => {
+  const { t } = useTranslation(['main'])
+
   const { api_action_kind, api_distance, api_name, api_nowhp = 200, api_maxhp = 200 } = landbase
-  const { api_base, api_bonus } = api_distance
+
+  const { api_base = 0, api_bonus = 0 } = api_distance || {}
   const tyku = getTyku([equipsData], api_action_kind)
   const hpPercentage = (api_nowhp / api_maxhp) * 100
   const hideLBACName = enableAvatar && compact
+
   return (
     <Tooltip
       position={Position.TOP}
@@ -119,4 +157,10 @@ export const SquardRow = compose(
       </ShipItem>
     </Tooltip>
   )
+}
+
+const mapStateToProps = (state: unknown, ownProps: SquadSelectorProps): SquadStateProps => ({
+  ...SquadSelectorFactory(ownProps.squardId)(state),
 })
+
+export const SquardRow = connect(mapStateToProps)(SquadRowComponent)
