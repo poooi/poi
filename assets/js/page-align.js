@@ -34,6 +34,9 @@ alignCSS.innerHTML = `html {
 aside {
   display: none !important;
 }
+ul:has([aria-label="close"]) {
+  display: none !important;
+}
 `
 
 window.align = function () {
