@@ -169,7 +169,7 @@ Object.defineProperty(window, '_serverName', {
   },
 })
 const initShips = (dispatch, current, previous) => {
-  window._ships = new Proxy(window.getStore('info.ships'), {
+  window._ships = new Proxy({ ...window.getStore('info.ships') }, {
     get: (target, property, receiver) => {
       const ship = target[property]
       if (typeof ship === 'undefined') {
@@ -186,7 +186,7 @@ const initShips = (dispatch, current, previous) => {
 }
 
 const initEquips = (dispatch, current, previous) => {
-  window._slotitems = new Proxy(window.getStore('info.equips'), {
+  window._slotitems = new Proxy({ ...window.getStore('info.equips') }, {
     get: (target, property, receiver) => {
       const equip = target[property]
       if (typeof equip === 'undefined') {
