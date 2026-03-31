@@ -170,7 +170,10 @@ export function copyIfSame<T>(obj: T, to: any): T {
  * @param state the state object
  * @param body the incoming new state
  */
-export function pickExisting<T extends Record<string, unknown>>(state: T, body: Record<string, unknown>): T {
+export function pickExisting<T extends Record<string, unknown>>(
+  state: T,
+  body: Record<string, unknown>,
+): T {
   const stateBackup = state
   forEach(state, (_, k) => {
     if (!(k in body)) {
@@ -249,7 +252,7 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
     if (newV != null && prevValue !== newV) {
       prevState = copyIfSame(prevState, prevStateBackup)
       ;(prevState as Record<string, unknown>)[k] = newV
-  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
+      /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
     }
   })
 

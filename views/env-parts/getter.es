@@ -169,37 +169,43 @@ Object.defineProperty(window, '_serverName', {
   },
 })
 const initShips = (dispatch, current, previous) => {
-  window._ships = new Proxy({ ...window.getStore('info.ships') }, {
-    get: (target, property, receiver) => {
-      const ship = target[property]
-      if (typeof ship === 'undefined') {
-        return undefined
-      }
-      return new Proxy(ship, {
-        get: (innerTarget, innerProperty, innerReceiver) => {
-          if (ship[innerProperty] != null) return ship[innerProperty]
-          return window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
-        },
-      })
+  window._ships = new Proxy(
+    { ...window.getStore('info.ships') },
+    {
+      get: (target, property, receiver) => {
+        const ship = target[property]
+        if (typeof ship === 'undefined') {
+          return undefined
+        }
+        return new Proxy(ship, {
+          get: (innerTarget, innerProperty, innerReceiver) => {
+            if (ship[innerProperty] != null) return ship[innerProperty]
+            return window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
+          },
+        })
+      },
     },
-  })
+  )
 }
 
 const initEquips = (dispatch, current, previous) => {
-  window._slotitems = new Proxy({ ...window.getStore('info.equips') }, {
-    get: (target, property, receiver) => {
-      const equip = target[property]
-      if (typeof equip === 'undefined') {
-        return undefined
-      }
-      return new Proxy(equip, {
-        get: (innerTarget, innerProperty, innerReceiver) => {
-          if (equip[innerProperty] != null) return equip[innerProperty]
-          return window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
-        },
-      })
+  window._slotitems = new Proxy(
+    { ...window.getStore('info.equips') },
+    {
+      get: (target, property, receiver) => {
+        const equip = target[property]
+        if (typeof equip === 'undefined') {
+          return undefined
+        }
+        return new Proxy(equip, {
+          get: (innerTarget, innerProperty, innerReceiver) => {
+            if (equip[innerProperty] != null) return equip[innerProperty]
+            return window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
+          },
+        })
+      },
     },
-  })
+  )
 }
 
 const initWebviewWidth = () => {

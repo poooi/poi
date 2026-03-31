@@ -16,8 +16,11 @@
     "dev": "electron . --dev --inspect",
     "clean": "gulp clean",
     "lint:js": "eslint . --ext .es --ext .js --ext .ts --ext .tsx",
+    "lint:js:fix": "eslint . --ext .es --ext .js --ext .ts --ext .tsx --fix",
     "lint:style": "stylelint '**/*.es' '**/*.css' '**/*.tsx'",
+    "lint:style:fix": "stylelint '**/*.es' '**/*.css' '**/*.tsx' --fix",
     "lint": "npm run lint:js && npm run lint:style",
+    "lint:fix": "npm run lint:js:fix && npm run lint:style:fix",
     "prepare": "husky install"
   },
   "repository": {
