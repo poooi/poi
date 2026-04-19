@@ -282,21 +282,6 @@ export class KanGameWindowWrapper extends PureComponent {
         },
         () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
       )
-
-      // workaround for https://github.com/electron/electron/issues/22440
-      const unsetResizable = debounce(() => {
-        this.currentWindow.setResizable(true)
-      }, 200)
-
-      const setResizable = () => {
-        this.currentWindow.setResizable(this.resizable)
-      }
-
-      this.currentWindow.on('minimize', unsetResizable)
-      this.currentWindow.on('maximize', unsetResizable)
-
-      this.currentWindow.on('restore', setResizable)
-      this.currentWindow.on('unmaximize', setResizable)
     })
   }
 
