@@ -192,11 +192,11 @@ export function pickExisting<T extends Record<string, unknown>>(
  * @param path data path
  * @param val the value to update
  */
-export function reduxSet<T extends Record<string, unknown>>(
-  obj: T,
-  path: (string | number)[],
-  val: any,
-): T {
+export function reduxSet<
+  T extends object,
+  const Path extends DeepKeyOfArray<T>,
+  const Value extends DeepValueOfArray<T, Path>,
+>(obj: T, path: Path, val: Value): T {
   return setWith(clone(obj), path, val, clone)
 }
 
