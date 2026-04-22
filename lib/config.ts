@@ -16,19 +16,19 @@ const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
-export type Config = DefaultConfig
+export type Config = Partial<DefaultConfig>
 export type ConfigPath = DeepKeyOf<DefaultConfig>
 
 class PoiConfig extends EventEmitter {
-  configData: ConfigType
+  configData: Config
   defaultConfigData: DefaultConfig
 
   constructor() {
     super()
-    this.configData = {}
+    this.configData = {} as Config
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as ConfigType // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as Config
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
