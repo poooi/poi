@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { DeepKeyOf } from 'shims/utils'
+import type { DeepKeyOf, DeepKeyOfArray, DeepValueOf, DeepValueOfArray } from 'shims/utils'
 
 import CSON from 'cson'
 import EventEmitter from 'events'
@@ -17,7 +17,13 @@ const configPath = path.join(EXROOT, 'config.cson')
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
 export type Config = Partial<DefaultConfig>
-export type ConfigPath = DeepKeyOf<DefaultConfig>
+export type ConfigPath = DeepKeyOf<DefaultConfig> | DeepKeyOfArray<DefaultConfig>
+export type ConfigValue<Path extends ConfigPath> =
+  Path extends DeepKeyOf<DefaultConfig>
+    ? DeepValueOf<DefaultConfig, Path>
+    : Path extends DeepKeyOfArray<DefaultConfig>
+      ? DeepValueOfArray<DefaultConfig, Path>
+      : never
 
 class PoiConfig extends EventEmitter {
   configData: Config
@@ -38,16 +44,13 @@ class PoiConfig extends EventEmitter {
 
   /**
    * get a config value at give path
-   * @param {ConfigPath | ConfigPath[]} path the given config location
+   * @param {ConfigPath} path the given config location
    * @param value value to fallback if queried config is undefined
    */
-  get = <
-    Path extends ConfigPath | ConfigPath[],
-    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
-  >(
+  get = <const Path extends ConfigPath>(
     path: Path,
-    value?: ValueType,
-  ) => {
+    value?: ConfigValue<Path>,
+  ): ConfigValue<Path> => {
     if (path === '') {
       return this.configData
     }
@@ -66,15 +69,12 @@ class PoiConfig extends EventEmitter {
 
   /**
    * get default config value at give path
-   * @param {ConfigPath | ConfigPath[]} path the given config location
+   * @param {ConfigPath} path the given config location
    */
-  getDefault = <
-    Path extends ConfigPath | ConfigPath[],
-    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
-  >(
+  getDefault = <const Path extends ConfigPath>(
     path: Path,
-    value?: ValueType,
-  ) => {
+    value?: ConfigValue<Path>,
+  ): ConfigValue<Path> => {
     if (path === '') {
       return this.defaultConfigData
     }
@@ -83,16 +83,10 @@ class PoiConfig extends EventEmitter {
 
   /**
    * set a config value at give path
-   * @param {ConfigPath | ConfigPath[]} path the given config location
+   * @param {ConfigPath} path the given config location
    * @param value value to overwrite, if the path belongs to poi's default config, will reset to default value
    */
-  set = <
-    Path extends ConfigPath | ConfigPath[],
-    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
-  >(
-    path: Path,
-    value?: ValueType,
-  ) => {
+  set = <const Path extends ConfigPath>(path: Path, value?: ConfigValue<Path>): void => {
     if (get(this.configData, path) === value) {
       return
     }
@@ -107,16 +101,10 @@ class PoiConfig extends EventEmitter {
 
   /**
    * set a config value only when it is not set (addition only)
-   * @param {ConfigPath | ConfigPath[]} path the given config location
+   * @param {ConfigPath} path the given config location
    * @param value value to overwrite, leaving undefined will remove the config
    */
-  setDefault = <
-    Path extends ConfigPath | ConfigPath[],
-    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
-  >(
-    path: Path,
-    value?: ValueType,
-  ) => {
+  setDefault = <const Path extends ConfigPath>(path: Path, value?: ConfigValue<Path>): void => {
     if (this.get(path) === undefined) {
       this.set(path, value)
     }
@@ -135,9 +123,9 @@ class PoiConfig extends EventEmitter {
 
   /**
    * remove a config at given path
-   * @param {ConfigPath | ConfigPath[]} path path to remove
+   * @param {ConfigPath} path path to remove
    */
-  delete = <Path extends ConfigPath | ConfigPath[]>(path: Path) => {
+  delete = (path: ConfigPath) => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
       const subpath = Array.isArray(path) ? path : path.split('.')
