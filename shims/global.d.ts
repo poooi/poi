@@ -1,3 +1,5 @@
+import { type ConfigInstance } from 'lib/config'
+
 interface ToastConfig {
   type: string
   title: string
@@ -20,6 +22,7 @@ declare global {
   var ROOT: string
   var DEFAULT_CACHE_PATH: string
   var isMain: boolean | undefined
+  var config: ConfigInstance
   /* eslint-enable no-var */
 }
 

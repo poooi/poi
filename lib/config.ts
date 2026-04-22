@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { DeepKeyOf } from 'shims/utils'
+
 import CSON from 'cson'
 import EventEmitter from 'events'
 import fs from 'fs-extra'
@@ -6,7 +8,7 @@ import { set, get, isEqual, keys } from 'lodash'
 import path from 'path'
 
 import dbg from './debug'
-import defaultConfig from './default-config'
+import defaultConfig, { type DefaultConfig } from './default-config'
 import { mergeConfig, warn } from './utils'
 
 const { EXROOT } = global
@@ -14,18 +16,19 @@ const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
-export type Config = { [key: string]: Config }
+export type Config = DefaultConfig
+export type ConfigPath = DeepKeyOf<DefaultConfig>
 
 class PoiConfig extends EventEmitter {
-  configData: Config
-  defaultConfigData: typeof defaultConfig
+  configData: ConfigType
+  defaultConfigData: DefaultConfig
 
   constructor() {
     super()
     this.configData = {}
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as Config // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as ConfigType // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
@@ -35,10 +38,16 @@ class PoiConfig extends EventEmitter {
 
   /**
    * get a config value at give path
-   * @param {String | String[]} path the given config location
+   * @param {ConfigPath | ConfigPath[]} path the given config location
    * @param value value to fallback if queried config is undefined
    */
-  get = (path: string | string[] = '', value?: any) => {
+  get = <
+    Path extends ConfigPath | ConfigPath[],
+    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
+  >(
+    path: Path,
+    value?: ValueType,
+  ) => {
     if (path === '') {
       return this.configData
     }
@@ -57,9 +66,15 @@ class PoiConfig extends EventEmitter {
 
   /**
    * get default config value at give path
-   * @param {String | String[]} path the given config location
+   * @param {ConfigPath | ConfigPath[]} path the given config location
    */
-  getDefault = (path: string | string[] = '', value?: any) => {
+  getDefault = <
+    Path extends ConfigPath | ConfigPath[],
+    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
+  >(
+    path: Path,
+    value?: ValueType,
+  ) => {
     if (path === '') {
       return this.defaultConfigData
     }
@@ -68,10 +83,16 @@ class PoiConfig extends EventEmitter {
 
   /**
    * set a config value at give path
-   * @param {String | String[]} path the given config location
+   * @param {ConfigPath | ConfigPath[]} path the given config location
    * @param value value to overwrite, if the path belongs to poi's default config, will reset to default value
    */
-  set = (path: string | string[], value: any) => {
+  set = <
+    Path extends ConfigPath | ConfigPath[],
+    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
+  >(
+    path: Path,
+    value?: ValueType,
+  ) => {
     if (get(this.configData, path) === value) {
       return
     }
@@ -86,10 +107,16 @@ class PoiConfig extends EventEmitter {
 
   /**
    * set a config value only when it is not set (addition only)
-   * @param {String | String[]} path the given config location
+   * @param {ConfigPath | ConfigPath[]} path the given config location
    * @param value value to overwrite, leaving undefined will remove the config
    */
-  setDefault = (path: string | string[], value: any) => {
+  setDefault = <
+    Path extends ConfigPath | ConfigPath[],
+    ValueType extends Path extends ConfigPath ? DeepValueOf<DefaultConfig, Path> : never,
+  >(
+    path: Path,
+    value?: ValueType,
+  ) => {
     if (this.get(path) === undefined) {
       this.set(path, value)
     }
@@ -108,9 +135,9 @@ class PoiConfig extends EventEmitter {
 
   /**
    * remove a config at given path
-   * @param {String | String[]} path path to remove
+   * @param {ConfigPath | ConfigPath[]} path path to remove
    */
-  delete = (path: string | string[]) => {
+  delete = <Path extends ConfigPath | ConfigPath[]>(path: Path) => {
     if (typeof this.get(path) !== 'undefined') {
       let p = this.configData
       const subpath = Array.isArray(path) ? path : path.split('.')

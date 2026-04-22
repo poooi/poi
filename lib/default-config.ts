@@ -329,3 +329,5 @@ const defaultConfig = {
 }
 
 export default defaultConfig
+
+export type DefaultConfig = typeof defaultConfig
