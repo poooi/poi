@@ -24,7 +24,9 @@ const PluginName = styled.div`
   font-size: 1.5em;
 `
 
-const PluginInfo = styled.div()
+const PluginInfo = styled.div`
+  display: block;
+`
 
 const PluginMeta = styled.div`
   margin-left: -0.5em;
