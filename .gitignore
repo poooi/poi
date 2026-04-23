@@ -54,3 +54,6 @@ dist/
 
 #Editor config
 .nova
+
+# Local files
+*.local.*
