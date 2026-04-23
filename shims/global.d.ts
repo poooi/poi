@@ -13,8 +13,27 @@ declare global {
       DEFAULT_CACHE_PATH: string
     }
   }
+  interface ModalButton {
+    name: string
+    func: () => void
+    style: string
+  }
+
+  interface IpcManager {
+    register: (namespace: string, handlers: Record<string, (...args: unknown[]) => unknown>) => void
+    unregisterAll: (namespace: string) => void
+    access: (namespace: string) => Record<string, (...args: unknown[]) => unknown>
+  }
+
   interface Window {
-    toast: (message: string, config: ToastConfig) => void
+    toast: (message: string, options?: Partial<ToastConfig>) => void
+    POI_VERSION: string
+    isSafeMode: boolean
+    LOCALES: Array<{ locale: string }>
+    reloadPlugin: (pkgName: string, verbose?: boolean) => Promise<void>
+    gracefulResetPlugin: () => void
+    toggleModal: (title: string, message: string, buttons: ModalButton[]) => void
+    openSettings?: () => void
   }
   // let and const do not show up on globalThis
   /* eslint-disable no-var */
@@ -28,6 +47,12 @@ declare global {
     lock: boolean
     cache: unknown
   }
+  var PLUGIN_PATH: string
+  var PLUGIN_EXTRA_PATH: string
+  var dispatch: (action: { type: string; [key: string]: unknown }) => void
+  var language: string
+  var ipc: IpcManager
+  var toast: (message: string, options?: Partial<ToastConfig>) => void
   /* eslint-enable no-var */
 }
 

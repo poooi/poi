@@ -8,7 +8,7 @@ import { set, get, isEqual, keys } from 'lodash'
 import path from 'path'
 
 import dbg from './debug'
-import defaultConfig, { type DefaultConfig } from './default-config'
+import defaultConfig, { type Config } from './default-config'
 import { mergeConfig, warn } from './utils'
 
 const { EXROOT } = global
@@ -16,25 +16,24 @@ const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
-export type Config = Partial<DefaultConfig>
-export type ConfigPath = DeepKeyOf<DefaultConfig> | DeepKeyOfArray<DefaultConfig>
+export type ConfigPath = DeepKeyOf<Config> | DeepKeyOfArray<Config>
 export type ConfigValue<Path extends ConfigPath> =
-  Path extends DeepKeyOf<DefaultConfig>
-    ? DeepValueOf<DefaultConfig, Path>
-    : Path extends DeepKeyOfArray<DefaultConfig>
-      ? DeepValueOfArray<DefaultConfig, Path>
+  Path extends DeepKeyOf<Config>
+    ? DeepValueOf<Config, Path>
+    : Path extends DeepKeyOfArray<Config>
+      ? DeepValueOfArray<Config, Path>
       : never
 
 class PoiConfig extends EventEmitter {
   configData: Config
-  defaultConfigData: DefaultConfig
+  defaultConfigData: Config
 
   constructor() {
     super()
-    this.configData = {} as Config
+    this.configData = {}
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath)) as Config
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath))
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
@@ -61,7 +60,7 @@ class PoiConfig extends EventEmitter {
         value !== undefined &&
         !isEqual(get(this.defaultConfigData, path), value)
       ) {
-        warn('There might be a mssing config default, check', stringPath, value)
+        warn('There might be a missing config default, check', stringPath, value)
       }
     }
     return get(this.configData, path, this.getDefault(path, value))

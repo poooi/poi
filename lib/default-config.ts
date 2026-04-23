@@ -1,4 +1,260 @@
-const defaultConfig = {
+interface LimitFps {
+  enabled: boolean
+  value: number
+}
+
+interface Screenshot {
+  format: string
+  usecanvas: boolean
+}
+
+interface Cache {
+  path: string
+  size: number
+}
+
+interface PoiMisc {
+  disablehwaccel: boolean
+  limitFps: LimitFps
+  safemode: boolean
+  shortcut: boolean
+  disablenetworkalert: boolean
+  dmmcookie: boolean
+  bypassgooglerestriction: boolean
+  homepage: string
+  networklog: boolean
+  analytics: boolean
+  exceptionReporting: boolean
+  async: boolean
+  screenshot: Screenshot
+  cache: Cache
+  trustedCerts: string[]
+  pinminimap: boolean
+}
+
+interface PoiContent {
+  resizable: boolean
+  alwaysOnTop: boolean
+  muted: boolean
+}
+
+interface PoiAppearance {
+  avatar: boolean
+  avatarType: string
+  zoom: number
+  theme: string
+  colorblindFilter: string
+  svgicon: boolean
+  textspacingcjk: boolean
+  vibrant: number
+  customtitlebar: boolean
+}
+
+interface PoiWindow {
+  isMaximized: boolean
+  isFullScreen: boolean
+}
+
+interface PoiShortcut {
+  bosskey: string
+}
+
+interface PoiUpdate {
+  beta: boolean
+  enable: boolean
+}
+
+interface WebviewRatio {
+  vertical: number
+  horizontal: number
+}
+
+interface PoiWebview {
+  useFixedResolution: boolean
+  windowUseFixedResolution: boolean
+  windowWidth: number
+  width: number
+  ratio: WebviewRatio
+}
+
+interface PoiLayout {
+  overlay: boolean
+  mode: string
+  isolate: boolean
+  reverse: boolean
+  editable: boolean
+}
+
+interface PoiConfirm {
+  quit: boolean
+}
+
+interface PoiAutoswitch {
+  enabled: boolean
+  main: boolean
+}
+
+interface MainPanelDimension {
+  px: number
+  percent: number
+}
+
+interface PoiTabarea {
+  vertical: boolean
+  double: boolean
+  grid: boolean
+  mainpanelwidth: MainPanelDimension
+  mainpanelheight: MainPanelDimension
+}
+
+interface NotifyItem {
+  enabled: boolean
+}
+
+interface NotifyItemWithValue {
+  value: number
+  enabled: boolean
+}
+
+interface NotifyDelay {
+  dev: boolean
+  improve: boolean
+}
+
+interface NotifyBattleEnd {
+  enabled: boolean
+  onlyBackground: boolean
+  onlyMuted: boolean
+}
+
+interface PoiNotify {
+  morale: NotifyItemWithValue
+  expedition: NotifyItemWithValue
+  volume: number
+  delay: NotifyDelay
+  enabled: boolean
+  construction: NotifyItem
+  repair: NotifyItem
+  battleEnd: NotifyBattleEnd
+  others: NotifyItem
+}
+
+interface MapStartCheckSlot {
+  enable: boolean
+  minFreeSlots: number
+}
+
+interface PoiMapStartCheck {
+  ship: MapStartCheckSlot
+  item: MapStartCheckSlot
+}
+
+interface PoiUnusedEquipmentSlotCheck {
+  enable: boolean
+  ignoreUnlocked: boolean
+}
+
+interface LayoutItem {
+  w: number
+  h: number
+  x: number
+  y: number
+  minW: number
+  minH: number
+  maxW: number
+  maxH: number
+  i: string
+}
+
+interface MainPanelLayout {
+  sm: LayoutItem[]
+  lg: LayoutItem[]
+}
+
+interface PoiMainPanel {
+  layout: MainPanelLayout
+}
+
+interface PluginBooleanMap {
+  [pluginId: string]: boolean
+}
+
+interface PoiPluginConfig {
+  windowmode?: PluginBooleanMap
+  background?: PluginBooleanMap
+  favorite?: PluginBooleanMap
+}
+
+interface Poi {
+  misc: PoiMisc
+  content: PoiContent
+  appearance: PoiAppearance
+  window: PoiWindow
+  shortcut: PoiShortcut
+  update: PoiUpdate
+  webview: PoiWebview
+  layout: PoiLayout
+  confirm: PoiConfirm
+  autoswitch: PoiAutoswitch
+  tabarea: PoiTabarea
+  notify: PoiNotify
+  eventSortieCheck: { enable: boolean }
+  expeditionResupplyCheck: { enable: boolean }
+  unusedEquipmentSlotCheck: PoiUnusedEquipmentSlotCheck
+  mapStartCheck: PoiMapStartCheck
+  transition: { enable: boolean }
+  mainpanel: PoiMainPanel
+  plugin: PoiPluginConfig
+}
+
+interface Socks5Proxy {
+  host: string
+  port: number
+}
+
+interface HttpProxy {
+  host: string
+  port: number
+  requirePassword: boolean
+  username: string
+  password: string
+}
+
+interface Proxy {
+  socks5: Socks5Proxy
+  http: HttpProxy
+  use: string
+}
+
+interface PackageManager {
+  enablePluginCheck: boolean
+  enableBetaPluginCheck: boolean
+  enableAutoUpdate: boolean
+  mirrorName?: string
+}
+
+interface IndividualPluginConfig {
+  enable?: boolean
+  bounds?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
+}
+
+interface PluginConfig {
+  [pluginId: string]: IndividualPluginConfig
+}
+
+export interface Config {
+  poi: Poi
+  proxy: Proxy
+  packageManager: PackageManager
+  plugin: PluginConfig
+}
+
+const defaultConfig: Config = {
   poi: {
     misc: {
       disablehwaccel: false,
@@ -329,5 +585,3 @@ const defaultConfig = {
 }
 
 export default defaultConfig
-
-export type DefaultConfig = typeof defaultConfig

@@ -1,0 +1,298 @@
+import { ButtonGroup, Button, Tooltip, Position, Intent, AnchorButton } from '@blueprintjs/core'
+import React, { useState } from 'react'
+import FontAwesome from 'react-fontawesome'
+import { Trans, useTranslation } from 'react-i18next'
+import ReactMarkdown from 'react-remarkable'
+import Transition from 'react-transition-group/Transition'
+import { styled, css } from 'styled-components'
+import pluginManager, { type Plugin } from 'views/services/plugin-manager'
+
+import { CheckboxLabelConfig } from '../components/checkbox'
+import { Section } from '../components/section'
+import { PluginSettingWrapper } from './plugin-setting-wrapper'
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const PluginName = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  font-size: 1.5em;
+`
+
+const PluginInfo = styled.div()
+
+const PluginMeta = styled.div`
+  margin-left: -0.5em;
+
+  a {
+    font-size: 1em;
+  }
+`
+
+const PluginDetail = styled.div`
+  position: relative;
+`
+
+type TransitionState = 'entering' | 'entered' | 'exiting' | 'exited'
+
+const Fade1 = styled.div<{ state: TransitionState }>`
+  transition: 0.3s ease-in-out;
+  opacity: 0;
+  ${({ state }) => {
+    switch (state) {
+      case 'entering':
+        return css`
+          opacity: 0;
+        `
+      case 'entered':
+        return css`
+          opacity: 1;
+        `
+      case 'exiting':
+        return css`
+          opacity: 0;
+        `
+      case 'exited':
+        return css`
+          display: none;
+        `
+    }
+  }}
+`
+
+const Fade2 = styled(Fade1)`
+  ${({ state }) => {
+    switch (state) {
+      case 'entering':
+        return css`
+          position: absolute;
+          top: 0;
+        `
+      case 'exiting':
+        return css`
+          position: absolute;
+          top: 0;
+        `
+      default:
+        return ''
+    }
+  }}
+`
+
+interface Props {
+  plugin: Plugin
+  onUpdate?: () => void
+  onEnable?: () => void
+  onRemove?: () => void
+  onReload?: () => void
+  installable?: boolean
+  installing?: boolean
+  npmWorking?: boolean
+  onInstall?: () => void
+}
+
+export const PluginItem = ({
+  plugin,
+  installable,
+  installing,
+  npmWorking,
+  onUpdate,
+  onEnable,
+  onRemove,
+  onReload,
+  onInstall,
+}: Props) => {
+  const { t } = useTranslation('setting')
+  const [settingOpen, setSettingOpen] = useState(false)
+
+  const toggleSettingPop = () => setSettingOpen((v) => !v)
+
+  const status = pluginManager.getStatusOfPlugin(plugin)
+  let enableBtnText: React.ReactNode
+  let enableBtnFAname: string
+
+  switch (status) {
+    case pluginManager.VALID:
+      enableBtnText = <Trans>setting:Disable</Trans>
+      enableBtnFAname = 'pause'
+      break
+    case pluginManager.DISABLED:
+      enableBtnText = <Trans>setting:Enable</Trans>
+      enableBtnFAname = 'play'
+      break
+    case pluginManager.NEEDUPDATE:
+      enableBtnText = <Trans>setting:Outdated</Trans>
+      enableBtnFAname = 'ban'
+      break
+    case pluginManager.BROKEN:
+      enableBtnText = <Trans>setting:Reload</Trans>
+      enableBtnFAname = 'refresh'
+      break
+    default:
+      enableBtnText = ''
+      enableBtnFAname = ''
+  }
+
+  const removeBtnText = plugin.isUninstalling ? (
+    <Trans>setting:Removing</Trans>
+  ) : (
+    <Trans>setting:Remove</Trans>
+  )
+
+  const removeBtnFAname = plugin.isInstalled ? 'trash' : 'trash-o'
+
+  const settingAvailable =
+    plugin.reactClass ||
+    plugin.settingsClass ||
+    plugin.switchPluginPath ||
+    (!plugin.multiWindow && plugin.windowURL)
+
+  return (
+    <Section className="plugin-item">
+      <Header className="plugin-header">
+        <PluginName className="plugin-name">
+          {installable ? (
+            <>
+              <FontAwesome name={typeof plugin.icon === 'string' ? plugin.icon : 'th-large'} />
+              {` ${typeof plugin[language] === 'string' ? plugin[language] : ''}`}
+            </>
+          ) : (
+            plugin.displayName
+          )}
+        </PluginName>
+        <ButtonGroup className="plugin-control">
+          {settingAvailable && (
+            <Tooltip position={Position.TOP} content={t(settingOpen ? 'Description' : 'Settings')}>
+              <Button minimal intent={Intent.PRIMARY} onClick={toggleSettingPop}>
+                <FontAwesome name={settingOpen ? 'file-alt' : 'gear'} />
+              </Button>
+            </Tooltip>
+          )}
+          {installable ? (
+            <Tooltip position={Position.TOP} content={t(installing ? 'Installing' : 'Install')}>
+              <Button minimal intent={Intent.PRIMARY} disabled={npmWorking} onClick={onInstall}>
+                <FontAwesome name="download" />
+              </Button>
+            </Tooltip>
+          ) : (
+            <>
+              <Tooltip position={Position.TOP} content={enableBtnText}>
+                <Button
+                  minimal
+                  intent={Intent.PRIMARY}
+                  disabled={status === pluginManager.NEEDUPDATE}
+                  onClick={status !== pluginManager.BROKEN ? onEnable : onReload}
+                >
+                  <FontAwesome name={enableBtnFAname} />
+                </Button>
+              </Tooltip>
+              <Tooltip position={Position.TOP} content={removeBtnText}>
+                <Button
+                  minimal
+                  intent={Intent.DANGER}
+                  onClick={onRemove}
+                  disabled={!plugin.isInstalled}
+                >
+                  <FontAwesome name={removeBtnFAname} />
+                </Button>
+              </Tooltip>
+            </>
+          )}
+        </ButtonGroup>
+      </Header>
+      <PluginInfo className="plugin-info">
+        <PluginMeta className="plugin-meta">
+          <AnchorButton minimal intent={Intent.PRIMARY} href={plugin.link} target="_blank">
+            <FontAwesome name="user" /> {plugin.author}
+          </AnchorButton>
+          {plugin.linkedPlugin && (
+            <AnchorButton minimal intent={Intent.PRIMARY}>
+              <FontAwesome name="link" /> {t('Linked')}
+            </AnchorButton>
+          )}
+          {!installable && (
+            <AnchorButton minimal intent={Intent.PRIMARY}>
+              <FontAwesome name="tag" /> {plugin.version ?? '1.0.0'}
+            </AnchorButton>
+          )}
+          {plugin.isOutdated && (
+            <AnchorButton minimal intent={Intent.SUCCESS} onClick={onUpdate}>
+              <FontAwesome name="cloud-download" /> {t('Available')} {plugin.latestVersion}
+            </AnchorButton>
+          )}
+          {plugin.isUpdating && (
+            <AnchorButton minimal intent={Intent.PRIMARY}>
+              <FontAwesome name="spinner" pulse /> {t('Updating')}
+            </AnchorButton>
+          )}
+        </PluginMeta>
+        <PluginDetail className="plugin-detail">
+          <Transition in={settingOpen} timeout={300}>
+            {(state: TransitionState) => (
+              <Fade1 className="plugin-setting" state={state}>
+                {!!plugin.reactClass && (
+                  <div>
+                    <CheckboxLabelConfig
+                      label={<Trans>setting:Open plugin in new window</Trans>}
+                      configName={`poi.plugin.windowmode.${plugin.id}`}
+                      defaultValue={!!plugin.windowMode}
+                    />
+                  </div>
+                )}
+                {!!plugin.switchPluginPath && (
+                  <div>
+                    <CheckboxLabelConfig
+                      label={<Trans>setting:Enable auto switch</Trans>}
+                      configName={`poi.autoswitch.${plugin.id}`}
+                      defaultValue={true}
+                    />
+                  </div>
+                )}
+                {!plugin.multiWindow && plugin.windowURL && (
+                  <div>
+                    <CheckboxLabelConfig
+                      label={
+                        <Trans>
+                          setting:Keep plugin process running in background (re-enable to apply
+                          changes)
+                        </Trans>
+                      }
+                      configName={`poi.plugin.background.${plugin.id}`}
+                      defaultValue={!plugin.realClose}
+                    />
+                  </div>
+                )}
+                {!!plugin.settingsClass && (
+                  <div>
+                    <PluginSettingWrapper plugin={plugin} key={plugin.timestamp ?? 0} />
+                  </div>
+                )}
+              </Fade1>
+            )}
+          </Transition>
+          <Transition in={!settingOpen} timeout={300}>
+            {(state: TransitionState) => (
+              <Fade2 className="plugin-description" state={state}>
+                <ReactMarkdown
+                  options={{ linkTarget: '_blank' }}
+                  source={
+                    installable
+                      ? typeof plugin[`des${language}`] === 'string'
+                        ? plugin[`des${language}`]
+                        : undefined
+                      : plugin.description
+                  }
+                />
+              </Fade2>
+            )}
+          </Transition>
+        </PluginDetail>
+      </PluginInfo>
+    </Section>
+  )
+}
