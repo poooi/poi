@@ -23,6 +23,11 @@ declare global {
   var DEFAULT_CACHE_PATH: string
   var isMain: boolean | undefined
   var config: ConfigInstance
+  var getStore: {
+    (path?: string): unknown
+    lock: boolean
+    cache: unknown
+  }
   /* eslint-enable no-var */
 }
 

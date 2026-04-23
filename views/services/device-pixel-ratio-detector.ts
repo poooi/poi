@@ -1,6 +1,9 @@
 import EventEmitter from 'events'
 
 export class devicePixelRatioDetector extends EventEmitter {
+  private matchMediaMin: MediaQueryList
+  private matchMediaMax: MediaQueryList
+
   constructor() {
     super()
     this.matchMediaMin = window.matchMedia(`screen and (min-resolution: ${devicePixelRatio}dppx)`)
@@ -8,7 +11,8 @@ export class devicePixelRatioDetector extends EventEmitter {
     this.matchMediaMin.addListener(this.callback)
     this.matchMediaMax.addListener(this.callback)
   }
-  callback = (e) => {
+
+  callback = (_e: MediaQueryListEvent): void => {
     this.matchMediaMin.removeListener(this.callback)
     this.matchMediaMax.removeListener(this.callback)
     this.matchMediaMin = window.matchMedia(`screen and (min-resolution: ${devicePixelRatio}dppx)`)
