@@ -1,7 +1,7 @@
 import type { Config } from 'views/env-parts/config'
 import type { Plugin } from 'views/services/plugin-manager/utils'
 
-import { mapValues, isEqual } from 'lodash'
+import { mapValues, isEqual, get } from 'lodash'
 
 import { createConfigAction } from './actions'
 import { reducer as battle, type BattleState } from './battle'
@@ -49,9 +49,14 @@ function secureExtensionConfig(
   return mapValues(extensionConfig, (func, key) => {
     if (func) {
       const wrappedReducer = combineReducers({ _: func })
-      return (state = {}, action: { type: string }, store?: Record<string, unknown>) => {
+      return (
+        state: Record<string, unknown> = {},
+        action: { type: string },
+        store?: Record<string, unknown>,
+      ) => {
         try {
-          return wrappedReducer(state, action, store)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+          return wrappedReducer(state as { _: unknown }, action, store)
         } catch (e) {
           console.error(`Error in extension ${key}`, e instanceof Error ? e.stack : String(e))
           return state
@@ -66,7 +71,10 @@ function secureExtensionConfig(
 export function reducerFactory(
   extensionConfig?: Record<string, PoiReducer | null | undefined>,
 ): PoiReducer<RootState> {
-  return combineReducers<RootState>({
+  // RootState lacks a string index signature so it can't satisfy the combineReducers
+  // constraint; cast at this store-construction boundary.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return combineReducers({
     const: constReducer,
     info,
     sortie,
@@ -75,15 +83,18 @@ export function reducerFactory(
     battle,
     misc,
     fcd,
-    plugins: window.isMain ? plugins : () => emptyObject,
-    layout: window.isMain ? layout : () => emptyObject,
-    ui: window.isMain ? ui : () => emptyObject,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    plugins: (window.isMain ? plugins : () => emptyObject) as PoiReducer,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    layout: (window.isMain ? layout : () => emptyObject) as PoiReducer,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    ui: (window.isMain ? ui : () => emptyObject) as PoiReducer,
     ext: extensionConfig
       ? combineReducers(secureExtensionConfig(extensionConfig))
       : () => emptyObject,
     ipc,
     wctf,
-  })
+  }) as unknown as PoiReducer<RootState>
 }
 
 // === Actions ===
@@ -159,7 +170,8 @@ export function onConfigChange({
   path: string
   value: unknown
 }): ReturnType<typeof createConfigAction> {
-  return createConfigAction({ path, value })
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return createConfigAction({ path, value: value as object })
 }
 
 // publish data changes to plugin windows
@@ -172,7 +184,7 @@ if (!window.isMain) {
         wctf?: { lastModified?: unknown; version?: string }
       }
       for (const key of Object.keys(fcd)) {
-        if (!isEqual(fcd[key], window.getStore(`fcd.${key}`))) {
+        if (!isEqual(fcd[key], get(window.getStore('fcd'), key))) {
           // eslint-disable-next-line no-console
           console.log(`Update ${key} from localStorage`)
           window.dispatch({
@@ -184,7 +196,7 @@ if (!window.isMain) {
           })
         }
       }
-      if (wctf.lastModified && wctf.lastModified !== window.getStore('wctf.lastModified')) {
+      if (wctf.lastModified && wctf.lastModified !== window.getStore('wctf').lastModified) {
         // eslint-disable-next-line no-console
         console.log(`Update wctf-db to ${wctf.version} from localstorage`)
         window.dispatch({

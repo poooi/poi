@@ -75,7 +75,8 @@ const composeEnhancers =
 
 export const store: Store<RootState> = createStore(
   reducerFactory(),
-  storeCache,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  storeCache as unknown as RootState,
   composeEnhancers(
     applyMiddleware(
       thunk,
@@ -192,7 +193,7 @@ declare global {
 }
 window.getStore = getStore
 window.dispatch = store.dispatch
-window.config.get = (path: string, value?: unknown): unknown => {
+window.config.get = (path, value) => {
   if (path === '') {
     return window.getStore('config')
   }
