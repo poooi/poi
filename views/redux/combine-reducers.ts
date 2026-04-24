@@ -1,9 +1,17 @@
+export type AnyAction = { type: string; [key: string]: unknown }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type PoiReducer<S = any> = (
+  state: S | undefined,
+  action: AnyAction,
+  store?: Record<string, unknown>,
+) => S
+
 const ActionTypes = {
   INIT: '@@redux/INIT' + Math.random().toString(36).substring(7).split('').join('.'),
   REPLACE: '@@redux/REPLACE' + Math.random().toString(36).substring(7).split('').join('.'),
 }
 
-function getUndefinedStateErrorMessage(key, action) {
+function getUndefinedStateErrorMessage(key: string, action: AnyAction): string {
   const actionType = action && action.type
   const actionDescription = (actionType && `action "${String(actionType)}"`) || 'an action'
 
@@ -14,7 +22,7 @@ function getUndefinedStateErrorMessage(key, action) {
   )
 }
 
-function assertReducerShape(reducers) {
+function assertReducerShape(reducers: Record<string, PoiReducer>): void {
   Object.keys(reducers).forEach((key) => {
     const reducer = reducers[key]
     const initialState = reducer(undefined, { type: ActionTypes.INIT })
@@ -44,26 +52,32 @@ function assertReducerShape(reducers) {
   })
 }
 
-export function combineReducers(reducers, store) {
-  const reducerKeys = Object.keys(reducers)
-  const finalReducers = {}
-  for (let i = 0; i < reducerKeys.length; i++) {
-    const key = reducerKeys[i]
-
+export function combineReducers<S extends Record<string, unknown>>(reducers: {
+  [K in keyof S]: PoiReducer<S[K]>
+}): PoiReducer<S> {
+  const reducerKeys = Object.keys(reducers) as Array<keyof S & string>
+  const finalReducers: Partial<{ [K in keyof S]: PoiReducer<S[K]> }> = {}
+  for (const key of reducerKeys) {
     if (typeof reducers[key] === 'function') {
       finalReducers[key] = reducers[key]
     }
   }
-  const finalReducerKeys = Object.keys(finalReducers)
+  const finalReducerKeys = Object.keys(finalReducers) as Array<keyof S & string>
 
-  let shapeAssertionError
+  let shapeAssertionError: Error | undefined
   try {
-    assertReducerShape(finalReducers)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    assertReducerShape(finalReducers as Record<string, PoiReducer>)
   } catch (e) {
-    shapeAssertionError = e
+    shapeAssertionError = e instanceof Error ? e : new Error(String(e))
   }
 
-  return function combination(state = {}, action, upperState) {
+  return function combination(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    state: S | undefined = {} as S,
+    action: AnyAction,
+    upperState?: Record<string, unknown>,
+  ): S {
     // Polyfill for redux@4
     if (window.getStore) {
       window.getStore.lock = true
@@ -75,23 +89,30 @@ export function combineReducers(reducers, store) {
     }
 
     let hasChanged = false
-    const nextState = {}
-    for (let i = 0; i < finalReducerKeys.length; i++) {
-      const key = finalReducerKeys[i]
-      const reducer = finalReducers[key]
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const nextState = {} as S
+    for (const key of finalReducerKeys) {
+      const reducer = finalReducers[key]!
       const previousStateForKey = state[key]
-      const nextStateForKey = reducer(previousStateForKey, action, upperState || state)
+      // S extends Record<string, unknown>, so state is safe to pass as the store arg
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const stateAsRecord = state as Record<string, unknown>
+      const nextStateForKey = reducer(previousStateForKey, action, upperState ?? stateAsRecord)
       if (typeof nextStateForKey === 'undefined') {
         const errorMessage = getUndefinedStateErrorMessage(key, action)
         throw new Error(errorMessage)
       }
-      nextState[key] = nextStateForKey
+      // reducer[K] returns S[K] by construction
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      nextState[key] = nextStateForKey as S[typeof key]
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }
 
     // Polyfill for redux@4
     if (window.getStore) {
-      delete window.getStore.lock
+      // delete optional property to remove the lock flag
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      delete (window.getStore as { lock?: boolean }).lock
     }
 
     return hasChanged ? nextState : state

@@ -15,7 +15,7 @@ export type PresetDeck = KcsapiPresetDeck
 
 export interface PresetsState {
   api_max_num: number
-  api_deck: Record<string, PresetDeck>
+  api_deck: Record<`${number}` | number, PresetDeck>
 }
 
 export type Action =

@@ -724,12 +724,6 @@ function processQuestRecords(
 
 const fileWriter = new FileWriter()
 
-declare global {
-  interface Window {
-    getStore: (path: string) => unknown
-  }
-}
-
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {

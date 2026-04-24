@@ -1,3 +1,5 @@
+import type { NoPeriod } from 'shims/utils'
+
 interface LimitFps {
   enabled: boolean
   value: number
@@ -175,8 +177,10 @@ interface PoiMainPanel {
   layout: MainPanelLayout
 }
 
+type PluginID = `poi-plugin-${string & NoPeriod<string>}`
+
 interface PluginBooleanMap {
-  [pluginId: string]: boolean
+  [pluginId: PluginID]: boolean
 }
 
 interface PoiPluginConfig {
@@ -224,6 +228,7 @@ interface Proxy {
   socks5: Socks5Proxy
   http: HttpProxy
   use: string
+  pacAddr?: string
 }
 
 interface PackageManager {
@@ -244,7 +249,7 @@ interface IndividualPluginConfig {
 }
 
 interface PluginConfig {
-  [pluginId: string]: IndividualPluginConfig
+  [pluginId: PluginID]: IndividualPluginConfig
 }
 
 export interface Config {
@@ -562,6 +567,7 @@ const defaultConfig: Config = {
         ],
       },
     },
+    plugin: {},
   },
   proxy: {
     socks5: {
@@ -582,6 +588,7 @@ const defaultConfig: Config = {
     enableBetaPluginCheck: false,
     enableAutoUpdate: true,
   },
+  plugin: {},
 }
 
 export default defaultConfig

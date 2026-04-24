@@ -5,5 +5,9 @@ export type { ConfigInstance, Config } from 'lib/config'
 
 export const config: ConfigInstance = remote.require('./lib/config')
 
-// @ts-expect-error backward compatibility
+declare global {
+  interface Window {
+    config: ConfigInstance
+  }
+}
 window.config = config

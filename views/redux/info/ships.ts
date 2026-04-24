@@ -29,7 +29,7 @@ import {
 export type Ship = Partial<APIShip> & { api_id: number }
 
 export interface ShipsState {
-  [key: string]: Ship
+  [key: `${number}` | number]: Ship
 }
 
 type DockInfo = Pick<APIGetMemberNdockResponse, 'api_id' | 'api_ship_id'>

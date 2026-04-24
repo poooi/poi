@@ -4,18 +4,31 @@ const threeMinutes = 3 * 60 * 1000
 
 // Calculates the time that a ship fully recovers
 // tick: the number you get from store.timers.cond.tick
-export function recoveryEndTime(tick, nowCond, targetCond) {
+export function recoveryEndTime(tick: number, nowCond: number, targetCond: number): number {
   return Math.ceil(Math.max(targetCond - nowCond, 0) / 3) * threeMinutes + tick
 }
 
-const initState = {
+export interface CondState {
+  conds: Record<number, number>
+  tick: number
+}
+
+const initState: CondState = {
   conds: {},
   tick: Date.now(),
 }
 
-export default function reducer(state = initState, { type, postBody, body }) {
+interface PortPortBody {
+  api_ship: Array<{ api_cond: number; api_id: number }>
+}
+
+export default function reducer(
+  state = initState,
+  { type, body }: { type: string; body?: PortPortBody },
+): CondState {
   switch (type) {
     case '@@Response/kcsapi/api_port/port': {
+      if (!body) return state
       /* Algorithm:
        * 1. Record a "tick". Conds increase on a certain tick within every 3 minutes.
        *    We want to approach a specific tick, the one during the last 3-minute cycle.
@@ -31,7 +44,7 @@ export default function reducer(state = initState, { type, postBody, body }) {
       const now = Date.now()
       const predictIncrease = Math.floor((now - oldTick) / threeMinutes) * 3
 
-      const conds = {}
+      const conds: Record<number, number> = {}
       let condNeedsUpdate = false
       let misprediction = false
       // Use lodash.forEach because it supports breaking by returning false
@@ -44,13 +57,13 @@ export default function reducer(state = initState, { type, postBody, body }) {
             return
           }
         }
-        if (cond - oldConds[api_id] > predictIncrease) {
+        if (cond - (oldConds[api_id] ?? 0) > predictIncrease) {
           misprediction = true
           return false // break; This is as much information as we can get
         }
       })
       if (!condNeedsUpdate && !misprediction) return state
-      const newState = {}
+      const newState: Partial<CondState> = {}
       if (condNeedsUpdate) {
         newState.conds = conds
         if (misprediction) {

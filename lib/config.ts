@@ -1,28 +1,34 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { DeepKeyOf, DeepKeyOfArray, DeepValueOf, DeepValueOfArray } from 'shims/utils'
 
 import CSON from 'cson'
 import EventEmitter from 'events'
 import fs from 'fs-extra'
-import { set, get, isEqual, keys } from 'lodash'
+import { set, get, isEqual, keys, merge, unset } from 'lodash'
 import path from 'path'
 
 import dbg from './debug'
 import defaultConfig, { type Config } from './default-config'
-import { mergeConfig, warn } from './utils'
+import { warn } from './utils'
 
 const { EXROOT } = global
 const configPath = path.join(EXROOT, 'config.cson')
 
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
-export type ConfigPath = DeepKeyOf<Config> | DeepKeyOfArray<Config>
+export type { Config } from './default-config'
+export type ConfigPath = DeepKeyOf<Config> | DeepKeyOfArray<Config> | ''
 export type ConfigValue<Path extends ConfigPath> =
-  Path extends DeepKeyOf<Config>
-    ? DeepValueOf<Config, Path>
-    : Path extends DeepKeyOfArray<Config>
-      ? DeepValueOfArray<Config, Path>
-      : never
+  // When Path is the full ConfigPath union (TypeScript error-recovery substitution),
+  // return never so callers see `never` instead of the union of all config values.
+  [ConfigPath] extends [Path]
+    ? never
+    : Path extends ''
+      ? Config
+      : Path extends DeepKeyOf<Config>
+        ? DeepValueOf<Config, Path>
+        : Path extends DeepKeyOfArray<Config>
+          ? DeepValueOfArray<Config, Path>
+          : never
 
 class PoiConfig extends EventEmitter {
   configData: Config
@@ -30,10 +36,10 @@ class PoiConfig extends EventEmitter {
 
   constructor() {
     super()
-    this.configData = {}
+    this.configData = defaultConfig
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath))
+      this.configData = merge(defaultConfig, CSON.parseCSONFile(configPath) satisfies Config)
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)
@@ -51,10 +57,11 @@ class PoiConfig extends EventEmitter {
     value?: ConfigValue<Path>,
   ): ConfigValue<Path> => {
     if (path === '') {
-      return this.configData
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return this.configData as ConfigValue<Path>
     }
     if (dbg.isEnabled()) {
-      const stringPath = Array.isArray(path) ? path.join('.') : path
+      const stringPath = Array.isArray(path) ? path.join('.') : `${path}`
       if (
         DEFAULT_CONFIG_PATH_REGEXP.test(stringPath) &&
         value !== undefined &&
@@ -75,7 +82,8 @@ class PoiConfig extends EventEmitter {
     value?: ConfigValue<Path>,
   ): ConfigValue<Path> => {
     if (path === '') {
-      return this.defaultConfigData
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return this.defaultConfigData as ConfigValue<Path>
     }
     return get(this.defaultConfigData, path, value)
   }
@@ -93,8 +101,8 @@ class PoiConfig extends EventEmitter {
       value = this.getDefault(path)
     }
     set(this.configData, path, value)
-    path = Array.isArray(path) ? path.join('.') : path
-    this.emit('config.set', path, value)
+    const pathToSet = Array.isArray(path) ? path.join('.') : path
+    this.emit('config.set', pathToSet, value)
     this.save()
   }
 
@@ -126,12 +134,7 @@ class PoiConfig extends EventEmitter {
    */
   delete = (path: ConfigPath) => {
     if (typeof this.get(path) !== 'undefined') {
-      let p = this.configData
-      const subpath = Array.isArray(path) ? path : path.split('.')
-      for (const sub of subpath.slice(0, subpath.length - 1)) {
-        p = p[sub]
-      }
-      delete p[subpath[subpath.length - 1]]
+      unset(this.configData, path)
     }
   }
 }

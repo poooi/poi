@@ -16,7 +16,7 @@ export interface UseItem {
 }
 
 export interface UseItemsState {
-  [key: string]: UseItem
+  [key: `${number}` | number]: UseItem
 }
 
 /**

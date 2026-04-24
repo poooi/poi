@@ -1,7 +1,30 @@
 /* global config */
 import { getZoomedSize } from 'views/services/utils'
 
-const initState = {
+interface PaneSize {
+  width: number
+  height: number
+}
+
+interface WebviewState extends PaneSize {
+  windowWidth: number
+  windowHeight: number
+  useFixedResolution: boolean
+  windowUseFixedResolution: boolean
+  ref: unknown
+  refts: number
+}
+
+export interface LayoutState {
+  window: PaneSize
+  webview: WebviewState
+  minishippane: PaneSize
+  shippane: PaneSize
+  mainpane: PaneSize
+  combinedpane: PaneSize
+}
+
+const initState: LayoutState = {
   window: {
     width: window.innerWidth,
     height: window.innerHeight,
@@ -34,25 +57,39 @@ const initState = {
   },
 }
 
-const getIntegerSize = (obj) => {
+type SizeObject = Record<string, number | unknown>
+
+function getIntegerSize<T extends SizeObject>(obj: T): T {
   const result = { ...obj }
   for (const key of Object.keys(result)) {
-    if (key.toLowerCase().includes('width') || key.toLowerCase().includes('height')) {
-      result[key] = Math.round(result[key])
+    const val = result[key]
+    if (
+      (key.toLowerCase().includes('width') || key.toLowerCase().includes('height')) &&
+      typeof val === 'number'
+    ) {
+      result[key] = Math.round(val)
     }
   }
   return result
 }
 
-export function reducer(state = initState, { type, value }) {
-  switch (type) {
+type LayoutAction =
+  | { type: '@@LayoutUpdate'; value: Partial<LayoutState> & { webview?: Partial<WebviewState> } }
+  | { type: '@@LayoutUpdate/webview/useFixedResolution'; value: boolean }
+  | { type: '@@LayoutUpdate/webview/windowUseFixedResolution'; value: boolean }
+  | { type: '@@LayoutUpdate/webview/UpdateWebviewRef'; value: { ref: unknown; ts: number } }
+  | { type: '@@LayoutUpdate/webview/size'; value: Partial<WebviewState> }
+  | { type: string }
+
+export function reducer(state = initState, action: LayoutAction): LayoutState {
+  switch (action.type) {
     case '@@LayoutUpdate':
       return {
         ...state,
-        ...getIntegerSize(value),
+        ...getIntegerSize(action.value),
         webview: {
           ...state.webview,
-          ...getIntegerSize(value.webview),
+          ...getIntegerSize(action.value.webview ?? {}),
         },
       }
     case '@@LayoutUpdate/webview/useFixedResolution':
@@ -60,7 +97,7 @@ export function reducer(state = initState, { type, value }) {
         ...state,
         webview: {
           ...state.webview,
-          useFixedResolution: value,
+          useFixedResolution: action.value,
         },
       }
     case '@@LayoutUpdate/webview/windowUseFixedResolution':
@@ -68,7 +105,7 @@ export function reducer(state = initState, { type, value }) {
         ...state,
         webview: {
           ...state.webview,
-          windowUseFixedResolution: value,
+          windowUseFixedResolution: action.value,
         },
       }
     case '@@LayoutUpdate/webview/UpdateWebviewRef':
@@ -76,8 +113,8 @@ export function reducer(state = initState, { type, value }) {
         ...state,
         webview: {
           ...state.webview,
-          ref: value.ref,
-          refts: value.ts,
+          ref: action.value.ref,
+          refts: action.value.ts,
         },
       }
     case '@@LayoutUpdate/webview/size':
@@ -85,7 +122,7 @@ export function reducer(state = initState, { type, value }) {
         ...state,
         webview: {
           ...state.webview,
-          ...getIntegerSize(value),
+          ...getIntegerSize(action.value),
         },
       }
     default:

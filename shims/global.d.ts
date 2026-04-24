@@ -1,5 +1,3 @@
-import { type ConfigInstance } from 'lib/config'
-
 interface ToastConfig {
   type: string
   title: string
@@ -41,15 +39,8 @@ declare global {
   var ROOT: string
   var DEFAULT_CACHE_PATH: string
   var isMain: boolean | undefined
-  var config: ConfigInstance
-  var getStore: {
-    (path?: string): unknown
-    lock: boolean
-    cache: unknown
-  }
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
-  var dispatch: (action: { type: string; [key: string]: unknown }) => void
   var language: string
   var ipc: IpcManager
   var toast: (message: string, options?: Partial<ToastConfig>) => void

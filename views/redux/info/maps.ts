@@ -29,7 +29,7 @@ export interface MapInfo {
 }
 
 export interface MapsState {
-  [key: string]: MapInfo
+  [key: `${number}` | number]: MapInfo
 }
 
 function normalizeState(state: MapsState): MapsState

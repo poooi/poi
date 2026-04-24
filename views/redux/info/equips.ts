@@ -23,7 +23,7 @@ export interface Equip {
 }
 
 export interface EquipsState {
-  [key: string]: Equip
+  [key: `${number}` | number]: Equip
 }
 
 // Returns a clone

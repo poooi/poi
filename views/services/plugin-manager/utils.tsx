@@ -23,6 +23,7 @@ import React from 'react'
 import semver from 'semver'
 import { promisify } from 'util'
 import { extendReducer } from 'views/create-store'
+import { config } from 'views/env-parts/config'
 import i18next, { addGlobalI18n, addResourceBundleDebounce } from 'views/env-parts/i18next'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
 
@@ -598,7 +599,7 @@ export const safePhysicallyRemove = async (packagePath: string): Promise<void> =
 
 export const getNpmConfig = (prefix: string): NpmConfig => {
   const mirrorConf = config.get('packageManager.mirrorName')
-  const enableBetaPluginCheck = config.get('packageManager.enableBetaPluginCheck') as boolean
+  const enableBetaPluginCheck = config.get('packageManager.enableBetaPluginCheck')
   const mirrorName = Object.keys(MIRRORS).includes(mirrorConf ?? '')
     ? (mirrorConf ?? 'npm')
     : navigator.language === 'zh-CN'
