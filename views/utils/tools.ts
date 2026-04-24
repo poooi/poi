@@ -8,6 +8,7 @@
 
 import type { PopoverProps } from '@blueprintjs/core'
 import type { Dictionary } from 'lodash'
+import type { DeepKeyOfArray, DeepValueOfArray } from 'shims/utils'
 
 import { readJsonSync } from 'fs-extra'
 import _, {
@@ -158,7 +159,8 @@ export function copyIfSame<T>(obj: T, to: any): T {
   // assert(typeof obj === 'object')
   if (obj === to) {
     if (Array.isArray(obj)) {
-      return obj.slice()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return obj.slice() as T
     }
     return { ...obj }
   }
@@ -197,7 +199,8 @@ export function reduxSet<
   const Path extends DeepKeyOfArray<T>,
   const Value extends DeepValueOfArray<T, Path>,
 >(obj: T, path: Path, val: Value): T {
-  return setWith(clone(obj), path, val, clone)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return setWith(clone(obj), path as readonly PropertyKey[], val, clone)
 }
 
 /**
@@ -250,7 +253,8 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
     }
 
     if (newV != null && prevValue !== newV) {
-      prevState = copyIfSame(prevState, prevStateBackup)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      prevState = copyIfSame(prevState as object, prevStateBackup) as T
       ;(prevState as Record<string, unknown>)[k] = newV
       /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
     }

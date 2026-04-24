@@ -44,7 +44,7 @@ export interface RootState {
 }
 
 function secureExtensionConfig(
-  extensionConfig: Record<string, PoiReducer | null | undefined>,
+  extensionConfig: Record<string, PoiReducer>,
 ): Record<string, PoiReducer> {
   return mapValues(extensionConfig, (func, key) => {
     if (func) {
@@ -69,7 +69,7 @@ function secureExtensionConfig(
 }
 
 export function reducerFactory(
-  extensionConfig?: Record<string, PoiReducer | null | undefined>,
+  extensionConfig?: Record<string, PoiReducer>,
 ): PoiReducer<RootState> {
   // RootState lacks a string index signature so it can't satisfy the combineReducers
   // constraint; cast at this store-construction boundary.
@@ -84,17 +84,17 @@ export function reducerFactory(
     misc,
     fcd,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    plugins: (window.isMain ? plugins : () => emptyObject) as PoiReducer,
+    plugins: plugins as PoiReducer,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    layout: (window.isMain ? layout : () => emptyObject) as PoiReducer,
+    layout: layout as PoiReducer,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    ui: (window.isMain ? ui : () => emptyObject) as PoiReducer,
+    ui: ui as PoiReducer,
     ext: extensionConfig
       ? combineReducers(secureExtensionConfig(extensionConfig))
       : () => emptyObject,
     ipc,
     wctf,
-  }) as unknown as PoiReducer<RootState>
+  }) as PoiReducer<RootState>
 }
 
 // === Actions ===

@@ -1,8 +1,7 @@
 export type AnyAction = { type: string; [key: string]: unknown }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type PoiReducer<S = any> = (
+export type PoiReducer<S = unknown, A extends AnyAction = AnyAction> = (
   state: S | undefined,
-  action: AnyAction,
+  action: A,
   store?: Record<string, unknown>,
 ) => S
 
@@ -52,9 +51,10 @@ function assertReducerShape(reducers: Record<string, PoiReducer>): void {
   })
 }
 
-export function combineReducers<S extends Record<string, unknown>>(reducers: {
+export function combineReducers<S>(reducers: {
   [K in keyof S]: PoiReducer<S[K]>
 }): PoiReducer<S> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const reducerKeys = Object.keys(reducers) as Array<keyof S & string>
   const finalReducers: Partial<{ [K in keyof S]: PoiReducer<S[K]> }> = {}
   for (const key of reducerKeys) {
@@ -62,6 +62,7 @@ export function combineReducers<S extends Record<string, unknown>>(reducers: {
       finalReducers[key] = reducers[key]
     }
   }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const finalReducerKeys = Object.keys(finalReducers) as Array<keyof S & string>
 
   let shapeAssertionError: Error | undefined

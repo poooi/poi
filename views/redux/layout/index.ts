@@ -1,4 +1,6 @@
-/* global config */
+import type { ExtendedWebviewTag } from 'views/components/etc/webview'
+
+import { config } from 'views/env-parts/config'
 import { getZoomedSize } from 'views/services/utils'
 
 interface PaneSize {
@@ -11,7 +13,7 @@ interface WebviewState extends PaneSize {
   windowHeight: number
   useFixedResolution: boolean
   windowUseFixedResolution: boolean
-  ref: unknown
+  ref: ExtendedWebviewTag | null
   refts: number
 }
 
@@ -67,6 +69,7 @@ function getIntegerSize<T extends SizeObject>(obj: T): T {
       (key.toLowerCase().includes('width') || key.toLowerCase().includes('height')) &&
       typeof val === 'number'
     ) {
+      // @ts-expect-error force type assertion
       result[key] = Math.round(val)
     }
   }
@@ -77,9 +80,11 @@ type LayoutAction =
   | { type: '@@LayoutUpdate'; value: Partial<LayoutState> & { webview?: Partial<WebviewState> } }
   | { type: '@@LayoutUpdate/webview/useFixedResolution'; value: boolean }
   | { type: '@@LayoutUpdate/webview/windowUseFixedResolution'; value: boolean }
-  | { type: '@@LayoutUpdate/webview/UpdateWebviewRef'; value: { ref: unknown; ts: number } }
+  | {
+      type: '@@LayoutUpdate/webview/UpdateWebviewRef'
+      value: { ref: ExtendedWebviewTag | null; ts: number }
+    }
   | { type: '@@LayoutUpdate/webview/size'; value: Partial<WebviewState> }
-  | { type: string }
 
 export function reducer(state = initState, action: LayoutAction): LayoutState {
   switch (action.type) {

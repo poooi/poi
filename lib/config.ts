@@ -3,12 +3,12 @@ import type { DeepKeyOf, DeepKeyOfArray, DeepValueOf, DeepValueOfArray } from 's
 import CSON from 'cson'
 import EventEmitter from 'events'
 import fs from 'fs-extra'
-import { set, get, isEqual, keys, merge, unset } from 'lodash'
+import { set, get, isEqual, keys, unset } from 'lodash'
 import path from 'path'
 
 import dbg from './debug'
 import defaultConfig, { type Config } from './default-config'
-import { warn } from './utils'
+import { mergeConfig, warn } from './utils'
 
 const { EXROOT } = global
 const configPath = path.join(EXROOT, 'config.cson')
@@ -39,7 +39,7 @@ class PoiConfig extends EventEmitter {
     this.configData = defaultConfig
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = merge(defaultConfig, CSON.parseCSONFile(configPath) satisfies Config)
+      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath) satisfies Config)
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)

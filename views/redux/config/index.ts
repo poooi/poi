@@ -1,3 +1,5 @@
+import type { DeepKeyOfArray } from 'shims/utils'
+
 import { createSlice } from '@reduxjs/toolkit'
 import { cloneDeep } from 'lodash'
 import { type Config, config } from 'views/env-parts/config'
@@ -12,7 +14,8 @@ const configSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(createConfigAction, (state, { payload }) => {
       const { path, value } = payload
-      return reduxSet(state, path.split('.'), value)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return reduxSet(state, path.split('.') as unknown as DeepKeyOfArray<Config>, value)
     })
   },
 })

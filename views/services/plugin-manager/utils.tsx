@@ -1,4 +1,4 @@
-import type { BaseWindowConstructorOptions } from 'electron'
+import type { BrowserWindowConstructorOptions } from 'electron'
 
 import * as remote from '@electron/remote'
 import FontAwesome from '@skagami/react-fontawesome'
@@ -17,8 +17,7 @@ import {
 import glob from 'glob'
 import { omit, each } from 'lodash'
 import { Module } from 'module'
-import path from 'path'
-import { join, basename } from 'path-extra'
+import { join, basename } from 'path'
 import React from 'react'
 import semver from 'semver'
 import { promisify } from 'util'
@@ -30,8 +29,8 @@ import { readI18nResources, normalizeURL } from 'views/utils/tools'
 const windowManager = remote.require('./lib/window')
 const utils = remote.require('./lib/utils')
 
-const NPM_EXEC_PATH = path.join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
-const MIRROR_JSON_PATH = path.join(ROOT, 'assets', 'data', 'mirror.json')
+const NPM_EXEC_PATH = join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
+const MIRROR_JSON_PATH = join(ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS: Record<string, { server: string }> = require(MIRROR_JSON_PATH)
 
 const clearReducer = undefined
@@ -110,7 +109,7 @@ export interface Plugin {
   reactClass?: React.ComponentType
   settingsClass?: React.ComponentType
   switchPluginPath?: string[]
-  windowOptions?: BaseWindowConstructorOptions
+  windowOptions?: BrowserWindowConstructorOptions
   pluginWindow?: PluginWindow | null
   handleClick?: () => void
   pluginDidLoad?: () => void
@@ -131,7 +130,7 @@ function calculateShasum(filePath: string): Promise<string> {
     try {
       const hash = crypto.createHash('sha1')
       const stream = createReadStream(filePath)
-      stream.on('data', (data) => hash.update(data, 'utf8'))
+      stream.on('data', (data) => hash.update(data.toString(), 'utf8'))
       stream.on('end', () => resolve(hash.digest('hex')))
       stream.on('error', (e) => reject(e))
     } catch (e) {
@@ -276,6 +275,11 @@ export async function readPlugin(pluginPath: string, isExtra = false): Promise<P
   const cleanPackageData = omit(packageData, 'poiPlugin') as Record<string, unknown>
 
   const packageName = getString(cleanPackageData, 'name') ?? basename(pluginPath)
+  if (!packageName.match(/poi-plugin-.+/)) {
+    throw new Error(
+      `Plugin package name "${packageName}" is invalid. It should start with "poi-plugin-".`,
+    )
+  }
   const name = getString(poiPlugin, 'name') ?? getString(poiPlugin, 'title') ?? packageName
   const id = getString(poiPlugin, 'id') ?? packageName
 
@@ -322,6 +326,7 @@ export async function readPlugin(pluginPath: string, isExtra = false): Promise<P
     }
   }
 
+  // @ts-expect-error force type assertion
   const enabled = config.get(`plugin.${id}.enable`, true)
 
   const iconRaw = poiPlugin['icon']
@@ -405,6 +410,7 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
   }
   let result: Plugin = { ...plugin, ...pluginMain }
   if (result.windowURL) {
+    // @ts-expect-error force type assertion
     const background = config.get(`poi.plugin.background.${result.id}`, !result.realClose)
     result.realClose = !background
   }
@@ -480,24 +486,24 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
       plugin.handleClick = () => {
         if (plugin.pluginWindow == null) {
           plugin.pluginWindow = windowManager.createWindow(windowOptions)
-          plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
-          plugin.pluginWindow.setAutoHideMenuBar(true)
-          plugin.pluginWindow.setMenuBarVisibility(false)
-          plugin.pluginWindow.on('close', () => {
+          plugin.pluginWindow?.setMenu(require('views/components/etc/menu').appMenu)
+          plugin.pluginWindow?.setAutoHideMenuBar(true)
+          plugin.pluginWindow?.setMenuBarVisibility(false)
+          plugin.pluginWindow?.on('close', () => {
             plugin.pluginWindow = null
           })
-          plugin.pluginWindow.loadURL(windowURL)
-          plugin.pluginWindow.show()
+          plugin.pluginWindow?.loadURL(windowURL)
+          plugin.pluginWindow?.show()
         } else {
           plugin.pluginWindow.show()
         }
       }
     } else {
       plugin.pluginWindow = windowManager.createWindow(windowOptions)
-      plugin.pluginWindow.setMenu(require('views/components/etc/menu').appMenu)
-      plugin.pluginWindow.setAutoHideMenuBar(true)
-      plugin.pluginWindow.setMenuBarVisibility(false)
-      plugin.pluginWindow.loadURL(windowURL)
+      plugin.pluginWindow?.setMenu(require('views/components/etc/menu').appMenu)
+      plugin.pluginWindow?.setAutoHideMenuBar(true)
+      plugin.pluginWindow?.setMenuBarVisibility(false)
+      plugin.pluginWindow?.loadURL(windowURL)
       plugin.handleClick = () => plugin.pluginWindow?.show()
     }
   }
@@ -559,7 +565,7 @@ export function notifyFailed(state: Plugin[], npmConfig: NpmConfig): void {
 export async function repairDep(brokenList: string[], npmConfig: NpmConfig): Promise<void> {
   const depList = (
     await new Promise<string[]>((res) => {
-      glob(path.join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches ?? []))
+      glob(join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches ?? []))
     })
   ).filter((p) => !p.includes('poi-plugin'))
   depList.forEach((p) => {

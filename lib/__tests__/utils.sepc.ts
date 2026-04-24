@@ -1,4 +1,4 @@
-import { merge } from 'lodash'
+import { mergeConfig } from '../utils'
 
 describe('config merging', () => {
   const defaultConfig = {
@@ -12,42 +12,42 @@ describe('config merging', () => {
   }
 
   it('returns new object', () => {
-    expect(merge(defaultConfig, {})).not.toBe(defaultConfig)
+    expect(mergeConfig(defaultConfig, {})).not.toBe(defaultConfig)
   })
 
   it('default config value is not the same type of that user config, use default configs value', () => {
-    expect(merge(defaultConfig, {})).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { galaxy: [42] })).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { galaxy: null })).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { bits: '0' })).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { year: '0' })).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { foo: 42 })).toEqual(defaultConfig)
-    expect(merge(defaultConfig, { single: 10 })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, {})).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { galaxy: [42] })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { galaxy: null })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { bits: '0' })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { year: '0' })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { foo: 42 })).toEqual(defaultConfig)
+    expect(mergeConfig(defaultConfig, { single: 10 })).toEqual(defaultConfig)
   })
 
   it('value of correct type in user config is honored', () => {
-    expect(merge(defaultConfig, { galaxy: { answer: -1 } })).toEqual({
+    expect(mergeConfig(defaultConfig, { galaxy: { answer: -1 } })).toEqual({
       ...defaultConfig,
       galaxy: { answer: -1 },
     })
-    expect(merge(defaultConfig, { bits: ['lll'] })).toEqual({
+    expect(mergeConfig(defaultConfig, { bits: ['lll'] })).toEqual({
       ...defaultConfig,
       bits: ['lll'],
     })
-    expect(merge(defaultConfig, { year: 999 })).toEqual({ ...defaultConfig, year: 999 })
-    expect(merge(defaultConfig, { foo: 'tanaka' })).toEqual({
+    expect(mergeConfig(defaultConfig, { year: 999 })).toEqual({ ...defaultConfig, year: 999 })
+    expect(mergeConfig(defaultConfig, { foo: 'tanaka' })).toEqual({
       ...defaultConfig,
       foo: 'tanaka',
     })
-    expect(merge(defaultConfig, { single: false })).toEqual({
+    expect(mergeConfig(defaultConfig, { single: false })).toEqual({
       ...defaultConfig,
       single: false,
     })
   })
 
   it('other user config values exist in result', () => {
-    expect(merge(defaultConfig, { chi: 'ba' })).toEqual({ ...defaultConfig, chi: 'ba' })
-    expect(merge(defaultConfig, { galaxy: { chi: 'ba' } })).toEqual({
+    expect(mergeConfig(defaultConfig, { chi: 'ba' })).toEqual({ ...defaultConfig, chi: 'ba' })
+    expect(mergeConfig(defaultConfig, { galaxy: { chi: 'ba' } })).toEqual({
       ...defaultConfig,
       galaxy: { ...defaultConfig.galaxy, chi: 'ba' },
     })

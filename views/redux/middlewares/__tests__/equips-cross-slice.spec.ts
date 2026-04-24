@@ -59,13 +59,19 @@ describe('equipsCrossSliceMiddleware', () => {
         method: 'POST',
         path: '/kcsapi/api_req_kaisou/powerup',
         body: {
-          api_result: 1,
-          api_result_msg: 'success',
-        } satisfies never,
+          api_deck: [],
+          api_powerup_flag: 0,
+          // @ts-expect-error test fixture
+          api_ship: {
+            api_id: 1,
+          },
+        },
         postBody: {
+          api_id: '0',
           api_slot_dest_flag: '1',
           api_id_items: '1,2',
-        } satisfies never,
+          api_verno: '_',
+        },
         time: 0,
       }),
     )
@@ -92,13 +98,19 @@ describe('equipsCrossSliceMiddleware', () => {
         method: 'POST',
         path: '/kcsapi/api_req_kaisou/powerup',
         body: {
-          api_result: 1,
-          api_result_msg: 'success',
-        } satisfies never,
+          api_deck: [],
+          api_powerup_flag: 0,
+          // @ts-expect-error test fixture
+          api_ship: {
+            api_id: 1,
+          },
+        },
         postBody: {
+          api_id: '0',
           api_slot_dest_flag: '0',
           api_id_items: '1',
-        } satisfies never,
+          api_verno: '_',
+        },
         time: 0,
       }),
     )
@@ -127,13 +139,14 @@ describe('equipsCrossSliceMiddleware', () => {
         method: 'POST',
         path: '/kcsapi/api_req_kousyou/destroyship',
         body: {
-          api_result: 1,
-          api_result_msg: 'success',
-        } satisfies never,
+          api_material: [],
+          api_unset_list: {},
+        },
         postBody: {
           api_slot_dest_flag: '1',
           api_ship_id: '10,20',
-        } satisfies never,
+          api_verno: '_',
+        },
         time: 0,
       }),
     )

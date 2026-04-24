@@ -1,3 +1,5 @@
+import { getStore } from 'views/create-store'
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
 window.addEventListener('game.response', (e) => {
@@ -7,27 +9,22 @@ window.addEventListener('game.response', (e) => {
   if (!config.get('poi.expeditionResupplyCheck.enable', false)) return
   if (path !== '/kcsapi/api_get_member/mission') return
 
-  // getStore returns unknown; these shapes are the well-known Redux store structure
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const fleets = getStore('info.fleets') as Array<{ api_ship: number[] }>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const ships = getStore('info.ships') as Record<
-    number,
-    { api_ship_id: number; api_bull: number; api_fuel: number } | undefined
-  >
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const $ships = getStore('const.$ships') as Record<
-    number,
-    { api_bull_max: number; api_fuel_max: number } | undefined
-  >
+  const fleets = getStore('info.fleets')
+  const ships = getStore('info.ships')
+  const $ships = getStore('const.$ships')
   const needResupply = fleets
     .filter((_, index) => index !== 0)
     .flatMap((fleet) => fleet.api_ship)
     .some((shipId) => {
+      if (!$ships) return false
       const ship = ships[shipId]
+      if (!ship?.api_ship_id) return false
       const $ship = ship != null ? $ships[ship.api_ship_id] : undefined
-      if (!ship || !$ship) return false
-      return ship.api_bull < $ship.api_bull_max || ship.api_fuel < $ship.api_fuel_max
+      if (!$ship) return false
+      return (
+        (ship.api_bull ?? 0) < ($ship.api_bull_max ?? 0) ||
+        (ship.api_fuel ?? 0) < ($ship.api_fuel_max ?? 0)
+      )
     })
 
   if (needResupply) {

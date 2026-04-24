@@ -1,3 +1,7 @@
+jest.mock('views/env-parts/config', () => ({
+  config: { get: jest.fn() },
+}))
+
 import { keyBy, range, random, sampleSize, times, shuffle } from 'lodash'
 
 import { damagedCheck } from '../utils'

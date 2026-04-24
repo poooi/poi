@@ -112,6 +112,7 @@ export function getStore(path?: string): unknown {
 getStore.lock = undefined as boolean | undefined
 getStore.cache = undefined as unknown
 getStore.cache = store.getState()
+export const dispatch = store.dispatch
 
 // Listen to config.set event
 const solveConfSet = (path: string, value: unknown): void => {

@@ -38,7 +38,7 @@ interface ExtraFields {
 
 type Props = WebviewTagDOMAttrs & HandlerFields & ExtraFields
 
-type ExtendedWebviewTag = WebviewTag & {
+export type ExtendedWebviewTag = WebviewTag & {
   getWebContents: () => WebContents
   isReady: () => boolean
   forceSyncZoom: () => void

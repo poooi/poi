@@ -21,6 +21,7 @@
     "lint:style:fix": "stylelint '**/*.es' '**/*.css' '**/*.tsx' --fix",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:fix": "npm run lint:js:fix && npm run lint:style:fix",
+    "typecheck": "tsc --noEmit --skipLibCheck",
     "prepare": "husky install"
   },
   "repository": {
@@ -155,6 +156,7 @@
     "@types/mousetrap": "^1.6.9",
     "@types/node": "^22.0.0",
     "@types/node-7z": "^2.1.4",
+    "@types/node-fetch": "^2.6.13",
     "@types/npm": "^7.19.0",
     "@types/npm-package-arg": "^6.1.1",
     "@types/pangu": "^4.0.0",

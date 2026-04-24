@@ -1,12 +1,16 @@
-/* global $, config*/
+import type { ConstState } from 'views/redux/const'
+import type { InfoState } from 'views/redux/info'
+import type { SortieState } from 'views/redux/sortie'
+
 import { flatMap, map, get } from 'lodash'
+import { config } from 'views/env-parts/config'
 
 export const damagedCheck = (
-  { $ships, $equips },
-  { sortieStatus, escapedPos },
-  { fleets, ships, equips },
+  { $ships, $equips }: ConstState,
+  { sortieStatus, escapedPos }: SortieState,
+  { fleets, ships, equips }: InfoState,
 ) => {
-  const damagedShips = []
+  const damagedShips: string[] = []
   const sortieShips = flatMap(sortieStatus, (sortie, index) =>
     sortie ? get(fleets, [index, 'api_ship'], []) : [],
   )
@@ -20,8 +24,8 @@ export const damagedCheck = (
       return
     }
     const ship = ships[shipId]
-    const $ship = $ships[ship.api_ship_id]
-    if (!ship || ship.api_nowhp / ship.api_maxhp >= 0.250001) {
+    const $ship = $ships?.[ship?.api_ship_id ?? -1]
+    if (!ship || (ship.api_nowhp ?? 0) / (ship.api_maxhp ?? 1) >= 0.250001) {
       return
     }
     // escapedPos is non-empty only in combined fleet mode
@@ -30,21 +34,16 @@ export const damagedCheck = (
     }
     // Check Emergency repair personnel / goddess
     let safe = false
-    ship.api_slot.concat(ship.api_slot_ex || -1).forEach((slotId) => {
+    ship?.api_slot?.concat(ship.api_slot_ex || -1).forEach((slotId) => {
       if (slotId === -1) {
         return
       }
-      if (
-        parseInt(
-          ((($equips || {})[((equips || {})[slotId] || {}).api_slotitem_id] || {}).api_type ||
-            [])[3],
-        ) === 14
-      ) {
+      if (Number($equips?.[equips?.[slotId]?.api_slotitem_id ?? -1]?.api_type?.[3] ?? 0) === 14) {
         safe = true
       }
     })
     if (!safe) {
-      damagedShips.push(`Lv. ${ship.api_lv} - ${$ship.api_name}`)
+      damagedShips.push(`Lv. ${ship.api_lv} - ${$ship?.api_name}`)
     }
   })
 
@@ -52,15 +51,15 @@ export const damagedCheck = (
 }
 
 export const gameRefreshPage = () => {
-  window.getStore('layout.webview.ref').getWebContents().reload()
+  window.getStore('layout.webview.ref')?.getWebContents().reload()
 }
 
 export const gameRefreshPageIgnoringCache = () => {
-  window.getStore('layout.webview.ref').reloadIgnoringCache()
+  window.getStore('layout.webview.ref')?.reloadIgnoringCache()
 }
 
 export const gameReload = () => {
-  window.getStore('layout.webview.ref').executeJavaScript(`
+  window.getStore('layout.webview.ref')?.executeJavaScript(`
   var doc;
   if (document.getElementById('game_frame')) {
     doc = document.getElementById('game_frame').contentDocument;
@@ -75,12 +74,14 @@ export const gameReload = () => {
   `)
 }
 
-export const getPoiInfoHeight = () => get($('poi-info'), 'clientHeight', 0)
+export const getPoiInfoHeight = () => document.querySelector('poi-info')?.clientHeight ?? 0
 
-export const getTitleBarHeight = () => get($('title-bar'), 'clientHeight', 0)
+export const getTitleBarHeight = () => document.querySelector('title-bar')?.clientHeight ?? 0
 
 export const getYOffset = () => getPoiInfoHeight() + getTitleBarHeight()
 
-export const getRealSize = (value) => Math.floor(value * config.get('poi.appearance.zoom', 1))
+export const getRealSize = (value: number) =>
+  Math.floor(value * config.get('poi.appearance.zoom', 1))
 
-export const getZoomedSize = (value) => Math.floor(value / config.get('poi.appearance.zoom', 1))
+export const getZoomedSize = (value: number) =>
+  Math.floor(value / config.get('poi.appearance.zoom', 1))

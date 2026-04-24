@@ -5,8 +5,10 @@ import { readJsonSync, accessSync, ensureDir, writeJSON } from 'fs-extra'
 import glob from 'glob'
 import { fromPairs, map } from 'lodash'
 import fetch from 'node-fetch'
-import { join } from 'path-extra'
+import { join } from 'path'
 import semver from 'semver'
+import { dispatch, getStore } from 'views/create-store'
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 import { sortPlugins } from 'views/redux/plugins'
 
@@ -26,12 +28,12 @@ import {
   type NpmConfig,
 } from './utils'
 
-const fetchHeader = new Headers()
-fetchHeader.set('Cache-Control', 'max-age=0')
 const defaultFetchOption = {
   method: 'GET',
   cache: 'default' as RequestCache,
-  headers: fetchHeader,
+  headers: {
+    'Cache-Control': 'max-age=0',
+  },
 }
 
 const PLUGIN_NAME_WILDCARD = 'poi-plugin-*'
@@ -42,7 +44,6 @@ const getPluginExtraPath = (packageName: string) =>
 const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
 const BUNDLED_PLUGINS: Record<string, { version?: string }> = readJsonSync(PLUGIN_DATA_PATH)
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 const getPlugins = (): Plugin[] => getStore('plugins') as Plugin[]
 
 class PluginManager extends EventEmitter {
@@ -371,11 +372,13 @@ class PluginManager extends EventEmitter {
     if (!plugin.isBroken) {
       plugin = await enablePlugin(plugin)
     }
+    // @ts-expect-error force type assertion
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({ type: '@@Plugin/add', value: plugin })
   }
 
   async disablePlugin(plugin: Plugin): Promise<void> {
+    // @ts-expect-error force type assertion
     config.set(`plugin.${plugin.id}.enable`, false)
     plugin = await disablePlugin(plugin)
     dispatch({ type: '@@Plugin/add', value: plugin })

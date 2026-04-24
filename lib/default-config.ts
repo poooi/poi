@@ -1,4 +1,4 @@
-import type { NoPeriod } from 'shims/utils'
+import type { PluginID } from './utils'
 
 interface LimitFps {
   enabled: boolean
@@ -53,6 +53,10 @@ interface PoiAppearance {
 }
 
 interface PoiWindow {
+  x?: number
+  y?: number
+  width?: number
+  height?: number
   isMaximized: boolean
   isFullScreen: boolean
 }
@@ -176,8 +180,6 @@ interface MainPanelLayout {
 interface PoiMainPanel {
   layout: MainPanelLayout
 }
-
-type PluginID = `poi-plugin-${string & NoPeriod<string>}`
 
 interface PluginBooleanMap {
   [pluginId: PluginID]: boolean
