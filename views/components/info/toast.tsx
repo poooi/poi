@@ -10,6 +10,12 @@ const intentMap: Partial<Record<string, Intent>> = {
   error: Intent.DANGER,
 }
 
+interface ToastConfig {
+  type?: string
+  title?: string
+  timeout?: number
+}
+
 type ToastArgs = [string, Partial<ToastConfig>?]
 const list: ToastArgs[] = []
 

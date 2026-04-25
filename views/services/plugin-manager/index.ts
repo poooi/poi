@@ -265,7 +265,7 @@ class PluginManager extends EventEmitter {
     ).filter((p): p is Plugin => p != null)
     if (isNotif && outdatedList.length > 0) {
       const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t('setting:PluginUpdateMsg')}`
-      toast(content, { type: 'info', title: i18next.t('setting:Plugin update') })
+      window.toast(content, { type: 'info', title: i18next.t('setting:Plugin update') })
     }
   }
 
@@ -372,13 +372,11 @@ class PluginManager extends EventEmitter {
     if (!plugin.isBroken) {
       plugin = await enablePlugin(plugin)
     }
-    // @ts-expect-error force type assertion
     config.set(`plugin.${plugin.id}.enable`, true)
     dispatch({ type: '@@Plugin/add', value: plugin })
   }
 
   async disablePlugin(plugin: Plugin): Promise<void> {
-    // @ts-expect-error force type assertion
     config.set(`plugin.${plugin.id}.enable`, false)
     plugin = await disablePlugin(plugin)
     dispatch({ type: '@@Plugin/add', value: plugin })

@@ -32,6 +32,7 @@ interface PoiMisc {
   cache: Cache
   trustedCerts: string[]
   pinminimap: boolean
+  language?: string
 }
 
 interface PoiContent {

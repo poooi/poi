@@ -5,7 +5,7 @@ export type DeepKeyOf<T> = T extends readonly unknown[]
     : T extends EventTarget
       ? never
       : string extends keyof T
-        ? never
+        ? string
         : T extends object
           ? {
               [K in keyof T]-?: `${Exclude<K, symbol>}${'' | `.${DeepKeyOf<NonNullable<T[K]>>}`}`
@@ -19,7 +19,7 @@ export type DeepKeyOfArray<T> = T extends readonly unknown[]
     : T extends EventTarget
       ? never
       : string extends keyof T
-        ? never
+        ? [string]
         : T extends object
           ? {
               [K in keyof T]: readonly [K] | readonly [K, ...DeepKeyOfArray<NonNullable<T[K]>>]

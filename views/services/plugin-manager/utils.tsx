@@ -298,7 +298,7 @@ export async function readPlugin(pluginPath: string, isExtra = false): Promise<P
   const description =
     getString(poiPlugin, 'description') ??
     getString(cleanPackageData, 'description') ??
-    String(packageNameData?.[`des${language}`] ?? 'unknown')
+    String(packageNameData?.[`des${window.language}`] ?? 'unknown')
 
   const pluginRealPath = realpathSync(pluginPath)
   const pluginStat = lstatSync(pluginPath)
@@ -326,7 +326,6 @@ export async function readPlugin(pluginPath: string, isExtra = false): Promise<P
     }
   }
 
-  // @ts-expect-error force type assertion
   const enabled = config.get(`plugin.${id}.enable`, true)
 
   const iconRaw = poiPlugin['icon']
@@ -354,7 +353,7 @@ export async function readPlugin(pluginPath: string, isExtra = false): Promise<P
     earliestCompatibleMain: getString(poiPlugin, 'earliestCompatibleMain') ?? '0.0.0',
     lastApiVer: getString(poiPlugin, 'lastApiVer') ?? version,
     priority: getNumber(poiPlugin, 'priority') ?? 10000,
-    enabled,
+    enabled: Boolean(enabled),
     isExtra,
     isInstalled: true,
     isUpdating: false,
@@ -410,7 +409,6 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
   }
   let result: Plugin = { ...plugin, ...pluginMain }
   if (result.windowURL) {
-    // @ts-expect-error force type assertion
     const background = config.get(`poi.plugin.background.${result.id}`, !result.realClose)
     result.realClose = !background
   }
@@ -557,7 +555,7 @@ export function notifyFailed(state: Plugin[], npmConfig: NpmConfig): void {
   }
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
-    toast(content, { type: 'error', title: i18next.t('setting:Plugin error') })
+    window.toast(content, { type: 'error', title: i18next.t('setting:Plugin error') })
   }
   repairDep(reinstallList, npmConfig)
 }

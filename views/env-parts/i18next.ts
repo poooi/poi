@@ -61,7 +61,7 @@ declare global {
   interface Window {
     language: string
     LOCALES: Array<{ locale: string }>
-    i18next: ReturnType<typeof createInstance>
+    i18next?: ReturnType<typeof createInstance>
     i18n: Record<string, { __: TFunction; translate: (locale: string, str: string) => string }>
   }
 }
@@ -84,7 +84,7 @@ const normalizeLanguage = (language: string) => {
 }
 
 const language = (window.language = normalizeLanguage(
-  config.get('poi.misc.language', navigator.language),
+  config.get('poi.misc.language', navigator.language) ?? 'en-US',
 ))
 
 const i18next = createInstance()
@@ -129,7 +129,6 @@ i18next.use(initReactI18next).init({
 
 // for test
 if (dbg?.isEnabled()) {
-  // @ts-expect-error backward compatibility
   window.i18next = i18next
 }
 
@@ -175,11 +174,9 @@ export const addResourceBundleDebounce: typeof i18next.addResourceBundle = (...p
   return response
 }
 
-// @ts-expect-error backward compatibility
 window.i18n.resources = {
   __: (str: string) => spacing(str),
   translate: (locale: string, str: string) => spacing(str),
-  setLocale: (str: string) => str,
 }
 
 // inject translator for English names

@@ -130,10 +130,11 @@ const shipsSlice = createSlice({
       .addCase(createAPIReqHenseiLockResponseAction, (state, { payload }) => {
         const api_ship_id = payload.postBody?.api_ship_id
         if (!api_ship_id) return state
+        const shipId = Number(api_ship_id)
         return {
           ...state,
-          [api_ship_id]: {
-            ...state[api_ship_id],
+          [shipId]: {
+            ...state[shipId],
             api_locked: payload.body?.api_locked,
           },
         }
@@ -200,11 +201,12 @@ const shipsSlice = createSlice({
         if (!api_ship_id) return state
 
         if (api_highspeed === '1') {
-          const ship = state[api_ship_id]
+          const shipId = Number(api_ship_id)
+          const ship = state[shipId]
           if (!ship) return state
           return {
             ...state,
-            [api_ship_id]: completeRepair(ship),
+            [shipId]: completeRepair(ship),
           }
         }
 
@@ -224,10 +226,11 @@ const shipsSlice = createSlice({
           const dockInfo: DockInfo | undefined = Array.isArray(payload.body)
             ? payload.body.find((x) => x.api_id === dockId)
             : undefined
-          if (dockInfo && dockInfo.api_ship_id === 0 && state[rstId]) {
+          const rstIdNum = Number(rstId)
+          if (dockInfo && dockInfo.api_ship_id === 0 && state[rstIdNum]) {
             newState = {
               ...state,
-              [rstId]: completeRepair(state[rstId]),
+              [rstIdNum]: completeRepair(state[rstIdNum]),
             }
           }
         }
@@ -251,7 +254,7 @@ const shipsSlice = createSlice({
         )
       })
       .addCase(createAPIReqKaisouOpenExslotResponseAction, (state, { payload }) => {
-        const api_id = payload.postBody?.api_id
+        const api_id = Number(payload.postBody?.api_id || 0)
         if (!api_id) return state
         return {
           ...state,
