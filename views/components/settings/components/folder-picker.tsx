@@ -1,4 +1,5 @@
 import type { FileFilter } from 'electron'
+import type { ConfigPath } from 'views/env-parts/config'
 
 import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
@@ -80,7 +81,8 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
         emitErrorMessage()
         return
       }
-      config.set(configName, val)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      config.set(configName as ConfigPath, val as never)
     },
     [exclude, configName, emitErrorMessage],
   )
@@ -88,7 +90,8 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   useEffect(() => {
     if (exclude.length && exclude.some((parent) => isSubdirectory(parent, value))) {
       emitErrorMessage()
-      config.set(configName, defaultValue)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      config.set(configName as ConfigPath, defaultValue as never)
     }
   }, []) // Only run on mount
 

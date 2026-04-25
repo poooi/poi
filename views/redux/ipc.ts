@@ -37,7 +37,7 @@ export const reducer = (
       return {
         ...state,
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        [scope!]: omit(state[scope!], keys) as IpcScope,
+        [scope!]: omit(state[scope!], ...(keys ?? [])) as IpcScope,
       }
     }
     case '@@unregisterAllIPC': {

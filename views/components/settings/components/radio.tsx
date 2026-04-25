@@ -1,3 +1,5 @@
+import type { ConfigPath } from 'views/env-parts/config'
+
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { get, map } from 'lodash'
 import React from 'react'
@@ -23,7 +25,8 @@ export const RadioConfig = ({ configName, defaultValue = '', availableVal = [] }
   const value = typeof storeValue === 'string' ? storeValue : defaultValue
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    config.set(configName, e.currentTarget.value)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    config.set(configName as ConfigPath, e.currentTarget.value as never)
   }
 
   return (

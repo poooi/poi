@@ -4,13 +4,13 @@
 import type { ReactNode, FunctionComponent } from 'react'
 
 import { Card, H3 } from '@blueprintjs/core'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { styled } from 'styled-components'
 
 interface SectionProps {
-  title: ReactNode
+  title?: ReactNode
   children: ReactNode
+  className?: string
 }
 
 const SectionCard = styled(Card)`
@@ -25,11 +25,6 @@ export const Section: FunctionComponent<SectionProps> = ({ title, children, ...p
     {children}
   </SectionCard>
 )
-
-Section.propTypes = {
-  title: PropTypes.node,
-  children: PropTypes.node,
-}
 
 export const Wrapper = styled.div`
   display: flex;

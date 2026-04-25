@@ -31,9 +31,8 @@ describe('basic reducer', () => {
   })
 
   it('should handle api_get_member/require_info - member_id as string', () => {
-    const payload: Parameters<typeof createAPIGetMemberRequireInfoAction>[0] =
-      // Narrow fixture: this JSON intentionally contains only the fields used by reducers/tests.
-      requireInfoFixture satisfies Parameters<typeof createAPIGetMemberRequireInfoAction>[0]
+    // @ts-expect-error narrow fixture: JSON only contains fields used by this test
+    const payload: Parameters<typeof createAPIGetMemberRequireInfoAction>[0] = requireInfoFixture
     const result = reducer({}, createAPIGetMemberRequireInfoAction(payload))
     expect(result.api_member_id).toBe('123')
   })

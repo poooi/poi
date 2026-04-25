@@ -1,4 +1,5 @@
 import type { BrowserWindowConstructorOptions } from 'electron'
+import type { FC } from 'react'
 
 import * as remote from '@electron/remote'
 import FontAwesome from '@skagami/react-fontawesome'
@@ -19,6 +20,8 @@ import { omit, each } from 'lodash'
 import { Module } from 'module'
 import { join, basename } from 'path'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import ReactMarkdown from 'react-remarkable'
 import semver from 'semver'
 import { promisify } from 'util'
 import { extendReducer } from 'views/create-store'
@@ -80,7 +83,7 @@ export interface Plugin {
   id: string
   author: string
   link: string
-  description: string
+  description: React.ReactNode | string
   pluginPath: string
   linkedPlugin?: boolean
   icon: string | string[]
@@ -96,7 +99,7 @@ export interface Plugin {
   needRollback: boolean
   apiVer?: Record<string, string>
   isOutdated: boolean
-  displayIcon: React.ReactNode
+  displayIcon: React.JSX.Element | null
   displayName: React.ReactNode
   timestamp: number
   isBroken?: boolean
@@ -117,6 +120,23 @@ export interface Plugin {
   i18nDir?: string
   title?: string
   windowMode?: boolean
+}
+
+interface BundlePluginI18n {
+  'zh-CN': string
+  'zh-TW': string
+  'ja-JP': string
+  'en-US': string
+  'ko-KR': string
+}
+
+export interface BundlePluginMeta {
+  name: BundlePluginI18n
+  version: string
+  icon: string
+  author: string
+  link: string
+  description: BundlePluginI18n
 }
 
 type PluginDataEntry = {
@@ -248,10 +268,48 @@ export function updateI18n(plugin: Plugin): Plugin {
     return {
       ...plugin,
       name: i18next.t(`${namespace}:${plugin.name}`),
-      description: i18next.t(`${namespace}:${plugin.description}`),
+      description:
+        typeof plugin.description === 'string'
+          ? i18next.t(`${namespace}:${plugin.description}`)
+          : plugin.description,
     }
   }
   return plugin
+}
+
+const BundlePluginDisplayName: FC<BundlePluginMeta> = (meta) => {
+  const { i18n } = useTranslation('setting')
+  return (
+    <>
+      <FontAwesome name={meta.icon.split('/')[1] || meta.icon} />{' '}
+      {/* @ts-expect-error the language is guaranteed to be a key of meta.name */}
+      {meta.name[i18n.language] ?? meta.name['en-US']}
+    </>
+  )
+}
+
+const BundlePluginDescription: FC<BundlePluginMeta> = (meta) => {
+  const { i18n } = useTranslation('setting')
+  return (
+    <ReactMarkdown
+      options={{ linkTarget: '_blank' }}
+      /* @ts-expect-error the language is guaranteed to be a key of meta.description */
+      source={meta.description[i18n.language] ?? meta.description['en-US']}
+    />
+  )
+}
+
+export function bundlePluginMetaToPlugin(meta: BundlePluginMeta, packageName: string): Plugin {
+  // @ts-expect-error the return type is guaranteed to match Plugin except for displayName and description which will be added later
+  return {
+    packageData: { name: packageName, version: meta.version },
+    packageName,
+    displayName: <BundlePluginDisplayName {...meta} />,
+    description: <BundlePluginDescription {...meta} />,
+    author: meta.author,
+    version: meta.version,
+    id: packageName,
+  }
 }
 
 export async function readPlugin(pluginPath: string, isExtra = false): Promise<Plugin> {
@@ -517,14 +575,17 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
 }
 
 function clearPluginCache(packagePath: string): void {
-  for (const p in Module._cache) {
+  for (const p in require.cache) {
     if (p.includes(basename(packagePath))) {
-      delete Module._cache[p]
+      delete require.cache[p]
     }
   }
-  for (const p in Module._pathCache) {
+  // _pathCache is a Node.js internal not typed in @types/node
+  type ModuleWithPathCache = typeof Module & { _pathCache?: Record<string, string | string[]> }
+  const pathCache = (Module as ModuleWithPathCache)._pathCache
+  for (const p in pathCache) {
     if (p.includes(basename(packagePath))) {
-      delete Module._pathCache[p]
+      delete pathCache[p]
     }
   }
 }

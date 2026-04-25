@@ -1,5 +1,5 @@
 import { TouchBar } from 'electron'
-import path from 'path-extra'
+import path from 'path'
 
 import config from './config'
 

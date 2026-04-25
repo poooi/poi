@@ -62,7 +62,7 @@ describe('maps reducer', () => {
       startFixture
     const result = reducer({}, createAPIReqMapStartResponseAction(startPayload))
     const key = `${startPayload.postBody.api_maparea_id}${startPayload.postBody.api_mapinfo_no}`
-    expect(result[key]?.api_eventmap?.api_max_maphp).toBeDefined()
-    expect(result[key]?.api_eventmap?.api_now_maphp).toBeDefined()
+    expect(result[Number(key)]?.api_eventmap?.api_max_maphp).toBeDefined()
+    expect(result[Number(key)]?.api_eventmap?.api_now_maphp).toBeDefined()
   })
 })

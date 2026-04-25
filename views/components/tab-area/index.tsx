@@ -1,3 +1,4 @@
+import type { ConfigStringPath } from 'lib/config'
 import type { ResizableAreaHandle } from 'react-resizable-area'
 import type { Plugin } from 'views/services/plugin-manager'
 
@@ -30,8 +31,10 @@ import { isInGame } from 'views/utils/game-utils'
 import type { PluginWindowWrapHandle } from './plugin-window-wrapper'
 import type { TabContentsUnionHandle } from './tab-contents-union'
 
+// @ts-expect-error not ready yet
 import * as MAIN_VIEW from '../main'
 import * as SETTINGS_VIEW from '../settings'
+// @ts-expect-error not ready yet
 import * as SHIP_VIEW from '../ship'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { PluginWrap } from './plugin-wrapper'
@@ -168,7 +171,8 @@ const PluginDropdown = styled(Menu)<{ grid?: boolean }>`
         `}
 `
 
-const NavTabs = styled(Tabs)`
+// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+const NavTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typeof Tabs>>)`
   width: 100%;
 
   & > .${Classes.TAB_LIST} {
@@ -215,8 +219,8 @@ const PluginNonIdealState = styled(NonIdealState)`
 `
 
 interface SizeOption {
-  px: number
-  percent: number
+  px?: number
+  percent?: number
 }
 
 interface ResizableAreaConfig {
@@ -252,8 +256,11 @@ const getResizableAreaProps = ({
       minimumHeight: { px: 0, percent: 100 },
       initHeight: { px: 0, percent: 100 },
       disable: { width: true, height: true },
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width as SizeOption),
+      onResized: ({ width }) =>
+        config.set('poi.tabarea.mainpanelwidth', {
+          px: width.px ?? 0,
+          percent: width.percent ?? 0,
+        }),
     }
   }
 
@@ -266,8 +273,11 @@ const getResizableAreaProps = ({
       minimumHeight: { px: 0, percent: 10 },
       initWidth: { px: 0, percent: 100 },
       disable: { width: true, height: !editable },
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      onResized: ({ height }) => config.set('poi.tabarea.mainpanelheight', height as SizeOption),
+      onResized: ({ height }) =>
+        config.set('poi.tabarea.mainpanelheight', {
+          px: height.px ?? 0,
+          percent: height.percent ?? 0,
+        }),
     }
   }
 
@@ -279,8 +289,11 @@ const getResizableAreaProps = ({
     minimumHeight: { px: 0, percent: 100 },
     initHeight: { px: 0, percent: 100 },
     disable: { width: !editable, height: true },
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    onResized: ({ width }) => config.set('poi.tabarea.mainpanelwidth', width as SizeOption),
+    onResized: ({ width }) =>
+      config.set('poi.tabarea.mainpanelwidth', {
+        px: width.px ?? 0,
+        percent: width.percent ?? 0,
+      }),
   }
 }
 
@@ -289,12 +302,13 @@ let lockedTab = false
 const dispatchTabChangeEvent = (
   tabInfo: { activeMainTab?: string; activePluginName?: string },
   autoSwitch = false,
-): void =>
+): void => {
   dispatch({
     type: '@@TabSwitch',
     tabInfo,
     autoSwitch,
   })
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyState = any
@@ -339,7 +353,7 @@ const ControlledTabAreaFC = ({
   const [prevDoubleTabbed, setPrevDoubleTabbed] = useState(doubleTabbed)
 
   const tabsRef = useRef<Tabs | null>(null)
-  const triggerRef = useRef<Button | null>(null)
+  const triggerRef = useRef<HTMLButtonElement | null>(null)
   const resizeContainerRef = useRef<HTMLDivElement | null>(null)
   const mainTabKeyUnionRef = useRef<TabContentsUnionHandle | null>(null)
   const tabKeyUnionRef = useRef<TabContentsUnionHandle | null>(null)
@@ -535,7 +549,7 @@ const ControlledTabAreaFC = ({
   )
 
   const handleConfig = useCallback(
-    (path: string): void => {
+    <P extends ConfigStringPath>(path: P): void => {
       if (path.startsWith('poi.tabarea')) {
         if (config.get('poi.tabarea.vertical', false)) {
           resizableAreaRef.current?.setSize({
@@ -587,7 +601,9 @@ const ControlledTabAreaFC = ({
     window.addEventListener('game.start', handleKeyDown)
     window.addEventListener('game.response', handleResponse)
     window.openSettings = handleCmdCommaKeyDown
-    ipc.register('MainWindow', { ipcFocusPlugin })
+    ipc.register('MainWindow', {
+      ipcFocusPlugin: (...args: unknown[]) => ipcFocusPlugin(String(args[0])),
+    })
 
     if (process.platform === 'darwin') {
       require('electron').ipcRenderer.on('touchbartab', (_event: unknown, message: number) => {
@@ -737,8 +753,6 @@ const ControlledTabAreaFC = ({
           hasBackdrop
           position={Position.BOTTOM_RIGHT}
           content={pluginDropdownContents}
-          wrapperTagName="div"
-          targetTagName="div"
           popoverClassName="plugin-dropdown-container"
           modifiers={pluginDropDownModifier}
         >
@@ -797,8 +811,6 @@ const ControlledTabAreaFC = ({
         position={Position.BOTTOM}
         content={pluginDropdownContents}
         className="nav-tab"
-        wrapperTagName="div"
-        targetTagName="div"
         modifiers={pluginDropDownModifier}
       >
         <PluginDropdownButton

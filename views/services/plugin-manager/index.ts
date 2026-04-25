@@ -12,6 +12,8 @@ import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 import { sortPlugins } from 'views/redux/plugins'
 
+import type { BundlePluginMeta, Plugin, NpmConfig } from './utils'
+
 import {
   installPackage,
   removePackage,
@@ -24,8 +26,6 @@ import {
   findInstalledTarball,
   getNpmConfig,
   isRecord,
-  type Plugin,
-  type NpmConfig,
 } from './utils'
 
 const defaultFetchOption = {
@@ -42,7 +42,7 @@ const getPluginPath = (packageName: string) => join(PLUGIN_PATH, 'node_modules',
 const getPluginExtraPath = (packageName: string) =>
   join(PLUGIN_EXTRA_PATH, 'node_modules', packageName)
 const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
-const BUNDLED_PLUGINS: Record<string, { version?: string }> = readJsonSync(PLUGIN_DATA_PATH)
+const BUNDLED_PLUGINS: Record<string, BundlePluginMeta> = readJsonSync(PLUGIN_DATA_PATH)
 
 const getPlugins = (): Plugin[] => getStore('plugins') as Plugin[]
 
@@ -145,9 +145,9 @@ class PluginManager extends EventEmitter {
     return this.getFilteredPlugins((plugin) => plugin.isInstalled)
   }
 
-  getUninstalledPluginSettings(): Record<string, { version?: string }> {
+  getUninstalledPluginSettings(): Record<string, BundlePluginMeta> {
     const installedNames = this.getInstalledPlugins().map((p) => p.packageName)
-    const uninstalled: Record<string, { version?: string }> = {}
+    const uninstalled: Record<string, BundlePluginMeta> = {}
     for (const name in BUNDLED_PLUGINS) {
       if (!installedNames.includes(name)) {
         uninstalled[name] = BUNDLED_PLUGINS[name]
@@ -251,7 +251,7 @@ class PluginManager extends EventEmitter {
     return undefined
   }
 
-  async getOutdatedPlugins(isNotif: boolean): Promise<void> {
+  async getOutdatedPlugins(isNotif = false): Promise<void> {
     const plugins = this.getInstalledPlugins()
     const outdatedList = (
       await Promise.all(

@@ -1,58 +1,46 @@
 import { Intent } from '@blueprintjs/core'
 import _, { get } from 'lodash'
-/*
- * This file contains utility functions that is related to the game mechanism,
- * or formatting instructions to game data.
- */
-import { ProgressBar } from 'react-bootstrap'
-import { addStyle } from 'react-bootstrap/lib/utils/bootstrapUtils'
 
 import { shipAvatarColor } from './color'
-
-addStyle(ProgressBar, 'green')
-addStyle(ProgressBar, 'yellow')
-addStyle(ProgressBar, 'orange')
-addStyle(ProgressBar, 'red')
-
 import { between } from './tools'
 
 const aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
-const aircraftLevelBonus = {
-  6: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 艦上戦闘機
-  7: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上爆撃機
-  8: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 艦上攻撃機
-  11: [0, 1, 1, 1, 1, 3, 3, 6, 6], // 水上爆撃機
-  26: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 対潜哨戒機
-  45: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 水上戦闘機
-  47: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 陸上攻撃機
-  48: [0, 0, 2, 5, 9, 14, 14, 22, 22], // 局地戦闘機 陸軍戦闘機
-  56: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式戦闘機
-  57: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式戦闘爆撃機
-  58: [0, 0, 0, 0, 0, 0, 0, 0, 0], // 噴式攻撃機
+const aircraftLevelBonus: Record<number, number[]> = {
+  6: [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  7: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  8: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  11: [0, 1, 1, 1, 1, 3, 3, 6, 6],
+  26: [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  45: [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  47: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  48: [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  56: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  57: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  58: [0, 0, 0, 0, 0, 0, 0, 0, 0],
 }
 
-const speedInterpretation = {
+const speedInterpretation: Record<number, string> = {
   5: 'Slow',
   10: 'Fast',
   15: 'Fast+',
   20: 'Fastest',
 }
 
-const speedStyles = {
+const speedStyles: Record<number, React.CSSProperties> = {
   [15]: { color: '#1E88E5' },
   [20]: { color: '#64B5F6' },
 }
 
 const uncountedSlotitemId = [42, 43, 145, 146, 150, 241]
 
-export function getMaterialStyle(percent) {
+export function getMaterialStyle(percent: number): string {
   if (percent <= 50) return 'red'
   else if (percent <= 75) return 'orange'
   else if (percent < 100) return 'yellow'
   else return 'green'
 }
 
-export function getCondStyle(cond) {
+export function getCondStyle(cond: number): string {
   let s = 'poi-ship-cond poi-ship-cond-'
   if (cond > 52) s += '53'
   else if (cond > 49) s += '50'
@@ -65,38 +53,37 @@ export function getCondStyle(cond) {
   return s
 }
 
-export function getShipAvatarColorByType(shipType) {
+export function getShipAvatarColorByType(shipType: number): string {
   switch (shipType) {
-    case 1: // 海防艦
+    case 1:
       return shipAvatarColor.GREY_BLUE
-    case 2: // 駆逐艦
+    case 2:
       return shipAvatarColor.GREEN
-    case 3: // 軽巡洋艦
-    case 4: // 重雷装巡洋艦
-    case 21: // 練習巡洋艦
+    case 3:
+    case 4:
+    case 21:
       return shipAvatarColor.YELLOW
-    case 5: // 重巡洋艦
-    case 6: // 航空巡洋艦
+    case 5:
+    case 6:
       return shipAvatarColor.ORANGE
-    case 8: // 戦艦
-    case 9: // 戦艦
-    case 10: // 航空戦艦
-    case 12: // 超弩級戦艦
+    case 8:
+    case 9:
+    case 10:
+    case 12:
       return shipAvatarColor.RED
-    case 7: // 軽空母
-    case 11: // 航空母艦
-    case 18: // 装甲空母
+    case 7:
+    case 11:
+    case 18:
       return shipAvatarColor.BLUE
-    case 13: // 潜水艦
-    case 14: // 潜水空母
+    case 13:
+    case 14:
       return shipAvatarColor.PURPLE
     default:
-      // 他
       return shipAvatarColor.WHITE
   }
 }
 
-export function getShipAvatarColorByRange(rng) {
+export function getShipAvatarColorByRange(rng: number): string {
   switch (rng) {
     case 1:
       return shipAvatarColor.GREEN
@@ -111,13 +98,12 @@ export function getShipAvatarColorByRange(rng) {
   }
 }
 
-export function getShipAvatarColorByTag(tag, color) {
+export function getShipAvatarColorByTag(tag: number, color: string[]): string {
   return Number.isInteger(tag) && tag > 0 ? `${color[tag - 1]}60` : shipAvatarColor.BLACK
 }
 
-export function getShipAvatarColorBySpeed(speed) {
+export function getShipAvatarColorBySpeed(speed: number): string {
   switch (speed) {
-    // 0=陸上基地, 5=低速, 10=高速(, 15=高速+, 20=最速)
     case 5:
       return shipAvatarColor.BLUE
     case 10:
@@ -131,7 +117,8 @@ export function getShipAvatarColorBySpeed(speed) {
   }
 }
 
-export function selectShipAvatarColor(ship, $ship, color, opt) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function selectShipAvatarColor(ship: any, $ship: any, color: string[], opt: string): string {
   switch (opt) {
     case 'shiptype':
       return getShipAvatarColorByType($ship.api_stype)
@@ -146,43 +133,43 @@ export function selectShipAvatarColor(ship, $ship, color, opt) {
   }
 }
 
-export const getSpeedLabel = (speed) => speedInterpretation[speed] || 'Unknown'
+export const getSpeedLabel = (speed: number): string => speedInterpretation[speed] || 'Unknown'
 
-export const getSpeedStyle = (speed) => speedStyles[speed] || {}
+export const getSpeedStyle = (speed: number): React.CSSProperties => speedStyles[speed] || {}
 
-export function getStatusStyle(status) {
+export function getStatusStyle(status: number | null | undefined): React.CSSProperties {
   if (status != null) {
-    const flag = status == 0 || status == 1 // retreat or repairing
-    if (flag != null && flag) {
+    const flag = status == 0 || status == 1
+    if (flag) {
       return { opacity: 0.4 }
     }
-  } else {
-    return {}
   }
+  return {}
 }
 
-export function getShipLabelStatus(ship, $ship, inRepair, escaped) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getShipLabelStatus(
+  ship: any,
+  $ship: any,
+  inRepair: boolean,
+  escaped: boolean,
+): number {
   if (!ship || !$ship) {
     return -1
   }
   if (escaped) {
-    // retreated
     return 0
   } else if (inRepair) {
-    // repairing
     return 1
   } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
-    // supply
     return 2
   } else if (ship.api_sally_area > 0) {
-    // special: locked phase
-    // returns 3 for locked phase 1, 4 for phase 2, etc
     return ship.api_sally_area + 2
   }
   return -1
 }
 
-export function getHpStyle(percent) {
+export function getHpStyle(percent: number): string {
   if (percent <= 25) {
     return 'red'
   } else if (percent <= 50) {
@@ -194,13 +181,9 @@ export function getHpStyle(percent) {
   }
 }
 
-/**
- * test if an equipment is aircraft using api_type[2] or api_type[3]
- * @param {Equip | number} equip equip (master) data or api_type[3]
- */
-export function equipIsAircraft(equip) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function equipIsAircraft(equip: any): boolean {
   if (Number.isInteger(equip)) {
-    // compat: the function used to accept api_type[3]
     return (
       equip != null &&
       (between(equip, 6, 10) ||
@@ -221,7 +204,11 @@ export function equipIsAircraft(equip) {
   }
 }
 
-export function getTyku(equipsData, landbaseStatus = 0) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getTyku(
+  equipsData: any[][],
+  landbaseStatus = 0,
+): { basic: number; min: number; max: number } {
   let minTyku = 0
   let maxTyku = 0
   let basicTyku = 0
@@ -240,37 +227,31 @@ export function getTyku(equipsData, landbaseStatus = 0) {
       }
       let tempTyku = 0.0
       let tempAlv
-      // Basic tyku
       if (_equip.api_alv) {
         tempAlv = _equip.api_alv
       } else {
         tempAlv = 0
       }
-      // 改修：艦戦×0.2、爆戦×0.25
       const levelFactor = $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) : 0
       if (
         [6, 7, 45, 47, 57].includes($equip.api_type[2]) ||
         ([26].includes($equip.api_type[2]) && $equip.api_tyku > 0)
       ) {
-        // 艦戦 · 爆戦 · 水上戦闘機 · 陸上攻撃機 · 噴式機
-        // 対潜哨戒機 (一式戦 隼II型改(20戦隊) · 一式戦 隼III型改(熟練/20戦隊))
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([8, 11].includes($equip.api_type[2])) {
-        // 艦攻 · 水上爆撃機
         tempTyku += Math.sqrt(onslot) * $equip.api_tyku
         tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
         basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([48].includes($equip.api_type[2])) {
-        // 局戦 · 陸戦
         let landbaseBonus = 0
-        if (landbaseStatus === 1) landbaseBonus = 1.5 * $equip.api_houk // (対空 ＋ 迎撃 × 1.5)
-        if (landbaseStatus === 2) landbaseBonus = $equip.api_houk + 2 * $equip.api_houm // (対空 ＋ 迎撃 ＋ 対爆 × 2)
+        if (landbaseStatus === 1) landbaseBonus = 1.5 * $equip.api_houk
+        if (landbaseStatus === 2) landbaseBonus = $equip.api_houk + 2 * $equip.api_houm
         tempTyku +=
           Math.sqrt(onslot) *
           ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
@@ -279,7 +260,6 @@ export function getTyku(equipsData, landbaseStatus = 0) {
         minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
         maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
       } else if ([10, 41].includes($equip.api_type[2])) {
-        // 水偵・飛行艇
         if (landbaseStatus == 2) {
           if ($equip.api_saku >= 9) {
             reconBonus = Math.max(reconBonus, 1.16)
@@ -294,14 +274,12 @@ export function getTyku(equipsData, landbaseStatus = 0) {
           maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
         }
       } else if ([9].includes($equip.api_type[2]) && landbaseStatus == 2) {
-        // 艦偵
         if ($equip.api_saku >= 9) {
           reconBonus = Math.max(reconBonus, 1.3)
         } else {
           reconBonus = Math.max(reconBonus, 1.2)
         }
       } else if ([49].includes($equip.api_type[2])) {
-        // 陸上偵察機
         if (landbaseStatus == 1) {
           tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
           basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
@@ -329,9 +307,11 @@ export function getTyku(equipsData, landbaseStatus = 0) {
   }
 }
 
-// Saku (2-5 旧式)
-// 偵察機索敵値×2 ＋ 電探索敵値 ＋ √(艦隊の装備込み索敵値合計 - 偵察機索敵値 - 電探索敵値)
-export function getSaku25(shipsData, equipsData) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getSaku25(
+  shipsData: any[][],
+  equipsData: any[][],
+): { recon: number; radar: number; ship: number; total: number } {
   let reconSaku = 0
   let shipSaku = 0
   let radarSaku = 0
@@ -377,11 +357,12 @@ export function getSaku25(shipsData, equipsData) {
   }
 }
 
-// Saku (2-5 秋式)
-// 索敵スコア = 艦上爆撃機 × (1.04) + 艦上攻撃機 × (1.37) + 艦上偵察機 × (1.66) + 水上偵察機 × (2.00)
-//            + 水上爆撃機 × (1.78) + 小型電探 × (1.00) + 大型電探 × (0.99) + 探照灯 × (0.91)
-//            + √(各艦毎の素索敵) × (1.69) + (司令部レベルを5の倍数に切り上げ) × (-0.61)
-export function getSaku25a(shipsData, equipsData, teitokuLv) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getSaku25a(
+  shipsData: any[][],
+  equipsData: any[][],
+  teitokuLv: number,
+): { ship: number; item: number; teitoku: number; total: number } {
   let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
@@ -440,34 +421,14 @@ export function getSaku25a(shipsData, equipsData, teitokuLv) {
   }
 }
 
-// Saku (33)
-// 索敵スコア = Sigma(CiSi) + Sigma(sqrt(s)) - Ceil(0.4H) + 2M
-//     Si(改修): 電探(1.25 * Sqrt(Star)) 水上偵察機(1.2 * Sqrt(Star))
-//     Ci(装備):
-//              6 0.6 艦上戦闘機
-//              7 0.6 艦上爆撃機
-//              8 0.8 艦上攻撃機
-//              9 1.0 艦上偵察機
-//             10 1.2 水上偵察機
-//             11 1.1 水上爆撃機
-//             12 0.6 小型電探
-//             13 0.6 大型電探
-//             26 0.6 対潜哨戒機
-//             29 0.6 探照灯
-//             34 0.6 司令部施設
-//             35 0.6 航空要員
-//             39 0.6 水上艦要員
-//             40 0.6 大型ソナー
-//             41 0.6 大型飛行艇
-//             42 0.6 大型探照灯
-//             45 0.6 水上戦闘機
-//             93 大型電探(II) null
-//             94 艦上偵察機(II) null
-//     S(各艦毎の素索敵)
-//     H(レベル)
-//     M(空き数)
-
-export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, slotCount = 6) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getSaku33(
+  shipsData: any[][],
+  equipsData: any[][],
+  teitokuLv: number,
+  mapModifier = 1.0,
+  slotCount = 6,
+): { ship: number; item: number; teitoku: number; total: number } {
   let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
@@ -522,31 +483,36 @@ export function getSaku33(shipsData, equipsData, teitokuLv, mapModifier = 1.0, s
   }
 }
 
-// returns fleet's minimal api_soku value, returns 0 when all elements undefined
-export const getFleetSpeed = (shipsData) => ({
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getFleetSpeed = (shipsData: any[][]): { speed: number } => ({
   speed:
     _(shipsData)
       .map(([ship = {}] = []) => ship.api_soku || Infinity)
       .min() || 0,
 })
 
-export async function isInGame() {
+interface ElectronWebviewElement extends HTMLElement {
+  getURL(): string
+  executeJavaScript(code: string): Promise<unknown>
+}
+
+export async function isInGame(): Promise<boolean> {
   try {
-    if (document.querySelector('webview').getURL() === 'https://play.games.dmm.com/game/kancolle') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const webview = document.querySelector('webview') as ElectronWebviewElement | null
+    if (webview?.getURL() === 'https://play.games.dmm.com/game/kancolle') {
       return true
     }
-
     const exists =
-      (await document
-        .querySelector('webview')
-        ?.executeJavaScript("document.querySelector('embed') !== null")) ?? false
-    return exists
+      (await webview?.executeJavaScript("document.querySelector('embed') !== null")) ?? false
+    return Boolean(exists)
   } catch (_) {
     return false
   }
 }
 
-export const getSlotitemCount = (slotitems) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getSlotitemCount = (slotitems: Record<string, any>): number => {
   return Object.values(slotitems).filter(
     ({ api_slotitem_id }) => !uncountedSlotitemId.includes(api_slotitem_id),
   ).length
@@ -561,16 +527,7 @@ export const FLEET_INTENTS = [
   Intent.NONE,
 ]
 
-/**
- *
- * 0: Cond >= 40, Supplied, Repaired, In port
- * 1: 20 <= Cond < 40, or not supplied, or medium damage
- * 2: Cond < 20, or heavy damage
- * 3: Repairing
- * 4: In mission
- * 5: In map
- */
-export const getFleetIntent = (state, disabled) =>
+export const getFleetIntent = (state: number, disabled: boolean): Intent =>
   state >= 0 && state <= 5 && !disabled ? FLEET_INTENTS[state] : Intent.NONE
 
 export const DEFAULT_FLEET_NAMES = ['I', 'II', 'III', 'IV']

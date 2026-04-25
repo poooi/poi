@@ -51,6 +51,7 @@ interface PoiAppearance {
   textspacingcjk: boolean
   vibrant: number
   customtitlebar: boolean
+  background?: string
 }
 
 interface PoiWindow {
@@ -77,11 +78,11 @@ interface WebviewRatio {
 }
 
 interface PoiWebview {
-  useFixedResolution: boolean
-  windowUseFixedResolution: boolean
-  windowWidth: number
-  width: number
-  ratio: WebviewRatio
+  useFixedResolution?: boolean
+  windowUseFixedResolution?: boolean
+  windowWidth?: number
+  width?: number
+  ratio?: WebviewRatio
 }
 
 interface PoiLayout {
@@ -94,11 +95,6 @@ interface PoiLayout {
 
 interface PoiConfirm {
   quit: boolean
-}
-
-interface PoiAutoswitch {
-  enabled: boolean
-  main: boolean
 }
 
 interface MainPanelDimension {
@@ -192,6 +188,16 @@ interface PoiPluginConfig {
   favorite?: PluginBooleanMap
 }
 
+interface PoiNetwork {
+  customCertificateAuthority?: string
+}
+
+interface PoiAutoSwitchPlugins {
+  enabled: boolean
+  main: boolean
+  [pluginId: string]: boolean
+}
+
 interface Poi {
   misc: PoiMisc
   content: PoiContent
@@ -202,7 +208,7 @@ interface Poi {
   webview: PoiWebview
   layout: PoiLayout
   confirm: PoiConfirm
-  autoswitch: PoiAutoswitch
+  autoswitch: PoiAutoSwitchPlugins
   tabarea: PoiTabarea
   notify: PoiNotify
   eventSortieCheck: { enable: boolean }
@@ -212,6 +218,7 @@ interface Poi {
   transition: { enable: boolean }
   mainpanel: PoiMainPanel
   plugin: PoiPluginConfig
+  network: PoiNetwork
 }
 
 interface Socks5Proxy {
@@ -571,6 +578,7 @@ const defaultConfig: Config = {
       },
     },
     plugin: {},
+    network: {},
   },
   proxy: {
     socks5: {

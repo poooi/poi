@@ -16,8 +16,11 @@ import React, { useContext, Children } from 'react'
 
 import { WindowEnv } from './window-env'
 
-const getSecondChildren = (children: ReactNode): ReactNode =>
-  Children.count(children) > 1 ? Children.toArray(children)[1] : undefined
+const getSecondChildren = (children: ReactNode): React.ReactElement | string | undefined =>
+  Children.count(children) > 1
+    ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      (Children.toArray(children)[1] as React.ReactElement | string)
+    : undefined
 
 export const Alert: React.FC<AlertProps> = ({ children, ...props }) => (
   <BAlert portalContainer={useContext(WindowEnv).mountPoint} {...props}>

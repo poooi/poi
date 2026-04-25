@@ -1,3 +1,5 @@
+import type { ConfigPath } from 'views/env-parts/config'
+
 import { NumericInput } from '@blueprintjs/core'
 import { debounce, get } from 'lodash'
 import React, { useMemo } from 'react'
@@ -19,7 +21,8 @@ export const IntegerConfig = ({ configName, defaultValue = 0, ...rest }: Props) 
   const handleChange = useMemo(
     () =>
       debounce((v: number) => {
-        config.set(configName, Math.round(v))
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        config.set(configName as ConfigPath, Math.round(v) as never)
       }, 200),
     [configName],
   )

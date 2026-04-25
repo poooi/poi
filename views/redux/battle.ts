@@ -16,7 +16,7 @@ function asString(x: unknown, fallback = ''): string {
 }
 
 function simulate(battle: InstanceType<typeof Battle>) {
-  const simulator = Simulator.auto(battle)
+  const simulator = Simulator.auto(battle, {})
   if (!simulator)
     return { deckShipId: [], deckHp: [], deckInitHp: [], enemyShipId: [], enemyHp: [] }
 
@@ -25,7 +25,7 @@ function simulate(battle: InstanceType<typeof Battle>) {
   const deckInitHp: number[] = []
   const deck = [...(simulator.mainFleet ?? []), ...(simulator.escortFleet ?? [])]
   deck.map((ship) => {
-    deckShipId.push(ship?.raw?.api_id ?? -1)
+    deckShipId.push(ship && isRecord(ship.raw) ? asNumber(ship.raw['api_id'], -1) : -1)
     deckHp.push(ship ? ship.nowHP : 0)
     deckInitHp.push(ship ? ship.initHP : 0)
   })
@@ -218,15 +218,15 @@ export function reducer(
         new Battle({
           fleet: new Fleet({
             type: sortieTypeFlag,
-            main: getFleet(asNumber(fleetId, 1), store ?? {}),
-            escort: getFleet(escortId, store ?? {}),
+            main: getFleet(asNumber(fleetId, 1), store ?? {}) ?? undefined,
+            escort: getFleet(escortId, store ?? {}) ?? undefined,
           }),
           packet: [],
         })
       const packetRaw: unknown = JSON.parse(JSON.stringify(body ?? {}))
       const packet: Record<string, unknown> = isRecord(packetRaw) ? packetRaw : {}
       packet['poi_path'] = path
-      battle.packet.push(packet)
+      battle.packet?.push(packet)
       const result = simulate(battle)
 
       return {

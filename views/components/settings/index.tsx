@@ -1,57 +1,34 @@
+import type { WithTranslation } from 'react-i18next'
+
 import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
 import { isEqual, map } from 'lodash'
-import React from 'react'
+import React, { Component } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Trans, withNamespaces } from 'react-i18next'
+import { Trans, withTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
 
+// @ts-expect-error ts not ready yet
 import { About } from './about'
+// @ts-expect-error ts not ready yet
 import { DisplayConfig } from './display'
+// @ts-expect-error ts not ready yet
 import { GamingConfig } from './gaming'
+// @ts-expect-error ts not ready yet
 import { PoiConfig } from './main'
+// @ts-expect-error ts not ready yet
 import { NetworkConfig } from './network'
 import { PluginConfig } from './plugin'
 
 const TABS = [
-  {
-    id: 0,
-    title: 'Common',
-    component: PoiConfig,
-    icon: 'wrench',
-  },
-  {
-    id: 4,
-    title: 'Gaming',
-    component: GamingConfig,
-    icon: 'gamepad',
-  },
-  {
-    id: 1,
-    title: 'Display',
-    component: DisplayConfig,
-    icon: 'television',
-  },
-  {
-    id: 2,
-    title: 'Network',
-    component: NetworkConfig,
-    icon: 'link',
-  },
-  {
-    id: 3,
-    title: 'Plugins',
-    component: PluginConfig,
-    icon: 'puzzle-piece',
-  },
-  {
-    id: -1,
-    title: 'About',
-    component: About,
-    icon: 'question-circle',
-  },
+  { id: 0, title: 'Common', component: PoiConfig, icon: 'wrench' },
+  { id: 4, title: 'Gaming', component: GamingConfig, icon: 'gamepad' },
+  { id: 1, title: 'Display', component: DisplayConfig, icon: 'television' },
+  { id: 2, title: 'Network', component: NetworkConfig, icon: 'link' },
+  { id: 3, title: 'Plugins', component: PluginConfig, icon: 'puzzle-piece' },
+  { id: -1, title: 'About', component: About, icon: 'question-circle' },
 ]
 
-const SettingsTabs = styled(Tabs)`
+const SettingsTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typeof Tabs>>)`
   height: 100%;
 
   .bp5-tab-list {
@@ -78,16 +55,20 @@ const SettingsTabs = styled(Tabs)`
   }
 `
 
-@withNamespaces(['setting'])
-export class reactClass extends React.Component {
-  state = {
+interface SettingsState {
+  activeTab: number
+}
+
+class SettingsComponent extends Component<WithTranslation, SettingsState> {
+  state: SettingsState = {
     activeTab: 0,
   }
 
-  shouldComponentUpdate = (nextProps, nextState) =>
-    !isEqual(nextProps, this.props) || nextState.activeTab !== this.state.activeTab
+  shouldComponentUpdate(nextProps: WithTranslation, nextState: SettingsState): boolean {
+    return !isEqual(nextProps, this.props) || nextState.activeTab !== this.state.activeTab
+  }
 
-  handleTabChange = (id) => {
+  handleTabChange = (id: number) => {
     this.setState({ activeTab: id })
   }
 
@@ -125,6 +106,10 @@ export class reactClass extends React.Component {
   }
 }
 
+export const reactClass = withTranslation(['setting'])(SettingsComponent)
+
 export const displayName = <Trans>setting:Settings</Trans>
 
 export const icon = <FontAwesome name="cog" />
+
+export const name = 'settings-view'

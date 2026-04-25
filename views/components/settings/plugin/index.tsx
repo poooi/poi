@@ -1,4 +1,4 @@
-import type { Plugin } from 'views/services/plugin-manager'
+import type { RootState } from 'views/redux/reducer-factory'
 
 import {
   Callout,
@@ -11,14 +11,14 @@ import {
   MenuItem,
 } from '@blueprintjs/core'
 import { shell } from 'electron'
-import { get } from 'lodash'
-import path from 'path-extra'
+import { join } from 'path'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import pluginManager from 'views/services/plugin-manager'
+import { bundlePluginMetaToPlugin } from 'views/services/plugin-manager/utils'
 
 import { Section } from '../components/section'
 import { NameInput } from './name-input'
@@ -49,9 +49,9 @@ const PluginList = styled.div`
 export const PluginConfig = (): React.ReactElement => {
   const { t } = useTranslation(['setting', 'others'])
 
-  const plugins = useSelector((state: any): Plugin[] => state.plugins)
-  const autoUpdate = useSelector((state: any): boolean =>
-    get(state, 'config.packageManager.enableAutoUpdate', true),
+  const plugins = useSelector((state: RootState) => state.plugins)
+  const autoUpdate = useSelector(
+    (state: RootState) => state?.config?.packageManager?.enableAutoUpdate ?? true,
   )
 
   const [checkingUpdate, setCheckingUpdate] = useState(false)
@@ -278,7 +278,7 @@ export const PluginConfig = (): React.ReactElement => {
                 <Menu>
                   <MenuItem
                     text={t('setting:Open plugin folder')}
-                    onClick={() => shell.openPath(path.join(PLUGIN_PATH, 'node_modules'))}
+                    onClick={() => shell.openPath(join(PLUGIN_PATH, 'node_modules'))}
                   />
                   <MenuItem
                     text={t('setting:Search for plugins')}
@@ -343,7 +343,8 @@ export const PluginConfig = (): React.ReactElement => {
           />
         ))}
         {Object.keys(uninstalledPluginSettings).map((name) => {
-          const plugin = uninstalledPluginSettings[name]
+          const bundlePlugin = uninstalledPluginSettings[name]
+          const plugin = bundlePluginMetaToPlugin(bundlePlugin, name)
           return (
             <PluginItem
               installable

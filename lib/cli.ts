@@ -7,16 +7,14 @@ import yargs from 'yargs'
 import Debug from './debug'
 import { warn } from './utils'
 
+/* eslint-disable no-var */
 declare global {
-  namespace NodeJS {
-    interface Global {
-      LATEST_COMMIT: string
-      isSafeMode: boolean
-      isDevVersion: boolean
-      dbg: typeof Debug
-    }
-  }
+  var LATEST_COMMIT: string
+  var isSafeMode: boolean
+  var isDevVersion: boolean
+  var dbg: typeof Debug
 }
+/* eslint-enable no-var */
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageMeta = require('../package.json')
@@ -73,7 +71,7 @@ if (argv.d) {
 }
 
 if (argv.extra) {
-  argv.extra.forEach((extra) => Debug.enableExtra(extra))
+  argv.extra.forEach((extra) => Debug.enableExtra(String(extra)))
 }
 
 // safe mode

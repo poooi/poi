@@ -47,7 +47,7 @@ const presetsSlice = createSlice({
         const { api_preset_no } = payload.body
         return {
           ...state,
-          api_deck: reduxSet(state.api_deck, [String(api_preset_no)], payload.body),
+          api_deck: reduxSet(state.api_deck, [api_preset_no], payload.body),
         }
       })
       .addCase(createAPIReqHenseiPresetDeleteResponseAction, (state, { payload }) => {
@@ -63,8 +63,11 @@ const presetsSlice = createSlice({
         // Note that we are implementing as if both values may not exist, just to be safe.
         const { api_preset_from, api_preset_to } = payload.postBody
 
-        const vFrom = state.api_deck[api_preset_from]
-        const vTo = state.api_deck[api_preset_to]
+        const fromKey = Number(api_preset_from)
+        const toKey = Number(api_preset_to)
+
+        const vFrom = state.api_deck[fromKey]
+        const vTo = state.api_deck[toKey]
 
         if (!vFrom && !vTo) {
           // none
@@ -73,20 +76,20 @@ const presetsSlice = createSlice({
 
         const newDeck = { ...state.api_deck }
 
-        if (vFrom) delete newDeck[api_preset_from]
-        if (vTo) delete newDeck[api_preset_to]
+        if (vFrom) delete newDeck[fromKey]
+        if (vTo) delete newDeck[toKey]
 
         if (vFrom) {
-          newDeck[api_preset_to] = {
+          newDeck[toKey] = {
             ...vFrom,
-            api_preset_no: parseInt(api_preset_to, 10),
+            api_preset_no: toKey,
           }
         }
 
         if (vTo) {
-          newDeck[api_preset_from] = {
+          newDeck[fromKey] = {
             ...vTo,
-            api_preset_no: parseInt(api_preset_from, 10),
+            api_preset_no: fromKey,
           }
         }
 

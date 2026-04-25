@@ -68,6 +68,7 @@ describe('equipsCrossSliceMiddleware', () => {
         },
         postBody: {
           api_id: '0',
+          // @ts-expect-error api_slot_dest_flag not in typed kcsapi request
           api_slot_dest_flag: '1',
           api_id_items: '1,2',
           api_verno: '_',
@@ -107,6 +108,7 @@ describe('equipsCrossSliceMiddleware', () => {
         },
         postBody: {
           api_id: '0',
+          // @ts-expect-error api_slot_dest_flag not in typed kcsapi request
           api_slot_dest_flag: '0',
           api_id_items: '1',
           api_verno: '_',

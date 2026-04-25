@@ -63,12 +63,13 @@ describe('info root reducer', () => {
       postBody: payload.postBody,
     })
 
+    // @ts-expect-error narrow test state; minimal shape sufficient for admiral-change reset test
     const result = reducer(state, extendedAction)
 
-    expect(result.basic.api_member_id).toBe('200')
-    expect(result.ships).toEqual({})
-    expect(result.fleets).toEqual([])
-    expect(result.equips).toEqual({})
-    expect(result.resources).toEqual([])
+    expect(result!.basic.api_member_id).toBe('200')
+    expect(result!.ships).toEqual({})
+    expect(result!.fleets).toEqual([])
+    expect(result!.equips).toEqual({})
+    expect(result!.resources).toEqual([])
   })
 })

@@ -1,3 +1,5 @@
+import type { ConfigPath } from 'views/env-parts/config'
+
 import { Checkbox } from '@blueprintjs/core'
 import { get } from 'lodash'
 import React from 'react'
@@ -24,7 +26,8 @@ export const CheckboxLabelConfig = ({
   const value = typeof storeValue === 'boolean' ? storeValue : defaultValue
 
   const handleChange = () => {
-    config.set(configName, !value)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    config.set(configName as ConfigPath, !value as never)
   }
 
   return (

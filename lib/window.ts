@@ -1,23 +1,21 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import type { Display, BrowserWindowConstructorOptions, Menu } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
 import { BrowserWindow, screen, webContents } from 'electron'
-import path from 'path-extra'
-const windows: typeof global.windows = (global.windows = [])
-const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
+import path from 'path'
 
+/* eslint-disable no-var */
 declare global {
-  namespace NodeJS {
-    interface Global {
-      mainWindow: BrowserWindow
-      windows: (BrowserWindow | null)[]
-      windowsIndex: {
-        [key: string]: BrowserWindow | null
-      }
-    }
+  var mainWindow: BrowserWindow
+  var windows: (BrowserWindow | null)[]
+  var windowsIndex: {
+    [key: string]: BrowserWindow | null
   }
 }
+/* eslint-enable no-var */
+
+const windows: typeof global.windows = (global.windows = [])
+const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
 
 let forceClose = false
 let pluginUnload = false

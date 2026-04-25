@@ -53,7 +53,8 @@ const mapsSlice = createSlice({
         const newState = indexify<MapInfo>(payload.body.api_map_info)
         // The 3rd arg shouldn't be 2, because defeated map has no defeat_count
         // and will remain its value in that case
-        return pickExisting(compareUpdate(normalized, newState, 1), newState)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        return pickExisting(compareUpdate(normalized, newState, 1), newState) as MapsState
       })
       .addCase(createAPIReqMapSelectEventmapRankResponseAction, (state, { payload }) => {
         const normalized = normalizeState(state)

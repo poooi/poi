@@ -101,8 +101,8 @@ describe('saveQuestTracking', () => {
     writeMock.mockReset()
     // @ts-expect-error APPDATA_PATH is injected by poi runtime
     globalThis.APPDATA_PATH = 'C:\\tmp'
-    // @ts-expect-error window.getStore is injected by poi runtime
     globalThis.window = {
+      // @ts-expect-error mock jest.fn lacks lock/cache from combine-reducers polyfill
       getStore: jest.fn((path: string) => {
         if (path === 'info.quests') {
           return {

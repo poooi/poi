@@ -174,7 +174,7 @@
     "@types/request": "^2.48.8",
     "@types/rimraf": "^3.0.2",
     "@types/semver": "^7.3.12",
-    "@types/styled-components": "^5.1.26",
+    "@types/styled-components": "^5.1.36",
     "@types/tar-fs": "^2.0.1",
     "@types/walk": "^2.3.1",
     "@types/wanakana": "^4.0.3",

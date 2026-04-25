@@ -46,6 +46,7 @@ export interface RootState {
 function secureExtensionConfig(
   extensionConfig: Record<string, PoiReducer>,
 ): Record<string, PoiReducer> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return mapValues(extensionConfig, (func, key) => {
     if (func) {
       const wrappedReducer = combineReducers({ _: func })
@@ -65,7 +66,7 @@ function secureExtensionConfig(
     } else {
       return () => emptyObject
     }
-  })
+  }) as Record<string, PoiReducer>
 }
 
 export function reducerFactory(
@@ -76,7 +77,8 @@ export function reducerFactory(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return combineReducers({
     const: constReducer,
-    info,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    info: info as PoiReducer,
     sortie,
     timers,
     config,

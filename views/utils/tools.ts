@@ -172,14 +172,12 @@ export function copyIfSame<T>(obj: T, to: any): T {
  * @param state the state object
  * @param body the incoming new state
  */
-export function pickExisting<T extends Record<string, unknown>>(
-  state: T,
-  body: Record<string, unknown>,
-): T {
+export function pickExisting<T extends object>(state: T, body: T): T {
   const stateBackup = state
   forEach(state, (_, k) => {
     if (!(k in body)) {
       state = copyIfSame(state, stateBackup)
+      // @ts-expect-error the state is guaranteed to be the same type as body
       delete state[k]
     }
   })
@@ -216,8 +214,7 @@ export function reduxSet<
  * @param depth
  * @returns updated result mixed of previous and new state
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T {
+export function compareUpdate<T>(prevState: T, newState: T, depth = 1): T {
   // Handle non-object cases
   if (
     depth === 0 ||
@@ -227,8 +224,7 @@ export function compareUpdate<T>(prevState: T, newState: unknown, depth = 1): T 
     typeof newState !== 'object' ||
     newState === null
   ) {
-    /* eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion */
-    return isEqual(prevState, newState) ? prevState : (newState as T)
+    return isEqual(prevState, newState) ? prevState : newState
   }
   if (prevState === newState) {
     return prevState

@@ -1,7 +1,6 @@
 import type { DeepKeyOf, DeepKeyOfArray, DeepValueOf, DeepValueOfArray } from 'shims/utils'
 
 import CSON from 'cson'
-import EventEmitter from 'events'
 import fs from 'fs-extra'
 import { set, get, isEqual, keys, unset } from 'lodash'
 import path from 'path'
@@ -16,7 +15,9 @@ const configPath = path.join(EXROOT, 'config.cson')
 const DEFAULT_CONFIG_PATH_REGEXP = new RegExp(`^[${keys(defaultConfig).join('|')}]`)
 
 export type { Config } from './default-config'
-export type ConfigPath = DeepKeyOf<Config> | DeepKeyOfArray<Config> | ''
+export type ConfigStringPath = DeepKeyOf<Config> | ''
+export type ConfigArrayPath = DeepKeyOfArray<Config>
+export type ConfigPath = ConfigStringPath | ConfigArrayPath
 export type ConfigValue<Path extends ConfigPath> =
   // When Path is the full ConfigPath union (TypeScript error-recovery substitution),
   // return never so callers see `never` instead of the union of all config values.
@@ -30,12 +31,21 @@ export type ConfigValue<Path extends ConfigPath> =
           ? DeepValueOfArray<Config, Path>
           : never
 
-class PoiConfig extends EventEmitter {
+export interface ConfigEventMap {
+  'config.set': <P extends ConfigStringPath>(path: P, value: ConfigValue<P>) => void
+  'config.delete': <P extends ConfigStringPath>(path: P) => void
+}
+
+export type ConfigListener<E extends keyof ConfigEventMap> = ConfigEventMap[E]
+
+type StoredListener = ConfigListener<keyof ConfigEventMap>
+
+class PoiConfig {
   configData: Config
   defaultConfigData: Config
+  private listeners: Partial<Record<keyof ConfigEventMap, StoredListener[]>> = {}
 
   constructor() {
-    super()
     this.configData = defaultConfig
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
@@ -46,6 +56,34 @@ class PoiConfig extends EventEmitter {
     }
     this.defaultConfigData = defaultConfig
   }
+
+  addListener = <E extends keyof ConfigEventMap>(event: E, listener: ConfigListener<E>): void => {
+    ;(this.listeners[event] ??= [] as StoredListener[]).push(listener)
+  }
+
+  on = this.addListener
+
+  private emit = <E extends keyof ConfigEventMap>(
+    event: E,
+    ...args: Parameters<ConfigEventMap[E]>
+  ) => {
+    this.listeners[event]?.forEach((listener) => {
+      // @ts-expect-error the parameter is guaranteed to match the listener type for this event
+      listener(...args)
+    })
+  }
+
+  removeListener = <E extends keyof ConfigEventMap>(
+    event: E,
+    listener: ConfigListener<E>,
+  ): void => {
+    const arr = this.listeners[event]
+    if (!arr) return
+    const idx = arr.indexOf(listener)
+    if (idx !== -1) arr.splice(idx, 1)
+  }
+
+  off = this.removeListener
 
   /**
    * get a config value at give path
@@ -97,12 +135,11 @@ class PoiConfig extends EventEmitter {
     if (get(this.configData, path) === value) {
       return
     }
-    if (value === undefined && this.getDefault(path) !== undefined) {
-      value = this.getDefault(path)
-    }
-    set(this.configData, path, value)
-    const pathToSet = Array.isArray(path) ? path.join('.') : path
-    this.emit('config.set', pathToSet, value)
+    const pathToEmit = Array.isArray(path) ? path.join('.') : path
+    const valueToSet = value ?? this.getDefault(path)
+    set(this.configData, path, valueToSet)
+    // @ts-expect-error the value is guaranteed to match the listener type for this event
+    this.emit('config.set', pathToEmit, valueToSet)
     this.save()
   }
 
@@ -118,6 +155,20 @@ class PoiConfig extends EventEmitter {
   }
 
   /**
+   * remove a config at given path
+   * @param {ConfigPath} path path to remove
+   */
+  delete = (path: ConfigPath) => {
+    if (typeof this.get(path) !== 'undefined') {
+      unset(this.configData, path)
+      const pathToEmit = Array.isArray(path) ? path.join('.') : path
+      // @ts-expect-error the parameter is guaranteed to match the listener type for this event
+      this.emit('config.delete', pathToEmit)
+      this.save()
+    }
+  }
+
+  /**
    * save current config to file
    */
   save = () => {
@@ -127,20 +178,9 @@ class PoiConfig extends EventEmitter {
       console.warn(e)
     }
   }
-
-  /**
-   * remove a config at given path
-   * @param {ConfigPath} path path to remove
-   */
-  delete = (path: ConfigPath) => {
-    if (typeof this.get(path) !== 'undefined') {
-      unset(this.configData, path)
-    }
-  }
 }
 
 const config = new PoiConfig()
-config.setMaxListeners(100)
 
 export type ConfigInstance = typeof config
 

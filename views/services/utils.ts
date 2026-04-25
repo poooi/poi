@@ -80,8 +80,8 @@ export const getTitleBarHeight = () => document.querySelector('title-bar')?.clie
 
 export const getYOffset = () => getPoiInfoHeight() + getTitleBarHeight()
 
-export const getRealSize = (value: number) =>
-  Math.floor(value * config.get('poi.appearance.zoom', 1))
+export const getRealSize = (value?: number) =>
+  Math.floor((value ?? 0) * config.get('poi.appearance.zoom', 1))
 
-export const getZoomedSize = (value: number) =>
-  Math.floor(value / config.get('poi.appearance.zoom', 1))
+export const getZoomedSize = (value?: number) =>
+  Math.floor((value ?? 0) / config.get('poi.appearance.zoom', 1))

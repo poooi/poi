@@ -46,13 +46,11 @@ describe('constructions reducer', () => {
   })
 
   it('should handle api_get_member/require_info', () => {
+    // @ts-expect-error narrow fixture: JSON only contains fields used by this test
     const payload: GameResponsePayload<
       APIGetMemberRequireInfoResponse,
       APIGetMemberRequireInfoRequest
-    > = requireInfoKdockFixture satisfies GameResponsePayload<
-      APIGetMemberRequireInfoResponse,
-      APIGetMemberRequireInfoRequest
-    >
+    > = requireInfoKdockFixture
     const result = reducer([], createAPIGetMemberRequireInfoAction(payload))
     expect(result).toEqual(payload.body.api_kdock)
   })

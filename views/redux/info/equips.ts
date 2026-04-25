@@ -31,7 +31,7 @@ export interface EquipsState {
 function removeEquips(equips: EquipsState, idList: (string | number)[]): EquipsState {
   equips = Object.assign({}, equips)
   idList.forEach((itemId) => {
-    delete equips[itemId]
+    delete equips[Number(itemId)]
   })
   return equips
 }
@@ -74,7 +74,7 @@ const equipsSlice = createSlice({
         return removeEquips(state, String(payload.postBody.api_slotitem_ids).split(','))
       })
       .addCase(createAPIReqKaisouLockResponseAction, (state, { payload }) => {
-        const api_slotitem_id = String(payload.postBody.api_slotitem_id)
+        const api_slotitem_id = Number(payload.postBody.api_slotitem_id)
         const api_locked = payload.body.api_locked
         return {
           ...state,

@@ -1,4 +1,8 @@
 declare global {
+  interface File {
+    path: string
+  }
+
   namespace NodeJS {
     interface Global {
       EXROOT: string
@@ -33,5 +37,7 @@ declare global {
   var ipc: IpcManager
   /* eslint-enable no-var */
 }
+
+declare module '*.css'
 
 export {}

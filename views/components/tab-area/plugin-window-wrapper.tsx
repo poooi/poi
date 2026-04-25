@@ -1,8 +1,10 @@
+import type { ConfigPath, ConfigValue } from 'lib/config'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import path from 'path-extra'
+import config from 'lib/config'
+import { join } from 'path'
 import React, {
   forwardRef,
   useCallback,
@@ -48,7 +50,8 @@ const getPluginWindowRect = (plugin: Plugin): WindowRect => {
     ? { width: 800, height: 700 }
     : { width: 600, height: 500 }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const bounds = config.get(`plugin.${plugin.id}.bounds` as never, defaultRect) as WindowRect
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  const bounds = (config.get(`plugin.${plugin.id}.bounds`) ?? defaultRect) as WindowRect
   let { x, y, width, height } = bounds
   if (x == null || y == null) {
     return defaultRect
@@ -169,7 +172,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
         })
         .join(',')
 
-      const handleZoom = (configPath: string, value: unknown): void => {
+      const handleZoom = <P extends ConfigPath>(configPath: P, value: ConfigValue<P>): void => {
         if (configPath === 'poi.appearance.zoom' && typeof value === 'number') {
           if (currentWindowRef.current) {
             currentWindowRef.current.webContents.zoomFactor = value
@@ -178,7 +181,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
       }
 
       try {
-        const URL = `${fileUrl(path.join(ROOT, 'index-plugin.html'))}?${plugin.id}`
+        const URL = `${fileUrl(join(ROOT, 'index-plugin.html'))}?${plugin.id}`
         const externalWindow = open(
           URL,
           `plugin[${plugin.id}]`,
@@ -189,7 +192,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
         externalWindow?.addEventListener('DOMContentLoaded', () => {
           if (!externalWindowRef.current) return
           const currentWindow = BrowserWindow.getAllWindows().find((a) =>
-            a.getURL().endsWith(plugin.id),
+            a.webContents.getURL().endsWith(plugin.id),
           )
           currentWindowRef.current = currentWindow
           externalWindowRef.current.document.head.innerHTML = `<meta charset="utf-8">
@@ -272,7 +275,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       <>
         {showCustomTitleBar && currentWindowRef.current && (
           <TitleBar
-            icon={path.join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
             browserWindowId={currentWindowRef.current.id}
           />
         )}

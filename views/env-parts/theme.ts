@@ -1,16 +1,24 @@
-/* global config, ROOT */
+import type { BrowserWindow } from 'electron'
+import type { ConfigStringPath, ConfigValue } from 'lib/config'
+
 import * as remote from '@electron/remote'
 import themes from 'assets/data/theme.json'
 import classNames from 'classnames'
 import { accessSync, ensureFileSync } from 'fs-extra'
-import { join } from 'path-extra'
-import { isBoolean } from 'util'
+import { join } from 'path'
 
 import { fileUrl } from '../utils/tools'
 
-const EXROOT = remote.getGlobal('EXROOT')
+declare global {
+  interface Window {
+    applyTheme: (theme: string) => void
+    isDarkTheme: boolean
+  }
+}
 
-require.extensions['.css'] = (m, name) => {
+const EXROOT = `${remote.getGlobal('EXROOT')}`
+
+require.extensions['.css'] = (m: NodeModule, name: string) => {
   accessSync(name)
   const link = document.createElement('link')
   link.setAttribute('rel', 'stylesheet')
@@ -18,50 +26,50 @@ require.extensions['.css'] = (m, name) => {
   document.head.appendChild(link)
 }
 
-window.applyTheme = (theme) => config.set('poi.appearance.theme', theme)
+window.applyTheme = (theme: string) => config.set('poi.appearance.theme', theme)
 config.setDefault('poi.appearance.theme', 'darklykai')
 
 export function loadStyle(
-  document = window.document,
-  currentWindow = remote.getCurrentWindow(),
+  doc: Document = window.document,
+  currentWindow: BrowserWindow = remote.getCurrentWindow(),
   isMainWindow = true,
-) {
-  const $ = (...s) => document.querySelector(...s)
+): void {
+  const $ = (s: string): Element | null => doc.querySelector(s)
   const customCSSPath = join(EXROOT, 'hack', 'custom.css')
   ensureFileSync(customCSSPath)
-  const customCSS = document.createElement('link')
+  const customCSS = doc.createElement('link')
   customCSS.setAttribute('rel', 'stylesheet')
   customCSS.setAttribute('id', 'custom-css')
   customCSS.setAttribute('href', fileUrl(customCSSPath))
 
   const FACSSPath = require.resolve('@fortawesome/fontawesome-svg-core/styles.css')
-  const FACSS = document.createElement('link')
+  const FACSS = doc.createElement('link')
   FACSS.setAttribute('rel', 'stylesheet')
   FACSS.setAttribute('id', 'fontawesome')
   FACSS.setAttribute('href', fileUrl(FACSSPath))
 
-  const glass = document.createElement('div')
+  const glass = doc.createElement('div')
   glass.id = 'bg-overlay'
   glass.style.position = 'fixed'
   glass.style.top = '-15px'
   glass.style.left = '-15px'
   glass.style.height = 'calc(100vh + 30px)'
   glass.style.width = 'calc(100vw + 30px)'
-  glass.style.zIndex = -1
+  glass.style.zIndex = '-1'
   glass.style.backgroundRepeat = 'no-repeat'
   glass.style.backgroundPosition = 'center center'
   glass.style.backgroundSize = 'cover'
   glass.style.color = '#000'
   glass.style.display = 'none'
 
-  const div = document.createElement('div')
+  const div = doc.createElement('div')
   div.id = 'custom-bg'
   div.style.position = 'fixed'
   div.style.top = '-15px'
   div.style.left = '-15px'
   div.style.height = 'calc(100vh + 30px)'
   div.style.width = 'calc(100vw + 30px)'
-  div.style.zIndex = -2
+  div.style.zIndex = '-2'
   div.style.backgroundRepeat = 'no-repeat'
   div.style.backgroundPosition = 'center center'
   div.style.backgroundSize = 'cover'
@@ -72,42 +80,42 @@ export function loadStyle(
     if (!$('#custom-css')) {
       return
     }
-    $('#custom-css').setAttribute('href', `file://${EXROOT}/hack/custom.css`)
+    $('#custom-css')!.setAttribute('href', `file://${EXROOT}/hack/custom.css`)
   }
 
-  const delaySetClassName = (className) => {
-    if (document.body) {
-      document.body.className = className
+  const delaySetClassName = (className: string) => {
+    if (doc.body) {
+      doc.body.className = className
     } else {
       setTimeout(() => delaySetClassName(className), 100)
     }
   }
 
-  const delaySetBackgroundColor = (value) => {
-    if (document.body) {
-      document.body.style.backgroundColor = value
+  const delaySetBackgroundColor = (value: string) => {
+    if (doc.body) {
+      doc.body.style.backgroundColor = value
     } else {
       setTimeout(() => delaySetBackgroundColor(value), 100)
     }
   }
 
-  const delaySetFilter = (value) => {
-    if (document.body) {
-      document.body.style.filter = value
+  const delaySetFilter = (value: string | null) => {
+    if (doc.body) {
+      doc.body.style.filter = value ?? ''
     } else {
       setTimeout(() => delaySetFilter(value), 100)
     }
   }
 
-  const setFilter = (type) => {
-    if (type === 'null') {
+  const setFilter = (type: string | null | undefined) => {
+    if (type === 'null' || type == null) {
       delaySetFilter(null)
     } else {
       delaySetFilter(`url(${fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#${type})`)
     }
   }
 
-  const setBackgroundColor = (isDark, isVibrant) => {
+  const setBackgroundColor = (isDark: boolean, isVibrant: boolean | number) => {
     if (isVibrant) {
       if ('darwin' === process.platform) {
         delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.59)' : 'rgba(246, 247, 249, 0.59)')
@@ -119,15 +127,15 @@ export function loadStyle(
     }
   }
 
-  const setRef = (el, url) => {
-    if (el.href !== url) {
+  const setRef = (el: Element, url: string) => {
+    if (el.getAttribute('href') !== url) {
       el.setAttribute('href', url)
     }
   }
 
-  const loadTheme = (theme = 'dark', isVibrant) => {
+  const loadTheme = (theme = 'dark', isVibrant?: boolean | number) => {
     theme = themes.includes(theme) ? theme : 'dark'
-    isVibrant = isBoolean(isVibrant) ? isVibrant : config.get('poi.appearance.vibrant', 0)
+    isVibrant = typeof isVibrant === 'boolean' ? isVibrant : config.get('poi.appearance.vibrant', 0)
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
     setBackgroundColor(isDark, isVibrant)
@@ -138,9 +146,10 @@ export function loadStyle(
         'bp5-dark': isDark,
       }),
     )
-    if ($('#bootstrap-css')) {
+    const bootstrapEl = $('#bootstrap-css')
+    if (bootstrapEl) {
       setRef(
-        $('#bootstrap-css'),
+        bootstrapEl,
         fileUrl(
           require.resolve(
             `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
@@ -148,9 +157,10 @@ export function loadStyle(
         ),
       )
     }
-    if ($('#blueprint-css')) {
+    const blueprintEl = $('#blueprint-css')
+    if (blueprintEl) {
       setRef(
-        $('#blueprint-css'),
+        blueprintEl,
         fileUrl(
           require.resolve(
             `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
@@ -158,24 +168,25 @@ export function loadStyle(
         ),
       )
     }
-    if ($('#blueprint-icon-css')) {
+    const blueprintIconEl = $('#blueprint-icon-css')
+    if (blueprintIconEl) {
       setRef(
-        $('#blueprint-icon-css'),
+        blueprintIconEl,
         fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')),
       )
     }
-    if ($('#normalize-css')) {
-      setRef($('#normalize-css'), fileUrl(require.resolve('normalize.css/normalize.css')))
+    const normalizeEl = $('#normalize-css')
+    if (normalizeEl) {
+      setRef(normalizeEl, fileUrl(require.resolve('normalize.css/normalize.css')))
     }
     reloadCustomCss()
   }
 
-  const setVibrancy = (value) => {
+  const setVibrancy = (value: number) => {
     const theme = config.get('poi.appearance.theme', 'dark')
-    const isDark = theme === 'dark'
     if ('darwin' === process.platform) {
       currentWindow.setBackgroundColor(value === 1 ? '#00000000' : '#000000')
-      currentWindow.setVibrancy(value === 1 ? (isDark ? 'dark' : 'light') : null)
+      currentWindow.setVibrancy(value === 1 ? 'window' : null)
     } else if ('win32' === process.platform) {
       if (currentWindow.isVisible()) {
         currentWindow.setBackgroundColor(value === 1 ? '#00000000' : '#000000')
@@ -183,8 +194,8 @@ export function loadStyle(
       }
     }
     window.dispatchEvent(new Event('resize'))
-    if (themes.includes(theme)) {
-      loadTheme(theme, !!value)
+    if (themes.includes(theme ?? '')) {
+      loadTheme(theme ?? undefined, !!value)
     } else {
       config.set('poi.appearance.theme', 'dark')
     }
@@ -196,28 +207,30 @@ export function loadStyle(
     setVibrancy(config.get('poi.appearance.vibrant', 0))
   })
 
-  const themeChangeHandler = (path, value) => {
-    if (path === 'poi.appearance.theme') {
-      loadTheme(value)
+  const themeChangeHandler = <P extends ConfigStringPath>(configPath: P, value: ConfigValue<P>) => {
+    if (configPath === 'poi.appearance.theme') {
+      loadTheme(typeof value === 'string' ? value : undefined)
     }
-    if (path === 'poi.appearance.vibrant') {
-      setVibrancy(value)
-      toggleBackground(value)
+    if (configPath === 'poi.appearance.vibrant') {
+      if (typeof value === 'number') {
+        setVibrancy(value)
+        toggleBackground(value)
+      }
     }
-    if (path === 'poi.appearance.background') {
-      setBackground(value)
+    if (configPath === 'poi.appearance.background') {
+      setBackground(typeof value === 'string' ? value : null)
     }
-    if (path === 'poi.appearance.colorblindFilter') {
-      setFilter(value)
+    if (configPath === 'poi.appearance.colorblindFilter') {
+      setFilter(typeof value === 'string' ? value : null)
     }
   }
 
   config.addListener('config.set', themeChangeHandler)
-  currentWindow.on('closed', (e) => {
+  currentWindow.on('closed', () => {
     config.removeListener('config.set', themeChangeHandler)
   })
 
-  const setBackground = (p) => {
+  const setBackground = (p: string | null) => {
     if (p) {
       div.style.backgroundImage = `url(${CSS.escape(fileUrl(p))})`
     } else {
@@ -225,7 +238,7 @@ export function loadStyle(
     }
   }
 
-  const toggleBackground = (value) => {
+  const toggleBackground = (value: number) => {
     if (value === 2) {
       div.style.filter = 'blur(10px) saturate(50%)'
       div.style.display = 'block'
@@ -238,13 +251,15 @@ export function loadStyle(
   }
 
   currentWindow.webContents.on('dom-ready', () => {
-    document.body.appendChild(customCSS)
-    document.head.appendChild(FACSS)
-    document.body.appendChild(div)
-    document.body.appendChild(glass)
-    setBackground(config.get('poi.appearance.background'))
-    toggleBackground(config.get('poi.appearance.vibrant'))
+    doc.body.appendChild(customCSS)
+    doc.head.appendChild(FACSS)
+    doc.body.appendChild(div)
+    doc.body.appendChild(glass)
+    setBackground(config.get('poi.appearance.background') ?? null)
+    toggleBackground(config.get('poi.appearance.vibrant', 0))
   })
+
+  void isMainWindow
 }
 
 loadStyle()

@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import { app, Tray, systemPreferences, nativeTheme } from 'electron'
 import path from 'path'
 
+/* eslint-disable no-var */
 declare global {
-  namespace NodeJS {
-    interface Global {
-      appTray: Tray
-    }
-  }
+  var appTray: Tray
 }
+/* eslint-enable no-var */
 
 const getIcon = (platform: NodeJS.Platform) => {
   if (platform === 'linux') {

@@ -1,3 +1,4 @@
+import type { ConfigInstance, ConfigStringPath, ConfigValue } from 'lib/config'
 import type { DeepKeyOf, DeepValueOf } from 'shims/utils'
 
 import * as remote from '@electron/remote'
@@ -117,14 +118,14 @@ getStore.cache = store.getState()
 export const dispatch = store.dispatch
 
 // Listen to config.set event
-const solveConfSet = (path: string, value: unknown): void => {
+const solveConfSet = <P extends ConfigStringPath>(path: P, value: ConfigValue<P>): void => {
   const details = {
     path,
     value: typeof value === 'undefined' ? undefined : cloneDeep(value),
   }
   store.dispatch(onConfigChange(details))
 }
-const remoteConfig = remote.require('./lib/config')
+const remoteConfig: ConfigInstance = remote.require('./lib/config')
 remoteConfig.addListener('config.set', solveConfSet)
 window.addEventListener('unload', () => {
   remoteConfig.removeListener('config.set', solveConfSet)
@@ -193,6 +194,8 @@ declare global {
     getStore: typeof getStore
     dispatch: typeof store.dispatch
   }
+  // eslint-disable-next-line no-var
+  var dispatch: typeof store.dispatch
 }
 window.getStore = getStore
 window.dispatch = store.dispatch

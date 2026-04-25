@@ -23,5 +23,6 @@
     "resolveJsonModule": true,
     "importHelpers": true,
     "moduleResolution": "node",
-  }
+  },
+  "exclude": ["eslint.config.mts"]
 }

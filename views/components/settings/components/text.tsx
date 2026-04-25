@@ -1,3 +1,5 @@
+import type { ConfigPath } from 'views/env-parts/config'
+
 import { InputGroup } from '@blueprintjs/core'
 import { debounce, get } from 'lodash'
 import React, { useMemo, useRef, useState } from 'react'
@@ -27,7 +29,8 @@ export const TextConfig = ({ configName, defaultValue = '', ...rest }: Props) =>
   const applyConfig = useMemo(
     () =>
       debounce((v: string) => {
-        config.set(configName, v)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        config.set(configName as ConfigPath, v as never)
       }, 200),
     [configName],
   )

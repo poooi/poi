@@ -115,7 +115,7 @@ export const PluginItem = ({
   const toggleSettingPop = () => setSettingOpen((v) => !v)
 
   const status = pluginManager.getStatusOfPlugin(plugin)
-  let enableBtnText: React.ReactNode
+  let enableBtnText: React.ReactElement | string
   let enableBtnFAname: string
 
   switch (status) {
@@ -157,16 +157,7 @@ export const PluginItem = ({
   return (
     <Section className="plugin-item">
       <Header className="plugin-header">
-        <PluginName className="plugin-name">
-          {installable ? (
-            <>
-              <FontAwesome name={typeof plugin.icon === 'string' ? plugin.icon : 'th-large'} />
-              {` ${typeof plugin[language] === 'string' ? plugin[language] : ''}`}
-            </>
-          ) : (
-            plugin.displayName
-          )}
-        </PluginName>
+        <PluginName className="plugin-name">{plugin.displayName}</PluginName>
         <ButtonGroup className="plugin-control">
           {settingAvailable && (
             <Tooltip position={Position.TOP} content={t(settingOpen ? 'Description' : 'Settings')}>
@@ -280,16 +271,11 @@ export const PluginItem = ({
           <Transition in={!settingOpen} timeout={300}>
             {(state: TransitionState) => (
               <Fade2 className="plugin-description" state={state}>
-                <ReactMarkdown
-                  options={{ linkTarget: '_blank' }}
-                  source={
-                    installable
-                      ? typeof plugin[`des${language}`] === 'string'
-                        ? plugin[`des${language}`]
-                        : undefined
-                      : plugin.description
-                  }
-                />
+                {typeof plugin.description === 'string' ? (
+                  <ReactMarkdown options={{ linkTarget: '_blank' }} source={plugin.description} />
+                ) : (
+                  plugin.description
+                )}
               </Fade2>
             )}
           </Transition>
