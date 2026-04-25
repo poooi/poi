@@ -316,6 +316,12 @@ interface ControlledTabAreaProps {
   async: boolean
 }
 
+declare global {
+  interface Window {
+    openSettings?: () => void
+  }
+}
+
 const ControlledTabAreaFC = ({
   t,
   plugins,

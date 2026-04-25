@@ -19,6 +19,11 @@ const toastPreload = (...args: ToastArgs) => {
   }
 }
 
+declare global {
+  interface Window {
+    toast: (...args: ToastArgs) => void
+  }
+}
 window.toast = toastPreload
 
 const ToasterPositioned = styled(OverlayToaster)<{ inbound: boolean }>`

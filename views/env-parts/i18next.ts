@@ -57,7 +57,14 @@ each(
   },
 )
 
-// @ts-expect-error backward compatibility
+declare global {
+  interface Window {
+    language: string
+    LOCALES: Array<{ locale: string }>
+    i18next: ReturnType<typeof createInstance>
+    i18n: Record<string, { __: TFunction; translate: (locale: string, str: string) => string }>
+  }
+}
 window.LOCALES = LOCALES
 
 const normalizeLanguage = (language: string) => {
@@ -76,7 +83,6 @@ const normalizeLanguage = (language: string) => {
   return language
 }
 
-// @ts-expect-error backward compatibility
 const language = (window.language = normalizeLanguage(
   config.get('poi.misc.language', navigator.language),
 ))

@@ -17,5 +17,14 @@ export const toggleModal = (
   })
 }
 
-// @ts-expect-error backward compatibility
+declare global {
+  interface Window {
+    toggleModal: (
+      title: string,
+      content: ReactNode,
+      footer: ButtonData[],
+      onClosing?: () => void,
+    ) => void
+  }
+}
 window.toggleModal = toggleModal

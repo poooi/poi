@@ -406,6 +406,13 @@ class PluginManager extends EventEmitter {
 
 const pluginManager = new PluginManager()
 
+declare global {
+  interface Window {
+    reloadPlugin: (pkgName: string, verbose?: boolean) => Promise<void>
+    gracefulResetPlugin: () => void
+  }
+}
+
 window.reloadPlugin = async (pkgName: string, verbose = false) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const { plugins } = getStore() as { plugins: Plugin[] }

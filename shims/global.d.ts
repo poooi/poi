@@ -1,8 +1,3 @@
-interface ToastConfig {
-  type: string
-  title: string
-}
-
 declare global {
   namespace NodeJS {
     interface Global {
@@ -24,14 +19,8 @@ declare global {
   }
 
   interface Window {
-    toast: (message: string, options?: Partial<ToastConfig>) => void
     POI_VERSION: string
     isSafeMode: boolean
-    LOCALES: Array<{ locale: string }>
-    reloadPlugin: (pkgName: string, verbose?: boolean) => Promise<void>
-    gracefulResetPlugin: () => void
-    toggleModal: (title: string, message: string, buttons: ModalButton[]) => void
-    openSettings?: () => void
   }
   // let and const do not show up on globalThis
   /* eslint-disable no-var */
@@ -41,9 +30,7 @@ declare global {
   var isMain: boolean | undefined
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
-  var language: string
   var ipc: IpcManager
-  var toast: (message: string, options?: Partial<ToastConfig>) => void
   /* eslint-enable no-var */
 }
 
