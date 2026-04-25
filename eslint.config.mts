@@ -113,7 +113,8 @@ const config: Linter.Config[] = [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: join(__dirname, 'tsconfig.json'),
+        projectService: true,
+        tsconfigRootDir: __dirname,
       },
       globals: {
         ...globals.browser,
@@ -158,6 +159,18 @@ const config: Linter.Config[] = [
     rules: {
       'import-x/namespace': 'off',
       'no-import-assign': 'off',
+    },
+  },
+  {
+    // These files have complex types (index-signature union types, complex generics) that make
+    // no-unsafe-type-assertion exponentially slow — the rule hangs these files indefinitely.
+    // Each assertion in these files is already individually documented.
+    files: [
+      'views/redux/info/quests.ts',
+      'views/services/plugin-manager/index.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
     },
   },
   {
