@@ -162,18 +162,6 @@ const config: Linter.Config[] = [
     },
   },
   {
-    // These files have complex types (index-signature union types, complex generics) that make
-    // no-unsafe-type-assertion exponentially slow — the rule hangs these files indefinitely.
-    // Each assertion in these files is already individually documented.
-    files: [
-      'views/redux/info/quests.ts',
-      'views/services/plugin-manager/index.ts',
-    ],
-    rules: {
-      '@typescript-eslint/no-unsafe-type-assertion': 'off',
-    },
-  },
-  {
     plugins: {
       perfectionist,
     },

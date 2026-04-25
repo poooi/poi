@@ -1,30 +1,30 @@
-export type DeepKeyOf<T, Seen = never> = T extends readonly unknown[]
+export type DeepKeyOf<T> = T extends readonly unknown[]
   ? never
-  : string extends keyof T
+  : T extends (...args: never[]) => unknown
     ? never
-    : T extends object
-      ? {
-          [K in keyof T]-?: `${Exclude<K, symbol>}${
-            | ''
-            | (NonNullable<T[K]> extends Seen
-                ? never
-                : `.${DeepKeyOf<NonNullable<T[K]>, Seen | T>}`)}`
-        }[keyof T]
-      : never
+    : T extends EventTarget
+      ? never
+      : string extends keyof T
+        ? never
+        : T extends object
+          ? {
+              [K in keyof T]-?: `${Exclude<K, symbol>}${'' | `.${DeepKeyOf<NonNullable<T[K]>>}`}`
+            }[keyof T]
+          : never
 
-export type DeepKeyOfArray<T, Seen = never> = T extends readonly unknown[]
+export type DeepKeyOfArray<T> = T extends readonly unknown[]
   ? never
-  : string extends keyof T
+  : T extends (...args: never[]) => unknown
     ? never
-    : T extends object
-      ? {
-          [K in keyof T]:
-            | readonly [K]
-            | (NonNullable<T[K]> extends Seen
-                ? never
-                : readonly [K, ...DeepKeyOfArray<NonNullable<T[K]>, Seen | T>])
-        }[keyof T]
-      : never
+    : T extends EventTarget
+      ? never
+      : string extends keyof T
+        ? never
+        : T extends object
+          ? {
+              [K in keyof T]: readonly [K] | readonly [K, ...DeepKeyOfArray<NonNullable<T[K]>>]
+            }[keyof T]
+          : never
 
 export type DeepValueOf<T, K extends DeepKeyOf<T>> = K extends `${infer Key}.${infer Rest}`
   ? Key extends keyof T

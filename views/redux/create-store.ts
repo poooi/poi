@@ -73,6 +73,8 @@ declare global {
 const composeEnhancers =
   (window.dbg?.isEnabled() && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
+// @ts-expect-error TS2589: Redux PreloadedState<RootState> recurses into DOM types via
+// LayoutState.webview.ref (ExtendedWebviewTag extends HTMLElement); pre-existing issue.
 export const store: Store<RootState> = createStore(
   reducerFactory(),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
