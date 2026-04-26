@@ -313,6 +313,12 @@ npm run lint:js -- views/redux/info
 npm run lint:js -- --fix views/redux/info
 ```
 
+## Type check
+
+```bash
+npm run typecheck
+```
+
 ### Pre-commit Hooks
 
 The repository uses lint-staged with husky. ESLint runs automatically on staged files during commit.
