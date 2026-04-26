@@ -25,6 +25,7 @@ declare global {
   interface Window {
     POI_VERSION: string
     isSafeMode: boolean
+    notify: (options: { title: string; body: string; icon?: string } | null) => void
   }
   // let and const do not show up on globalThis
   /* eslint-disable no-var */

@@ -1,4 +1,5 @@
-import type { ConfigPath } from 'views/env-parts/config'
+import type { ConfigValue, ConfigPath } from 'lib/config'
+import type { RootState } from 'views/redux/reducer-factory'
 
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { get, map } from 'lodash'
@@ -10,23 +11,23 @@ interface RadioOption {
   name: string
 }
 
-interface Props {
-  configName: string
+interface Props<P extends ConfigPath> {
+  configName: P
   defaultValue?: string
   availableVal?: RadioOption[]
 }
 
-type ConfigState = { config: Record<string, unknown> }
-
-export const RadioConfig = ({ configName, defaultValue = '', availableVal = [] }: Props) => {
-  const storeValue = useSelector((state: ConfigState) =>
-    get(state.config, configName, defaultValue),
-  )
+export const RadioConfig = <P extends ConfigPath>({
+  configName,
+  defaultValue = '',
+  availableVal = [],
+}: Props<P>) => {
+  const storeValue = useSelector((state: RootState) => get(state.config, configName, defaultValue))
   const value = typeof storeValue === 'string' ? storeValue : defaultValue
 
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set(configName as ConfigPath, e.currentTarget.value as never)
+    config.set(configName, e.currentTarget.value as ConfigValue<P>)
   }
 
   return (

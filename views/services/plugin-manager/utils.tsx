@@ -270,8 +270,8 @@ export function updateI18n(plugin: Plugin): Plugin {
       name: i18next.t(`${namespace}:${plugin.name}`),
       description:
         typeof plugin.description === 'string'
-          ? i18next.t(`${namespace}:${plugin.description}`)
-          : plugin.description,
+          ? (i18next.t(`${namespace}:${plugin.description}`) satisfies string)
+          : (plugin.description satisfies React.ReactNode),
     }
   }
   return plugin

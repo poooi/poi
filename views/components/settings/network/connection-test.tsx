@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react'
+import type { FC } from 'react'
 
 import { Button, Intent } from '@blueprintjs/core'
 import React, { useCallback, useRef, useState } from 'react'
@@ -14,7 +14,7 @@ const timeout = (): Promise<void> =>
     setTimeout(() => reject(new Error(ErrorMessage.TimeoutError)), 15 * 1000)
   })
 
-export const ConnectionTest: FunctionComponent<void> = () => {
+export const ConnectionTest: FC = () => {
   const [loading, setLoading] = useState(false)
   const { t } = useTranslation('setting')
   const controller = useRef<AbortController>()

@@ -60,9 +60,12 @@ each(
 declare global {
   interface Window {
     language: string
-    LOCALES: Array<{ locale: string }>
+    LOCALES: Array<{ locale: string; lng: string }>
     i18next?: ReturnType<typeof createInstance>
-    i18n: Record<string, { __: TFunction; translate: (locale: string, str: string) => string }>
+    i18n: Record<
+      string,
+      { __: TFunction; translate: (locale: string, str: string) => string; fixedT: TFunction }
+    >
   }
 }
 window.LOCALES = LOCALES
@@ -185,6 +188,7 @@ export const addResourceBundleDebounce: typeof i18next.addResourceBundle = (...p
 window.i18n.resources = {
   __: (str: string) => spacing(str),
   translate: (locale: string, str: string) => spacing(str),
+  fixedT: i18next.getFixedT(language),
 }
 
 // inject translator for English names

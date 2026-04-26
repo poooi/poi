@@ -64,7 +64,11 @@ interface PoiWindow {
 }
 
 interface PoiShortcut {
-  bosskey: string
+  bosskey:
+    | string
+    | {
+        macos: string
+      }
 }
 
 interface PoiUpdate {

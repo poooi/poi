@@ -7,15 +7,10 @@ import FontAwesome from 'react-fontawesome'
 import { Trans, withTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
 
-// @ts-expect-error ts not ready yet
 import { About } from './about'
-// @ts-expect-error ts not ready yet
 import { DisplayConfig } from './display'
-// @ts-expect-error ts not ready yet
 import { GamingConfig } from './gaming'
-// @ts-expect-error ts not ready yet
 import { PoiConfig } from './main'
-// @ts-expect-error ts not ready yet
 import { NetworkConfig } from './network'
 import { PluginConfig } from './plugin'
 

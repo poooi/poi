@@ -17,9 +17,10 @@ const registerShortcut = (acc: Electron.Accelerator, desc: string, func: () => v
 
 const registerBossKey = () => {
   const accelerator = config.get('poi.shortcut.bosskey', '')
-  if (accelerator)
+  if (accelerator && typeof accelerator === 'string') {
     if (!registerShortcut(accelerator, 'Boss Key', windowManager.toggleAllWindowsVisibility))
       config.set('poi.shortcut.bosskey', '')
+  }
 }
 
 export default {
