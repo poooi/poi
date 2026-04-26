@@ -1,9 +1,19 @@
 import { every, isFinite, each, isArray, isString, isBoolean } from 'lodash'
 
-import { AACITable, getShipAACIs } from '../aaci'
-const { ship, equips } = require('./fixtures/aaci-sample-ship.json')
+import type { GameEquip, GameShip } from '../aaci'
 
-const isStringArray = (array) => isArray(array) && every(array, (e) => isString(e))
+import { AACITable, getShipAACIs } from '../aaci'
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const {
+  ship,
+  equips,
+}: {
+  ship: GameShip
+  equips: GameEquip[]
+} = require('./fixtures/aaci-sample-ship.json')
+
+const isStringArray = (array: unknown): boolean =>
+  isArray(array) && every(array, (e) => isString(e))
 
 describe('AACI entry check', () => {
   it('AACI key is numeric', () => {
@@ -13,6 +23,7 @@ describe('AACI entry check', () => {
 
   it('AACI entry should be valid', () => {
     each(AACITable, ({ name, id, fixed, modifier, shipValid, equipsValid }) => {
+      void fixed
       expect(name === '' || isStringArray(name)).toBe(true)
       expect(isFinite(id) && id > 0).toBe(true)
       expect(isFinite(modifier) && modifier > 0).toBe(true)

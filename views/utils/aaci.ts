@@ -4,28 +4,53 @@
 // in thankful acknowledgment of their hard work
 // some variable and function naming are modified
 
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
+
 import { maxBy } from 'lodash'
 
+export type GameShip = APIShip & APIMstShip
+export type GameEquip = APISlotItem & APIMstSlotitem
+
+type ShipPredicate = (ship: GameShip) => boolean
+type EquipsPredicate = (equips: GameEquip[]) => boolean
+
+interface AACIEntry {
+  name?: string | string[]
+  id: number
+  fixed: number
+  modifier: number
+  shipValid: ShipPredicate
+  equipsValid: EquipsPredicate
+}
+
 // check for $slotitemtypes
-const itemTypeIs = n => equip => equip.api_type[2] === n
+const itemTypeIs = (n: number) => (equip: GameEquip) => equip.api_type?.[2] === n
 
 // type for slot item
-const iconIs = n => equip => equip.api_type[3] === n
+const iconIs = (n: number) => (equip: GameEquip) => equip.api_type?.[3] === n
 
 // validAll(f,g...)(x) = f(x) && g(x) && ...
-const validAll = (...func) => x => func.every(f => f(x))
-const validNot = f => x => !f(x)
-const validAny = (...func) => x => func.some(f => f(x))
+const validAll =
+  (...func: EquipsPredicate[]) =>
+  (x: GameEquip[]) =>
+    func.every((f) => f(x))
+const validNot = (f: EquipsPredicate) => (x: GameEquip[]) => !f(x)
+const validAny =
+  (...func: EquipsPredicate[]) =>
+  (x: GameEquip[]) =>
+    func.some((f) => f(x))
 
 // avoid modifying this structure directly, use "declareAACI" instead.
-export const AACITable = {}
+export const AACITable: Record<number, AACIEntry> = {}
 
 // typeIcons is a array including [ship icon, equip icon, ...]
 // predicateShipMst is a function f: f(mst)
 // predicateShipObj is a function f: f(shipObj)
 // returns a boolean to indicate whether the ship in question (with equipments)
 // is capable of performing such type of AACI
-const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid }) => {
+const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid }: AACIEntry) => {
   AACITable[id] = {
     name,
     id,
@@ -36,21 +61,25 @@ const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid })
   }
 }
 
-const shipIdIs = n => ship => ship.api_ship_id === n
-const equipIdIs = n => equip => equip.api_slotitem_id === n
-const shipIdIsOneOf = (...shipIds) => ship => shipIds.includes(ship.api_ship_id)
-const isKai = (ship) => ship.api_getmes === '<br>'
+const shipIdIs = (n: number) => (ship: GameShip) => ship.api_ship_id === n
+const equipIdIs = (n: number) => (equip: GameEquip) => equip.api_slotitem_id === n
+const shipIdIsOneOf =
+  (...shipIds: number[]) =>
+  (ship: GameShip) =>
+    shipIds.includes(ship.api_ship_id ?? -1)
+const isKai = (ship: GameShip) => ship.api_getmes === '<br>'
 
 // "hasAtLeast(pred)(n)(xs)" is the same as:
 // xs.filter(pred).length >= n
-const hasAtLeast = (pred, n) => xs => xs.filter(pred).length >= n
+const hasAtLeast = (pred: (e: GameEquip) => boolean, n: number) => (xs: GameEquip[]) =>
+  xs.filter(pred).length >= n
 
 // "hasSome(pred)(xs)" is the same as:
 // xs.some(pred)
-const hasSome = pred => xs => xs.some(pred)
+const hasSome = (pred: (e: GameEquip) => boolean) => (xs: GameEquip[]) => xs.some(pred)
 
 // check if slot num of ship (excluding ex slot) equals or greater
-const slotNumAtLeast = n => ship => ship.api_slot_num >= n
+const slotNumAtLeast = (n: number) => (ship: GameShip) => (ship.api_slot_num ?? 0) >= n
 
 /*
 
@@ -63,12 +92,12 @@ const slotNumAtLeast = n => ship => ship.api_slot_num >= n
  */
 
 // 54 = 秋月型
-const isAkizukiClass = ship => ship.api_ctype === 54
+const isAkizukiClass = (ship: GameShip) => ship.api_ctype === 54
 // icon=16: 高角砲
 const isHighAngleMount = iconIs(16)
 // 12: 小型電探
 // 13: 大型電探
-const isRadar = equip => itemTypeIs(12)(equip) || itemTypeIs(13)(equip)
+const isRadar = (equip: GameEquip) => itemTypeIs(12)(equip) || itemTypeIs(13)(equip)
 
 // id 1~3: Akizuki-class
 declareAACI({
@@ -98,7 +127,7 @@ declareAACI({
   equipsValid: validAll(hasAtLeast(isHighAngleMount, 2)),
 })
 
-const isBattleship = ship => [8, 9, 10].includes(ship.api_stype)
+const isBattleship = (ship: GameShip) => [8, 9, 10].includes(ship.api_stype ?? -1)
 // 3: 大口径主砲
 const isLargeCaliberMainGun = itemTypeIs(3)
 // 18: 対空強化弾
@@ -108,8 +137,8 @@ const isAAFD = itemTypeIs(36)
 // AA Radar
 // Surface Radar are excluded by checking whether
 // the equipment gives AA stat (api_tyku)
-const isAARadar = equip => isRadar(equip) && equip.api_tyku > 0
-const isAdvancedAARadar = equip => isRadar(equip) && equip.api_tyku >= 4
+const isAARadar = (equip: GameEquip) => isRadar(equip) && (equip.api_tyku ?? 0) > 0
+const isAdvancedAARadar = (equip: GameEquip) => isRadar(equip) && (equip.api_tyku ?? 0) >= 4
 
 // id 4: battleships
 declareAACI({
@@ -117,7 +146,7 @@ declareAACI({
   id: 4,
   fixed: 6,
   modifier: 1.5,
-  shipValid: validAll(isBattleship, slotNumAtLeast(4)),
+  shipValid: (ship) => isBattleship(ship) && slotNumAtLeast(4)(ship),
   equipsValid: validAll(
     hasSome(isLargeCaliberMainGun),
     hasSome(isType3Shell),
@@ -126,17 +155,18 @@ declareAACI({
   ),
 })
 
-const isNotSubmarine = ship => ![13, 14].includes(ship.api_stype)
-// ref wikia: "Built-in HA mount is defined as a single High-Angle gun that has 8￼AA stat or higher."
+const isNotSubmarine = (ship: GameShip) => ![13, 14].includes(ship.api_stype ?? -1)
+// ref wikia: "Built-in HA mount is defined as a single High-Angle gun that has 8 AA stat or higher."
 // (as of Jan 1, 2020)
-const isBuiltinHighAngleMount = equip => isHighAngleMount(equip) && equip.api_tyku >= 8
+const isBuiltinHighAngleMount = (equip: GameEquip) =>
+  isHighAngleMount(equip) && (equip.api_tyku ?? 0) >= 8
 
 // id 5: all surface ships
 declareAACI({
   id: 5,
   fixed: 4,
   modifier: 1.5,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(3)(ship),
   equipsValid: validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAARadar)),
 })
 
@@ -146,7 +176,7 @@ declareAACI({
   id: 6,
   fixed: 4,
   modifier: 1.45,
-  shipValid: validAll(isBattleship, slotNumAtLeast(3)),
+  shipValid: (ship) => isBattleship(ship) && slotNumAtLeast(3)(ship),
   equipsValid: validAll(hasSome(isLargeCaliberMainGun), hasSome(isType3Shell), hasSome(isAAFD)),
 })
 
@@ -155,7 +185,7 @@ declareAACI({
   id: 7,
   fixed: 3,
   modifier: 1.35,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(3)(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD), hasSome(isAARadar)),
 })
 
@@ -163,7 +193,7 @@ declareAACI({
   id: 8,
   fixed: 4,
   modifier: 1.4,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(2)(ship),
   equipsValid: validAll(hasSome(isBuiltinHighAngleMount), hasSome(isAARadar)),
 })
 
@@ -171,15 +201,15 @@ declareAACI({
   id: 9,
   fixed: 2,
   modifier: 1.3,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(2)),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(2)(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAFD)),
 })
 
 // 21=対空機銃
 const isMachineGun = itemTypeIs(21)
 const isMayaK2 = shipIdIs(428)
-// ref wikia: "CDMG is defined as any Anti-Air gun that has 9￼AA stat or higher."
-const isCDMG = equip => isMachineGun(equip) && equip.api_tyku >= 9
+// ref wikia: "CDMG is defined as any Anti-Air gun that has 9 AA stat or higher."
+const isCDMG = (equip: GameEquip) => isMachineGun(equip) && (equip.api_tyku ?? 0) >= 9
 
 // id: 10~11 Maya K2
 declareAACI({
@@ -207,7 +237,7 @@ declareAACI({
   id: 12,
   fixed: 3,
   modifier: 1.25,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(3)(ship),
   equipsValid: validAll(hasSome(isCDMG), hasAtLeast(isAAGun, 2), hasSome(isAARadar)),
 })
 
@@ -216,14 +246,9 @@ declareAACI({
   id: 13,
   fixed: 4,
   modifier: 1.35,
-  shipValid: validAll(isNotSubmarine, slotNumAtLeast(3)),
-  equipsValid: validAll(
-    hasSome(isBuiltinHighAngleMount),
-    hasSome(isCDMG),
-    hasSome(isAARadar),
-  ),
+  shipValid: (ship) => isNotSubmarine(ship) && slotNumAtLeast(3)(ship),
+  equipsValid: validAll(hasSome(isBuiltinHighAngleMount), hasSome(isCDMG), hasSome(isAARadar)),
 })
-
 
 const isIsuzuK2 = shipIdIs(141)
 // id 14~15: Isuzu K2
@@ -336,8 +361,8 @@ declareAACI({
   id: 23,
   fixed: 1,
   modifier: 1.05,
-  shipValid: validAny(isUIT25, isI504),
-  equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG)))),
+  shipValid: (ship) => isUIT25(ship) || isI504(ship),
+  equipsValid: validAll(hasSome((e) => isAAGun(e) && !isCDMG(e))),
 })
 
 const isTenryuuK2 = shipIdIs(477)
@@ -349,8 +374,11 @@ declareAACI({
   id: 24,
   fixed: 3,
   modifier: 1.25,
-  shipValid: validAny(isTenryuuK2, isTatsutaK2),
-  equipsValid: validAll(hasSome(validAll(isAAGun, validNot(isCDMG))), hasSome(isHighAngleMount)),
+  shipValid: (ship) => isTenryuuK2(ship) || isTatsutaK2(ship),
+  equipsValid: validAll(
+    hasSome((e) => isAAGun(e) && !isCDMG(e)),
+    hasSome(isHighAngleMount),
+  ),
 })
 
 const isIseK = shipIdIs(82)
@@ -366,12 +394,12 @@ declareAACI({
   id: 25,
   fixed: 7,
   modifier: 1.55,
-  shipValid: validAny(isIseK, isHyuuGaK, isIseK2, isHyuuGaK2),
+  shipValid: (ship) => isIseK(ship) || isHyuuGaK(ship) || isIseK2(ship) || isHyuuGaK2(ship),
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar), hasSome(isType3Shell)),
 })
 
 const isMusashiK2 = shipIdIs(546)
-const isYamatoK2 = validAny(shipIdIs(911), shipIdIs(916))
+const isYamatoK2 = (ship: GameShip) => shipIdIs(911)(ship) || shipIdIs(916)(ship)
 // 275: 10cm連装高角砲改+増設機銃
 const isHighAngleMountGun = equipIdIs(275)
 
@@ -381,7 +409,7 @@ declareAACI({
   id: 26,
   fixed: 6,
   modifier: 1.4,
-  shipValid: validAny(isMusashiK2, isYamatoK2),
+  shipValid: (ship) => isMusashiK2(ship) || isYamatoK2(ship),
   equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
@@ -392,12 +420,8 @@ declareAACI({
   id: 27,
   fixed: 5,
   modifier: 1.55,
-  shipValid: validAny(isOoyodoK),
-  equipsValid: validAll(
-    hasSome(isHighAngleMountGun),
-    hasSome(isRocketK2),
-    hasSome(isAARadar)
-  ),
+  shipValid: isOoyodoK,
+  equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
 const isMusashiK = shipIdIs(148)
@@ -408,7 +432,13 @@ declareAACI({
   id: 28,
   fixed: 4,
   modifier: 1.4,
-  shipValid: validAny(isIseK, isIseK2, isHyuuGaK, isHyuuGaK2, isMusashiK, isMusashiK2),
+  shipValid: (ship) =>
+    isIseK(ship) ||
+    isIseK2(ship) ||
+    isHyuuGaK(ship) ||
+    isHyuuGaK2(ship) ||
+    isMusashiK(ship) ||
+    isMusashiK2(ship),
   equipsValid: validAll(hasSome(isRocketK2), hasSome(isAARadar)),
 })
 
@@ -421,7 +451,7 @@ declareAACI({
   id: 29,
   fixed: 5,
   modifier: 1.55,
-  shipValid: validAny(isHamakazeBK, isIsokazeBK),
+  shipValid: (ship) => isHamakazeBK(ship) || isIsokazeBK(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
@@ -433,7 +463,7 @@ declareAACI({
   id: 30,
   fixed: 3,
   modifier: 1.3,
-  shipValid: validAny(isTenryuuK2, isGotlandKai),
+  shipValid: (ship) => isTenryuuK2(ship) || isGotlandKai(ship),
   equipsValid: hasAtLeast(isHighAngleMount, 3),
 })
 
@@ -452,9 +482,10 @@ declareAACI({
 // 82 = J class
 // 88 = Nelson class
 // 108 = Town class
-const isRoyalNavyShips = ship => [67, 78, 82, 88, 108].includes(ship.api_ctype)
+const isRoyalNavyShips = (ship: GameShip) => [67, 78, 82, 88, 108].includes(ship.api_ctype ?? -1)
 // 6 = 金剛型
-const isKongouClassK2 = ship => ship.api_ctype === 6 && ship.api_name.includes('改二')
+const isKongouClassK2 = (ship: GameShip) =>
+  ship.api_ctype === 6 && (ship.api_name ?? '').includes('改二')
 // 191: QF 2ポンド8連装ポンポン砲
 const isQF2Pounder = equipIdIs(191)
 // 300: 16inch Mk.I三連装砲改+FCR type284
@@ -468,11 +499,11 @@ declareAACI({
   id: 32,
   fixed: 3,
   modifier: 1.2,
-  shipValid: validAny(isRoyalNavyShips, isKongouClassK2),
+  shipValid: (ship) => isRoyalNavyShips(ship) || isKongouClassK2(ship),
   equipsValid: validAny(
     validAll(hasSome(is16InchMkITriplePlusFCR), hasSome(isQF2Pounder)),
     validAll(hasSome(is20Tube7InchUpRocketLaunchers), hasSome(isQF2Pounder)),
-    hasAtLeast(is20Tube7InchUpRocketLaunchers, 2)
+    hasAtLeast(is20Tube7InchUpRocketLaunchers, 2),
   ),
 })
 
@@ -488,13 +519,16 @@ declareAACI({
 
 const isFletcherClassOrKai = shipIdIsOneOf(
   // Johnston & Kai
-  562, 689,
-
+  562,
+  689,
   // Fletcher & Kai & Mod.2 & Mk.II
-  596, 692, 628, 629,
-
+  596,
+  692,
+  628,
+  629,
   // Heywood L.E. & Kai
-  941, 726,
+  941,
+  726,
 )
 
 const is5InchSingleGunMountMk30PlusGFCS = equipIdIs(308)
@@ -509,8 +543,9 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
 
-const is5InchSingleGunMountMk30OrKai = equip => (equip.api_slotitem_id === 284 || equip.api_slotitem_id === 313)
-const is5InckSingleGunMountMk30Kai = equip => equip.apt_slotitem_id === 313
+const is5InchSingleGunMountMk30OrKai = (equip: GameEquip) =>
+  equip.api_slotitem_id === 284 || equip.api_slotitem_id === 313
+const is5InckSingleGunMountMk30Kai = (equip: GameEquip) => equip.api_slotitem_id === 313
 
 declareAACI({
   name: ['Fletcher-class'],
@@ -548,11 +583,12 @@ declareAACI({
 
 // 597: Atlanta
 // 696: Atlanta Kai
-const isAtlantaOrKai = ship => [597, 696].includes(ship.api_ship_id)
+const isAtlantaOrKai = (ship: GameShip) => [597, 696].includes(ship.api_ship_id ?? -1)
 // 362: 5inch連装両用砲(集中配備)
 // 363: GFCS Mk.37+5inch連装両用砲(集中配備)
 const isGFCSMk37And5InchTwinDualPurposeGunMount = equipIdIs(363)
-const is5InchTwinDualPurposeGunMountLike = equip => [362, 363].includes(equip.api_slotitem_id)
+const is5InchTwinDualPurposeGunMountLike = (equip: GameEquip) =>
+  equip.api_slotitem_id === 362 || equip.api_slotitem_id === 363
 
 declareAACI({
   name: ['Atlanta', 'Atlanta改'],
@@ -560,11 +596,7 @@ declareAACI({
   fixed: 10,
   modifier: 1.85,
   shipValid: isAtlantaOrKai,
-  equipsValid:
-    validAll(
-      // 2 of GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
-      hasAtLeast(isGFCSMk37And5InchTwinDualPurposeGunMount, 2),
-    ),
+  equipsValid: validAll(hasAtLeast(isGFCSMk37And5InchTwinDualPurposeGunMount, 2)),
 })
 
 // (as of Jan 1, 2020) Wikia listed this as Atlanta Kai's AACI and wikiwiki listed this as Atlanta's
@@ -575,13 +607,12 @@ declareAACI({
   fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
-  equipsValid:
-    validAll(
-      // GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
-      hasSome(isGFCSMk37And5InchTwinDualPurposeGunMount),
-      // And should have at least 2 in total, regardless of presence of GFCS radar.
-      hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
-    ),
+  equipsValid: validAll(
+    // GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
+    hasSome(isGFCSMk37And5InchTwinDualPurposeGunMount),
+    // And should have at least 2 in total, regardless of presence of GFCS radar.
+    hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
+  ),
 })
 
 declareAACI({
@@ -590,11 +621,7 @@ declareAACI({
   fixed: 10,
   modifier: 1.7,
   shipValid: isAtlantaOrKai,
-  equipsValid:
-    validAll(
-      hasSome(isGFCSMk37),
-      hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
-    ),
+  equipsValid: validAll(hasSome(isGFCSMk37), hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2)),
 })
 
 declareAACI({
@@ -606,24 +633,25 @@ declareAACI({
   equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
 })
 
-// id 42~45: Yamato K2 / Yamoto K2 Heavy / Musashi K2
+// id 42~45: Yamato K2 / Yamato K2 Heavy / Musashi K2
 
 // 464: 10cm連装高角砲群 集中配備
 const is10cmTwinHighAngleGunMountConcentratedDeployment = equipIdIs(464)
 
 // 142: 15m二重測距儀＋21号電探改二
 // 460: 15m二重測距儀改＋21号電探改二＋熟練射撃指揮所
-const is15mDuplexRangefinderLike = equip => [142, 460].includes(equip.api_slotitem_id)
+const is15mDuplexRangefinderLike = (equip: GameEquip) =>
+  equip.api_slotitem_id === 142 || equip.api_slotitem_id === 460
 
-// Anti-Air gun that has 9￼AA stat or higher.
-const isAAMG = equip => isMachineGun(equip) && equip.api_tyku >= 6
+// Anti-Air gun that has 6+ AA stat
+const isAAMG = (equip: GameEquip) => isMachineGun(equip) && (equip.api_tyku ?? 0) >= 6
 
 declareAACI({
   name: ['武蔵改二', '大和改二', '大和改二重'],
   id: 42,
   fixed: 10,
   modifier: 1.65,
-  shipValid: validAny(isMusashiK2, isYamatoK2),
+  shipValid: (ship) => isMusashiK2(ship) || isYamatoK2(ship),
   equipsValid: validAll(
     hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
     hasSome(is15mDuplexRangefinderLike),
@@ -636,7 +664,7 @@ declareAACI({
   id: 43,
   fixed: 8,
   modifier: 1.6,
-  shipValid: validAny(isMusashiK2, isYamatoK2),
+  shipValid: (ship) => isMusashiK2(ship) || isYamatoK2(ship),
   equipsValid: validAll(
     hasAtLeast(is10cmTwinHighAngleGunMountConcentratedDeployment, 2),
     hasSome(is15mDuplexRangefinderLike),
@@ -648,7 +676,7 @@ declareAACI({
   id: 44,
   fixed: 6,
   modifier: 1.6,
-  shipValid: validAny(isMusashiK2, isYamatoK2),
+  shipValid: (ship) => isMusashiK2(ship) || isYamatoK2(ship),
   equipsValid: validAll(
     hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
     hasSome(is15mDuplexRangefinderLike),
@@ -661,7 +689,7 @@ declareAACI({
   id: 45,
   fixed: 5,
   modifier: 1.55,
-  shipValid: validAny(isMusashiK2, isYamatoK2),
+  shipValid: (ship) => isMusashiK2(ship) || isYamatoK2(ship),
   equipsValid: validAll(
     hasSome(is10cmTwinHighAngleGunMountConcentratedDeployment),
     hasSome(is15mDuplexRangefinderLike),
@@ -681,23 +709,18 @@ declareAACI({
   id: 46,
   fixed: 8,
   modifier: 1.55,
-  shipValid: validAny(isHarunaKaiNiB),
+  shipValid: isHarunaKaiNiB,
   equipsValid: validAll(
     hasSome(isCDMG),
     hasSome(isAARadar),
-    hasSome(validAny(is356mmTwinMountKai3Dazzle, is356mmTwinMountKai4)),
+    hasSome((e) => is356mmTwinMountKai3Dazzle(e) || is356mmTwinMountKai4(e)),
   ),
 })
 
 // id 47: Shiratsuyu Class Kai 2
 
-const isShiratsuyuClassK2 = validAny(
-  shipIdIs(497),
-  shipIdIs(145),
-  shipIdIs(961),
-  shipIdIs(498),
-  shipIdIs(975),
-)
+const isShiratsuyuClassK2 = (ship: GameShip) =>
+  [497, 145, 961, 498, 975].includes(ship.api_ship_id ?? -1)
 // 529: 12.7cm連装砲C型改三H
 const is127mmTwinMountTypeCKai3H = equipIdIs(529)
 // 505: 25mm対空機銃増備
@@ -708,11 +731,11 @@ declareAACI({
   id: 47,
   fixed: 2,
   modifier: 1.3,
-  shipValid: validAny(isShiratsuyuClassK2),
+  shipValid: isShiratsuyuClassK2,
   equipsValid: validAny(
     validAll(
       hasSome(is127mmTwinMountTypeCKai3H),
-      hasSome(validAny(is25mmAAGunExtraEmplacement, isAdvancedAARadar)),
+      hasSome((e) => is25mmAAGunExtraEmplacement(e) || isAdvancedAARadar(e)),
     ),
     hasAtLeast(is127mmTwinMountTypeCKai3H, 2),
   ),
@@ -728,17 +751,9 @@ declareAACI({
   id: 48,
   fixed: 8,
   modifier: 1.75,
-  shipValid: validAny(
-    validAll(
-      isAkizukiClass,
-      isKai,
-    )
-  ),
+  shipValid: (ship) => isAkizukiClass(ship) && isKai(ship),
   equipsValid: validAny(
-    validAll(
-      hasAtLeast(is100mmTwinMountKaiAAFD, 2),
-      hasSome(isAdvancedAARadar),
-    ),
+    validAll(hasAtLeast(is100mmTwinMountKaiAAFD, 2), hasSome(isAdvancedAARadar)),
   ),
 })
 
@@ -753,16 +768,9 @@ declareAACI({
   id: 49,
   fixed: 5,
   modifier: 1.5,
-  shipValid: validAny(
-    isFujinamiK2,
-    isFubukiK2,
-    isShirayukiK2,
-  ),
+  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
   equipsValid: validAny(
-    validAll(
-      hasAtLeast(isBuiltinHighAngleMount, 2),
-      hasSome(isAdvancedAARadar),
-    ),
+    validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAdvancedAARadar)),
   ),
 })
 
@@ -770,22 +778,16 @@ declareAACI({
 
 const isType94AAFD = equipIdIs(121)
 const is100mmTwinMountKai = equipIdIs(553)
-const is100mmTwinMountKaiOrAAFD = validAny(
-  is100mmTwinMountKaiAAFD,
-  is100mmTwinMountKai,
-)
+const is100mmTwinMountKaiOrAAFD = (equip: GameEquip) =>
+  is100mmTwinMountKaiAAFD(equip) || is100mmTwinMountKai(equip)
 
 declareAACI({
   name: ['藤波改二', '吹雪改二', '白雪改二', 'Akizuki Class'],
   id: 50,
   fixed: 7,
   modifier: 1.5,
-  shipValid: validAny(
-    isFujinamiK2,
-    isFubukiK2,
-    isShirayukiK2,
-    isAkizukiClass,
-  ),
+  shipValid: (ship) =>
+    isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship) || isAkizukiClass(ship),
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKaiOrAAFD, 2),
@@ -802,17 +804,9 @@ declareAACI({
   id: 51,
   fixed: 5,
   modifier: 1.35,
-  shipValid: validAny(
-    isFujinamiK2,
-    isFubukiK2,
-    isShirayukiK2,
-  ),
+  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
   equipsValid: validAny(
-    validAll(
-      hasSome(is100mmTwinMountKaiOrAAFD),
-      hasSome(isAdvancedAARadar),
-      hasSome(isAAGun),
-    ),
+    validAll(hasSome(is100mmTwinMountKaiOrAAFD), hasSome(isAdvancedAARadar), hasSome(isAAGun)),
   ),
 })
 
@@ -821,17 +815,8 @@ declareAACI({
   id: 52,
   fixed: 4,
   modifier: 1.4,
-  shipValid: validAny(
-    isFujinamiK2,
-    isFubukiK2,
-    isShirayukiK2,
-  ),
-  equipsValid: validAny(
-    validAll(
-      hasAtLeast(is100mmTwinMountKai, 2),
-      hasSome(isType94AAFD),
-    ),
-  ),
+  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
+  equipsValid: validAny(validAll(hasAtLeast(is100mmTwinMountKai, 2), hasSome(isType94AAFD))),
 })
 
 // return: a list of sorted AACI objects order by effect desc,
@@ -839,12 +824,13 @@ declareAACI({
 // param: AACI IDs from possibleAACIs functions
 // param: a optional sorting callback to customize ordering
 const sortAaciIds = (
-  aaciIds,
-  sortCallback = (a, b) => b.fixed - a.fixed || b.modifier - a.modifier,
-) => {
-  let aaciList = []
-  if (!!aaciIds && Array.isArray(aaciIds)) {
-    aaciIds.forEach(id => {
+  aaciIds: number[] | null | undefined,
+  sortCallback: (a: AACIEntry, b: AACIEntry) => number = (a, b) =>
+    b.fixed - a.fixed || b.modifier - a.modifier,
+): AACIEntry[] => {
+  let aaciList: AACIEntry[] = []
+  if (aaciIds && Array.isArray(aaciIds)) {
+    aaciIds.forEach((id) => {
       if (AACITable[id]) {
         aaciList.push(AACITable[id])
       }
@@ -855,33 +841,33 @@ const sortAaciIds = (
 }
 
 // Order by AACI id desc
-export const sortFleetPossibleAaciList = triggeredShipAaciIds =>
+export const sortFleetPossibleAaciList = (triggeredShipAaciIds: number[]): AACIEntry[] =>
   sortAaciIds(triggeredShipAaciIds, (a, b) => b.id - a.id)
 
-// return a list of AACIs that meet the requirement of ship and equipmenmt
+// return a list of AACIs that meet the requirement of ship and equipment
 // ship: ship
 // equips: [[equip, onslot] for equip on ship]
-export const getShipAvailableAACIs = (ship, equips) =>
+export const getShipAvailableAACIs = (ship: GameShip, equips: GameEquip[]): number[] =>
   Object.keys(AACITable)
-    .filter(key => {
-      const type = AACITable[key]
+    .filter((key) => {
+      const type = AACITable[Number(key)]
       return type.shipValid(ship) && type.equipsValid(equips)
     })
-    .map(key => Number(key))
+    .map((key) => Number(key))
 
 // return a list of all possible AACIs for the ship herself
-export const getShipAllAACIs = ship =>
+export const getShipAllAACIs = (ship: GameShip): number[] =>
   Object.keys(AACITable)
-    .filter(key => {
-      const type = AACITable[key]
+    .filter((key) => {
+      const type = AACITable[Number(key)]
       return type.shipValid(ship)
     })
-    .map(key => Number(key))
+    .map((key) => Number(key))
 
 // return the AACIs to trigger for a ship, it will be array due to exceptions
-export const getShipAACIs = (ship, equips) => {
+export const getShipAACIs = (ship: GameShip, equips: GameEquip[]): number[] => {
   const AACIs = getShipAvailableAACIs(ship, equips)
-  const maxFixed = maxBy(AACIs, id => (AACITable[id] || {}).fixed || 0) || 0
+  const maxFixed = maxBy(AACIs, (id) => (AACITable[id] || {}).fixed || 0) || 0
   // Kinu kai 2 exception
   if (AACIs.includes(19)) {
     return [19, 20]
@@ -913,15 +899,15 @@ export const getShipAACIs = (ship, equips) => {
 }
 
 // collections of AACIs to trigger of each ship
-export const getFleetAvailableAACIs = (ships, equips) => {
-  const aaciSet = {}
+export const getFleetAvailableAACIs = (ships: GameShip[], equips: GameEquip[][]): number[] => {
+  const aaciSet: Record<number, boolean> = {}
   ships.forEach((ship, index) => {
     getShipAACIs(
       ship,
-      equips[index].map(([equip, onslot]) => equip),
-    ).forEach(id => {
+      equips[index].map((equip) => equip),
+    ).forEach((id) => {
       aaciSet[id] = true
     })
   })
-  return Object.keys(aaciSet).map(key => Number(key))
+  return Object.keys(aaciSet).map((key) => Number(key))
 }

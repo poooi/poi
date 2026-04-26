@@ -27,6 +27,8 @@ describe('equips reducer', () => {
   const createEquip = (id: number, slotitemId: number): Equip => ({
     api_id: id,
     api_slotitem_id: slotitemId,
+    api_level: 0,
+    api_locked: 0,
   })
 
   it('should return initial state', () => {

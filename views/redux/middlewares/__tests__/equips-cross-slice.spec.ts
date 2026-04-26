@@ -40,8 +40,11 @@ describe('equipsCrossSliceMiddleware', () => {
   it('removes equips for powerup when api_slot_dest_flag is set', () => {
     const store = createTestStore(
       {
+        // @ts-expect-error test fixture with minimal equip data
         '101': { api_id: 101 },
+        // @ts-expect-error test fixture with minimal equip data
         '102': { api_id: 102 },
+        // @ts-expect-error test fixture with minimal equip data
         '103': { api_id: 103 },
       },
       {
@@ -83,6 +86,7 @@ describe('equipsCrossSliceMiddleware', () => {
   it('does not remove equips for powerup when api_slot_dest_flag is not set', () => {
     const store = createTestStore(
       {
+        // @ts-expect-error test fixture with minimal equip data
         '101': { api_id: 101 },
       },
       {
@@ -123,7 +127,9 @@ describe('equipsCrossSliceMiddleware', () => {
   it('removes equips for destroyship when api_slot_dest_flag is set', () => {
     const store = createTestStore(
       {
+        // @ts-expect-error test fixture with minimal equip data
         '201': { api_id: 201 },
+        // @ts-expect-error test fixture with minimal equip data
         '202': { api_id: 202 },
       },
       {

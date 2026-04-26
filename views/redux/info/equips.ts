@@ -1,3 +1,5 @@
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+
 import { createSlice } from '@reduxjs/toolkit'
 import { keyBy, filter } from 'lodash'
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
@@ -16,11 +18,7 @@ import {
   createInfoEquipsRemoveByIdsAction,
 } from '../actions'
 
-export interface Equip {
-  api_id: number
-  api_slotitem_id?: number
-  api_locked?: number
-}
+export type Equip = APISlotItem
 
 export interface EquipsState {
   [key: `${number}` | number]: Equip

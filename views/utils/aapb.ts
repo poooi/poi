@@ -13,10 +13,19 @@
 
  */
 
-const isAAGun = ($equip) => $equip.api_type[2] === 21
-const isHighAngleMount = ($equip) => $equip.api_type[3] === 16
-const isAAFireDirector = ($equip) => $equip.api_type[2] === 36
-const isAARadar = ($equip) => [12, 13].includes($equip.api_type[2]) && $equip.api_tyku > 0
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
+
+type EquipPair = [APISlotItem, APIMstSlotitem]
+
+type ShipPair = [APIShip, APIMstShip]
+
+const isAAGun = ($equip: APIMstSlotitem) => $equip.api_type[2] === 21
+const isHighAngleMount = ($equip: APIMstSlotitem) => $equip.api_type[3] === 16
+const isAAFireDirector = ($equip: APIMstSlotitem) => $equip.api_type[2] === 36
+const isAARadar = ($equip: APIMstSlotitem) =>
+  [12, 13].includes($equip.api_type[2]) && $equip.api_tyku > 0
 
 // 加重対空値
 /*
@@ -25,15 +34,15 @@ const isAARadar = ($equip) => [12, 13].includes($equip.api_type[2]) && $equip.ap
    we'll prefer wikiwiki for it's updated more recently (as of Oct 18, 2018)
    unless further experiment proves otherwise.
  */
-const getEquipWeightedAA = ([equip, $equip]) => {
+const getEquipWeightedAA = ([equip, $equip]: EquipPair): number => {
   // equip AA = (E_fmod * E_AA) + (E_f* * sqrt(lvl))
   if (isAAGun($equip)) {
     if ($equip.api_tyku >= 8) {
       // 素対空8以上
-      return 6 * $equip.api_tyku + 6 * Math.sqrt(equip.api_level)
+      return 6 * $equip.api_tyku + 6 * Math.sqrt(equip.api_level ?? 0)
     } else {
       // 素対空7以下
-      return 6 * $equip.api_tyku + 4 * Math.sqrt(equip.api_level)
+      return 6 * $equip.api_tyku + 4 * Math.sqrt(equip.api_level ?? 0)
     }
   }
   if (isHighAngleMount($equip)) {
@@ -41,14 +50,13 @@ const getEquipWeightedAA = ([equip, $equip]) => {
        inconsistency:
        - equipment's improvement modifier is always 3 in wikia,
        - while in wikiwiki, HA with AA stat <= 7 has a factor of 2
-
      */
     if ($equip.api_tyku >= 8) {
       // 素対空8以上
-      return 4 * $equip.api_tyku + 3 * Math.sqrt(equip.api_level)
+      return 4 * $equip.api_tyku + 3 * Math.sqrt(equip.api_level ?? 0)
     } else {
       // 素対空7以下
-      return 4 * $equip.api_tyku + 2 * Math.sqrt(equip.api_level)
+      return 4 * $equip.api_tyku + 2 * Math.sqrt(equip.api_level ?? 0)
     }
   }
   if (isAAFireDirector($equip)) {
@@ -57,7 +65,7 @@ const getEquipWeightedAA = ([equip, $equip]) => {
        - AAFD's improvement modifier is not present in wikia
        - it's 2 in wikiwiki
      */
-    return 4 * $equip.api_tyku + 2 * Math.sqrt(equip.api_level)
+    return 4 * $equip.api_tyku + 2 * Math.sqrt(equip.api_level ?? 0)
   }
   if (isAARadar($equip)) {
     return 3 * $equip.api_tyku
@@ -88,7 +96,7 @@ const capableShipTypes = [
    - EquipsInfo: Array of `EquipInfo`,
        where EquipInfo at least has shape: [equip, $equip, onslot]
  */
-export const getShipAAPB = ([ship, $ship], equipsInfo) => {
+export const getShipAAPB = ([ship, $ship]: ShipPair, equipsInfo: EquipPair[]): number => {
   if (!capableShipTypes.includes($ship.api_stype)) return 0
 
   let rlk2Count = 0
@@ -111,7 +119,7 @@ export const getShipAAPB = ([ship, $ship], equipsInfo) => {
      but here we want to obtain ship's basic AA **excluding** all equipments' bonus,
      for now the easiest approach is to work from $ship and ships' own modernization state.
    */
-  const basicAA = $ship.api_tyku[0] + ship.api_kyouka[2]
+  const basicAA = ($ship.api_tyku?.[0] ?? 0) + ship.api_kyouka[2]
   let adjustedAA = basicAA
   equipsInfo.forEach((e) => {
     adjustedAA += getEquipWeightedAA(e)
@@ -126,6 +134,6 @@ export const getShipAAPB = ([ship, $ship], equipsInfo) => {
      must have equipped something, so we can say A = 2
    */
   adjustedAA = 2 * Math.floor(adjustedAA / 2)
-  // as we want to show the precentage, let *100 here to obtain a better precision.
+  // as we want to show the percentage, let *100 here to obtain a better precision.
   return ((adjustedAA + 0.9 * ship.api_lucky[0]) * 100) / 281 + 15 * (rlk2Count - 1) + iseClassBonus
 }

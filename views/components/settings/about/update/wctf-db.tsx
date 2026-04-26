@@ -8,7 +8,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
-// @ts-expect-error not ready yet
 import { wctfSelector } from 'views/utils/selectors'
 
 declare const APPDATA_PATH: string

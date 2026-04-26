@@ -1,10 +1,29 @@
+import type { APIMstMapinfo, APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
+import type { AirBase } from 'views/redux/info/airbase'
+import type { Equip } from 'views/redux/info/equips'
+import type { Fleet } from 'views/redux/info/fleets'
+import type { MapInfo, MapsState } from 'views/redux/info/maps'
+import type { RepairData } from 'views/redux/info/repairs'
+import type { Ship } from 'views/redux/info/ships'
+import type { RootState } from 'views/redux/reducer-factory'
+import type { SortieState } from 'views/redux/sortie'
+
 import memoize from 'fast-memoize'
 import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
+//### Local Types ###
+
+type FleetFull = Fleet & { api_mission?: number[] }
+type ExtendedMapInfo = MapInfo & { api_required_defeat_count?: number; api_defeat_count?: number }
+type StateWithOnslot = { state: RootState; onslot: number | undefined }
+type ShipData = [Ship, APIMstShip | undefined]
+type EquipDataWithOnslot = [Equip, APIMstSlotitem, number | undefined]
+type MapData = [MapInfo, APIMstMapinfo]
+
 //### Helpers ###
 
-function deepCompareArray(currentVal, previousVal) {
+function deepCompareArray(currentVal: unknown, previousVal: unknown): boolean {
   if (currentVal === previousVal) return true
   if (
     Array.isArray(currentVal) &&
@@ -16,6 +35,7 @@ function deepCompareArray(currentVal, previousVal) {
     return false
   }
 }
+
 // This kind of selector specially treats array arguments by `===` comparing
 // its items one by one
 export const createDeepCompareArraySelector = createSelectorCreator(
@@ -25,38 +45,64 @@ export const createDeepCompareArraySelector = createSelectorCreator(
 
 // This wrapper prevents different array (in terms of ===) being returned
 // despite having the same elements
-function arrayResultWrapper(selector) {
-  return createDeepCompareArraySelector(selector, (result) => result)
+function arrayResultWrapper<S, T>(selector: (state: S) => T): (state: S) => T {
+  // createDeepCompareArraySelector has the same call semantics as createSelector but
+  // with a custom equality check. We assert the state type to satisfy reselect's
+  // overloads; the actual type parameter S is preserved via the outer cast.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  const typedSelector = selector as (state: RootState) => T
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return createDeepCompareArraySelector(typedSelector, (result: T) => result) as (state: S) => T
 }
 
-function getDeckState(shipsData = [], inBattle, inExpedition, inRepairShipsId) {
+function getDeckState(
+  shipsData: (ShipData | undefined)[] | undefined = [],
+  inBattle: unknown,
+  inExpedition: unknown,
+  inRepairShipsId: number[] | undefined,
+): number {
   let state = 0
   if (inBattle) state = Math.max(state, 5)
   if (inExpedition) state = Math.max(state, 4)
-  shipsData.forEach(([ship, $ship] = []) => {
+  shipsData?.forEach((pair) => {
+    if (!pair) return
+    const [ship, $ship] = pair
     if (!ship || !$ship) return
     // Cond < 20 or medium damage
-    if (ship.api_cond < 20 || ship.api_nowhp / ship.api_maxhp < 0.25) state = Math.max(state, 2)
+    if ((ship.api_cond ?? 100) < 20 || (ship.api_nowhp ?? 1) / (ship.api_maxhp ?? 1) < 0.25)
+      state = Math.max(state, 2)
     // Cond < 40 or heavy damage
-    else if (ship.api_cond < 40 || ship.api_nowhp / ship.api_maxhp < 0.5) state = Math.max(state, 1)
+    else if ((ship.api_cond ?? 100) < 40 || (ship.api_nowhp ?? 1) / (ship.api_maxhp ?? 1) < 0.5)
+      state = Math.max(state, 1)
     // Not supplied
-    if (ship.api_fuel / $ship.api_fuel_max < 0.99 || ship.api_bull / $ship.api_bull_max < 0.99)
+    if (
+      (ship.api_fuel ?? 0) / ($ship.api_fuel_max ?? 1) < 0.99 ||
+      (ship.api_bull ?? 0) / ($ship.api_bull_max ?? 1) < 0.99
+    )
       state = Math.max(state, 1)
     // Repairing
-    if (inRepairShipsId.includes(ship.api_id)) state = Math.max(state, 3)
+    if (inRepairShipsId?.includes(ship.api_id)) state = Math.max(state, 3)
   })
   return state
 }
 
-function getMapData(mapId, maps, $maps) {
+function getMapData(
+  mapId: number | string | null | undefined,
+  maps: MapsState | null | undefined,
+  $maps: Record<string, APIMstMapinfo> | null | undefined,
+): MapData | undefined {
   if (mapId == 0 || mapId == null || maps == null || $maps == null) return
-  if (!maps[mapId] || !$maps[mapId]) return
-  return [maps[mapId], $maps[mapId]]
+  const numericId = Number(mapId)
+  if (Number.isNaN(numericId) || !maps[numericId] || !$maps[numericId]) return
+  return [maps[numericId], $maps[numericId]]
 }
 
 // Returns [nowHp, maxHp, gaugeType]
 // where nowHp === 0 means cleared
-function getMapHp(map, $map) {
+function getMapHp(
+  map: ExtendedMapInfo | undefined,
+  $map: APIMstMapinfo | undefined,
+): [number | undefined, number | undefined, number | undefined] | undefined {
   if (!map || !$map) return
   if (map.api_eventmap) {
     const { api_now_maphp, api_max_maphp, api_gauge_type } = map.api_eventmap
@@ -71,28 +117,33 @@ function getMapHp(map, $map) {
 
 //### Selectors ###
 // Use it sparingly
-export const stateSelector = (state) => state
+export const stateSelector = (state: RootState): RootState => state
 
-export const constSelector = (state) => state.const
-export const basicSelector = (state) => state.info.basic
-export const configSelector = (state) => state.config
-export const miscSelector = (state) => state.misc
-export const fleetsSelector = (state) => state.info.fleets
-export const shipsSelector = (state) => state.info.ships
-export const equipsSelector = (state) => state.info.equips
-export const repairsSelector = (state) => state.info.repairs
-export const mapsSelector = (state) => state.info.maps
-export const sortieSelector = (state) => state.sortie
-export const sortieStatusSelector = (state) => state.sortie.sortieStatus
-export const currentNodeSelector = (state) => state.sortie.currentNode
-export const battleSelector = (state) => state.battle
-export const fcdSelector = (state) => state.fcd
-export const ipcSelector = (state) => state.ipc
-export const wctfSelector = (state) => state.wctf
-export const layoutSelector = (state) => state.layout
-export const fcdShipTagColorSelector = (state) => get(state.fcd, 'shiptag.color', [])
+export const constSelector = (state: RootState) => state.const
+export const basicSelector = (state: RootState) => state.info.basic
+export const configSelector = (state: RootState) => state.config
+export const miscSelector = (state: RootState) => state.misc
+export const fleetsSelector = (state: RootState) => state.info.fleets
+export const shipsSelector = (state: RootState) => state.info.ships
+export const equipsSelector = (state: RootState) => state.info.equips
+export const repairsSelector = (state: RootState) => state.info.repairs
+export const mapsSelector = (state: RootState) => state.info.maps
+export const sortieSelector = (state: RootState) => state.sortie
+export const sortieStatusSelector = (state: RootState) => state.sortie.sortieStatus
+export const currentNodeSelector = (state: RootState) => state.sortie.currentNode
+export const battleSelector = (state: RootState) => state.battle
+export const fcdSelector = (state: RootState) => state.fcd
+export const ipcSelector = (state: RootState) => state.ipc
+export const wctfSelector = (state: RootState) => state.wctf
+export const layoutSelector = (state: RootState) => state.layout
+export const fcdShipTagColorSelector = (state: RootState): unknown[] =>
+  get(state.fcd, 'shiptag.color', [])
 
-export const extensionSelectorFactory = (key) => (state) => get(state.ext, [key, '_']) || {}
+export const extensionSelectorFactory =
+  (key: string) =>
+  (state: RootState): Record<string, unknown> =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    (get(state.ext, [key, '_']) as Record<string, unknown> | undefined) ?? {}
 
 export const configLayoutSelector = createSelector(configSelector, (config) =>
   get(config, 'poi.layout.mode', 'horizontal'),
@@ -107,12 +158,12 @@ export const configReverseLayoutSelector = createSelector(configSelector, (confi
   get(config, 'poi.layout.reverse', false),
 )
 
-export const condTickSelector = (state) => state.timers.cond.tick
+export const condTickSelector = (state: RootState) => state.timers.cond.tick
 
 // Returns [shipId for every ship in repair]
 // Returns undefined if uninitialized
 export const inRepairShipsIdSelector = arrayResultWrapper(
-  createSelector(repairsSelector, (repairs) => {
+  createSelector(repairsSelector, (repairs: RepairData[] | undefined) => {
     if (!repairs) return
     return map(
       repairs.filter((repair) => repair.api_state == 1),
@@ -122,15 +173,15 @@ export const inRepairShipsIdSelector = arrayResultWrapper(
 )
 
 export const fleetSelectorFactory = memoize(
-  (fleetId) => (state) => (state.info.fleets || [])[fleetId],
+  (fleetId: number) => (state: RootState) => (state.info.fleets || [])[fleetId],
 )
 export const landbaseSelectorFactory = memoize(
-  (landbaseId) => (state) => (state.info.airbase || [])[landbaseId],
+  (landbaseId: number) => (state: RootState) => (state.info.airbase || [])[landbaseId],
 )
 
 // Returns [shipId] of this fleet
 // Returns undefined if fleet not found
-export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
+export const fleetShipsIdSelectorFactory = memoize((fleetId: number) =>
   arrayResultWrapper(
     createSelector(fleetSelectorFactory(fleetId), (fleet) => {
       if (fleet == null) return
@@ -139,24 +190,27 @@ export const fleetShipsIdSelectorFactory = memoize((fleetId) =>
   ),
 )
 
-export const fleetSlotCountSelectorFactory = memoize((fleetId) =>
+export const fleetSlotCountSelectorFactory = memoize((fleetId: number) =>
   createSelector([fleetSelectorFactory(fleetId)], (fleet) => get(fleet, 'api_ship.length', 0)),
 )
 
-export const fleetInBattleSelectorFactory = memoize((fleetId) =>
+export const fleetInBattleSelectorFactory = memoize((fleetId: number) =>
   createSelector(sortieStatusSelector, (sortieStatus) => sortieStatus[fleetId]),
 )
-export const fleetInExpeditionSelectorFactory = memoize((fleetId) =>
+export const fleetInExpeditionSelectorFactory = memoize((fleetId: number) =>
   createSelector(fleetSelectorFactory(fleetId), (fleet) =>
-    typeof fleet === 'object' ? fleet.api_mission[0] : false,
+    typeof fleet === 'object'
+      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        ((fleet as FleetFull).api_mission?.[0] ?? false)
+      : false,
   ),
 )
-export const fleetNameSelectorFactory = memoize((fleetId) =>
+export const fleetNameSelectorFactory = memoize((fleetId: number) =>
   createSelector(fleetSelectorFactory(fleetId), (fleet) =>
-    typeof fleet === 'object' ? fleet.api_name : '',
+    typeof fleet === 'object' ? (fleet.api_name ?? '') : '',
   ),
 )
-export const fleetStateSelectorFactory = memoize((fleetId) =>
+export const fleetStateSelectorFactory = memoize((fleetId: number) =>
   createSelector(
     [
       fleetInBattleSelectorFactory(fleetId),
@@ -170,16 +224,17 @@ export const fleetStateSelectorFactory = memoize((fleetId) =>
 )
 
 const emptyExpedition = [0, 0, 0, 0]
-export const fleetExpeditionSelectorFactory = memoize((fleetId) =>
+export const fleetExpeditionSelectorFactory = memoize((fleetId: number) =>
   createSelector(fleetSelectorFactory(fleetId), (fleet) =>
-    fleet ? fleet.api_mission : emptyExpedition,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    fleet ? ((fleet as FleetFull).api_mission ?? emptyExpedition) : emptyExpedition,
   ),
 )
 
 // Reads props.fleetId
 // Returns <repairDock> if this ship is in repair
 // Returns undefined if uninitialized or not in repair
-export const shipRepairDockSelectorFactory = memoize((shipId) =>
+export const shipRepairDockSelectorFactory = memoize((shipId: number) =>
   createSelector(repairsSelector, (repairs) => {
     if (repairs == null) return
     return repairs.find(({ api_state, api_ship_id }) => api_state == 1 && api_ship_id == shipId)
@@ -193,21 +248,21 @@ const sortieShipIdSelector = arrayResultWrapper(
       fleetsSelector, // we need the -1 placeholder here because escapedPos is by index
       sortieSelector,
     ],
-    (fleet, { sortieStatus }) =>
+    (fleet, { sortieStatus }: SortieState) =>
       flatMap(sortieStatus, (sortie, index) => (sortie ? get(fleet, [index, 'api_ship'], []) : [])),
   ),
 )
 
-export const escapeStatusSelectorFactory = memoize((shipId) =>
+export const escapeStatusSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [sortieShipIdSelector, sortieSelector],
-    (sortieShipIds, { escapedPos }) =>
+    (sortieShipIds, { escapedPos }: SortieState) =>
       shipId > 0 && escapedPos.some((pos) => sortieShipIds[pos] === shipId),
   ),
 )
 
 // There's a Number type check
-const shipBaseDataSelectorFactory = memoize((shipId) =>
+const shipBaseDataSelectorFactory = memoize((shipId: number) =>
   createSelector([shipsSelector], (ships) =>
     ships && typeof shipId === 'number' && shipId ? ships[shipId] : undefined,
   ),
@@ -218,60 +273,67 @@ const shipBaseDataSelectorFactory = memoize((shipId) =>
 // Returns undefined if uninitialized, or if ship not found in _ship
 // Attention: shipId here only accepts Number type,
 //   otherwise will always return undefined
-export const shipDataSelectorFactory = memoize((shipId) =>
+export const shipDataSelectorFactory = memoize((shipId: number) =>
   arrayResultWrapper(
     createSelector([shipBaseDataSelectorFactory(shipId), constSelector], (ship, { $ships }) =>
-      $ships && typeof ship === 'object' && ship ? [ship, $ships[ship.api_ship_id]] : undefined,
+      $ships && typeof ship === 'object' && ship
+        ? ([ship, $ships[ship.api_ship_id ?? -1]] as ShipData)
+        : undefined,
     ),
   ),
 )
 
-const shipSlotnumSelectorFactory = memoize((shipId) =>
-  createSelector(shipBaseDataSelectorFactory(shipId), (ship) => (ship ? ship.api_slotnum : 0)),
+const shipSlotnumSelectorFactory = memoize((shipId: number) =>
+  createSelector(shipBaseDataSelectorFactory(shipId), (ship) =>
+    ship ? (ship.api_slotnum ?? 0) : 0,
+  ),
 )
-const shipSlotSelectorFactory = memoize((shipId) =>
+const shipSlotSelectorFactory = memoize((shipId: number) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) => (ship ? ship.api_slot : undefined)),
 )
-const shipExslotSelectorFactory = memoize((shipId) =>
-  createSelector(shipBaseDataSelectorFactory(shipId), (ship) => (ship ? ship.api_slot_ex : -1)),
+const shipExslotSelectorFactory = memoize((shipId: number) =>
+  createSelector(shipBaseDataSelectorFactory(shipId), (ship) =>
+    ship ? (ship.api_slot_ex ?? -1) : -1,
+  ),
 )
-const shipOnSlotSelectorFactory = memoize((shipId) =>
+const shipOnSlotSelectorFactory = memoize((shipId: number) =>
   createSelector(shipBaseDataSelectorFactory(shipId), (ship) =>
     ship ? ship.api_onslot : undefined,
   ),
 )
-const landbaseSlotnumSelectorFactory = memoize((landbaseId) =>
-  createSelector(landbaseSelectorFactory(landbaseId), (landbase) =>
-    landbase ? landbase.api_plane_info.length : 0,
+const landbaseSlotnumSelectorFactory = memoize((landbaseId: number) =>
+  createSelector(landbaseSelectorFactory(landbaseId), (landbase: AirBase | undefined) =>
+    landbase ? (landbase.api_plane_info?.length ?? 0) : 0,
   ),
 )
-const landbaseOnSlotSelectorFactory = memoize((landbaseId) =>
-  createSelector(landbaseSelectorFactory(landbaseId), (landbase) =>
-    landbase ? landbase.api_plane_info.map((l) => l.api_count) : undefined,
+const landbaseOnSlotSelectorFactory = memoize((landbaseId: number) =>
+  createSelector(landbaseSelectorFactory(landbaseId), (landbase: AirBase | undefined) =>
+    landbase ? landbase.api_plane_info?.map((l) => l.api_count) : undefined,
   ),
 )
+
 // Returns [equipId for each slot on the ship]
 // length is always 5 + 1(ex slot)
 // Slot is padded with -1 for each empty slot
 // Returns undefined if ship is undefined
-const shipEquipsIdSelectorFactory = memoize((shipId) =>
+const shipEquipsIdSelectorFactory = memoize((shipId: number) =>
   arrayResultWrapper(
     createSelector(
       [shipSlotSelectorFactory(shipId), shipExslotSelectorFactory(shipId)],
-      (slot, exslot) => (slot ? slot.concat(exslot).map((i) => parseInt(i)) : undefined),
+      (slot, exslot) => (slot ? slot.concat(exslot).map((i) => parseInt(String(i))) : undefined),
     ),
   ),
 )
-const landbaseEquipsIdSelectorFactory = memoize((landbaseId) =>
+const landbaseEquipsIdSelectorFactory = memoize((landbaseId: number) =>
   arrayResultWrapper(
-    createSelector(landbaseSelectorFactory(landbaseId), (landbase) =>
-      landbase ? landbase.api_plane_info.map((l) => l.api_slotid) : [],
+    createSelector(landbaseSelectorFactory(landbaseId), (landbase: AirBase | undefined) =>
+      landbase ? (landbase.api_plane_info?.map((l) => l.api_slotid) ?? []) : [],
     ),
   ),
 )
 
 // There's a Number type check
-const equipBaseDataSelectorFactory = memoize((equipId) =>
+const equipBaseDataSelectorFactory = memoize((equipId: number) =>
   createSelector([equipsSelector], (equips) =>
     equips && typeof equipId === 'number' && equipId ? equips[equipId] : undefined,
   ),
@@ -281,32 +343,34 @@ const equipBaseDataSelectorFactory = memoize((equipId) =>
 // Returns undefined if uninitialized, or if equip not found in _equip
 // Attention: equipId here only accepts Number type,
 //   otherwise will always return undefined
-export const equipDataSelectorFactory = memoize((equipId) =>
+export const equipDataSelectorFactory = memoize((equipId: number) =>
   arrayResultWrapper(
     createSelector([equipBaseDataSelectorFactory(equipId), constSelector], (equip, { $equips }) => {
-      if (!equip || !$equips || !$equips[equip.api_slotitem_id]) return
-      return [equip, $equips[equip.api_slotitem_id]]
+      if (!equip || !$equips || equip.api_slotitem_id == null || !$equips[equip.api_slotitem_id])
+        return
+      return [equip, $equips[equip.api_slotitem_id]] as [Equip, APIMstSlotitem]
     }),
   ),
 )
 
-const modifiedEquipDataSelectorFactory = memoize((equipId) =>
-  arrayResultWrapper(
+const modifiedEquipDataSelectorFactory = memoize((equipId: number) =>
+  arrayResultWrapper<StateWithOnslot, EquipDataWithOnslot | undefined>(
     createSelector(
       [
-        (state) => equipBaseDataSelectorFactory(equipId)(state.state),
-        (state) => constSelector(state.state),
-        (state) => state.onslot,
+        (state: StateWithOnslot) => equipBaseDataSelectorFactory(equipId)(state.state),
+        (state: StateWithOnslot) => constSelector(state.state),
+        (state: StateWithOnslot) => state.onslot,
       ],
       (equip, { $equips }, onslot) => {
-        if (!equip || !$equips || !$equips[equip.api_slotitem_id]) return
-        return [equip, $equips[equip.api_slotitem_id], onslot]
+        if (!equip || !$equips || equip.api_slotitem_id == null || !$equips[equip.api_slotitem_id])
+          return
+        return [equip, $equips[equip.api_slotitem_id], onslot] as EquipDataWithOnslot
       },
     ),
   ),
 )
 
-function effectiveEquips(equipArray, slotnum) {
+function effectiveEquips<T>(equipArray: T[], slotnum: number): T[] {
   equipArray.splice(slotnum, equipArray.length - slotnum - 1)
   return equipArray
 }
@@ -317,7 +381,7 @@ function effectiveEquips(equipArray, slotnum) {
 // onslots (length 5) is padded with a 0 since onslot for exslot is assumed to be 0
 // Slot is padded with undefined for being empty or not fount in _equips
 // Returns undefined if _equips or $equips is undefined
-export const shipEquipDataSelectorFactory = memoize((shipId) =>
+export const shipEquipDataSelectorFactory = memoize((shipId: number) =>
   arrayResultWrapper(
     createSelector(
       [
@@ -330,8 +394,8 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
         !Array.isArray(shipEquipsId)
           ? undefined
           : effectiveEquips(
-              zip(shipEquipsId, onslots.concat(0)).map(([equipId, onslot]) =>
-                equipId <= 0
+              zip(shipEquipsId, (onslots ?? []).concat(0)).map(([equipId, onslot]) =>
+                !equipId || equipId <= 0
                   ? undefined
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
@@ -341,7 +405,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId) =>
   ),
 )
 
-export const landbaseEquipDataSelectorFactory = memoize((landbaseId) =>
+export const landbaseEquipDataSelectorFactory = memoize((landbaseId: number) =>
   arrayResultWrapper(
     createSelector(
       [
@@ -355,7 +419,7 @@ export const landbaseEquipDataSelectorFactory = memoize((landbaseId) =>
           ? undefined
           : effectiveEquips(
               zip(landbaseEquipsId, onslots).map(([equipId, onslot]) =>
-                equipId <= 0
+                !equipId || equipId <= 0
                   ? undefined
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
@@ -366,11 +430,12 @@ export const landbaseEquipDataSelectorFactory = memoize((landbaseId) =>
 )
 
 // Return [map, $map] or undefined
-export const mapDataSelectorFactory = memoize((mapId) =>
+export const mapDataSelectorFactory = memoize((mapId: number | string) =>
   arrayResultWrapper(
     createSelector([mapsSelector, constSelector], (maps, { $maps }) => {
-      if (!maps[mapId] || !$maps[mapId]) return
-      return [maps[mapId], $maps[mapId]]
+      const numericId = Number(mapId)
+      if (Number.isNaN(numericId) || !maps[numericId] || !$maps?.[numericId]) return
+      return [maps[numericId], $maps[numericId]] as MapData
     }),
   ),
 )
@@ -381,7 +446,7 @@ export const sortieMapDataSelector = createSelector(
   (mapId, maps, { $maps }) => getMapData(mapId, maps, $maps),
 )
 export const sortieMapHpSelector = createSelector(sortieMapDataSelector, (mapData) =>
-  mapData ? getMapHp(mapData[0], mapData[1]) : undefined,
+  mapData ? getMapHp(mapData[0] as ExtendedMapInfo, mapData[1]) : undefined,
 )
 export const sortieMapEnemySelector = createSelector(
   sortieSelector,
@@ -392,7 +457,7 @@ export const sortieMapEnemySelector = createSelector(
 // See fleetShipsDataSelectorFactory for detail
 // A ship not found in _ships is filled with []
 // A ship not found in $ships is filled with [_ship, undefined]
-export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
+export const fleetShipsDataSelectorFactory = memoize((fleetId: number) =>
   arrayResultWrapper(
     createSelector([stateSelector, fleetShipsIdSelectorFactory(fleetId)], (state, fleetShipsId) =>
       !fleetShipsId
@@ -404,7 +469,7 @@ export const fleetShipsDataSelectorFactory = memoize((fleetId) =>
 
 // Returns [ [_equip, $equip] for ship in thisFleet]
 // See shipDataToEquipData
-export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
+export const fleetShipsEquipDataSelectorFactory = memoize((fleetId: number) =>
   arrayResultWrapper(
     createSelector([stateSelector, fleetShipsIdSelectorFactory(fleetId)], (state, fleetShipsId) =>
       !fleetShipsId
@@ -415,7 +480,7 @@ export const fleetShipsEquipDataSelectorFactory = memoize((fleetId) =>
 )
 
 // excludes escaped ships
-export const fleetShipsDataWithEscapeSelectorFactory = memoize((fleetId) =>
+export const fleetShipsDataWithEscapeSelectorFactory = memoize((fleetId: number) =>
   arrayResultWrapper(
     createSelector([stateSelector, fleetShipsIdSelectorFactory(fleetId)], (state, fleetShipsId) =>
       !fleetShipsId
@@ -427,7 +492,7 @@ export const fleetShipsDataWithEscapeSelectorFactory = memoize((fleetId) =>
   ),
 )
 
-export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
+export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId: number) =>
   arrayResultWrapper(
     createSelector([stateSelector, fleetShipsIdSelectorFactory(fleetId)], (state, fleetShipsId) =>
       !fleetShipsId
@@ -440,7 +505,7 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId) =>
 )
 
 export const allCVEIdsSelector = createSelector(constSelector, (c) =>
-  values(get(c, '$ships'))
+  values(get(c, '$ships') as Record<string, APIMstShip> | undefined)
     .filter(
       (x) =>
         // our ships
@@ -476,15 +541,18 @@ export const allCVEIdsSelector = createSelector(constSelector, (c) =>
 
  */
 export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }) => {
+  if (!$ships) return { remodelChains: {}, originMstIdOf: {} }
+
   // master id of all non-abyssal ships
   const mstIds = values($ships)
     .map((x) => x.api_id)
     .filter((x) => x <= 1500)
   // set of masterIds that has some other ship pointing to it (through remodeling)
-  const afterMstIdSet = new Set()
+  const afterMstIdSet = new Set<number>()
 
-  mstIds.map((mstId) => {
+  mstIds.forEach((mstId) => {
     const $ship = $ships[mstId]
+    if (!$ship) return
     const afterMstId = Number($ship.api_aftershipid)
     if (afterMstId !== 0) afterMstIdSet.add(afterMstId)
   })
@@ -493,7 +561,7 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId))
 
   // chase remodel chain until we either reach an end or hit a loop
-  const searchRemodels = (mstId, results = []) => {
+  const searchRemodels = (mstId: number, results: number[] = []): number[] => {
     if (results.includes(mstId)) return results
 
     const newResults = [...results, mstId]
@@ -512,13 +580,13 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
        - originMstId: master id of the original ship
        - RemodelChain: an Array of master ids, sorted by remodeling order.
      */
-  const remodelChains = fromPairs(
+  const remodelChains: Record<number, number[]> = fromPairs(
     originMstIds.map((originMstId) => {
       return [originMstId, searchRemodels(originMstId)]
     }),
   )
 
-  const shipsInChain = new Set()
+  const shipsInChain = new Set<number>()
   for (const chain of Object.values(remodelChains)) {
     chain.forEach((item) => shipsInChain.add(item))
   }
@@ -538,9 +606,9 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   }
 
   // originMstIdOf[<master id>] = <original master id>
-  const originMstIdOf = {}
-  Object.entries(remodelChains).map(([originMstId, remodelChain]) => {
-    remodelChain.map((mstId) => {
+  const originMstIdOf: Record<number, number | string> = {}
+  Object.entries(remodelChains).forEach(([originMstId, remodelChain]) => {
+    remodelChain.forEach((mstId) => {
       originMstIdOf[mstId] = originMstId
     })
   })

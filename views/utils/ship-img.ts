@@ -1,13 +1,12 @@
 import * as remote from '@electron/remote'
 import fs from 'fs-extra'
-/* global config */
 import { padStart } from 'lodash'
-import path from 'path-extra'
+import path from 'path'
 import url from 'url'
 
 const getCachePath = (pathname = '') => {
   const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
-  return path.join(dir, pathname)
+  return path.join(String(dir ?? ''), pathname)
 }
 
 const findHackFilePath = (pathname = '') => {
@@ -60,8 +59,8 @@ export const slotItemImgType = [
   'statustop_item',
 ]
 
-const map = new Map()
-const slotmap = new Map()
+const map = new Map<string, string>()
+const slotmap = new Map<string, string>()
 
 // Magic of tanaka
 const resource = [
@@ -77,7 +76,7 @@ const resource = [
 const rank = ['', 'c1', 'c2', 'c3', 'r1', 'r2', 'sr1', 'sr2', 'sr3']
 const itemrank = ['item_c1', 'item_r1', 'sr1', 'sr1', 'sr1', 'sr2']
 
-function createKey(t) {
+function createKey(t: string): number {
   let e = 0
   if (null != t && '' != t) {
     for (let i = 0; i < t.length; i++) {
@@ -87,7 +86,7 @@ function createKey(t) {
   return e
 }
 
-function create(id, seed) {
+function create(id: number | string, seed: string): string {
   const o = id.toString().match(/\d+/)
   if (null == o || 0 == o.length) return ''
   const r = parseInt(o[0])
@@ -96,7 +95,7 @@ function create(id, seed) {
   return (((17 * (r + 7) * resource[(s + r * a) % 100]) % 8973) + 1e3).toString()
 }
 
-function join(ip, base, version) {
+function join(ip: string | undefined, base: string, version?: string | number): string {
   const hackedPath = findHackFilePath(base)
   if (hackedPath) {
     return pathToFileURL(hackedPath).href
@@ -105,13 +104,19 @@ function join(ip, base, version) {
     return base
   }
   let url = `https://${ip}${base}`
-  if (version && parseInt(version) > 1) {
+  if (version && parseInt(String(version)) > 1) {
     url = `${url}?version=${version}`
   }
   return url
 }
 
-export function getShipImgPath(id, type, damaged, ip, version) {
+export function getShipImgPath(
+  id: number,
+  type: string,
+  damaged: boolean,
+  ip: string | undefined,
+  version?: string | number,
+): string {
   // reset damaged status according to main.js
   if (type === 'album_status') {
     damaged = false
@@ -119,14 +124,14 @@ export function getShipImgPath(id, type, damaged, ip, version) {
   if (['banner_g', 'banner2_g', 'banner3_g'].includes(type)) {
     damaged = true
   }
-  // for enemy ships, damagaed images are the same, we could reset the damaged status
+  // for enemy ships, damaged images are the same; reset the damaged status
   // exceptions are 北方栖姫
   if (id > 1500 && ![1587, 1588, 1589, 1590].includes(id)) {
     damaged = false
   }
   const mapkey = [id, type, damaged].toString()
   if (map.has(mapkey)) {
-    return join(ip, map.get(mapkey), version)
+    return join(ip, map.get(mapkey)!, version)
   }
   if (!shipImgType.includes(type)) {
     throw new Error('Wrong type!')
@@ -137,31 +142,36 @@ export function getShipImgPath(id, type, damaged, ip, version) {
   const ntype = type + (damaged ? '_dmg' : '')
   const seed = 'ship_' + ntype
   const cipherNum = create(id, seed)
-  const padId = padStart(id, 4, '0')
+  const padId = padStart(String(id), 4, '0')
   const ret = `/kcs2/resources/ship/${ntype}/${padId}_${cipherNum}.png`
   map.set(mapkey, ret)
   return join(ip, ret, version)
 }
 
-export function getShipBackgroundPath(r, ip) {
+export function getShipBackgroundPath(r: number, ip?: string): string {
   return join(ip, `/kcs2/img/common/ship_bg/card/${rank[r]}.png`)
 }
 
-export function getSlotItemBackgroundPath(r, ip) {
+export function getSlotItemBackgroundPath(r: number, ip?: string): string {
   return join(ip, `/kcs2/img/common/ship_bg/screen/${itemrank[r]}.png`)
 }
 
-export function getSlotItemImgPath(id, type, ip, version) {
+export function getSlotItemImgPath(
+  id: number,
+  type: string,
+  ip: string | undefined,
+  version?: string | number,
+): string {
   const mapkey = [id, type].toString()
   if (slotmap.has(mapkey)) {
-    return join(ip, slotmap.get(mapkey))
+    return join(ip, slotmap.get(mapkey)!)
   }
   if (!slotItemImgType.includes(type)) {
     throw new Error('Wrong type!')
   }
   const seed = 'slot_' + type
   const cipherNum = create(id, seed)
-  const padId = padStart(id, 4, '0')
+  const padId = padStart(String(id), 4, '0')
   const ret = `/kcs2/resources/slot/${type}/${padId}_${cipherNum}.png`
   slotmap.set(mapkey, ret)
   return join(ip, ret, version)
