@@ -31,10 +31,8 @@ import { isInGame } from 'views/utils/game-utils'
 import type { PluginWindowWrapHandle } from './plugin-window-wrapper'
 import type { TabContentsUnionHandle } from './tab-contents-union'
 
-// @ts-expect-error not ready yet
 import * as MAIN_VIEW from '../main'
 import * as SETTINGS_VIEW from '../settings'
-// @ts-expect-error not ready yet
 import * as SHIP_VIEW from '../ship'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { PluginWrap } from './plugin-wrapper'

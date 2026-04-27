@@ -1,3 +1,5 @@
+import type { APIEDeckInfo } from 'kcsapi/api_req_map/next/response'
+
 import { isArray, get } from 'lodash'
 
 /* FORMAT
@@ -22,7 +24,7 @@ export interface SortieState {
   item: Record<number, number> | null | undefined
   itemHistory: Array<Record<number, number>>
   spAttackCount: Record<number, number>
-  nextEnemyInfo: unknown[]
+  nextEnemyInfo: APIEDeckInfo[]
   _toEscapeIdx?: number[]
   bossSpot?: number
 }
@@ -61,7 +63,7 @@ interface NodeBody {
   api_no: number
   api_bosscell_no?: number
   api_color_no?: number
-  api_e_deck_info?: unknown[]
+  api_e_deck_info?: APIEDeckInfo[]
   api_combined_flag?: number
   api_get_ship?: { api_ship_id?: number }
   api_escape_flag?: number

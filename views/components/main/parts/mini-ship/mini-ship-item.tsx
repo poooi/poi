@@ -1,14 +1,16 @@
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
+import type { RootState } from 'views/redux/reducer-factory'
+
 import { Tag, ProgressBar, Intent, Position, Tooltip } from '@blueprintjs/core'
-import shallowEqual from 'fbjs/lib/shallowEqual'
 import { isEqual, pick, omit, memoize, get } from 'lodash'
-import { join } from 'path-extra'
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import path from 'path'
+import React, { memo } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { withNamespaces } from 'react-i18next'
-import { connect } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
-import { styled, css } from 'styled-components'
+import { css, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import { SlotitemIcon } from 'views/components/etc/icon'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
@@ -55,7 +57,7 @@ const SlotItemContainerMini = styled.div`
   }
 `
 
-const ItemName = styled.div`
+const ItemName = styled.div<{ hide?: boolean }>`
   margin-bottom: 5px;
   ${({ hide }) =>
     hide &&
@@ -72,12 +74,12 @@ const SlotItemName = styled.span`
 `
 
 const Level = styled.strong`
-  color: '#45A9A5';
+  color: #45a9a5;
   margin-left: 1em;
   margin-right: 1em;
 `
 
-const OnSlot = styled(Tag)`
+const OnSlot = styled(Tag)<{ hide?: boolean }>`
   width: 3em;
   text-align: center;
   display: flex;
@@ -90,93 +92,98 @@ const OnSlot = styled(Tag)`
     `}
 `
 
-const slotitemsDataSelectorFactory = memoize((shipId) =>
+const slotitemsDataSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
-    ([ship, $ship] = [], equipsData) => ({
-      api_maxeq: ($ship || {}).api_maxeq,
-      equipsData,
-    }),
+    (shipPair, equipsData) => {
+      const [, $ship] = shipPair ?? []
+      return {
+        api_maxeq: $ship?.api_maxeq,
+        equipsData,
+      }
+    },
   ),
 )
 
-const Slotitems = withNamespaces(['resources'])(
-  connect((state, { shipId }) => slotitemsDataSelectorFactory(shipId)(state))(function ({
-    api_maxeq,
-    equipsData,
-    t,
-  }) {
-    return (
-      <ItemName className="item-name" hide={!equipsData}>
-        <div className="slotitems-mini" style={{ display: 'flex', flexFlow: 'column' }}>
-          {equipsData.filter(Boolean).map((equipData, equipIdx) => {
-            const [equip, $equip, onslot] = equipData
-            const equipIconId = $equip.api_type[3]
-            const level = equip.api_level
-            const proficiency = equip.api_alv
-            const isAircraft = equipIsAircraft($equip)
-            const maxOnslot = (api_maxeq || [])[equipIdx]
-            const onslotText = onslot
-            const onslotWarning = maxOnslot && onslot < maxOnslot
-            return (
-              <SlotItemContainerMini key={equipIdx} className="slotitem-container-mini">
-                <SlotitemIcon
-                  key={equip.api_id}
-                  className="slotitem-img"
-                  slotitemId={equipIconId}
-                />
-                <SlotItemName>
-                  {$equip ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '???'}
-                </SlotItemName>
-                {Boolean(level) && (
-                  <Level>
-                    <FontAwesome name="star" />
-                    {level}
-                  </Level>
-                )}
-                {proficiency && (
-                  <ALevel
-                    className="alv-img"
-                    src={join('assets', 'img', 'airplane', `alv${proficiency}.png`)}
-                  />
-                )}
-                <OnSlot
-                  className="slotitems-onslot"
-                  hide={!isAircraft}
-                  intent={onslotWarning ? Intent.WARNING : Intent.SUCCESS}
-                >
-                  {onslotText}
-                </OnSlot>
-              </SlotItemContainerMini>
-            )
-          })}
-        </div>
-      </ItemName>
-    )
-  }),
-)
+const Slotitems = ({ shipId }: { shipId: number }) => {
+  const { t } = useTranslation('resources')
+  const selector = React.useMemo(() => slotitemsDataSelectorFactory(shipId), [shipId])
+  const { api_maxeq, equipsData } = useSelector((state: RootState) => selector(state))
 
-const miniShipRowDataSelectorFactory = memoize((shipId) =>
+  return (
+    <ItemName className="item-name" hide={!equipsData}>
+      <div className="slotitems-mini" style={{ display: 'flex', flexFlow: 'column' }}>
+        {(equipsData ?? []).filter(Boolean).map((equipData, equipIdx) => {
+          const [equip, $equip, onslot] = equipData!
+          const equipIconId = ($equip.api_type as number[])[3]
+          const level = equip.api_level as number
+          const proficiency = equip.api_alv as number | undefined
+          const isAircraft = equipIsAircraft($equip)
+          const maxOnslot = (api_maxeq ?? [])[equipIdx]
+          const onslotWarning = maxOnslot !== undefined && (onslot ?? 0) < maxOnslot
+          return (
+            <SlotItemContainerMini key={equipIdx} className="slotitem-container-mini">
+              <SlotitemIcon
+                key={equip.api_id as number}
+                className="slotitem-img"
+                slotitemId={equipIconId}
+              />
+              <SlotItemName>
+                {$equip ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '???'}
+              </SlotItemName>
+              {Boolean(level) && (
+                <Level>
+                  <FontAwesome name="star" />
+                  {level}
+                </Level>
+              )}
+              {proficiency && (
+                <ALevel
+                  className="alv-img"
+                  src={path.join('assets', 'img', 'airplane', `alv${proficiency}.png`)}
+                />
+              )}
+              <OnSlot
+                className="slotitems-onslot"
+                hide={!isAircraft}
+                intent={onslotWarning ? Intent.WARNING : Intent.SUCCESS}
+              >
+                {onslot}
+              </OnSlot>
+            </SlotItemContainerMini>
+          )
+        })}
+      </div>
+    </ItemName>
+  )
+}
+
+const miniShipRowDataSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [
       shipDataSelectorFactory(shipId),
       shipRepairDockSelectorFactory(shipId),
       escapeStatusSelectorFactory(shipId),
       fcdShipTagColorSelector,
-      (state) => get(state, 'config.poi.appearance.avatarType'),
+      (state: RootState) => state.config?.poi?.appearance?.avatarType,
     ],
-    ([ship, $ship] = [], repairDock, escaped, shipTagColor, avatarType) => {
+    (shipPair, repairDock, escaped, shipTagColor, avatarType) => {
+      const [ship, $ship] = shipPair ?? []
       return {
-        ship: ship || {},
-        $ship: $ship || {},
-        labelStatus: getShipLabelStatus(ship, $ship, repairDock, escaped),
-        shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType),
+        ship: ship,
+        $ship: $ship,
+        labelStatus: getShipLabelStatus(ship, $ship, !!repairDock, escaped),
+        shipAvatarColor: selectShipAvatarColor(
+          ship,
+          $ship,
+          shipTagColor as string[],
+          avatarType ?? '',
+        ),
       }
     },
   ),
 )
 
-// Remember to expand the list in case you add new properties to display
 const SHIP_PROPS_TO_PICK = [
   'api_lv',
   'api_exp',
@@ -186,7 +193,7 @@ const SHIP_PROPS_TO_PICK = [
   'api_cond',
   'api_slot',
   'api_slot_ex',
-]
+] as const
 
 const ShipTooltip = styled.div`
   font-size: 13px;
@@ -197,7 +204,7 @@ const ShipTooltip = styled.div`
   }
 `
 
-const ShipItem = styled.div`
+const ShipItem = styled.div<{ avatar?: boolean; shipName?: boolean; isLBAC?: boolean }>`
   align-items: start;
   display: grid;
   flex: 1;
@@ -206,14 +213,13 @@ const ShipItem = styled.div`
   position: relative;
   white-space: nowrap;
   ${({ avatar = true, shipName = true, isLBAC = false }) => {
-    const avatarWidth = avatar ? '50px' : 0
+    const avatarWidth = avatar ? '50px' : '0'
     const nameWidth = shipName ? 'minmax(35px, 95px)' : isLBAC ? '1fr' : '15px'
     const dataWidth = isLBAC ? '32px 120px' : 'minmax(70px, 5fr) 18px 42px'
     return css`
       grid-template-columns: ${avatarWidth} ${nameWidth} ${dataWidth};
       grid-template-rows: 20px 13px;
-      grid-column-gap: 6px;
-      grid-row-gap: 5px;
+      gap: 5px 6px;
     `
   }}
 `
@@ -242,7 +248,7 @@ const ShipInfo = styled.div`
   }
 `
 
-const ShipName = styled.div`
+const ShipName = styled.div<{ avatar?: boolean }>`
   z-index: 2;
   grid-row: 1 / 2;
   grid-column: 2 / 3;
@@ -256,11 +262,11 @@ const ShipName = styled.div`
       padding-right: 6px;
       font-weight: 600;
       color: white;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
-const ShipLvText = styled.div`
+const ShipLvText = styled.div<{ avatar?: boolean }>`
   z-index: 2;
   grid-row: 2 / 3;
   grid-column: 2 / 3;
@@ -274,7 +280,7 @@ const ShipLvText = styled.div`
       text-align: end;
       padding-right: 6px;
       color: white;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -308,6 +314,7 @@ const ShipCond = styled.div`
 const HPProgress = styled.div`
   grid-row: 2 / 3;
   grid-column: 3 / 6;
+
   .bp5-progress-bar {
     flex: auto;
     height: 7px;
@@ -323,7 +330,7 @@ export const ShipAvatar = styled(Avatar)`
   grid-column: 1 / 3;
 `
 
-const Gradient = styled.div`
+const Gradient = styled.div<{ color: string }>`
   z-index: 1;
   grid-row: 1 / 3;
   grid-column: 2 / 3;
@@ -333,148 +340,6 @@ const Gradient = styled.div`
     background: linear-gradient(to right, transparent, ${color});
   `}
 `
-
-@withNamespaces(['resources', 'main'])
-@connect((state, { shipId }) => miniShipRowDataSelectorFactory(shipId))
-export class MiniShipRow extends Component {
-  static propTypes = {
-    ship: PropTypes.object,
-    $ship: PropTypes.object,
-    labelStatus: PropTypes.number,
-    enableAvatar: PropTypes.bool,
-    compact: PropTypes.bool,
-    shipAvatarColor: PropTypes.string,
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return (
-      !shallowEqual(omit(this.props, ['ship']), omit(nextProps, ['ship'])) ||
-      !isEqual(pick(this.props.ship, SHIP_PROPS_TO_PICK), pick(nextProps.ship, SHIP_PROPS_TO_PICK))
-    )
-  }
-
-  render() {
-    const { ship, $ship, labelStatus, enableAvatar, shipAvatarColor, compact, t } = this.props
-    const hideShipName = enableAvatar && compact
-    if (!ship) return <div />
-    const labelStatusStyle = getStatusStyle(labelStatus)
-    const hpPercentage = (ship.api_nowhp / ship.api_maxhp) * 100
-    const level = ship.api_lv
-    const remodelLevel = $ship.api_afterlv
-    const exp = (ship.api_exp || [])[0]
-    const nextExp = (ship.api_exp || [])[1]
-    const remodelString =
-      level < remodelLevel
-        ? t('main:RemodelLv', { remodelLevel })
-        : remodelLevel
-          ? t('main:RemodelReady')
-          : ''
-    return (
-      <ShipTile
-        as={Tooltip}
-        position={Position.RIGHT_TOP}
-        disabled={get(ship, ['api_slot', 0], -1) === -1 && ship.api_slot_ex <= 0}
-        className="ship-tile"
-        targetTagName="div"
-        targetClassName="ship-item-wrapper"
-        wrapperTagName="div"
-        content={
-          <ShipTooltip className="ship-pop">
-            <Slotitems shipId={ship.api_id} />
-          </ShipTooltip>
-        }
-      >
-        <ShipItem
-          className="ship-item"
-          avatar={enableAvatar}
-          shipName={!hideShipName}
-          data-master-id={ship.api_ship_id}
-          data-ship-id={ship.api_id}
-        >
-          {enableAvatar && (
-            <>
-              <ShipAvatar
-                mstId={$ship.api_id}
-                isDamaged={hpPercentage <= 50}
-                useDefaultBG={false}
-                useFixedWidth={false}
-                height={38}
-              />
-              <Gradient color={shipAvatarColor} />
-            </>
-          )}
-          {hideShipName && (
-            <ShipLvAvatar className="ship-lv-avatar">
-              {level && t('main:Lv', { level })}
-            </ShipLvAvatar>
-          )}
-          {!hideShipName && (
-            <>
-              <ShipName
-                className="ship-name"
-                style={enableAvatar ? null : labelStatusStyle}
-                avatar={enableAvatar}
-              >
-                {$ship.api_name
-                  ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
-                  : '??'}
-              </ShipName>
-              <ShipLvText
-                className="ship-lv-text"
-                style={enableAvatar ? null : labelStatusStyle}
-                avatar={enableAvatar}
-              >
-                {level && t('main:Lv', { level })}
-              </ShipLvText>
-            </>
-          )}
-          <ShipHP className="ship-hp" style={labelStatusStyle}>
-            {ship.api_nowhp} / {ship.api_maxhp}
-          </ShipHP>
-          <StatusLabelContainer className="status-label">
-            <StatusLabel label={labelStatus} />
-          </StatusLabelContainer>
-          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
-            {ship.api_cond}
-          </ShipCond>
-          <HPProgress className="hp-progress" style={labelStatusStyle}>
-            <ProgressBar
-              stripes={false}
-              intent={getHpStyle(hpPercentage)}
-              value={hpPercentage / 100}
-            />
-          </HPProgress>
-          <ShipInfo
-            as={Tooltip}
-            className="ship-info"
-            position={Position.TOP_LEFT}
-            wrapperTagName="div"
-            targetTagName="div"
-            content={
-              hideShipName ? (
-                <div className="ship-tooltip-info">
-                  <div>{$ship.api_name ? t(`resources:${$ship.api_name}`) : '??'}</div>
-                  <div>{level && t('main:Lv', { level })}</div>
-                  {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
-                  {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
-                  {remodelString && <div>{remodelString}</div>}
-                </div>
-              ) : (
-                <div>
-                  {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
-                  {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
-                  {remodelString && <div>{remodelString}</div>}
-                </div>
-              )
-            }
-          >
-            <div />
-          </ShipInfo>
-        </ShipItem>
-      </ShipTile>
-    )
-  }
-}
 
 const ShipTile = styled.div`
   align-items: center;
@@ -496,6 +361,165 @@ const ShipTile = styled.div`
   }
 `
 
+interface MiniShipRowInnerProps {
+  ship?: APIShip
+  $ship?: APIMstShip
+  labelStatus: number
+  shipAvatarColor: string
+  enableAvatar?: boolean
+  compact?: boolean
+  t: (key: string, opts?: object) => string
+}
+
+const MiniShipRowInner = memo(
+  ({
+    ship,
+    $ship,
+    labelStatus,
+    enableAvatar,
+    shipAvatarColor,
+    compact,
+    t,
+  }: MiniShipRowInnerProps) => {
+    const hideShipName = enableAvatar && compact
+    if (!ship || !ship.api_id) return <div />
+    const labelStatusStyle = getStatusStyle(labelStatus)
+    const apiNowhp = ship.api_nowhp ?? 0
+    const apiMaxhp = ship.api_maxhp ?? 1
+    const hpPercentage = (apiNowhp / apiMaxhp) * 100
+    const level = ship.api_lv
+    const remodelLevel = $ship?.api_afterlv
+    const exp = (ship.api_exp ?? [])[0]
+    const nextExp = (ship.api_exp ?? [])[1]
+    const remodelString =
+      remodelLevel && level < remodelLevel
+        ? t('main:RemodelLv', { remodelLevel })
+        : remodelLevel
+          ? t('main:RemodelReady')
+          : ''
+
+    return (
+      <ShipTile
+        as={Tooltip}
+        position={Position.RIGHT_TOP}
+        disabled={get(ship, ['api_slot', 0], -1) === -1 && (ship.api_slot_ex as number) <= 0}
+        className="ship-tile"
+        content={
+          <ShipTooltip className="ship-pop">
+            <Slotitems shipId={ship.api_id as number} />
+          </ShipTooltip>
+        }
+      >
+        <ShipItem
+          className="ship-item"
+          avatar={enableAvatar}
+          shipName={!hideShipName}
+          data-master-id={ship.api_ship_id as number}
+          data-ship-id={ship.api_id as number}
+        >
+          {enableAvatar && (
+            <>
+              <ShipAvatar
+                mstId={$ship?.api_id}
+                isDamaged={hpPercentage <= 50}
+                useDefaultBG={false}
+                useFixedWidth={false}
+                height={38}
+              />
+              <Gradient color={shipAvatarColor} />
+            </>
+          )}
+          {hideShipName && (
+            <ShipLvAvatar className="ship-lv-avatar">
+              {level && t('main:Lv', { level })}
+            </ShipLvAvatar>
+          )}
+          {!hideShipName && (
+            <>
+              <ShipName
+                className="ship-name"
+                style={enableAvatar ? undefined : labelStatusStyle}
+                avatar={enableAvatar}
+              >
+                {$ship?.api_name
+                  ? t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })
+                  : '??'}
+              </ShipName>
+              <ShipLvText
+                className="ship-lv-text"
+                style={enableAvatar ? undefined : labelStatusStyle}
+                avatar={enableAvatar}
+              >
+                {level && t('main:Lv', { level })}
+              </ShipLvText>
+            </>
+          )}
+          <ShipHP className="ship-hp" style={labelStatusStyle}>
+            {apiNowhp} / {apiMaxhp}
+          </ShipHP>
+          <StatusLabelContainer className="status-label">
+            <StatusLabel label={labelStatus} />
+          </StatusLabelContainer>
+          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond as number)}>
+            {ship.api_cond as number}
+          </ShipCond>
+          <HPProgress className="hp-progress" style={labelStatusStyle}>
+            <ProgressBar
+              stripes={false}
+              // @ts-expect-error custom intent
+              intent={getHpStyle(hpPercentage)}
+              value={hpPercentage / 100}
+            />
+          </HPProgress>
+          <ShipInfo
+            as={Tooltip}
+            className="ship-info"
+            position={Position.TOP_LEFT}
+            content={
+              hideShipName ? (
+                <div className="ship-tooltip-info">
+                  <div>{$ship?.api_name ? t(`resources:${$ship.api_name}`) : '??'}</div>
+                  <div>{level && t('main:Lv', { level })}</div>
+                  {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
+                  {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
+                  {remodelString && <div>{remodelString}</div>}
+                </div>
+              ) : (
+                <div>
+                  {exp > 0 && <div>{t('main:TotalExp', { exp })}</div>}
+                  {nextExp > 0 && <div>{t('main:NextExp', { nextExp })}</div>}
+                  {remodelString && <div>{remodelString}</div>}
+                </div>
+              )
+            }
+          >
+            <div />
+          </ShipInfo>
+        </ShipItem>
+      </ShipTile>
+    )
+  },
+  (prev, next) =>
+    isEqual(omit(prev, ['ship']), omit(next, ['ship'])) &&
+    isEqual(pick(prev.ship, SHIP_PROPS_TO_PICK), pick(next.ship, SHIP_PROPS_TO_PICK)),
+)
+MiniShipRowInner.displayName = 'MiniShipRowInner'
+
+export const MiniShipRow = ({
+  shipId,
+  enableAvatar,
+  compact,
+}: {
+  shipId: number
+  enableAvatar?: boolean
+  compact?: boolean
+}) => {
+  const { t } = useTranslation(['resources', 'main'])
+  const selector = React.useMemo(() => miniShipRowDataSelectorFactory(shipId), [shipId])
+  const data = useSelector((state: RootState) => selector(state))
+  return <MiniShipRowInner {...data} enableAvatar={enableAvatar} compact={compact} t={t} />
+}
+
 const LandBaseStatTag = styled(Tag)`
   grid-column: 3 / 4;
   grid-row: 2 / 3;
@@ -513,7 +537,7 @@ const LandBaseState = styled.div`
   align-self: end;
 `
 
-const ShipFP = styled.div`
+const ShipFP = styled.div<{ avatar?: boolean }>`
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   font-size: 70%;
@@ -524,7 +548,7 @@ const ShipFP = styled.div`
       text-align: end;
       padding-right: 6px;
       color: white;
-      text-shadow: #000000 0px 0px 10px;
+      text-shadow: #000 0 0 10px;
     `}
 `
 
@@ -544,64 +568,74 @@ const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
   }
 `
 
-export const MiniSquardRow = withNamespaces(['main'])(
-  connect((state, { squardId }) =>
-    createSelector(
-      [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
-      (landbase, equipsData) => ({
-        landbase,
-        equipsData,
-        squardId,
-      }),
-    ),
-  )(({ landbase, equipsData, squardId, enableAvatar, compact, t }) => {
-    const hideShipName = enableAvatar && compact
-    const { api_action_kind, api_name } = landbase
-    const tyku = getTyku([equipsData], api_action_kind)
-    return (
-      <ShipTile className="ship-tile">
-        <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
-          {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
-            <>
-              <ShipAvatar
-                type="equip"
-                mstId={get(equipsData, '0.0.api_slotitem_id')}
-                height={38}
-                useDefaultBG={false}
-                useFixedWidth={false}
-              />
-              <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
-            </>
-          )}
-          {hideShipName && (
-            <ShipLvAvatar className="ship-lv-avatar">
-              {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-            </ShipLvAvatar>
-          )}
-          {!hideShipName && (
-            <>
-              <ShipName className="ship-name" avatar={enableAvatar}>
-                {api_name}
-              </ShipName>
-              <ShipFP className="ship-fp" avatar={enableAvatar}>
-                {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
-              </ShipFP>
-            </>
-          )}
-          <LandBaseStatTag
-            className="landbase-status"
-            minimal
-            intent={LBAC_INTENTS[api_action_kind]}
-          >
-            {t(LBAC_STATUS_NAMES[api_action_kind])}
-          </LandBaseStatTag>
-          <LandBaseState className="ship-stat landbase-stat">
-            <ShipStateText>
-              <MiniLandbaseSlotitems landbaseId={squardId} isMini={true} />
-            </ShipStateText>
-          </LandBaseState>
-        </ShipItem>
-      </ShipTile>
-    )
-  }),
+const miniSquardSelectorFactory = memoize((squardId: number) =>
+  createSelector(
+    [landbaseSelectorFactory(squardId), landbaseEquipDataSelectorFactory(squardId)],
+    (landbase, equipsData) => ({ landbase, equipsData, squardId }),
+  ),
 )
+
+export const MiniSquardRow = ({
+  squardId,
+  enableAvatar,
+  compact,
+}: {
+  squardId: number
+  enableAvatar?: boolean
+  compact?: boolean
+}) => {
+  const { t } = useTranslation('main')
+  const selector = React.useMemo(() => miniSquardSelectorFactory(squardId), [squardId])
+  const { landbase, equipsData } = useSelector((state: RootState) => selector(state))
+
+  const hideShipName = enableAvatar && compact
+  const lb = landbase
+  const api_action_kind = lb?.api_action_kind ?? 0
+  const api_name = lb?.api_name ?? ''
+  const tyku = getTyku(equipsData ? [equipsData] : [], api_action_kind)
+  return (
+    <ShipTile className="ship-tile">
+      <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
+        {enableAvatar && !!get(equipsData, '0.0.api_slotitem_id') && (
+          <>
+            <ShipAvatar
+              type="equip"
+              mstId={equipsData?.[0]?.[0]?.api_slotitem_id}
+              height={38}
+              useDefaultBG={false}
+              useFixedWidth={false}
+            />
+            <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
+          </>
+        )}
+        {hideShipName && (
+          <ShipLvAvatar className="ship-lv-avatar">
+            {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+          </ShipLvAvatar>
+        )}
+        {!hideShipName && (
+          <>
+            <ShipName className="ship-name" avatar={enableAvatar}>
+              {api_name}
+            </ShipName>
+            <ShipFP className="ship-fp" avatar={enableAvatar}>
+              {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : tyku.min + '+'}
+            </ShipFP>
+          </>
+        )}
+        <LandBaseStatTag
+          className="landbase-status"
+          minimal
+          intent={LBAC_INTENTS[api_action_kind] as Intent}
+        >
+          {t(LBAC_STATUS_NAMES[api_action_kind])}
+        </LandBaseStatTag>
+        <LandBaseState className="ship-stat landbase-stat">
+          <ShipStateText>
+            <MiniLandbaseSlotitems landbaseId={squardId} isMini />
+          </ShipStateText>
+        </LandBaseState>
+      </ShipItem>
+    </ShipTile>
+  )
+}

@@ -26,7 +26,7 @@ import {
 
 // Ship roster state is built by merging multiple endpoints.
 // Real payloads can be partial, so keep this "compat" shape.
-export type Ship = Partial<APIShip> & { api_id: number }
+export type Ship = APIShip & { api_id: number }
 
 export interface ShipsState {
   [key: `${number}` | number]: Ship

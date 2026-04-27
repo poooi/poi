@@ -1,10 +1,8 @@
-import type { WithTranslation } from 'react-i18next'
-
 import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
-import { isEqual, map } from 'lodash'
-import React, { Component } from 'react'
+import { map } from 'lodash'
+import React, { useState } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Trans, withTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
 
 import { About } from './about'
@@ -50,58 +48,41 @@ const SettingsTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typ
   }
 `
 
-interface SettingsState {
-  activeTab: number
+const SettingsComponent = () => {
+  const { t } = useTranslation(['setting'])
+  const [activeTab, setActiveTab] = useState(0)
+
+  return (
+    <SettingsTabs
+      selectedTabId={activeTab}
+      id="settings-view-tabs"
+      className="settings-view-tabs"
+      onChange={(id) => setActiveTab(Number(id))}
+    >
+      {map(TABS, (tab) => (
+        <Tab
+          key={tab.id}
+          id={tab.id}
+          icon={
+            <Tooltip
+              disabled={tab.id === activeTab}
+              position={Position.BOTTOM}
+              content={t(tab.title)}
+              hoverOpenDelay={200}
+            >
+              <FontAwesome name={tab.icon} />
+            </Tooltip>
+          }
+          title={tab.id === activeTab ? t(tab.title) : ''}
+          className="poi-settings-tab"
+          panel={<tab.component />}
+        />
+      ))}
+    </SettingsTabs>
+  )
 }
 
-class SettingsComponent extends Component<WithTranslation, SettingsState> {
-  state: SettingsState = {
-    activeTab: 0,
-  }
-
-  shouldComponentUpdate(nextProps: WithTranslation, nextState: SettingsState): boolean {
-    return !isEqual(nextProps, this.props) || nextState.activeTab !== this.state.activeTab
-  }
-
-  handleTabChange = (id: number) => {
-    this.setState({ activeTab: id })
-  }
-
-  render() {
-    const { t } = this.props
-    const { activeTab } = this.state
-    return (
-      <SettingsTabs
-        selectedTabId={activeTab}
-        id="settings-view-tabs"
-        className="settings-view-tabs"
-        onChange={this.handleTabChange}
-      >
-        {map(TABS, (tab) => (
-          <Tab
-            key={tab.id}
-            id={tab.id}
-            icon={
-              <Tooltip
-                disabled={tab.id === activeTab}
-                position={Position.BOTTOM}
-                content={t(tab.title)}
-                hoverOpenDelay={200}
-              >
-                <FontAwesome name={tab.icon} />
-              </Tooltip>
-            }
-            title={tab.id === activeTab ? t(tab.title) : ''}
-            className="poi-settings-tab"
-            panel={<tab.component />}
-          />
-        ))}
-      </SettingsTabs>
-    )
-  }
-}
-
-export const reactClass = withTranslation(['setting'])(SettingsComponent)
+export const reactClass = SettingsComponent
 
 export const displayName = <Trans>setting:Settings</Trans>
 

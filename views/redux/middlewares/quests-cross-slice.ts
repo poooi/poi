@@ -239,15 +239,9 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const boss = Boolean(result.boss)
     const maparea = Number(result.map)
     const mapcell = Number(result.mapCell)
-    const enemyHp =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- enemyHp is known to be number[]
-      (result.enemyHp || []) as number[]
-    const enemyShipId =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- enemyShipId is known to be number[]
-      (result.enemyShipId || []) as number[]
-    const deckShipId =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- deckShipId is known to be number[]
-      (result.deckShipId || []) as number[]
+    const enemyHp = result.enemyHp || []
+    const enemyShipId = result.enemyShipId || []
+    const deckShipId = result.deckShipId || []
 
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     const battleMeta = { shipname, shiptype, shipclass, mapcell, maparea }

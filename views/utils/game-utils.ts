@@ -1,3 +1,7 @@
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
+import type { Equip } from 'views/redux/info/equips'
+
 import { Intent } from '@blueprintjs/core'
 import _, { get } from 'lodash'
 
@@ -117,17 +121,21 @@ export function getShipAvatarColorBySpeed(speed: number): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function selectShipAvatarColor(ship: any, $ship: any, color: string[], opt: string): string {
+export function selectShipAvatarColor(
+  ship: APIShip | undefined,
+  $ship: APIMstShip | undefined,
+  color: string[],
+  opt: string,
+): string {
   switch (opt) {
     case 'shiptype':
-      return getShipAvatarColorByType($ship.api_stype)
+      return getShipAvatarColorByType($ship?.api_stype ?? 0)
     case 'range':
-      return getShipAvatarColorByRange(ship.api_leng)
+      return getShipAvatarColorByRange(ship?.api_leng ?? 0)
     case 'tag':
-      return getShipAvatarColorByTag(ship.api_sally_area, color)
+      return getShipAvatarColorByTag(ship?.api_sally_area ?? 0, color)
     case 'speed':
-      return getShipAvatarColorBySpeed(ship.api_soku)
+      return getShipAvatarColorBySpeed(ship?.api_soku ?? 0)
     default:
       return '#00000000'
   }
@@ -147,10 +155,9 @@ export function getStatusStyle(status: number | null | undefined): React.CSSProp
   return {}
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getShipLabelStatus(
-  ship: any,
-  $ship: any,
+  ship: APIShip | undefined,
+  $ship: APIMstShip | undefined,
   inRepair: boolean,
   escaped: boolean,
 ): number {
@@ -161,10 +168,13 @@ export function getShipLabelStatus(
     return 0
   } else if (inRepair) {
     return 1
-  } else if (Math.min(ship.api_fuel / $ship.api_fuel_max, ship.api_bull / $ship.api_bull_max) < 1) {
+  } else if (
+    Math.min(ship.api_fuel / ($ship.api_fuel_max ?? 1), ship.api_bull / ($ship.api_bull_max ?? 1)) <
+    1
+  ) {
     return 2
-  } else if (ship.api_sally_area > 0) {
-    return ship.api_sally_area + 2
+  } else if ((ship.api_sally_area ?? 0) > 0) {
+    return (ship.api_sally_area ?? 0) + 2
   }
   return -1
 }
@@ -204,9 +214,8 @@ export function equipIsAircraft(equip: any): boolean {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getTyku(
-  equipsData: any[][],
+  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
   landbaseStatus = 0,
 ): { basic: number; min: number; max: number } {
   let minTyku = 0
@@ -222,7 +231,7 @@ export function getTyku(
         continue
       }
       const [_equip, $equip, onslot] = equipsData[i][j]
-      if (onslot < 1 || onslot == undefined) {
+      if ((onslot ?? 0) < 1 || onslot == undefined) {
         continue
       }
       let tempTyku = 0.0
@@ -307,10 +316,9 @@ export function getTyku(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSaku25(
-  shipsData: any[][],
-  equipsData: any[][],
+  shipsData: [APIShip, APIMstShip][],
+  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
 ): { recon: number; radar: number; ship: number; total: number } {
   let reconSaku = 0
   let shipSaku = 0
@@ -357,10 +365,9 @@ export function getSaku25(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSaku25a(
-  shipsData: any[][],
-  equipsData: any[][],
+  shipsData: [APIShip, APIMstShip][],
+  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
   teitokuLv: number,
 ): { ship: number; item: number; teitoku: number; total: number } {
   let totalSaku = 0
@@ -423,8 +430,8 @@ export function getSaku25a(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSaku33(
-  shipsData: any[][],
-  equipsData: any[][],
+  shipsData: [APIShip, APIMstShip][],
+  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
   teitokuLv: number,
   mapModifier = 1.0,
   slotCount = 6,
@@ -484,10 +491,10 @@ export function getSaku33(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getFleetSpeed = (shipsData: any[][]): { speed: number } => ({
+export const getFleetSpeed = (shipsData: [APIShip, APIMstShip][]): { speed: number } => ({
   speed:
     _(shipsData)
-      .map(([ship = {}] = []) => ship.api_soku || Infinity)
+      .map(([ship = {}]) => ship.api_soku || Infinity)
       .min() || 0,
 })
 

@@ -3,6 +3,7 @@ import notifCenter from 'views/env-parts/notif-center'
 interface NotifyOptions {
   completeTime?: number | null
   preemptTime?: number
+  [key: string]: unknown
 }
 
 export class CountdownNotifier {

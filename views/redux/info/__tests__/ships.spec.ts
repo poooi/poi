@@ -73,6 +73,7 @@ import nyukyoStartHighspeedFixture from './__fixtures__/api_req_nyukyo_start_hig
 import nyukyoStartInstantCompletionFixture from './__fixtures__/api_req_nyukyo_start_instant_completion_under_60s.json'
 
 describe('ships reducer', () => {
+  // @ts-expect-error helper to create ship objects with minimal required fields; other fields will be filled with defaults
   const createShip = (id: number, shipId: number): Ship => ({
     api_id: id,
     api_ship_id: shipId,
@@ -178,6 +179,7 @@ describe('ships reducer', () => {
 
     const initialState: ShipsState = {
       // ensure compareUpdate actually changes something
+      // @ts-expect-error createShip helper doesn't fill all fields; test should still pass as reducer should only update api_nowhp
       '1777': {
         api_id: 1777,
         api_ship_id: 127,
@@ -216,6 +218,7 @@ describe('ships reducer', () => {
     > = hokyuChargeFixture
 
     const initialState: ShipsState = {
+      // @ts-expect-error createShip helper doesn't fill all fields; test should still pass as reducer should only update api_nowhp
       '84': {
         api_id: 84,
         api_ship_id: 999,
@@ -450,6 +453,7 @@ describe('ships reducer', () => {
     > = anchorageRepairFixture
 
     const initialState: ShipsState = {
+      // @ts-expect-error createShip helper doesn't fill all fields; test should still pass as reducer should only update api_nowhp
       '166': {
         api_id: 166,
         api_ship_id: 118,

@@ -1,9 +1,9 @@
-import { Tooltip, Card, ButtonGroup, Tag } from '@blueprintjs/core'
-import { styled, css } from 'styled-components'
+import { ButtonGroup, Tag, Tooltip } from '@blueprintjs/core'
+import { css, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 
-export const ShipCard = styled(Card)`
+export const ShipCard = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -30,7 +30,12 @@ export const ShipTabContent = styled.div`
   overflow: hidden;
 `
 
-export const ShipDeck = styled.div`
+export const ShipDeck = styled.div<{
+  transition?: boolean
+  left?: boolean
+  right?: boolean
+  active?: boolean
+}>`
   height: 100%;
   width: 100%;
   position: absolute;
@@ -91,7 +96,11 @@ export const AirbaseArea = styled.div`
   width: 100%;
 `
 
-export const ShipItem = styled.div`
+export const ShipItem = styled.div<{
+  avatar?: boolean
+  shipName?: boolean
+  isLBAC?: boolean
+}>`
   align-items: center;
   display: grid;
   flex: 1;
@@ -125,7 +134,7 @@ export const ShipAvatar = styled(Avatar)`
   pointer-events: none;
 `
 
-export const Gradient = styled.div`
+export const Gradient = styled.div<{ color: string }>`
   z-index: 1;
   grid-row: 1 / 5;
   grid-column: 2 / 3;
@@ -135,7 +144,7 @@ export const Gradient = styled.div`
   `}
 `
 
-export const ShipBasic = styled.div`
+export const ShipBasic = styled.div<{ avatar?: boolean }>`
   z-index: 2;
   font-size: 80%;
   width: 0;
@@ -164,7 +173,7 @@ export const ShipIndicators = styled.div`
   vertical-align: bottom;
 `
 
-export const ShipSubText = styled.div`
+export const ShipSubText = styled.div<{ avatar?: boolean }>`
   z-index: 2;
   grid-column: 2 / 3;
   grid-row: 4 / 5;
@@ -185,7 +194,7 @@ export const ShipSubText = styled.div`
     `}
 `
 
-export const ShipName = styled.span`
+export const ShipName = styled.span<{ avatar?: boolean }>`
   z-index: 2;
   grid-column: 2 / 3;
   grid-row: 2 / 4;
@@ -203,7 +212,7 @@ export const ShipName = styled.span`
     `}
 `
 
-export const LBACName = styled.span`
+export const LBACName = styled.span<{ avatar?: boolean }>`
   z-index: 2;
   grid-column: 2 / 3;
   grid-row: 1 / 3;
@@ -221,7 +230,7 @@ export const LBACName = styled.span`
     `}
 `
 
-export const LBACRange = styled.div`
+export const LBACRange = styled.div<{ avatar?: boolean }>`
   z-index: 2;
   grid-column: 2 / 3;
   grid-row: 3 / 4;
@@ -297,7 +306,7 @@ export const ShipSlot = styled.div`
   align-self: flex-end;
 `
 
-export const ShipLabel = styled.span`
+export const ShipLabel = styled.span<{ isTag?: boolean }>`
   height: 1em;
 
   &:not(:first-child) {
@@ -335,7 +344,7 @@ export const SlotItems = styled.div`
   display: flex;
 `
 
-export const SlotItemContainer = styled.div`
+export const SlotItemContainer = styled.div<{ showOnslot?: boolean; warning?: boolean }>`
   display: inline;
   margin-right: 2px;
   position: relative;
@@ -376,7 +385,7 @@ export const SlotItemContainer = styled.div`
   }
 `
 
-export const OnSlotMini = styled(Tag)`
+export const OnSlotMini = styled(Tag)<{ hide?: boolean }>`
   font-size: 90%;
   margin-left: 2px;
   padding: 3px 6px 3px 5px;

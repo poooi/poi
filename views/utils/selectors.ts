@@ -17,7 +17,7 @@ import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 type FleetFull = Fleet & { api_mission?: number[] }
 type ExtendedMapInfo = MapInfo & { api_required_defeat_count?: number; api_defeat_count?: number }
 type StateWithOnslot = { state: RootState; onslot: number | undefined }
-type ShipData = [Ship, APIMstShip | undefined]
+type ShipData = [Ship, APIMstShip]
 type EquipDataWithOnslot = [Equip, APIMstSlotitem, number | undefined]
 type MapData = [MapInfo, APIMstMapinfo]
 
@@ -136,8 +136,7 @@ export const fcdSelector = (state: RootState) => state.fcd
 export const ipcSelector = (state: RootState) => state.ipc
 export const wctfSelector = (state: RootState) => state.wctf
 export const layoutSelector = (state: RootState) => state.layout
-export const fcdShipTagColorSelector = (state: RootState): unknown[] =>
-  get(state.fcd, 'shiptag.color', [])
+export const fcdShipTagColorSelector = (state: RootState) => state.fcd?.shiptag?.color ?? []
 
 export const extensionSelectorFactory =
   (key: string) =>
@@ -400,7 +399,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId: number) =>
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
               slotnum,
-            ),
+            ).filter((data): data is EquipDataWithOnslot => data !== undefined),
     ),
   ),
 )
@@ -424,7 +423,7 @@ export const landbaseEquipDataSelectorFactory = memoize((landbaseId: number) =>
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
               slotnum,
-            ),
+            ).filter((data): data is EquipDataWithOnslot => data !== undefined),
     ),
   ),
 )
@@ -487,7 +486,8 @@ export const fleetShipsDataWithEscapeSelectorFactory = memoize((fleetId: number)
         ? undefined
         : fleetShipsId
             .filter((shipId) => !escapeStatusSelectorFactory(shipId)(state))
-            .map((shipId) => shipDataSelectorFactory(shipId)(state)),
+            .map((shipId) => shipDataSelectorFactory(shipId)(state))
+            .filter((data): data is ShipData => data !== undefined),
     ),
   ),
 )
@@ -499,7 +499,8 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId: nu
         ? undefined
         : fleetShipsId
             .filter((shipId) => !escapeStatusSelectorFactory(shipId)(state))
-            .map((shipId) => shipEquipDataSelectorFactory(shipId)(state)),
+            .map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
+            .filter((data): data is EquipDataWithOnslot[] => data !== undefined),
     ),
   ),
 )

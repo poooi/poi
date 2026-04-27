@@ -24,7 +24,7 @@ describe('AACI entry check', () => {
   it('AACI entry should be valid', () => {
     each(AACITable, ({ name, id, fixed, modifier, shipValid, equipsValid }) => {
       void fixed
-      expect(name === '' || isStringArray(name)).toBe(true)
+      expect(name?.length === 0 || isStringArray(name)).toBe(true)
       expect(isFinite(id) && id > 0).toBe(true)
       expect(isFinite(modifier) && modifier > 0).toBe(true)
       expect(isBoolean(shipValid(ship)))

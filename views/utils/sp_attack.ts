@@ -1,18 +1,7 @@
-interface MasterShip {
-  api_stype?: number
-  api_ctype?: number
-  [key: string]: unknown
-}
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 
-interface ActualShip {
-  api_ship_id?: number
-  api_nowhp?: number
-  api_maxhp?: number
-  api_lv?: number
-  [key: string]: unknown
-}
-
-type ShipData = [ActualShip, MasterShip]
+type ShipData = [APIShip, APIMstShip]
 
 interface ExtraData {
   spAttackCount: Record<number, number>
@@ -91,12 +80,12 @@ const overShip =
     func(shipsData[n])
 
 const overShipState =
-  (func: (ship: ActualShip) => boolean): ShipPred =>
+  (func: (ship: APIShip) => boolean): ShipPred =>
   (ship) =>
     func(ship[0])
 
 const overShipProp =
-  (func: (ship: MasterShip) => boolean): ShipPred =>
+  (func: (ship: APIMstShip) => boolean): ShipPred =>
   (ship) =>
     func(ship[1])
 

@@ -17,7 +17,7 @@ type ShipPredicate = (ship: GameShip) => boolean
 type EquipsPredicate = (equips: GameEquip[]) => boolean
 
 interface AACIEntry {
-  name?: string | string[]
+  name?: string[]
   id: number
   fixed: number
   modifier: number
@@ -50,7 +50,7 @@ export const AACITable: Record<number, AACIEntry> = {}
 // predicateShipObj is a function f: f(shipObj)
 // returns a boolean to indicate whether the ship in question (with equipments)
 // is capable of performing such type of AACI
-const declareAACI = ({ name = '', id, fixed, modifier, shipValid, equipsValid }: AACIEntry) => {
+const declareAACI = ({ name = [], id, fixed, modifier, shipValid, equipsValid }: AACIEntry) => {
   AACITable[id] = {
     name,
     id,

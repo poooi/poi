@@ -14,13 +14,9 @@ import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross
 // @ts-expect-error legacy .es module has no type declarations
 import Scheduler from 'views/services/scheduler'
 
-import {
-  getTanakalendarQuarterMonth,
-  saveQuestTracking,
-  reducer as questsReducer,
-  type SubgoalRecord,
-  type QuestsState,
-} from '../quests'
+import type { GoalKey, SubgoalRecord, QuestsState } from '../quests'
+
+import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
 import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
@@ -172,7 +168,7 @@ describe('saveQuestTracking', () => {
 describe('quests reducer - questTrackingReducer paths', () => {
   type PayloadOf<AC> = AC extends (payload: infer P) => unknown ? P : never
 
-  function getSubgoal(state: QuestsState, questId: number, subgoalId: string): SubgoalRecord {
+  function getSubgoal(state: QuestsState, questId: number, subgoalId: GoalKey): SubgoalRecord {
     const record = state.records[questId]
     if (!record) throw new Error(`Missing quest record ${questId}`)
 
@@ -274,13 +270,21 @@ describe('quests reducer - questTrackingReducer paths', () => {
       8: { id: 8, reach_mapcell: { count: 0, required: 1 } },
     },
     activeQuests: {
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       1: { detail: { api_no: 1 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       2: { detail: { api_no: 2 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       3: { detail: { api_no: 3 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       4: { detail: { api_no: 4 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       5: { detail: { api_no: 5 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       6: { detail: { api_no: 6 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       7: { detail: { api_no: 7 }, time: 0 },
+      // @ts-expect-error not important for this test, just need some data to verify non-mutation
       8: { detail: { api_no: 8 }, time: 0 },
     },
     questGoals: {
