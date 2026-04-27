@@ -13,7 +13,6 @@ import type {
   APIMstUseitem,
 } from 'kcsapi/api_start2/getData/response'
 
-import { keyBy } from 'lodash'
 import { indexify } from 'views/utils/tools'
 
 export interface ConstState {
@@ -30,6 +29,7 @@ export interface ConstState {
   $shipUpgrades?: APIMstShipupgrade[]
   $exslotEquips?: number[]
   $exslotEquipShips?: Record<string, APIMstEquipExslotShip>
+  $exslotEquipLimits?: Record<string, number[]>
 }
 
 function dataFromBody(body: APIStart2GetDataResponse): ConstState {
@@ -51,10 +51,8 @@ function dataFromBody(body: APIStart2GetDataResponse): ConstState {
      */
     $shipUpgrades: body.api_mst_shipupgrade,
     $exslotEquips: body.api_mst_equip_exslot,
-    $exslotEquipShips: keyBy<APIMstEquipExslotShip>(
-      body.api_mst_equip_exslot_ship,
-      'api_slotitem_id',
-    ),
+    $exslotEquipShips: body.api_mst_equip_exslot_ship,
+    $exslotEquipLimits: body.api_mst_equip_limit_exslot,
   }
 }
 

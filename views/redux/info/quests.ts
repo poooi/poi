@@ -310,7 +310,6 @@ function outdateRecords(
 
 function filterActiveQuestFactory(now: number) {
   return (activeQuest: Partial<ActiveQuest> = {}): boolean => {
-    // @ts-expect-error FIXME: Update quest API type declaration
     const { time, detail: { api_type, api_no, api_label_type } = {} } = activeQuest
     if (!time || !api_type) return false
     if (!isDifferentDay(now, time)) return true

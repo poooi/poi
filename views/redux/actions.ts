@@ -97,8 +97,15 @@ import type {
   APIReqQuestClearitemgetResponse,
   APIReqQuestStopRequest,
   APIReqQuestStopResponse,
+  APIReqAirCorpsChangeNameResponse,
+  APIReqAirCorpsChangeNameRequest,
+  APIReqAirCorpsChangeDeploymentBaseResponse,
+  APIReqAirCorpsChangeDeploymentBaseRequest,
+  APIReqHenseiPresetOrderChangeResponse,
+  APIReqHenseiPresetOrderChangeRequest,
+  APIReqMemberUpdatedecknameResponse,
+  APIReqMemberUpdatedecknameRequest,
 } from 'kcsapi'
-import type { APIDistance, APIPlaneInfo } from 'kcsapi/api_req_air_corps/set_plane/response'
 import type { APIShipDatum } from 'kcsapi/api_req_map/anchorage_repair/response'
 
 import { createAction } from '@reduxjs/toolkit'
@@ -109,19 +116,6 @@ export interface GameResponsePayload<Body, PostBody> {
   body: Body
   postBody: PostBody
   time: number
-}
-
-// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_air_corps/change_name
-interface APIReqAirCorpsChangeNameRequest {
-  api_verno: string
-  api_area_id: string
-  api_base_id: string
-  api_name: string
-}
-
-interface APIReqAirCorpsChangeNameResponse {
-  api_result: number
-  api_result_msg: string
 }
 
 interface ConfigAction {
@@ -260,26 +254,6 @@ export const createAPIReqKousyouCreateShipSpeedChangeResponseAction = createActi
   >
 >('@@Response/kcsapi/api_req_kousyou/createship_speedchange')
 
-// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_air_corps/change_deployment_base
-export interface APIReqAirCorpsChangeDeploymentBaseRequest {
-  api_area_id: string
-  api_base_id: string
-  api_base_id_src: string
-  api_item_id: string
-  api_squadron_id: string
-  api_verno: string
-}
-
-export interface APIBaseItem {
-  api_distance: APIDistance
-  api_plane_info: APIPlaneInfo[]
-  api_rid: number
-}
-
-export interface APIReqAirCorpsChangeDeploymentBaseResponse {
-  api_base_items: APIBaseItem[]
-}
-
 export const createAPIReqAirCorpsChangeDeploymentBaseResponseAction = createAction<
   GameResponsePayload<
     APIReqAirCorpsChangeDeploymentBaseResponse,
@@ -360,18 +334,6 @@ export const createAPIReqHenseiPresetRegisterResponseAction = createAction<
 export const createAPIReqHenseiPresetSelectResponseAction = createAction<
   GameResponsePayload<APIReqHenseiPresetSelectResponse, APIReqHenseiPresetSelectRequest>
 >('@@Response/kcsapi/api_req_hensei/preset_select')
-
-// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_hensei/preset_order_change
-export interface APIReqHenseiPresetOrderChangeRequest {
-  api_verno: string
-  api_preset_from: string
-  api_preset_to: string
-}
-
-export interface APIReqHenseiPresetOrderChangeResponse {
-  api_result: number
-  api_result_msg: string
-}
 
 export const createAPIReqHenseiPresetOrderChangeResponseAction = createAction<
   GameResponsePayload<APIReqHenseiPresetOrderChangeResponse, APIReqHenseiPresetOrderChangeRequest>
@@ -464,18 +426,6 @@ export const createAPIReqMapStartResponseAction = createAction<
 export const createAPIReqMemberItemuseResponseAction = createAction<
   GameResponsePayload<APIReqMemberItemuseResponse, APIReqMemberItemuseRequest>
 >('@@Response/kcsapi/api_req_member/itemuse')
-
-// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_member/updatedeckname
-export interface APIReqMemberUpdatedecknameRequest {
-  api_verno: string
-  api_deck_id: string
-  api_name: string
-}
-
-export interface APIReqMemberUpdatedecknameResponse {
-  api_result: number
-  api_result_msg: string
-}
 
 export const createAPIReqMemberUpdatedecknameResponseAction = createAction<
   GameResponsePayload<APIReqMemberUpdatedecknameResponse, APIReqMemberUpdatedecknameRequest>

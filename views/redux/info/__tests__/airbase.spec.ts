@@ -5,13 +5,11 @@ import type {
   APIGetMemberMapinfoRequest,
   APIPortPortRequest,
   APIPortPortResponse,
+  APIReqAirCorpsChangeDeploymentBaseResponse,
+  APIReqAirCorpsChangeDeploymentBaseRequest,
 } from 'kcsapi'
 
-import type {
-  APIReqAirCorpsChangeDeploymentBaseRequest,
-  APIReqAirCorpsChangeDeploymentBaseResponse,
-  GameResponsePayload,
-} from '../../actions'
+import type { GameResponsePayload } from '../../actions'
 
 import {
   createAPIGetMemberMapinfoResponseAction,
@@ -189,11 +187,13 @@ describe('airbase reduer', () => {
           {
             api_rid: 1,
             api_distance: { api_base: 0, api_bonus: 0 },
+            // @ts-expect-error test fixture with minimal plane info
             api_plane_info: [{ api_squadron_id: 1, api_slotid: 111, api_state: 0 }],
           },
           {
             api_rid: 2,
             api_distance: { api_base: 0, api_bonus: 0 },
+            // @ts-expect-error test fixture with minimal plane info
             api_plane_info: [{ api_squadron_id: 1, api_slotid: 222, api_state: 0 }],
           },
         ],
@@ -244,6 +244,7 @@ describe('airbase reduer', () => {
             {
               api_rid: 1,
               api_distance: { api_base: 0, api_bonus: 0 },
+              // @ts-expect-error test fixture with minimal plane info
               api_plane_info: [{ api_squadron_id: 1, api_slotid: 111, api_state: 0 }],
             },
           ],
@@ -272,11 +273,13 @@ describe('airbase reduer', () => {
             {
               api_rid: 1,
               api_distance: { api_base: 0, api_bonus: 0 },
+              // @ts-expect-error test fixture with minimal plane info
               api_plane_info: [{ api_squadron_id: 1, api_slotid: 111, api_state: 0 }],
             },
             {
               api_rid: 1,
               api_distance: { api_base: 0, api_bonus: 0 },
+              // @ts-expect-error test fixture with minimal plane info
               api_plane_info: [{ api_squadron_id: 1, api_slotid: 111, api_state: 0 }],
             },
           ],

@@ -37,6 +37,7 @@ describe('fleets reducer', () => {
     const postBody = {
       api_deck_id: '1',
       api_name: 'New Fleet Name',
+      api_name_id: '1',
     }
     const result = reducer(
       initialState,
