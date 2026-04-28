@@ -3,7 +3,7 @@ import _ from 'lodash'
 import type { PresetsState } from '../presets'
 
 import { createAPIReqHenseiPresetOrderChangeResponseAction } from '../../actions'
-import reducer from '../presets'
+import { reducer } from '../presets'
 
 const spec = it
 
