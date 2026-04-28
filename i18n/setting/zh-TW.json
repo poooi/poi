@@ -243,5 +243,9 @@
   "Test": "測試",
   "Custom Certificate Authority test": "自定義證書機構測試",
   "Certificate is valid": "證書有效",
-  "Certificate is invalid": "證書無效"
+  "Certificate is invalid": "證書無效",
+  "Favorite": "收藏",
+  "Unfavorite": "取消收藏",
+  "Open in tab": "在標籤頁中打開",
+  "Open in window": "在新視窗中打開"
 }

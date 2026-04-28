@@ -198,5 +198,9 @@
   "Test": "Test",
   "Custom Certificate Authority test": "Custom Certificate Authority test",
   "Certificate is valid": "Certificate is valid.",
-  "Certificate is invalid": "Certificate is invalid."
+  "Certificate is invalid": "Certificate is invalid.",
+  "Favorite": "Favorite",
+  "Unfavorite": "Unfavorite",
+  "Open in tab": "Open in tab",
+  "Open in window": "Open in window"
 }

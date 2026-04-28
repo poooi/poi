@@ -1,6 +1,7 @@
 export interface UiState {
   activeMainTab: string
   activeFleetId: number
+  activePluginName?: string
 }
 
 const initState: UiState = {

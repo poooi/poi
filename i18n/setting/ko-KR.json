@@ -235,5 +235,9 @@
   "Test": "테스트",
   "Custom Certificate Authority test": "커스텀 인증서 기관 테스트",
   "Certificate is valid": "인증서는 유효합니다.",
-  "Certificate is invalid": "인증서는 유효하지 않습니다."
+  "Certificate is invalid": "인증서는 유효하지 않습니다.",
+  "Favorite": "즐겨찾기",
+  "Unfavorite": "즐겨찾기 해제",
+  "Open in tab": "탭에서 열기",
+  "Open in window": "창에서 열기"
 }

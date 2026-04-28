@@ -243,5 +243,9 @@
   "Test": "测试",
   "Custom Certificate Authority test": "自定义证书机构测试",
   "Certificate is valid": "证书有效",
-  "Certificate is invalid": "证书无效"
+  "Certificate is invalid": "证书无效",
+  "Favorite": "收藏",
+  "Unfavorite": "取消收藏",
+  "Open in tab": "在标签页中打开",
+  "Open in window": "在新窗口中打开"
 }

@@ -1,6 +1,7 @@
 import type { ConfigStringPath } from 'lib/config'
 import type { UpdateMainTouchbar } from 'lib/touchbar'
 import type { ResizableAreaHandle } from 'react-resizable-area'
+import type { RootState } from 'views/redux/reducer-factory'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import {
@@ -13,13 +14,12 @@ import {
   NonIdealState,
   Card,
   Menu,
-  MenuItem,
 } from '@blueprintjs/core'
 import { IconNames } from '@blueprintjs/icons'
 import * as remote from '@electron/remote'
 import * as Sentry from '@sentry/electron'
 import classNames from 'classnames'
-import { get } from 'lodash'
+import { get, sortBy } from 'lodash'
 import React, { Component, useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
@@ -35,11 +35,10 @@ import type { TabContentsUnionHandle } from './tab-contents-union'
 import * as MAIN_VIEW from '../main'
 import * as SETTINGS_VIEW from '../settings'
 import * as SHIP_VIEW from '../ship'
+import PluginDropdownMenuItem from './plugin-dropdown-menu-item'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { PluginWrap } from './plugin-wrapper'
 import { TabContentsUnion } from './tab-contents-union'
-
-const emptyObj: Record<string, boolean> = {}
 
 const pluginDropDownModifier = {
   flip: { enabled: false },
@@ -136,38 +135,19 @@ const PluginDropdownButton = styled(Button)<{ double?: boolean }>`
     `}
 `
 
-const PluginDropdownMenuItem = styled(MenuItem)`
-  align-items: center;
-`
-
 const PluginDropdown = styled(Menu)<{ grid?: boolean }>`
   overflow: auto;
   ${({ grid }) =>
     grid
       ? css`
-          li {
+          > * {
             display: block;
             float: left;
             width: calc(100% / 3);
-
-            a {
-              padding: 10px;
-              flex-direction: column;
-
-              /* stylelint-disable-next-line selector-class-pattern */
-              [class*='fa-'].svg-inline--fa {
-                font-size: 175%;
-                margin: 0;
-              }
-            }
+            height: 72px;
           }
         `
-      : css`
-          /* stylelint-disable-next-line selector-class-pattern */
-          [class*='fa-'].svg-inline--fa {
-            width: 1em;
-          }
-        `}
+      : ''}
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -309,9 +289,6 @@ const dispatchTabChangeEvent = (
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyState = any
-
 const isPluginTab = (key: string): boolean => !['main-view', 'ship-view', 'settings'].includes(key)
 
 interface ControlledTabAreaProps {
@@ -326,6 +303,7 @@ interface ControlledTabAreaProps {
   mainPanelHeight: SizeOption
   editable: boolean
   windowmode: Record<string, boolean>
+  favorite: Record<string, boolean>
   async: boolean
 }
 
@@ -337,7 +315,7 @@ declare global {
 
 const ControlledTabAreaFC = ({
   t,
-  plugins,
+  plugins: rawPlugins,
   doubleTabbed,
   verticalDoubleTabbed,
   useGridMenu,
@@ -347,6 +325,7 @@ const ControlledTabAreaFC = ({
   mainPanelHeight,
   editable,
   windowmode,
+  favorite,
 }: ControlledTabAreaProps): React.ReactElement => {
   const [openedWindow, setOpenedWindow] = useState<Record<string, boolean>>({})
   const [prevDoubleTabbed, setPrevDoubleTabbed] = useState(doubleTabbed)
@@ -364,6 +343,9 @@ const ControlledTabAreaFC = ({
     dispatchTabChangeEvent({ activeMainTab: 'main-view' })
     setPrevDoubleTabbed(doubleTabbed)
   }
+
+  // sort plugins by favorite and priority
+  const plugins = sortBy(rawPlugins, [(plugin) => (favorite[plugin.id] ? 0 : 1), 'priority'])
 
   const isWindowMode = useCallback(
     (plugin: Plugin): boolean =>
@@ -692,9 +674,9 @@ const ControlledTabAreaFC = ({
             <PluginDropdownMenuItem
               onClick={handleClick}
               id={activeMainTab === plugin.id ? '' : plugin.id}
-              icon={plugin.displayIcon}
-              text={plugin.name}
+              plugin={plugin}
               key={plugin.id}
+              grid={useGridMenu}
             />
           )
         })
@@ -900,46 +882,44 @@ class TabAreaErrorBoundary extends Component<ControlledTabAreaProps, ErrorBounda
 export const ControlledTabArea = (): React.ReactElement => {
   const { t } = useTranslation(['setting', 'others'])
 
-  const plugins = useSelector((state: AnyState): Plugin[] => state.plugins)
-  const windowmode = useSelector(
-    (state: AnyState): Record<string, boolean> =>
-      get(state.config, 'poi.plugin.windowmode', emptyObj),
-  )
-  const activePluginName = useSelector((state: AnyState): string => {
-    const fromState: string | null = get(state.ui, 'activePluginName', null)
-    if (fromState !== null) return fromState
-    const wm: Record<string, boolean> = get(state.config, 'poi.plugin.windowmode', emptyObj)
-    const allPlugins: Plugin[] = state.plugins
+  const plugins = useSelector((state: RootState) => state.plugins)
+  const windowmode = useSelector((state: RootState) => state.config.poi?.plugin?.windowmode ?? {})
+  const favorite = useSelector((state: RootState) => state.config.poi?.plugin?.favorite ?? {})
+  const activePluginName = useSelector((state: RootState): string => {
+    const fromState = state?.ui?.activePluginName
+    if (fromState != null) return fromState
+    const wm = state.config.poi?.plugin?.windowmode ?? {}
+    const allPlugins = state.plugins
     const visibleActivePlugins = allPlugins.filter(
       (plugin) => plugin.enabled && !get(wm, plugin.id, false),
     )
-    return get(visibleActivePlugins, '0.id', '')
+    return visibleActivePlugins[0]?.id ?? ''
   })
-  const doubleTabbed = useSelector((state: AnyState): boolean =>
-    get(state.config, 'poi.tabarea.double', false),
+  const doubleTabbed = useSelector(
+    (state: RootState): boolean => state.config.poi?.tabarea?.double ?? false,
   )
-  const verticalDoubleTabbed = useSelector((state: AnyState): boolean =>
-    get(state.config, 'poi.tabarea.vertical', false),
+  const verticalDoubleTabbed = useSelector(
+    (state: RootState): boolean => state.config.poi?.tabarea?.vertical ?? false,
   )
-  const useGridMenu = useSelector((state: AnyState): boolean =>
-    get(state.config, 'poi.tabarea.grid', true),
+  const useGridMenu = useSelector(
+    (state: RootState): boolean => state.config.poi?.tabarea?.grid ?? true,
   )
-  const activeMainTab = useSelector((state: AnyState): string =>
-    get(state.ui, 'activeMainTab', 'main-view'),
+  const activeMainTab = useSelector(
+    (state: RootState): string => state.ui?.activeMainTab ?? 'main-view',
   )
   const mainPanelWidth = useSelector(
-    (state: AnyState): SizeOption =>
-      get(state.config, 'poi.tabarea.mainpanelwidth', { px: 0, percent: 50 }),
+    (state: RootState): SizeOption =>
+      state.config.poi?.tabarea?.mainpanelwidth ?? { px: 0, percent: 50 },
   )
   const mainPanelHeight = useSelector(
-    (state: AnyState): SizeOption =>
-      get(state.config, 'poi.tabarea.mainpanelheight', { px: 0, percent: 50 }),
+    (state: RootState): SizeOption =>
+      state.config.poi?.tabarea?.mainpanelheight ?? { px: 0, percent: 50 },
   )
-  const editable = useSelector((state: AnyState): boolean =>
-    get(state.config, 'poi.layout.editable', false),
+  const editable = useSelector(
+    (state: RootState): boolean => state.config.poi?.layout?.editable ?? false,
   )
-  const asyncProp = useSelector((state: AnyState): boolean =>
-    get(state.config, 'poi.misc.async', true),
+  const asyncProp = useSelector(
+    (state: RootState): boolean => state.config.poi?.misc?.async ?? true,
   )
 
   return (
@@ -955,6 +935,7 @@ export const ControlledTabArea = (): React.ReactElement => {
       mainPanelHeight={mainPanelHeight}
       editable={editable}
       windowmode={windowmode}
+      favorite={favorite}
       async={asyncProp}
     />
   )

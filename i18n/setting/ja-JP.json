@@ -243,5 +243,9 @@
   "Test": "テスト",
   "Custom Certificate Authority test": "カスタム証明書機関のテスト",
   "Certificate is valid": "証明書は有効です。",
-  "Certificate is invalid": "証明書は無効です。"
+  "Certificate is invalid": "証明書は無効です。",
+  "Favorite": "お気に入り",
+  "Unfavorite": "お気に入り解除",
+  "Open in tab": "タブで開く",
+  "Open in window": "ウィンドウで開く"
 }
