@@ -19,9 +19,7 @@ const ShipDetailsMini = styled(ScrollShadow)`
 `
 
 export const PaneBodyMini = ({ fleetId }: { fleetId: number }) => {
-  const shipsId = useSelector((state: RootState) => fleetShipsIdSelectorFactory(fleetId)(state)) as
-    | number[]
-    | undefined
+  const shipsId = useSelector((state: RootState) => fleetShipsIdSelectorFactory(fleetId)(state))
   const enableAvatar = useSelector(
     (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,
   )
