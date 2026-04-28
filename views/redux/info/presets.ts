@@ -98,6 +98,4 @@ const presetsSlice = createSlice({
   },
 })
 
-const reducer = presetsSlice.reducer
-
-export default reducer
+export const reducer = presetsSlice.reducer
