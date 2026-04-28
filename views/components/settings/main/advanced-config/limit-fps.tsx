@@ -9,8 +9,7 @@ import { SwitchConfig } from 'views/components/settings/components/switch'
 type ConfigState = { config: Record<string, unknown> }
 
 const handleChangeLimit = (value: number) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  config.set('poi.misc.limitFps.value' as never, value as never)
+  config.set('poi.misc.limitFps.value', value)
 }
 
 export const LimitFps = () => {

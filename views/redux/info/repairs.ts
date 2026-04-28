@@ -5,6 +5,8 @@ import _ from 'lodash'
 import { observer } from 'redux-observers'
 import { compareUpdate } from 'views/utils/tools'
 
+import type { RootState } from '../reducer-factory'
+
 import {
   createAPIGetMemberNdockResponseAction,
   createAPIPortPortResponseAction,
@@ -26,12 +28,6 @@ export interface RepairData {
 }
 
 export type RepairsState = RepairData[]
-
-interface RootState {
-  info: {
-    repairs: RepairsState
-  }
-}
 
 // Preserved fields: api_id, api_member_id
 const emptyRepair: Omit<RepairData, 'api_id' | 'api_member_id'> = {
@@ -61,8 +57,7 @@ const repairsSlice = createSlice({
         const api_ndock_id = Number(payload.postBody.api_ndock_id)
         const newState = state.slice()
         newState[api_ndock_id - 1] = {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Providing default empty object when undefined
-          ...(newState[api_ndock_id - 1] || ({} as RepairData)),
+          ...newState[api_ndock_id - 1],
           ...emptyRepair,
         }
         return newState

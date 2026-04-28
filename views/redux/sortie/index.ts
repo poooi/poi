@@ -231,10 +231,10 @@ export function reducer(state = initState, { type, postBody, body }: SortieActio
   }
   let newState = state
   const spAttackIds = [
-    ...get(body, 'api_hougeki1.api_at_type', [] as number[]),
-    ...get(body, 'api_hougeki2.api_at_type', [] as number[]),
-    ...get(body, 'api_hougeki3.api_at_type', [] as number[]),
-    ...get(body, 'api_hougeki.api_sp_list', [] as number[]),
+    ...(body?.api_hougeki1?.api_at_type ?? []),
+    ...(body?.api_hougeki2?.api_at_type ?? []),
+    ...(body?.api_hougeki3?.api_at_type ?? []),
+    ...(body?.api_hougeki?.api_sp_list ?? []),
   ].filter((a) => a >= 100)
   if (spAttackIds.length > 0) {
     const spAttackCount = {

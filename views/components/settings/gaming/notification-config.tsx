@@ -71,21 +71,14 @@ export const NotificationConfig = () => {
 
   const handleSetNotify = (notifyPath: NotifyType | null) => () => {
     if (!notifyPath) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      config.set('poi.notify.enabled' as never, !enabled as never)
+      config.set('poi.notify.enabled', !enabled)
     } else {
-      config.set(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        `poi.notify.${notifyPath}.enabled` as never,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        !notifyValues[notifyPath] as never,
-      )
+      config.set(`poi.notify.${notifyPath}.enabled`, !notifyValues[notifyPath])
     }
   }
 
   const handleChangeNotifyVolume = (vol: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.notify.volume' as never, vol as never)
+    config.set('poi.notify.volume', vol)
   }
 
   const handleEndChangeNotifyVolume = () => {

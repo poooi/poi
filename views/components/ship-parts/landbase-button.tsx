@@ -145,10 +145,7 @@ export const LandbaseButton = ({
     (state: RootState) => (state.sortie.sortieStatus as boolean[]) ?? [],
   )
   const airbase = useSelector((state: RootState) => state.info?.airbase ?? [])
-  const mapareas = useSelector(
-    (state: RootState) =>
-      (state.const.$mapareas as Record<string | number, MapareaInfo> | undefined) ?? {},
-  )
+  const mapareas = useSelector((state: RootState) => state.const?.$mapareas ?? {})
 
   const { airbaseProps, intent } = getAirbaseData(airbase, mapareas, sortieStatus)
 
@@ -159,7 +156,7 @@ export const LandbaseButton = ({
         return (
           <div key={areaId}>
             <div>
-              [{areaId}] {mapareas[areaId] && t(`resources:${mapareas[areaId].api_name}`)}
+              [{areaId}] {mapareas[areaId] ? t(`resources:${mapareas[areaId].api_name}`) : ''}
             </div>
             {squardCond > 1 && fatiguedLabel}
             {squardState < 1 && emptyLabel}

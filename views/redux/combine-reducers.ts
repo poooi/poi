@@ -1,3 +1,5 @@
+import type { RootState } from './reducer-factory'
+
 export type AnyAction = { type: string; [key: string]: unknown }
 export type PoiReducer<S = unknown, A extends AnyAction = AnyAction> = (
   state: S | undefined,
@@ -82,7 +84,8 @@ export function combineReducers<S>(reducers: {
     // Polyfill for redux@4
     if (window.getStore) {
       window.getStore.lock = true
-      window.getStore.cache = state
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      window.getStore.cache = state as RootState
     }
 
     if (shapeAssertionError) {
@@ -112,8 +115,7 @@ export function combineReducers<S>(reducers: {
     // Polyfill for redux@4
     if (window.getStore) {
       // delete optional property to remove the lock flag
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      delete (window.getStore as { lock?: boolean }).lock
+      delete window.getStore.lock
     }
 
     return hasChanged ? nextState : state

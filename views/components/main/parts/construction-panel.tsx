@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position } from '@blueprintjs/core'
-import { join as joinString, range, get, map } from 'lodash'
+import { join as joinString, range, map } from 'lodash'
 import path from 'path'
 import React from 'react'
 import FA from 'react-fontawesome'
@@ -69,16 +69,14 @@ const getMaterialId = (index: number) => {
 export const ConstructionPanel = ({ editable }: { editable?: boolean }) => {
   const { t } = useTranslation('main')
   const constructions = useSelector((state: RootState) => state.info.constructions)
-  const $ships = useSelector(
-    (state: RootState) => state.const.$ships as Record<number, { api_name?: string }> | undefined,
-  )
+  const $ships = useSelector((state: RootState) => state.const.$ships)
   const canNotify = useSelector((state: RootState) => state.misc?.canNotify ?? false)
   const enableAvatar = useSelector(
     (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,
   )
 
   const getDockShipName = (dockId: number, defaultValue: string): string => {
-    const id = get(constructions, [dockId, 'api_created_ship_id']) as number | undefined
+    const id = constructions?.[dockId]?.api_created_ship_id
     return id && $ships?.[id] ? t(`resources:${$ships[id].api_name}`) : defaultValue
   }
 
@@ -128,10 +126,7 @@ export const ConstructionPanel = ({ editable }: { editable?: boolean }) => {
                 {enableAvatar && (
                   <>
                     {dock.api_state > 0 ? (
-                      <Avatar
-                        height={20}
-                        mstId={get(constructions, [i, 'api_created_ship_id']) as number}
-                      />
+                      <Avatar height={20} mstId={constructions?.[i]?.api_created_ship_id ?? 0} />
                     ) : (
                       <EmptyDock state={dock.api_state} />
                     )}

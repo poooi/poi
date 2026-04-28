@@ -23,8 +23,7 @@ export const LanguageConfig = () => {
 
   const handleSetLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const language = e.currentTarget.value
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.misc.language' as never, language as never)
+    config.set('poi.misc.language', language)
     void i18next.changeLanguage(language)
     setWindowI18nLng(language)
   }

@@ -20,6 +20,7 @@ export const sendEscKey = () => {
     keyCode: 'Escape',
   })
 }
+export type SendEscKeyType = typeof sendEscKey
 
 // buttons
 const devtools = new TouchBarButton({
@@ -166,6 +167,7 @@ export const toggleRefreshConfirm = (refreshLabel: string, reloadLabel: string) 
     }),
   )
 }
+export type ToggleRefreshConfirm = typeof toggleRefreshConfirm
 
 //main-touchbar
 const mainTouchbar = new TouchBar({
@@ -189,6 +191,7 @@ export const updateTouchbarInfoIcons = () => {
   //TouchBar icon will not auto update on recent macOS
   renderMainTouchbar()
 }
+export type UpdateTouchbarInfoIcons = typeof updateTouchbarInfoIcons
 
 //Tab switching initialization
 export const updateMainTouchbar = (
@@ -228,7 +231,10 @@ export const updateMainTouchbar = (
     renderMainTouchbar()
   }
 }
+export type UpdateMainTouchbar = typeof updateMainTouchbar
+
 //Touchbar reset
 export const renderMainTouchbar = () => {
   mainWindow.setTouchBar(mainTouchbar)
 }
+export type RenderMainTouchbar = typeof renderMainTouchbar

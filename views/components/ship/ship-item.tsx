@@ -64,10 +64,8 @@ const shipRowDataSelectorFactory = memoize((shipId: number) =>
     (shipPair, repairDock, { $shipTypes }, escaped, shipTagColor, avatarType) => {
       const [ship, $ship] = shipPair ?? []
       return {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        ship: (ship ?? {}) as unknown as APIShip,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        $ship: ($ship ?? {}) as unknown as APIMstShip,
+        ship: ship,
+        $ship: $ship,
         $shipTypes: $shipTypes ?? {},
         labelStatus: getShipLabelStatus(ship, $ship, !!repairDock, escaped),
         shipAvatarColor: selectShipAvatarColor(ship, $ship, shipTagColor, avatarType ?? ''),
@@ -96,8 +94,8 @@ const SHIP_PICK_PROPS = [
 ] as const
 
 type ShipRowInnerProps = ShipRowProps & {
-  ship: APIShip
-  $ship: APIMstShip
+  ship?: APIShip
+  $ship?: APIMstShip
   $shipTypes: Record<string, { api_name?: string }>
   labelStatus: number
   shipAvatarColor: string
@@ -118,21 +116,21 @@ const ShipRowInner = memo(
   }: ShipRowInnerProps) => {
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
-    const shipId = ship.api_id ?? -1
-    const shipMstId = $ship.api_id ?? -1
-    const apiNowhp = ship.api_nowhp ?? 0
-    const apiMaxhp = ship.api_maxhp ?? 1
-    const apiFuel = ship.api_fuel ?? 0
-    const apiBull = ship.api_bull ?? 0
-    const apiFuelMax = $ship.api_fuel_max ?? 1
-    const apiBullMax = $ship.api_bull_max ?? 1
-    const apiLv = ship.api_lv ?? 0
-    const apiCond = ship.api_cond ?? 49
-    const apiSoku = ship.api_soku ?? 0
-    const apiStype = $ship.api_stype ?? 0
-    const apiNdockTime = ship.api_ndock_time ?? 0
-    const apiExp = ship.api_exp ?? []
-    const apiName = $ship.api_name ?? '??'
+    const shipId = ship?.api_id ?? -1
+    const shipMstId = $ship?.api_id ?? -1
+    const apiNowhp = ship?.api_nowhp ?? 0
+    const apiMaxhp = ship?.api_maxhp ?? 1
+    const apiFuel = ship?.api_fuel ?? 0
+    const apiBull = ship?.api_bull ?? 0
+    const apiFuelMax = $ship?.api_fuel_max ?? 1
+    const apiBullMax = $ship?.api_bull_max ?? 1
+    const apiLv = ship?.api_lv ?? 0
+    const apiCond = ship?.api_cond ?? 49
+    const apiSoku = ship?.api_soku ?? 0
+    const apiStype = $ship?.api_stype ?? 0
+    const apiNdockTime = ship?.api_ndock_time ?? 0
+    const apiExp = ship?.api_exp ?? []
+    const apiName = $ship?.api_name ?? '??'
     const hpPercentage = (apiNowhp / apiMaxhp) * 100
     const fuelPercentage = (apiFuel / apiFuelMax) * 100
     const ammoPercentage = (apiBull / apiBullMax) * 100
@@ -192,7 +190,7 @@ const ShipRowInner = memo(
       >
         <ShipItem
           className="ship-item"
-          data-master-id={$ship.api_id as number}
+          data-master-id={$ship?.api_id}
           data-ship-id={shipId}
           avatar={enableAvatar}
           shipName={!hideShipName}

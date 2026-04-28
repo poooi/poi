@@ -94,10 +94,8 @@ export const LayoutConfig = () => {
   const setLayout = (newLayout: string, rev: boolean) => {
     if (isolateGameWindow) setIsolateGameWindow(false)
     if (overlayPanel) setOverlayPanel(false)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.layout.mode' as never, newLayout as never)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.layout.reverse' as never, rev as never)
+    config.set('poi.layout.mode', newLayout)
+    config.set('poi.layout.reverse', rev)
   }
 
   const handleSetLayout = (newLayout: string, rev: boolean) => {
@@ -109,13 +107,11 @@ export const LayoutConfig = () => {
   }
 
   const setIsolateGameWindow = (flag: boolean) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.layout.isolate' as never, flag as never)
+    config.set('poi.layout.isolate', flag)
   }
 
   const setOverlayPanel = (flag: boolean) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.layout.overlay' as never, flag as never)
+    config.set('poi.layout.overlay', flag)
   }
 
   const handleSetIsolateGameWindow = () => {
@@ -139,11 +135,9 @@ export const LayoutConfig = () => {
   }
 
   const handleSetDoubleTabbed = (doubleTabbed: boolean, vertical?: boolean) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.tabarea.double' as never, doubleTabbed as never)
+    config.set('poi.tabarea.double', doubleTabbed)
     if (doubleTabbed && vertical !== undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      config.set('poi.tabarea.vertical' as never, vertical as never)
+      config.set('poi.tabarea.vertical', vertical)
     }
   }
 

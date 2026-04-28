@@ -1,3 +1,5 @@
+import type { Updater } from 'lib/updater'
+
 import { ProgressBar, Intent } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { throttle } from 'lodash'
@@ -5,12 +7,7 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-const { updater } = remote.require('./lib/updater') as {
-  updater: {
-    on: (event: string, listener: (...args: unknown[]) => void) => void
-  }
-}
+const updater: Updater = remote.require('./lib/updater').updater
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,10 +47,7 @@ export const DownloadProgress = () => {
   )
 
   useEffect(() => {
-    updater.on('download-progress', (progress) =>
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      updateProgress(progress as Omit<ProgressState, 'downloaded'>),
-    )
+    updater.on('download-progress', (progress) => updateProgress(progress))
     updater.on('update-downloaded', () => {
       remote.getCurrentWindow().setProgressBar(-1)
       setState((prev) => ({ ...prev, downloaded: true }))

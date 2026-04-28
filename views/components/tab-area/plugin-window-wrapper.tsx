@@ -1,4 +1,5 @@
 import type { ConfigPath, ConfigValue } from 'lib/config'
+import type { IPCType } from 'lib/ipc'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
@@ -34,8 +35,7 @@ const pickOptions = [
 ] as const
 
 const { BrowserWindow, screen } = remote
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
-const ipc = remote.require('./lib/ipc') as any
+const ipc: IPCType = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
 
 interface WindowRect {
@@ -49,9 +49,7 @@ const getPluginWindowRect = (plugin: Plugin): WindowRect => {
   const defaultRect: WindowRect = plugin.windowMode
     ? { width: 800, height: 700 }
     : { width: 600, height: 500 }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const bounds = (config.get(`plugin.${plugin.id}.bounds`) ?? defaultRect) as WindowRect
+  const bounds = config.get(`plugin.${plugin.id}.bounds`) ?? defaultRect
   let { x, y, width, height } = bounds
   if (x == null || y == null) {
     return defaultRect
@@ -145,7 +143,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
             currentWindowRef.current?.focus()
           } else {
             setImmediate(() => {
-              ipc.access('MainWindow').ipcFocusPlugin(plugin.id)
+              ipc.access('MainWindow')?.ipcFocusPlugin?.(plugin.id)
             })
           }
         },
@@ -216,20 +214,15 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           externalWindowRef.current.document.title = plugin.name
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
           ;(externalWindowRef.current as any).isWindowMode = true
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           loadStyle(externalWindowRef.current.document, currentWindow, false)
           remote.require('./lib/webcontent-utils').stopFileNavigate(currentWindow?.webContents.id)
           for (const pickOption of pickOptions) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
-            ;(externalWindowRef.current as any)[pickOption] = (window as any)[pickOption]
+            ;(externalWindowRef.current as any)[pickOption] = window[pickOption]
           }
           externalWindowRef.current.addEventListener('beforeunload', () => {
             setLoaded(false)
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
-            ;(config as any).set(
-              `plugin.${plugin.id}.bounds`,
-              currentWindowRef.current?.getBounds(),
-            )
+            config.set(`plugin.${plugin.id}.bounds`, currentWindowRef.current?.getBounds())
             try {
               closeWindowPortal()
             } catch (e) {

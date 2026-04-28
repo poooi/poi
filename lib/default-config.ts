@@ -34,6 +34,7 @@ interface PoiMisc {
   screenshot: Screenshot
   cache: Cache
   trustedCerts: string[]
+  untrustedCerts?: string[]
   pinminimap: boolean
   language?: string
 }

@@ -19,8 +19,7 @@ export const ZoomingConfig = () => {
   }
 
   const handleSaveZoomLevel = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.appearance.zoom' as never, zoomLevel as never)
+    config.set('poi.appearance.zoom', zoomLevel)
   }
 
   return (

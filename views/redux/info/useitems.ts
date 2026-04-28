@@ -93,34 +93,27 @@ const useitemsSlice = createSlice({
       })
       // sortie award
       .addCase(createAPIReqCombinedBattleBattleresultResponseAction, (state, { payload }) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response type definition
-        const body = payload.body as {
-          api_get_useitem?: { api_useitem_id?: number }
-          api_get_exmap_useitem_id?: number
-        }
+        const body = payload.body
+        // @ts-expect-error FIXME: api_get_useitem is missing in type definition
         const { api_get_useitem, api_get_exmap_useitem_id } = body
         let nextState = { ...state }
         if (api_get_useitem?.api_useitem_id != null && api_get_useitem.api_useitem_id > 0) {
           nextState = increment(nextState, api_get_useitem.api_useitem_id, 1)
         }
-        if (api_get_exmap_useitem_id != null && api_get_exmap_useitem_id > 0) {
-          nextState = increment(nextState, api_get_exmap_useitem_id, 1)
+        if (api_get_exmap_useitem_id != null && Number(api_get_exmap_useitem_id) > 0) {
+          nextState = increment(nextState, Number(api_get_exmap_useitem_id), 1)
         }
         return compareUpdate(state, nextState)
       })
       .addCase(createAPIReqSortieBattleResultResponseAction, (state, { payload }) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response type definition
-        const body = payload.body as {
-          api_get_useitem?: { api_useitem_id?: number }
-          api_get_exmap_useitem_id?: number
-        }
+        const body = payload.body
         const { api_get_useitem, api_get_exmap_useitem_id } = body
         let nextState = { ...state }
         if (api_get_useitem?.api_useitem_id != null && api_get_useitem.api_useitem_id > 0) {
           nextState = increment(nextState, api_get_useitem.api_useitem_id, 1)
         }
-        if (api_get_exmap_useitem_id != null && api_get_exmap_useitem_id > 0) {
-          nextState = increment(nextState, api_get_exmap_useitem_id, 1)
+        if (api_get_exmap_useitem_id != null && Number(api_get_exmap_useitem_id) > 0) {
+          nextState = increment(nextState, Number(api_get_exmap_useitem_id), 1)
         }
         return compareUpdate(state, nextState)
       })

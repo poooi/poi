@@ -1,4 +1,4 @@
-import type { MenuItemConstructorOptions } from 'electron/main'
+import type { Menu as MenuType, MenuItemConstructorOptions } from 'electron/main'
 import type { Config } from 'lib/default-config'
 
 import * as remote from '@electron/remote'
@@ -24,7 +24,7 @@ declare global {
   }
 }
 
-const { Menu } = remote.require('electron')
+const Menu: typeof MenuType = remote.require('electron').Menu
 const { openExternal } = shell
 
 const resetViews = () => {
@@ -368,17 +368,18 @@ if (process.platform !== 'darwin') {
 const themepos = process.platform === 'darwin' ? 3 : 2
 for (let i = themes.length - 1; i >= 0; i--) {
   const th = themes[i]
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  ;(template[themepos].submenu as MenuTemplate).unshift({
-    label: th === '__default__' ? 'Default' : capitalize(th),
-    type: 'radio',
-    checked: config.get('poi.appearance.theme', 'dark') === th,
-    click: () => {
-      if (th !== config.get('poi.appearance.theme', 'dark')) {
-        window.applyTheme(th)
-      }
-    },
-  })
+  if (Array.isArray(template[themepos].submenu)) {
+    template[themepos].submenu.unshift({
+      label: th === '__default__' ? 'Default' : capitalize(th),
+      type: 'radio',
+      checked: config.get('poi.appearance.theme', 'dark') === th,
+      click: () => {
+        if (th !== config.get('poi.appearance.theme', 'dark')) {
+          window.applyTheme(th)
+        }
+      },
+    })
+  }
 }
 
 export const appMenu = Menu.buildFromTemplate(template)
@@ -394,13 +395,12 @@ if (process.platform === 'darwin') {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-const themeMenuList = (appMenu.items[themepos].submenu as Electron.Menu).items
+const themeMenuList = appMenu?.items[themepos].submenu?.items
 
 config.on('config.set', (configPath, value) => {
   if (configPath === 'poi.appearance.theme' && typeof value === 'string') {
     const idx = themes.indexOf(value)
-    if (themeMenuList[idx]) {
+    if (themeMenuList?.[idx]) {
       themeMenuList[idx].checked = true
     }
   }

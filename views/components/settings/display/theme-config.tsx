@@ -94,13 +94,11 @@ export const ThemeConfig = () => {
   }
 
   const handleSetVibrancy = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.appearance.vibrant' as never, parseInt(e.target.value) as never)
+    config.set('poi.appearance.vibrant', parseInt(e.target.value))
   }
 
   const handleSetAvatarType = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.appearance.avatarType' as never, e.target.value as never)
+    config.set('poi.appearance.avatarType', e.target.value)
   }
 
   return (

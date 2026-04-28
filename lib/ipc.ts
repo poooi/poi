@@ -4,7 +4,7 @@
 import { EventEmitter } from 'events'
 import { mapValues } from 'lodash'
 
-type IPCFunction = (...args: never[]) => unknown
+type IPCFunction = (...args: unknown[]) => unknown
 
 class IPC extends EventEmitter {
   data: Record<string, Record<string, IPCFunction>> = {}
@@ -75,3 +75,4 @@ class IPC extends EventEmitter {
 }
 
 export default new IPC()
+export type IPCType = IPC

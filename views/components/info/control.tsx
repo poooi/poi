@@ -158,10 +158,7 @@ export const PoiControl = () => {
 
   const handleCapturePageOverWebContent = useCallback(
     async (toClipboard?: boolean) => {
-      const { width, height } = window.getStore('layout.webview') as {
-        width: number
-        height: number
-      }
+      const { width, height } = window.getStore('layout.webview')
       const webContentId = window.getStore('layout.webview.ref')?.getWebContentsId()
       if (webContentId == null) {
         handleScreenshotFailure(new Error('WebContent is not available'))
@@ -191,9 +188,7 @@ export const PoiControl = () => {
 
   const handleCapturePageOverCanvas = useCallback(
     async (toClipboard?: boolean) => {
-      const ref = window.getStore('layout.webview.ref') as {
-        getWebContents: () => { executeJavaScript: (code: string) => Promise<unknown> } | null
-      } | null
+      const ref = window.getStore('layout.webview.ref')
       const webContents = ref?.getWebContents()
       if (!webContents) {
         await handleCapturePageOverWebContent(toClipboard)

@@ -1,5 +1,7 @@
 import type { Middleware } from 'redux'
 
+import type { RootState } from '../reducer-factory'
+
 import {
   createAPIReqNyukyoSpeedchangeResponseAction,
   createInfoShipsRepairCompletedAction,
@@ -13,12 +15,6 @@ import {
  * - The response doesn't include which ship was in the selected dock.
  * - The ship roster id must be derived from info.repairs.
  */
-
-type RootState = {
-  info?: {
-    repairs?: Array<{ api_ship_id?: number }>
-  }
-}
 
 type Action = {
   type: string

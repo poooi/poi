@@ -62,7 +62,6 @@ export function reducer(
       if (value?.data && value.meta) {
         const { name, version } = value.meta
         if (name && version) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           state = Object.assign({}, state, {
             version: { ...state.version, [name]: version },
             [name]: value.data,

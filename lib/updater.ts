@@ -21,5 +21,7 @@ export function changeChannel(channel: string) {
   })
   autoUpdater.autoDownload = false
 }
+export type ChangeChannel = typeof changeChannel
 
 export const updater = autoUpdater
+export type Updater = typeof autoUpdater

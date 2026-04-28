@@ -1,3 +1,5 @@
+import type { RootState } from 'views/redux/reducer-factory'
+
 import { Button, Intent, Tooltip } from '@blueprintjs/core'
 import { sync as globSync } from 'glob'
 import { get, entries, map, max, values } from 'lodash'
@@ -19,23 +21,17 @@ const serverList = [
 ]
 
 const defaultFetchOption = {
-  method: 'GET' as const,
-  cache: 'default' as const,
+  method: 'GET',
+  cache: 'default',
   headers: {
     'Cache-Control': 'max-age=0',
   },
 }
 
-interface FcdVersion {
-  [key: string]: string
-}
-
-type RootState = { fcd: { version?: FcdVersion } }
-
 export const FCD = () => {
   const { t } = useTranslation('setting')
   const dispatch = useDispatch()
-  const version: FcdVersion = useSelector((state: RootState) => state.fcd.version ?? {})
+  const version = useSelector((state: RootState) => state.fcd.version ?? {})
   const [updating, setUpdating] = useState(false)
 
   const updateData = useCallback(

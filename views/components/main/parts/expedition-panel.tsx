@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
-import { join as joinString, map, get, range, isEqual, compact } from 'lodash'
+import { join as joinString, map, range, isEqual, compact } from 'lodash'
 import path from 'path'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -110,7 +110,7 @@ const basicNotifyConfig = {
 }
 
 interface ExpeditionPanelProps {
-  fleetsExpedition: Array<[number, number, number] | undefined>
+  fleetsExpedition: number[][]
   fleetNames: string[]
   $expeditions: Record<number, { api_disp_no?: string; api_name?: string }>
   canNotify: boolean
@@ -137,11 +137,8 @@ const ExpeditionPanelContent = ({
     <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
       {range(1, 4).map((i) => {
         const [status, expeditionId, rawCompleteTime] = fleetsExpedition[i] ?? [-1, 0, -1]
-        const fleetName = get(fleetNames, i, '???') as string
-        const expedition = get($expeditions, expeditionId, {}) as {
-          api_disp_no?: string
-          api_name?: string
-        }
+        const fleetName = fleetNames?.[i] ?? '???'
+        const expedition = $expeditions?.[expeditionId] ?? {}
         const { api_disp_no, api_name } = expedition
         const expeditionName =
           status === -1

@@ -7,7 +7,7 @@ import { IntegerConfig } from 'views/components/settings/components/integer'
 import { Wrapper } from 'views/components/settings/components/section'
 
 interface Props {
-  type: string
+  type: 'ship' | 'item'
 }
 
 type ConfigState = { config: Record<string, unknown> }
@@ -21,8 +21,7 @@ export const SlotCheckConfig = ({ type }: Props) => {
   )
 
   const handleChange = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set(`poi.mapStartCheck.${type}.enable` as never, !enable as never)
+    config.set(`poi.mapStartCheck.${type}.enable`, !enable)
   }
 
   return (

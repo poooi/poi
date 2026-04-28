@@ -124,10 +124,7 @@ const LBView = ({ enableAvatar, width }: { enableAvatar: boolean; width: number 
   const areaIds = useSelector((state: RootState) =>
     (state?.info?.airbase ?? []).map((a) => a.api_area_id),
   )
-  const mapareas = useSelector(
-    (state: RootState) =>
-      (state.const.$mapareas as Record<number, { api_name: string }> | undefined) ?? {},
-  )
+  const mapareas = useSelector((state: RootState) => state.const?.$mapareas ?? {})
   return (
     <ShipDetails className="ship-details">
       {areaIds.map(
@@ -277,13 +274,9 @@ const ShipView: FC = () => {
   const enableTransition = useSelector(
     (state: RootState) => state.config?.poi?.transition?.enable ?? true,
   )
-  const fleetCount = useSelector(
-    (state: RootState) => (state.info.fleets as unknown[])?.length ?? 4,
-  )
+  const fleetCount = useSelector((state: RootState) => state.info?.fleets?.length ?? 4)
   const activeFleetId = useSelector((state: RootState) => state.ui?.activeFleetId ?? 0)
-  const airBaseCnt = useSelector(
-    (state: RootState) => (state.info.airbase as unknown[] | undefined)?.length ?? 0,
-  )
+  const airBaseCnt = useSelector((state: RootState) => state.info?.airbase?.length ?? 0)
   const enableAvatar = useSelector(
     (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,
   )

@@ -1,3 +1,5 @@
+import type { ChangeChannel } from 'lib/updater'
+
 import { FormGroup, Button, Intent } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import React from 'react'
@@ -12,10 +14,8 @@ import { DownloadProgress } from './download-progress'
 import { FCD } from './fcd'
 import { WctfDB } from './wctf-db'
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-const { changeChannel } = (process.platform !== 'linux' ? remote.require('./lib/updater') : {}) as {
-  changeChannel?: (channel: string) => void
-}
+const changeChannel: ChangeChannel | undefined =
+  process.platform !== 'linux' ? remote.require('./lib/updater').changeChannel : undefined
 
 config.on('config.set', (path: string, value: unknown) => {
   if (path === 'poi.update.beta' && process.platform !== 'linux') {

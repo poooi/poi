@@ -17,8 +17,7 @@ const ProxiesConfig = () => {
   const use = String(useSelector((state: ConfigState) => get(state, 'config.proxy.use', 'none')))
 
   const handleChangeUse = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('proxy.use' as never, e.currentTarget.value as never)
+    config.set('proxy.use', e.currentTarget.value)
   }
 
   return (

@@ -68,12 +68,10 @@ export const ResolutionConfig = () => {
 
   useEffect(() => {
     if (screenSize.screenHeight < 900 || screenSize.screenWidth < 1500) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      config.setDefault('poi.webview.width' as never, 800 as never)
+      config.setDefault('poi.webview.width', 800)
       defaultWidthRef.current = 800
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      config.setDefault('poi.webview.width' as never, 1200 as never)
+      config.setDefault('poi.webview.width', 1200)
       defaultWidthRef.current = 1200
     }
 
@@ -97,8 +95,7 @@ export const ResolutionConfig = () => {
       if (w > screenSize.screenWidth || w * 0.6 > screenSize.screenHeight) {
         const fallback = Number(
           config.get(
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-            isolateGameWindow ? 'poi.webview.windowWidth' : ('poi.webview.width' as never),
+            isolateGameWindow ? 'poi.webview.windowWidth' : 'poi.webview.width',
             defaultWidthRef.current,
           ),
         )
@@ -106,11 +103,9 @@ export const ResolutionConfig = () => {
         return
       }
       if (isolateGameWindow) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        config.set('poi.webview.windowWidth' as never, w as never)
+        config.set('poi.webview.windowWidth', w)
       } else {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        config.set('poi.webview.width' as never, w as never)
+        config.set('poi.webview.width', w)
       }
     },
     [isolateGameWindow, screenSize, webview],
@@ -136,15 +131,9 @@ export const ResolutionConfig = () => {
 
   const handleSetFixedResolution = () => {
     if (isolateGameWindow) {
-      config.set(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        'poi.webview.windowUseFixedResolution' as never,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        !webview.windowUseFixedResolution as never,
-      )
+      config.set('poi.webview.windowUseFixedResolution', !webview.windowUseFixedResolution)
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      config.set('poi.webview.useFixedResolution' as never, !webview.useFixedResolution as never)
+      config.set('poi.webview.useFixedResolution', !webview.useFixedResolution)
     }
   }
 

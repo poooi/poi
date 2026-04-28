@@ -1,6 +1,8 @@
 import type { Middleware } from 'redux'
 
-import { flatMap, get } from 'lodash'
+import { flatMap } from 'lodash'
+
+import type { RootState } from '../reducer-factory'
 
 import {
   createAPIReqKaisouPowerupResponseAction,
@@ -20,12 +22,6 @@ import {
  * - The legacy reducer used the custom combineReducers 3rd arg (root state) to
  *   look up ship slots and delete equips.
  */
-
-type RootState = {
-  info?: {
-    ships?: Record<string, { api_slot?: number[] }>
-  }
-}
 
 type Action = {
   type: string
@@ -48,11 +44,7 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
       const ids = String(a.payload?.postBody?.api_id_items || '')
         .split(',')
         .filter(Boolean)
-        .flatMap(
-          (shipId) =>
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_slot is known to be number[]
-            (get(state, `info.ships.${shipId}.api_slot`) as number[]) || [],
-        )
+        .flatMap((shipId) => state.info?.ships?.[Number(shipId)]?.api_slot || [])
 
       if (ids.length) {
         store.dispatch(createInfoEquipsRemoveByIdsAction({ ids }))
@@ -68,8 +60,7 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         .filter(Boolean)
 
       const ids = flatMap(shipIds, (shipId) =>
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_slot is known to be number[]
-        ((get(state, `info.ships.${shipId}.api_slot`) as number[]) || []).filter((x) => x != null),
+        (state.info?.ships?.[Number(shipId)]?.api_slot || []).filter((x) => x != null),
       )
 
       if (ids.length) {

@@ -48,7 +48,7 @@ const setLocalStorageDebounced = debounce(setLocalStorage, 5000)
 
 function autoCacheObserver(store: Store<RootState>, path: string) {
   return observer(
-    (state: RootState) => get(state, path) as unknown,
+    (state: RootState) => get(state, path),
     (_dispatch: unknown, current: unknown) => {
       set(storeCache, path, current)
       setLocalStorageDebounced()
@@ -106,14 +106,14 @@ export function getStore(path?: string): unknown {
     return path !== undefined ? get(storeContent, path) : storeContent
   }
   const storeStateRaw = store.getState()
-  const storeContent: Record<string, unknown> = isRecord(storeStateRaw) ? storeStateRaw : {}
+  const storeContent = isRecord(storeStateRaw) ? (storeStateRaw as RootState) : undefined
   if (getStore.cache !== storeContent) {
     getStore.cache = storeContent
   }
   return path !== undefined ? get(storeContent, path) : storeContent
 }
 getStore.lock = undefined as boolean | undefined
-getStore.cache = undefined as unknown
+getStore.cache = undefined as RootState | undefined
 getStore.cache = store.getState()
 export const dispatch = store.dispatch
 

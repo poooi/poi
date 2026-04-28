@@ -63,9 +63,7 @@ export const AACIIndicator = memo(({ shipId }: AACIIndicatorProps) => {
       createSelector([shipDataSelectorFactory(shipId)], (shipPair) => {
         if (!shipPair) return 0
         const [_ship, $ship] = shipPair
-        const AACIs = getShipAllAACIs({ ...$ship, ..._ship } as Parameters<
-          typeof getShipAllAACIs
-        >[0])
+        const AACIs = getShipAllAACIs({ ...$ship, ..._ship })
         return Math.max(...AACIs.map((id) => AACITable[id]?.fixed ?? 0))
       }),
     [shipId],

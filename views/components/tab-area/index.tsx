@@ -1,4 +1,5 @@
 import type { ConfigStringPath } from 'lib/config'
+import type { UpdateMainTouchbar } from 'lib/touchbar'
 import type { ResizableAreaHandle } from 'react-resizable-area'
 import type { Plugin } from 'views/services/plugin-manager'
 
@@ -624,9 +625,9 @@ const ControlledTabAreaFC = ({
     config.addListener('config.set', handleConfig)
 
     setTimeout(() => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-type-assertion
-      const tabsInstance = tabsRef.current as any
-      if (tabsInstance?.moveSelectionIndicator) {
+      const tabsInstance = tabsRef.current
+      if (tabsInstance != null && 'moveSelectionIndicator' in tabsInstance) {
+        // @ts-expect-error dirty hack to access private method to fix selection indicator position after loading
         tabsInstance.moveSelectionIndicator(false)
       }
     }, 500)
@@ -649,10 +650,8 @@ const ControlledTabAreaFC = ({
           : (currentTabbedPlugins.find((p) => p.packageName === activePluginName) ??
             currentTabbedPlugins[0])
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      const { updateMainTouchbar } = remote.require('./lib/touchbar') as {
-        updateMainTouchbar: (...args: string[]) => void
-      }
+      const updateMainTouchbar: UpdateMainTouchbar =
+        remote.require('./lib/touchbar').updateMainTouchbar
       updateMainTouchbar(
         t('main:Overview'),
         t('main:Fleet'),

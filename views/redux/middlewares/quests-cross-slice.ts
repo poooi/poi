@@ -2,6 +2,8 @@ import type { Middleware } from 'redux'
 
 import { countBy, get } from 'lodash'
 
+import type { RootState } from '../reducer-factory'
+
 import {
   createAPIReqPracticeResultResponseAction,
   createAPIReqMissionResultResponseAction,
@@ -17,26 +19,6 @@ import {
   createAPIReqMapNextResponseAction,
   createInfoQuestsApplyProgressAction,
 } from '../actions'
-
-type RootState = {
-  info?: {
-    ships?: Record<string, { api_ship_id?: number }>
-    fleets?: Record<string, { api_ship?: number[] }>
-    equips?: Record<string, { api_slotitem_id?: number }>
-  }
-  const?: {
-    $ships?: Record<string, { api_name?: string; api_stype?: number; api_ctype?: number }>
-    $equips?: Record<string, { api_type?: number[] }>
-  }
-  sortie?: {
-    sortieStatus?: boolean[]
-  }
-  battle?: {
-    result?: {
-      deckShipId?: number[]
-    }
-  }
-}
 
 type AnyAction = {
   type: string
@@ -86,12 +68,8 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const winRank = String(body.api_win_rank || '')
 
-    const fleetId =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- sortieStatus is known to be boolean[]
-      (get(state, 'sortie.sortieStatus', []) as boolean[]).findIndex((x) => x)
-    const deckShipId =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- api_ship is known to be number[]
-      (get(state, `info.fleets.${fleetId}.api_ship`, []) as number[]) || []
+    const fleetId = state?.sortie?.sortieStatus?.findIndex((x) => x)
+    const deckShipId = state.info?.fleets?.[fleetId ?? 0]?.api_ship || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
 
     store.dispatch(

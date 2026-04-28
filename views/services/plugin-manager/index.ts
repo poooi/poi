@@ -44,7 +44,7 @@ const getPluginExtraPath = (packageName: string) =>
 const PLUGIN_DATA_PATH = join(ROOT, 'assets', 'data', 'plugin.json')
 const BUNDLED_PLUGINS: Record<string, BundlePluginMeta> = readJsonSync(PLUGIN_DATA_PATH)
 
-const getPlugins = (): Plugin[] => getStore('plugins') as Plugin[]
+const getPlugins = () => getStore('plugins')
 
 class PluginManager extends EventEmitter {
   readonly VALID = 0
@@ -412,8 +412,7 @@ declare global {
 }
 
 window.reloadPlugin = async (pkgName: string, verbose = false) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const { plugins } = getStore() as { plugins: Plugin[] }
+  const { plugins } = getStore()
   const plugin = plugins.find((pkg) => [pkgName, `poi-plugin-${pkgName}`].includes(pkg.packageName))
   if (!plugin) {
     console.error(`plugin "${pkgName}" not found`)

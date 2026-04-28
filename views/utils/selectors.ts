@@ -1,7 +1,6 @@
 import type { APIMstMapinfo, APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
 import type { AirBase } from 'views/redux/info/airbase'
 import type { Equip } from 'views/redux/info/equips'
-import type { Fleet } from 'views/redux/info/fleets'
 import type { MapInfo, MapsState } from 'views/redux/info/maps'
 import type { RepairData } from 'views/redux/info/repairs'
 import type { Ship } from 'views/redux/info/ships'
@@ -14,7 +13,6 @@ import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Local Types ###
 
-type FleetFull = Fleet & { api_mission?: number[] }
 type ExtendedMapInfo = MapInfo & { api_required_defeat_count?: number; api_defeat_count?: number }
 type StateWithOnslot = { state: RootState; onslot: number | undefined }
 type ShipData = [Ship, APIMstShip]
@@ -198,10 +196,7 @@ export const fleetInBattleSelectorFactory = memoize((fleetId: number) =>
 )
 export const fleetInExpeditionSelectorFactory = memoize((fleetId: number) =>
   createSelector(fleetSelectorFactory(fleetId), (fleet) =>
-    typeof fleet === 'object'
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        ((fleet as FleetFull).api_mission?.[0] ?? false)
-      : false,
+    typeof fleet === 'object' ? (fleet.api_mission?.[0] ?? false) : false,
   ),
 )
 export const fleetNameSelectorFactory = memoize((fleetId: number) =>
@@ -225,8 +220,7 @@ export const fleetStateSelectorFactory = memoize((fleetId: number) =>
 const emptyExpedition = [0, 0, 0, 0]
 export const fleetExpeditionSelectorFactory = memoize((fleetId: number) =>
   createSelector(fleetSelectorFactory(fleetId), (fleet) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    fleet ? ((fleet as FleetFull).api_mission ?? emptyExpedition) : emptyExpedition,
+    fleet ? (fleet.api_mission ?? emptyExpedition) : emptyExpedition,
   ),
 )
 
@@ -445,7 +439,7 @@ export const sortieMapDataSelector = createSelector(
   (mapId, maps, { $maps }) => getMapData(mapId, maps, $maps),
 )
 export const sortieMapHpSelector = createSelector(sortieMapDataSelector, (mapData) =>
-  mapData ? getMapHp(mapData[0] as ExtendedMapInfo, mapData[1]) : undefined,
+  mapData ? getMapHp(mapData[0], mapData[1]) : undefined,
 )
 export const sortieMapEnemySelector = createSelector(
   sortieSelector,
@@ -506,7 +500,7 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId: nu
 )
 
 export const allCVEIdsSelector = createSelector(constSelector, (c) =>
-  values(get(c, '$ships') as Record<string, APIMstShip> | undefined)
+  values(get(c, '$ships'))
     .filter(
       (x) =>
         // our ships

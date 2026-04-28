@@ -2,7 +2,7 @@ import type { app, BrowserWindow } from 'electron/main'
 
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { sortBy, round, sumBy, map } from 'lodash'
+import { sortBy, round, sumBy, map, cloneDeep } from 'lodash'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Section } from 'views/components/settings/components/section'
@@ -41,8 +41,7 @@ export const AppMetrics = () => {
       newPidmap[pid] = win.getTitle()
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    setMetrics(sortBy(JSON.parse(JSON.stringify(newMetrics)) as AppMetric[], 'pid'))
+    setMetrics(sortBy(cloneDeep(newMetrics), 'pid'))
     setTotal(newTotal)
     setPidmap(newPidmap)
   }, [])

@@ -148,16 +148,16 @@ export const ARMENIA_TIMEZONE = 'Asia/Yerevan'
 
 // Remove items from an object where its value doesn't satisfy `pred`.
 // The argument `obj` IS MODIFIED.
-function filterObjectValue<T extends Record<string, unknown>>(
-  obj: T,
-  pred: (v: unknown) => boolean = Boolean,
-): T {
+function filterObjectValue<T>(
+  obj: Record<string | number, T>,
+): Record<string | number, NonNullable<T>> {
   forEach(obj, (v, k) => {
-    if (!pred(v)) {
+    if (!v) {
       delete obj[k]
     }
   })
-  return obj
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return obj as Record<string | number, NonNullable<T>>
 }
 
 function isDifferentDay(time1: number, time2: number): boolean {
@@ -264,48 +264,29 @@ const resetQuestRecordYearlyFactory = (resetMonth: number) =>
   resetQuestRecordFactory([100 + resetMonth], 5)
 function outdateRecords(
   questGoals: Record<string | number, QuestGoal>,
-  records: Record<string | number, QuestRecord>,
+  records: Record<string | number, QuestRecord | undefined>,
   then: number,
   now: number,
 ): Record<string | number, QuestRecord> {
   if (!isDifferentDay(now, then)) {
-    return records
+    return filterObjectValue(records)
   }
-  records =
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
-    mapValues(records, resetQuestRecordDaily(questGoals)) as Record<string | number, QuestRecord>
+  records = mapValues(records, resetQuestRecordDaily(questGoals))
   if (isDifferentWeek(now, then)) {
-    records =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
-      mapValues(records, resetQuestRecordWeekly(questGoals)) as Record<string | number, QuestRecord>
+    records = mapValues(records, resetQuestRecordWeekly(questGoals))
   }
   if (isDifferentMonth(now, then)) {
-    records =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
-      mapValues(records, resetQuestRecordMonthly(questGoals)) as Record<
-        string | number,
-        QuestRecord
-      >
+    records = mapValues(records, resetQuestRecordMonthly(questGoals))
   }
   if (isDifferentQuarter(now, then)) {
-    records =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
-      mapValues(records, resetQuestRecordQuarterly(questGoals)) as Record<
-        string | number,
-        QuestRecord
-      >
+    records = mapValues(records, resetQuestRecordQuarterly(questGoals))
   }
   for (const resetMonth of range(1, 13)) {
     if (isDifferentYear(now, then, resetMonth)) {
-      records =
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- mapValues preserves Record type
-        mapValues(records, resetQuestRecordYearlyFactory(resetMonth)(questGoals)) as Record<
-          string | number,
-          QuestRecord
-        >
+      records = mapValues(records, resetQuestRecordYearlyFactory(resetMonth)(questGoals))
     }
   }
-  return filterObjectValue(records) as Record<string | number, QuestRecord>
+  return filterObjectValue(records)
 }
 
 function filterActiveQuestFactory(now: number) {
@@ -431,8 +412,7 @@ function updateQuestRecordFactory(
   return (event: QuestEvent, options: QuestOptions | null, delta: number): boolean => {
     let changed = false
     forEach(activeQuests, (activeQuest) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Default empty object for destructuring
-      const quest = (activeQuest || ({} as ActiveQuest)).detail
+      const quest = activeQuest?.detail
       if (typeof quest !== 'object') return
       const { api_no } = quest
       const record = records[api_no]
@@ -750,10 +730,7 @@ const fileWriter = new FileWriter()
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
 export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- window.getStore is an untyped global store accessor, so we assert the expected slice shape here
-  const { activeQuests } = window.getStore('info.quests') as {
-    activeQuests: Record<string | number, ActiveQuest>
-  }
+  const { activeQuests } = window.getStore('info.quests')
   const admiralId = String(window.getStore('info.basic.api_member_id') ?? '')
   fileWriter.write(
     questTrackingPath(admiralId),

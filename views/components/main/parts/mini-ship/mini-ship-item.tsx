@@ -402,7 +402,7 @@ const MiniShipRowInner = memo(
       <ShipTile
         as={Tooltip}
         position={Position.RIGHT_TOP}
-        disabled={get(ship, ['api_slot', 0], -1) === -1 && (ship.api_slot_ex as number) <= 0}
+        disabled={ship?.api_slot?.[0] === -1 && ship.api_slot_ex <= 0}
         className="ship-tile"
         content={
           <ShipTooltip className="ship-pop">
@@ -460,8 +460,8 @@ const MiniShipRowInner = memo(
           <StatusLabelContainer className="status-label">
             <StatusLabel label={labelStatus} />
           </StatusLabelContainer>
-          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond as number)}>
-            {ship.api_cond as number}
+          <ShipCond className={'ship-cond ' + getCondStyle(ship.api_cond)}>
+            {ship.api_cond}
           </ShipCond>
           <HPProgress className="hp-progress" style={labelStatusStyle}>
             <ProgressBar

@@ -18,6 +18,7 @@ export interface Fleet {
   api_id: number
   api_name?: string
   api_ship: number[]
+  api_mission?: number[]
 }
 
 export type FleetsState = Fleet[]

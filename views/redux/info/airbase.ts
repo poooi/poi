@@ -142,20 +142,22 @@ const airBaseSlice = createSlice({
       })
       .addCase(createAPIReqAirCorpsSetActionResponseAction, (state, { payload }) => {
         const { api_action_kind, api_base_id, api_area_id } = payload.postBody
-        const update =
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- zip returns unknown[][], but we know it's [string, string][]
-          (zip(api_base_id.split(','), api_action_kind.split(',')) as [string, string][]).map(
-            ([base_id, action_kind]) => {
-              const baseIndex = findIndex(
-                state,
-                (squad) => squad.api_rid === +base_id && squad.api_area_id === +api_area_id,
-              )
-              const index = baseIndex === -1 ? +base_id - 1 : baseIndex
-              return [index, { api_action_kind: parseInt(action_kind) }]
-            },
-          )
+        const update = zip(api_base_id.split(','), api_action_kind.split(',')).map(
+          ([base_id, action_kind]) => {
+            const baseIndex = findIndex(
+              state,
+              (squad) =>
+                squad.api_rid === Number(base_id ?? 0) && squad.api_area_id === +api_area_id,
+            )
+            const index = baseIndex === -1 ? Number(base_id ?? 0) - 1 : baseIndex
+            return [index, { api_action_kind: Number(action_kind ?? 0) }] as [
+              number,
+              Partial<AirBase>,
+            ]
+          },
+        )
         const [idx, values] =
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- unzip returns unknown[][], but we know it's [number[], Partial<APIAirBase>[]]
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           unzip(update) as [number[], Partial<APIAirBase>[]]
         return compareUpdate(state, constructArray(idx, values), 2)
       })

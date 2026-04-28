@@ -1,3 +1,5 @@
+import type { ExtendedWebviewTag } from 'views/components/etc/webview'
+
 import {
   Button,
   ButtonGroup,
@@ -54,9 +56,9 @@ export const NavigatorBar = () => {
   config.setDefault('poi.misc.homepage', 'https://play.games.dmm.com/game/kancolle')
 
   const [status, setStatus] = useState<WvStatus>(wvStatus.Loaded)
-  const [url, setUrl] = useState<string>(() => config.get('poi.misc.homepage') as string)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const webviewRef = useRef<any>(null)
+  const [url, setUrl] = useState<string>(() => config.get('poi.misc.homepage'))
+
+  const webviewRef = useRef<ExtendedWebviewTag | null>(null)
 
   const onStartLoading = useCallback(() => {
     setStatus(wvStatus.Loading)
@@ -65,8 +67,7 @@ export const NavigatorBar = () => {
   const onStopLoading = useCallback(() => {
     const webview = getStore('layout.webview.ref')
     setStatus(wvStatus.Loaded)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    setUrl((prev) => (webview as any)?.getURL?.() || prev)
+    setUrl((prev) => webview?.getURL?.() || prev)
   }, [])
 
   const onFailLoad = useCallback(() => {
@@ -81,13 +82,11 @@ export const NavigatorBar = () => {
     const load = () => {
       const webview = getStore('layout.webview.ref')
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        const wv = webview as any
-        wv.getWebContents().addListener('did-start-loading', onStartLoading)
-        wv.getWebContents().addListener('did-stop-loading', onStopLoading)
-        wv.getWebContents().addListener('did-fail-load', onFailLoad)
-        wv.getWebContents().addListener('will-navigate', onWillNavigate)
-        webviewRef.current = wv
+        webview?.getWebContents().addListener('did-start-loading', onStartLoading)
+        webview?.getWebContents().addListener('did-stop-loading', onStopLoading)
+        webview?.getWebContents().addListener('did-fail-load', onFailLoad)
+        webview?.getWebContents().addListener('will-navigate', onWillNavigate)
+        webviewRef.current = webview
       } catch (_) {
         setTimeout(load, 1000)
       }
@@ -116,8 +115,7 @@ export const NavigatorBar = () => {
       targetUrl.startsWith('http://') || targetUrl.startsWith('https://')
         ? targetUrl
         : `http://${targetUrl}`
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    ;(webview as any)?.loadURL?.(resolved)
+    webview?.loadURL?.(resolved)
     setUrl(resolved)
   }
 
@@ -132,17 +130,15 @@ export const NavigatorBar = () => {
   }
 
   const onClickStop = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    ;(getStore('layout.webview.ref') as any)?.stop?.()
+    getStore('layout.webview.ref')?.stop?.()
   }
 
   const onClickHomepage = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.misc.homepage' as never, url as never)
+    config.set('poi.misc.homepage', url)
   }
 
   const onRightClickHomepage = () => {
-    navigate(config.get('poi.misc.homepage') as string)
+    navigate(config.get('poi.misc.homepage'))
   }
 
   let statusIcon: React.JSX.Element | undefined

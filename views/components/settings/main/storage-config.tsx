@@ -74,10 +74,8 @@ export const StorageConfig = () => {
   }
 
   const handleRevokeCert = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.misc.trustedCerts' as never, [] as never)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.misc.untrustedCerts' as never, [] as never)
+    config.set('poi.misc.trustedCerts', [])
+    config.set('poi.misc.untrustedCerts', [])
   }
 
   return (

@@ -34,8 +34,7 @@ export const AccessibilityConfig = () => {
   )
 
   const handleSetFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set('poi.appearance.colorblindFilter' as never, e.currentTarget.value as never)
+    config.set('poi.appearance.colorblindFilter', e.currentTarget.value)
   }
 
   return (

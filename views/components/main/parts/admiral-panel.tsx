@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
-import { get, map } from 'lodash'
+import { map } from 'lodash'
 import moment from 'moment-timezone'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
@@ -244,11 +244,11 @@ const CountDownControl = () => {
 }
 
 const admiralInfoSelector = createSelector([basicSelector], (basic) => ({
-  level: get(basic, 'api_level', -1) as number,
-  nickname: get(basic, 'api_nickname', '') as string,
-  rank: get(basic, 'api_rank', 0) as number,
-  maxShip: get(basic, 'api_max_chara', 0) as number,
-  maxSlotitem: get(basic, 'api_max_slotitem', 0) as number,
+  level: basic?.api_level ?? -1,
+  nickname: basic?.api_nickname ?? '',
+  rank: basic?.api_rank ?? 0,
+  maxShip: basic?.api_max_chara ?? 0,
+  maxSlotitem: basic?.api_max_slotitem ?? 0,
 }))
 
 const numCheckSelector = createSelector([configSelector], (cfg) => ({

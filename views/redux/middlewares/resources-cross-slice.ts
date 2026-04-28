@@ -1,5 +1,7 @@
 import type { Middleware } from 'redux'
 
+import type { RootState } from '../reducer-factory'
+
 import {
   createAPIReqKousyouCreateShipSpeedChangeResponseAction,
   createAPIReqNyukyoStartResponseAction,
@@ -24,13 +26,6 @@ import {
  *   store.getState(), then dispatching a small internal action that only targets
  *   info.resources.
  */
-
-type RootState = {
-  info?: {
-    constructions?: Array<{ api_item1?: number }>
-    ships?: Record<string, { api_ndock_item?: number[] }>
-  }
-}
 
 type Action = {
   type: string
@@ -73,7 +68,7 @@ export const resourcesCrossSliceMiddleware: Middleware = (store) => (next) => (a
     // not in the API response.
     const shipId = String(a.payload?.postBody?.api_ship_id || '')
     if (shipId) {
-      const ndockItem = state?.info?.ships?.[shipId]?.api_ndock_item
+      const ndockItem = state?.info?.ships?.[Number(shipId)]?.api_ndock_item
       if (Array.isArray(ndockItem) && ndockItem.length >= 2) {
         const fuel = Number(ndockItem[0]) || 0
         const steel = Number(ndockItem[1]) || 0

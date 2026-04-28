@@ -59,9 +59,7 @@ interface SlotitemIconProps {
 }
 
 export const SlotitemIcon = memo(({ alt, slotitemId = 0, className }: SlotitemIconProps) => {
-  const [useSVGIcon, setUseSVGIcon] = useState(
-    () => config.get('poi.appearance.svgicon', false) as boolean,
-  )
+  const [useSVGIcon, setUseSVGIcon] = useState(() => config.get('poi.appearance.svgicon', false))
   const keyRef = useRef(0)
 
   useEffect(() => {
@@ -89,9 +87,7 @@ interface MaterialIconProps {
 }
 
 export const MaterialIcon = memo(({ className, alt, materialId = 0 }: MaterialIconProps) => {
-  const [useSVGIcon, setUseSVGIcon] = useState(
-    () => config.get('poi.appearance.svgicon', false) as boolean,
-  )
+  const [useSVGIcon, setUseSVGIcon] = useState(() => config.get('poi.appearance.svgicon', false))
   const keyRef = useRef(0)
 
   useEffect(() => {
