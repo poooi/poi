@@ -1,9 +1,9 @@
-import { ButtonGroup, Tag, Tooltip } from '@blueprintjs/core'
+import { ButtonGroup, Card, Tag, Tooltip } from '@blueprintjs/core'
 import { css, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 
-export const ShipCard = styled.div`
+export const ShipCard = styled(Card)`
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -295,7 +295,7 @@ export const ShipFB = styled.span`
   display: flex;
   flex-direction: column;
 
-  > div {
+  > * {
     margin-top: 4px;
   }
 `
