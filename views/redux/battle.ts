@@ -104,7 +104,7 @@ interface StatusState {
   result?: ReturnType<typeof simulate>
 }
 
-export interface BattleResult {
+export type BattleResult = {
   valid: boolean
   time?: number
   rank?: string
@@ -119,7 +119,7 @@ export interface BattleResult {
   dropShipId?: number
   enemyFormation?: number
   eventItem?: unknown
-}
+} & Partial<ReturnType<typeof simulate>>
 
 export interface BattleState {
   _status: StatusState

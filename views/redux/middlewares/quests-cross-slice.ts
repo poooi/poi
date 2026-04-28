@@ -128,8 +128,7 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     )
   } else if (a.type === createAPIReqKousyouCreateitemResponseAction.type) {
     const body = a.payload?.body || {}
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- API response items are known to be unknown[]
-    const items = (body.api_get_items as unknown[]) || []
+    const items = body.api_get_items || []
     store.dispatch(
       createInfoQuestsApplyProgressAction({
         event: 'create_item',
@@ -200,9 +199,7 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     const body = a.payload?.body || {}
     const mapcell = Number(body.api_no)
     const maparea = Number(body.api_maparea_id) * 10 + Number(body.api_mapinfo_no)
-    const deckShipId =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- deckShipId is known to be number[]
-      (get(state, 'battle.result.deckShipId', []) as number[]) || []
+    const deckShipId = state.battle?.result?.deckShipId || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     store.dispatch(
       createInfoQuestsApplyProgressAction({
