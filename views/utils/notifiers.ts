@@ -1,7 +1,9 @@
+import type { NotifyOptions } from 'views/env-parts/notif-center'
+
 import notifCenter from 'views/env-parts/notif-center'
 
-interface NotifyOptions {
-  completeTime?: number | null
+export interface CountdownNotifyOptions<T = unknown> extends NotifyOptions<T> {
+  completeTime?: number
   preemptTime?: number
   [key: string]: unknown
 }
@@ -10,7 +12,7 @@ export class CountdownNotifier {
   private _lastCompleteTime: number | null = null
   private _justNotified = false
 
-  tryNotify = (o: NotifyOptions): void => {
+  tryNotify = <T = unknown>(o: CountdownNotifyOptions<T>): void => {
     if (
       o.completeTime != null &&
       this._lastCompleteTime != null &&

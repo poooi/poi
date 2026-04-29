@@ -1,8 +1,12 @@
-/* global getStore, config, toggleModal, log, error, dbg */
+import type { Dispatch } from 'redux'
+
 import * as remote from '@electron/remote'
 import { observer, observe } from 'redux-observers'
 import { store } from 'views/create-store'
+import { config } from 'views/env-parts/config'
+import { dbg } from 'views/env-parts/dbg'
 import i18next from 'views/env-parts/i18next'
+import { toggleModal } from 'views/env-parts/modal'
 import { isInGame } from 'views/utils/game-utils'
 
 const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
@@ -22,21 +26,24 @@ import './services/battle-notify'
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
 // Update server info
-const setUpdateServer = (dispatch) => {
-  gameAPIBroadcaster.addListener('kancolle.server.change', ({ ip, num: id, name }) => {
-    if (window.getStore('info.server.ip') !== ip) {
-      if (ip) {
-        dispatch({
-          type: '@@ServerReady',
-          serverInfo: { ip, id, name },
-        })
+const setUpdateServer = (dispatch: Dispatch) => {
+  gameAPIBroadcaster.addListener(
+    'kancolle.server.change',
+    ({ ip, num: id, name }: { ip: string; num: number; name: string }) => {
+      if (window.getStore('info.server.ip') !== ip) {
+        if (ip) {
+          dispatch({
+            type: '@@ServerReady',
+            serverInfo: { ip, id, name },
+          })
+        }
       }
-    }
-  })
+    },
+  )
 }
 const serverObserver = observer(
-  (state) => state.info.server.ip,
-  (dispatch, current, previous) => {
+  (state: { info: { server: { ip: string } } }) => state.info.server.ip,
+  (dispatch: Dispatch, current: string) => {
     if (!current) {
       setUpdateServer(dispatch)
     }
@@ -50,40 +57,29 @@ observe(store, [serverObserver])
 window.addEventListener('keydown', async (e) => {
   const isingame = await isInGame()
   if (
-    (document.activeElement.tagName === 'WEBVIEW' && !isingame) ||
-    document.activeElement.tagName === 'INPUT'
+    (document.activeElement?.tagName === 'WEBVIEW' && !isingame) ||
+    document.activeElement?.tagName === 'INPUT'
   ) {
     return
   }
   if (process.platform == 'darwin') {
     if (e.keyCode === 91 || e.keyCode === 93) {
-      // When the game frame is on focus, it catches all keypress events
-      // Blur the webview when any Cmd key is pressed,
-      // so the OS shortcuts will always work
       remote.getCurrentWindow().blurWebView()
     } else if (e.keyCode === 82 && e.metaKey) {
       if (e.shiftKey) {
-        // cmd + shift + r
         gameRefreshPageIgnoringCache()
       } else if (e.altKey) {
-        // cmd + alt + r
         gameReload()
       } else {
-        // cmd + r
-        // Catched by menu
-        // $('kan-game webview').reload()
         return false
       }
     }
   } else if (e.keyCode === 116) {
     if (e.ctrlKey) {
-      // ctrl + f5
       gameRefreshPageIgnoringCache()
     } else if (e.altKey) {
-      // alt + f5
       gameReload()
     } else if (!e.metaKey) {
-      // f5
       gameRefreshPage()
     }
   }
@@ -98,11 +94,11 @@ const exitPoi = () => {
   window.onbeforeunload = null
   window.close()
 }
-window.onbeforeunload = (e) => {
+window.onbeforeunload = (e: BeforeUnloadEvent) => {
   if (confirmExit || !config.get('poi.confirm.quit', false)) {
     exitPoi()
   } else {
-    toggleModal(i18next.t('Exit'), i18next.t('Confirm?'), [
+    toggleModal(String(i18next.t('Exit')), String(i18next.t('Confirm?')), [
       {
         name: i18next.t('Confirm'),
         func: exitPoi,
@@ -112,8 +108,13 @@ window.onbeforeunload = (e) => {
     e.returnValue = false
   }
 }
+
 class GameResponse {
-  constructor(path, body, postBody, time) {
+  path: string
+  body: unknown
+  postBody: unknown
+
+  constructor(path: string, body: unknown, postBody: unknown, time: number) {
     this.path = path
     this.body = body
     this.postBody = postBody
@@ -129,16 +130,13 @@ class GameResponse {
   }
 }
 
-window.addEventListener('game.request', (e) => {
-  //const {method} = e.detail
-  //const resPath = e.detail.path
+window.addEventListener('game.request', () => {
+  // noop
 })
 window.addEventListener('game.response', (e) => {
   const { method, body, postBody, time } = e.detail
   const resPath = e.detail.path
-  if (dbg.extra('gameResponse').isEnabled()) {
-    dbg.getLogFunc()(new GameResponse(resPath, body, postBody, time))
-  }
+  dbg?.extra('gameResponse')?.log(new GameResponse(resPath, body, postBody, time))
   if (config.get('poi.misc.networklog', true)) {
     log(`${i18next.t('Hit')}: ${method} ${resPath}`, { dontReserve: true })
   }
@@ -153,7 +151,7 @@ window.addEventListener('network.invalid.result', (e) => {
 
 remote
   .getCurrentWebContents()
-  .on('devtools-opened', (e) => window.dispatchEvent(new Event('resize')))
+  .on('devtools-opened', () => window.dispatchEvent(new Event('resize')))
 
 remote.getCurrentWebContents().on('dom-ready', () => {
   if (process.platform === 'darwin') {
@@ -171,7 +169,5 @@ remote.getCurrentWebContents().on('dom-ready', () => {
 })
 
 remote.getCurrentWindow().on('show', () => {
-  if (getStore('layout.webview.ref')) {
-    getStore('layout.webview.ref').executeJavaScript('align()')
-  }
+  getStore('layout.webview.ref')?.executeJavaScript('align()')
 })

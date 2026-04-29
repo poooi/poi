@@ -6,7 +6,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import { map, sortBy, mapValues, forEach, values, fromPairs, isEqual, range } from 'lodash'
 import moment from 'moment-timezone'
 import path from 'path'
-// @ts-expect-error legacy .es module has no type declarations
 import Scheduler from 'views/services/scheduler'
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'

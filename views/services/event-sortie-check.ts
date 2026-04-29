@@ -1,9 +1,9 @@
-import _ from 'lodash'
+import type { Ship } from 'views/redux/info/ships'
+
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
 import { fleetShipsDataSelectorFactory, fleetStateSelectorFactory } from '../utils/selectors'
-
-const { config } = window
 
 // event sortie check notify for fleets that
 // - is not in mission
@@ -12,23 +12,22 @@ const { config } = window
 // - ships has less than 2 color tags (multiple-color prevents sortie)
 // It is of course insufficient because the existence of easy level and areas that has no tag requirements
 
-const getFleetFlag = (fleetData) => {
-  const data = _(fleetData)
-    .map(([ship, _] = []) => ship)
-    .filter(Boolean)
+const getFleetFlag = (fleetData: ([Ship, unknown] | undefined)[] | undefined) => {
+  if (!fleetData) return false
+  const ships = fleetData
+    .map((item) => item?.[0] ?? null)
+    .filter((ship): ship is Ship => ship != null)
 
-  const freeShipCount = data.filter((ship) => ship.api_sally_area === 0).value().length
-
-  const taggedCount = data
-    .filter((ship) => ship.api_sally_area > 0)
-    .map((ship) => ship.api_sally_area)
-    .uniq()
-    .value().length
+  const freeShipCount = ships.filter((ship) => !ship.api_sally_area).length
+  const taggedCount = new Set(
+    ships.map((ship) => ship.api_sally_area).filter((area): area is number => (area ?? 0) > 0),
+  ).size
 
   return freeShipCount > 0 && taggedCount <= 1
 }
 
-window.addEventListener('game.request', ({ detail: { path } }) => {
+window.addEventListener('game.request', (e) => {
+  const { path } = e.detail
   if (!config.get('poi.eventSortieCheck.enable', true)) {
     return
   }
@@ -41,15 +40,15 @@ window.addEventListener('game.request', ({ detail: { path } }) => {
       flag =
         flag ||
         getFleetFlag([
-          ...fleetShipsDataSelectorFactory(0)(state),
-          ...fleetShipsDataSelectorFactory(1)(state),
+          ...(fleetShipsDataSelectorFactory(0)(state) ?? []),
+          ...(fleetShipsDataSelectorFactory(1)(state) ?? []),
         ])
       fleets = [2, 3]
     }
 
-    _(fleets)
-      .filter((fleetId) => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state))) // 3: Repairing, 4: In mission, 5: In map
-      .each((fleetId) => {
+    fleets
+      .filter((fleetId) => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state)))
+      .forEach((fleetId) => {
         flag = flag || getFleetFlag(fleetShipsDataSelectorFactory(fleetId)(state))
       })
 

@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
 import { Section, Wrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
-// @ts-expect-error not ready yet
 import { checkUpdate } from 'views/services/update'
 
 import { DownloadProgress } from './download-progress'

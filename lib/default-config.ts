@@ -79,6 +79,8 @@ interface PoiShortcut {
 interface PoiUpdate {
   beta: boolean
   enable: boolean
+  knownVersion?: string
+  lastversion?: string
 }
 
 interface WebviewRatio {
@@ -100,6 +102,7 @@ interface PoiLayout {
   isolate: boolean
   reverse: boolean
   editable: boolean
+  overlaypanel?: { width?: number }
 }
 
 interface PoiConfirm {
@@ -117,6 +120,7 @@ interface PoiTabarea {
   grid: boolean
   mainpanelwidth: MainPanelDimension
   mainpanelheight: MainPanelDimension
+  overlaypanelwidth?: MainPanelDimension
 }
 
 interface NotifyItem {
@@ -190,6 +194,10 @@ interface PoiAutoSwitchPlugins {
   [pluginId: string]: boolean
 }
 
+interface PoiKangameWindow {
+  bounds?: { x?: number; y?: number; width: number; height: number }
+}
+
 interface Poi {
   misc: PoiMisc
   content: PoiContent
@@ -207,10 +215,13 @@ interface Poi {
   expeditionResupplyCheck: { enable: boolean }
   unusedEquipmentSlotCheck: PoiUnusedEquipmentSlotCheck
   mapStartCheck: PoiMapStartCheck
+  marriageDelta?: { enable: boolean }
+  modernizationDelta?: { enable: boolean }
   transition: { enable: boolean }
   mainpanel: PoiMainPanel
   plugin: PoiPluginConfig
   network: PoiNetwork
+  kangameWindow?: PoiKangameWindow
 }
 
 interface Socks5Proxy {

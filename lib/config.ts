@@ -90,13 +90,16 @@ class PoiConfig {
    * @param {ConfigPath} path the given config location
    * @param value value to fallback if queried config is undefined
    */
-  get = <const Path extends ConfigPath>(
+  get = <
+    const Path extends ConfigPath,
+    const Value extends ConfigValue<Path> | undefined = undefined,
+  >(
     path: Path,
-    value?: ConfigValue<Path>,
-  ): ConfigValue<Path> => {
+    value?: Value,
+  ): Value extends undefined ? ConfigValue<Path> : NonNullable<ConfigValue<Path>> => {
     if (path === '') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return this.configData as ConfigValue<Path>
+      // @ts-expect-error the empty path is guaranteed to return the full config object, which matches the expected type
+      return this.configData
     }
     if (dbg.isEnabled()) {
       const stringPath = Array.isArray(path) ? path.join('.') : `${path}`
@@ -115,13 +118,16 @@ class PoiConfig {
    * get default config value at give path
    * @param {ConfigPath} path the given config location
    */
-  getDefault = <const Path extends ConfigPath>(
+  getDefault = <
+    const Path extends ConfigPath,
+    const Value extends ConfigValue<Path> | undefined = undefined,
+  >(
     path: Path,
-    value?: ConfigValue<Path>,
-  ): ConfigValue<Path> => {
+    value?: Value,
+  ): Value extends undefined ? ConfigValue<Path> : NonNullable<ConfigValue<Path>> => {
     if (path === '') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return this.defaultConfigData as ConfigValue<Path>
+      // @ts-expect-error the empty path is guaranteed to return the full config object, which matches the expected type
+      return this.defaultConfigData
     }
     return get(this.defaultConfigData, path, value)
   }

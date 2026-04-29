@@ -4,7 +4,7 @@ import path from 'path'
 import querystring from 'querystring'
 import { URL } from 'url'
 
-type RequestOrigin = string | undefined
+type RequestOrigin = string
 type PathName = string
 type Url = string
 type RequestInfo = [RequestOrigin, PathName, Url]
@@ -19,7 +19,14 @@ interface KancolleServerInfo {
   [ip: string]: KancolleServer
 }
 
-class GameAPIBroadcaster extends EventEmitter {
+interface GameAPIBroadcasterEventMap {
+  'network.on.request': [string, RequestInfo, string, number]
+  'network.on.response': [string, RequestInfo, string, string, number]
+  'network.error': [RequestInfo, number?]
+  'kancolle.server.change': [KancolleServer]
+}
+
+export class GameAPIBroadcaster extends EventEmitter<GameAPIBroadcasterEventMap> {
   serverList: KancolleServerInfo = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
 
   serverInfo: KancolleServer = {}
@@ -38,7 +45,7 @@ class GameAPIBroadcaster extends EventEmitter {
     method: string,
     requestInfo: RequestInfo,
     rawReqBody: string,
-    rawResBody: unknown,
+    rawResBody: string,
     resType: XMLHttpRequestResponseType,
     statusCode?: number,
   ) => {

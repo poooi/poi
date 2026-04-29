@@ -7,7 +7,7 @@ import { writeFile } from 'fs-extra'
 export const ioWorker = {
   initialize: () => null,
   port: {
-    postMessage: ([type, path, data]) => {
+    postMessage: ([_type, path, data]: [unknown, string, unknown]) => {
       writeFile(path, JSON.stringify(data))
     },
   },

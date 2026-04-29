@@ -1,19 +1,22 @@
+import type { ButtonData } from 'views/components/etc/modal'
+
 import * as remote from '@electron/remote'
 import { shell } from 'electron'
 import fetch from 'node-fetch'
-/* global POI_VERSION, toggleModal, config, language */
 import React from 'react'
 import Markdown from 'react-remarkable'
 import semver from 'semver'
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
-const fetchHeader = new Headers()
-fetchHeader.set('Cache-Control', 'max-age=0')
-fetchHeader.set('User-Agent', `poi v${POI_VERSION}`)
+const fetchHeaders: Record<string, string> = {
+  'Cache-Control': 'max-age=0',
+  'User-Agent': `poi v${window.POI_VERSION}`,
+}
 const defaultFetchOption = {
-  method: 'GET',
-  cache: 'default',
-  headers: fetchHeader,
+  method: 'GET' as const,
+  cache: 'default' as RequestCache,
+  headers: fetchHeaders,
 }
 
 const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
@@ -49,7 +52,7 @@ if (process.platform === 'win32') {
     console.warn('Update from poi.moe not available')
   })
 
-  updater.on('error', (event, error) => {
+  updater.on('error', (_event: unknown, _error: unknown) => {
     window.toast(i18next.t('Please try again or download manually'), {
       type: 'danger',
       title: i18next.t('Update failed'),
@@ -61,9 +64,12 @@ const UPDATE_SERVER = 'update.poi.moe'
 
 export const checkUpdate = async () => {
   const betaChannel = config.get('poi.update.beta', false)
-  const versionInfo = await fetch(`https://${UPDATE_SERVER}/update/latest.json`, defaultFetchOption)
+  const versionInfo = await fetch(
+    `https://${UPDATE_SERVER}/update/latest.json`,
+    defaultFetchOption as Parameters<typeof fetch>[1],
+  )
     .then((res) => res.json())
-    .catch((e) => {
+    .catch((e: Error) => {
       console.warn('Check update error.', e.stack)
       return {}
     })
@@ -74,17 +80,18 @@ export const checkUpdate = async () => {
         : versionInfo.version
     const channel = version.includes('beta') ? '-beta' : ''
     // eslint-disable-next-line no-console
-    console.log(`Remote version: ${version}. Current version: ${POI_VERSION}`)
-    const knownVersion = config.get('poi.update.knownVersion', POI_VERSION)
+    console.log(`Remote version: ${version}. Current version: ${window.POI_VERSION}`)
+    const knownVersion = (config.get('poi.update.knownVersion', window.POI_VERSION) ??
+      window.POI_VERSION) as string
 
-    if (semver.lt(POI_VERSION, version) && semver.lt(knownVersion, version)) {
+    if (semver.lt(window.POI_VERSION, version) && semver.lt(knownVersion, version)) {
       const currentLang = LANG.includes(language) ? language : 'en-US'
       const log = await fetch(
         `https://${UPDATE_SERVER}/update/${currentLang}${channel}.md`,
-        defaultFetchOption,
+        defaultFetchOption as Parameters<typeof fetch>[1],
       )
         .then((res) => res.text())
-        .catch((res) => {
+        .catch(() => {
           console.warn('fetch update log error')
           return ''
         })
@@ -93,37 +100,29 @@ export const checkUpdate = async () => {
   }
 }
 
-const toggleUpdate = (version, log) => {
-  const title = (
-    <span>
-      {i18next.t('Update')} poi-{version}
-    </span>
-  )
-  // react-remarkable uses remarkable as parser，
-  // remarkable disables HTML by default，
-  // react-remarkable's default option dose not enable HTML，
-  // it could be considered safe
+const toggleUpdate = (version: string, log: string) => {
+  const title = `${String(i18next.t('Update'))} poi-${version}`
   const content = <Markdown source={log} />
-  const footer = [
+  const footer: ButtonData[] = [
     {
-      name: i18next.t('I know'),
+      name: String(i18next.t('I know')),
       func: () => config.set('poi.update.knownVersion', version),
       style: 'success',
     },
     {
-      name: `${i18next.t('Manually download')}`,
+      name: `${String(i18next.t('Manually download'))}`,
       func: () => shell.openExternal('https://poi.moe'),
       style: 'primary',
     },
   ]
   if (process.platform === 'win32') {
     footer.push({
-      name: `${i18next.t('Auto update')}`,
+      name: `${String(i18next.t('Auto update'))}`,
       func: doUpdate,
       style: 'primary',
     })
   }
-  toggleModal(title, content, footer)
+  window.toggleModal(title, content, footer)
 }
 
 if (config.get('poi.update.enable', true)) {

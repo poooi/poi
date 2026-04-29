@@ -1,4 +1,5 @@
 import type { RootState } from 'views/redux/reducer-factory'
+import type { CountdownNotifyOptions } from 'views/utils/notifiers'
 
 import { Position, Tooltip } from '@blueprintjs/core'
 import { join as joinString, memoize } from 'lodash'
@@ -95,10 +96,11 @@ interface CountdownLabelProps {
   fleetName: string
 }
 
-const basicNotifyConfig = {
+const basicNotifyConfig: CountdownNotifyOptions<string> = {
   type: 'morale',
   title: i18next.t('main:Morale'),
-  message: (names: string) => `${names} ${i18next.t('main:have recovered from fatigue')}`,
+  message: (names: string | string[]) =>
+    `${names} ${i18next.t('main:have recovered from fatigue')}`,
   icon: path.join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
 }
 

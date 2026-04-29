@@ -1,10 +1,13 @@
-/* global POI_VERSION, getStore, isMain */
 import * as remote from '@electron/remote'
 
 if (isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened', () => {
-    const PLUGINS = getStore('plugins') || []
-    const FCD = getStore('fcd.version') || {}
+    const PLUGINS = (window.getStore('plugins') || []) as Array<{
+      enabled: boolean
+      id: string
+      version: string
+    }>
+    const FCD = (window.getStore('fcd.version') || {}) as Record<string, string>
 
     const pluginMessage = PLUGINS.filter((plugin) => plugin.enabled)
       .map((plugin) => `${plugin.id}@${plugin.version}`)
@@ -16,7 +19,7 @@ if (isMain) {
 
     // eslint-disable-next-line no-console
     console.log(
-      `%cThis is poi@${POI_VERSION} on ${process.platform} ${process.arch} with Electron@${process.versions.electron},
+      `%cThis is poi@${window.POI_VERSION} on ${process.platform} ${process.arch} with Electron@${process.versions.electron},
         PLUGINS: ${pluginMessage},
         FCD: ${fcdMessage}`,
       'font-size: 120%',

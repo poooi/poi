@@ -82,7 +82,7 @@ export const NotificationConfig = () => {
   }
 
   const handleEndChangeNotifyVolume = () => {
-    window.notify(null)
+    window.notify('')
   }
 
   return (

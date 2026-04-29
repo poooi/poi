@@ -2,6 +2,10 @@ jest.mock('views/env-parts/config', () => ({
   config: { get: jest.fn() },
 }))
 
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { Fleet } from 'views/redux/info/fleets'
+
 import { keyBy, range, random, sampleSize, times, shuffle } from 'lodash'
 
 import { damagedCheck } from '../utils'
@@ -9,11 +13,16 @@ const start2 = require('./fixtures/start2.json')
 const $ships = keyBy(start2.api_mst_ship, 'api_id')
 const $equips = keyBy(start2.api_mst_slotitem, 'api_id')
 
-let sortieStatus, escapedPos, fleets, ships, equips
+let sortieStatus: [boolean, boolean, boolean, boolean]
+let escapedPos: number[]
+let fleets: Fleet[]
+let ships: Record<number, APIShip>
+let equips: Record<number, APISlotItem>
+
 const LOOP_TIMES = 100
 const MAX_ID = 500
 
-const randomSetSlot = (ship) => {
+const randomSetSlot = (ship: APIShip) => {
   const index = random(0, 4)
   if (index == 4) {
     ship.api_slot_ex = random(2, 3)
@@ -31,6 +40,7 @@ describe('Validate sortie dangerous check', () => {
       shipIds.slice(12, 18),
       shipIds.slice(18),
     ])
+    // @ts-expect-error partial data for test
     fleets = range(4).map((id) => ({ api_ship: chunks[id] }))
     sortieStatus = [true, false, false, false]
     escapedPos = []
@@ -43,14 +53,18 @@ describe('Validate sortie dangerous check', () => {
       api_ship_id: 1,
       api_lv: id,
     }))
+    // @ts-expect-error partial data for test
     ships = keyBy(_ships, 'api_id')
     equips = {
+      // @ts-expect-error partial data for test
       1: {
         api_slotitem_id: 183, // 16inch三连装炮 Mk.7+GFCS
       },
+      // @ts-expect-error partial data for test
       2: {
         api_slotitem_id: 42, // 応急修理要員
       },
+      // @ts-expect-error partial data for test
       3: {
         api_slotitem_id: 43, // 応急修理女神
       },
@@ -188,7 +202,7 @@ describe('Validate sortie dangerous check', () => {
       const { api_ship: mainFleet } = fleets[0]
       const { api_ship: escortFleet } = fleets[1]
 
-      const setFleet = (fleet) => {
+      const setFleet = (fleet: number[]) => {
         const damageCount = random(1, fleet.length)
         const repairCount = random(1, damageCount)
         let count = damageCount - repairCount
@@ -199,7 +213,6 @@ describe('Validate sortie dangerous check', () => {
         const repairs = sampleSize(damages, repairCount)
         repairs.forEach((id) => randomSetSlot(ships[id]))
 
-        // both flagships are always safe
         if (damages.includes(fleet[0]) && !repairs.includes(fleet[0])) {
           count -= 1
         }

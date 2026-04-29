@@ -11,7 +11,6 @@ import {
   createAPIReqPracticeResultResponseAction,
 } from 'views/redux/actions'
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
-// @ts-expect-error legacy .es module has no type declarations
 import Scheduler from 'views/services/scheduler'
 
 import type { GoalKey, SubgoalRecord, QuestsState } from '../quests'

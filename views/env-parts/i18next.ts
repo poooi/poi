@@ -59,7 +59,7 @@ each(
 
 declare global {
   interface Window {
-    language: string
+    language?: string
     LOCALES: Array<{ locale: string; lng: string }>
     i18next?: ReturnType<typeof createInstance>
     i18n: Record<
@@ -88,7 +88,7 @@ const normalizeLanguage = (language: string) => {
 
 declare global {
   interface Window {
-    language: string
+    language?: string
   }
   // eslint-disable-next-line no-var
   var language: string

@@ -1,24 +1,26 @@
-import { get } from 'lodash'
+import type { Ship } from 'views/redux/info/ships'
+
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
-/* global getStore, config */
 import { fleetStateSelectorFactory } from '../utils/selectors'
 
-window.addEventListener('game.response', ({ detail: { path, body } }) => {
+window.addEventListener('game.response', (e) => {
+  const { path } = e.detail
   if (path !== '/kcsapi/api_get_member/mapinfo') return
   if (!config.get('poi.unusedEquipmentSlotCheck.enable', false)) return
 
   const ignoreUnlocked = config.get('poi.unusedEquipmentSlotCheck.ignoreUnlocked', false)
 
-  const state = getStore()
-  const fleets = get(state, 'info.fleets')
-  const ships = get(state, 'info.ships')
+  const state = window.getStore()
+  const fleets = state.info.fleets
+  const ships = state.info.ships
 
-  const checkSlot = (ship) => {
+  const checkSlot = (ship?: Ship) => {
     if (!ship) {
       return false
     }
-    if (ignoreUnlocked && !ship.api_locked) {
+    if (ignoreUnlocked && !ship?.api_locked) {
       return false
     }
     return (

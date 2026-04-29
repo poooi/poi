@@ -1,16 +1,21 @@
+import type { ResizableAreaHandle, SizeState } from 'react-resizable-area'
+import type { Dispatch, AnyAction } from 'redux'
+import type { ButtonData } from 'views/components/etc/modal'
+import type { ExtendedWebviewTag } from 'views/components/etc/webview'
+import type { RootState } from 'views/redux/reducer-factory'
+
 import * as remote from '@electron/remote'
 import classnames from 'classnames'
 import { createHash, X509Certificate } from 'crypto'
 import fs from 'fs-extra'
 import { get, memoize } from 'lodash'
-/* global getStore, toggleModal */
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import { connect } from 'react-redux'
 import ReactMarkdown from 'react-remarkable'
 import { ResizableArea } from 'react-resizable-area'
 import { styled } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
-import WebView from 'views/components/etc/webview'
+import ElectronWebView from 'views/components/etc/webview'
 import i18next from 'views/env-parts/i18next'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import { fileUrl } from 'views/utils/tools'
@@ -26,7 +31,7 @@ const { error } = remote.require('./lib/utils')
 const poiControlHeight = 30
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
 
-let caCert
+let caCert: X509Certificate | null = null
 let caCertError = false
 
 const ensureCACert = () => {
@@ -45,7 +50,7 @@ const ensureCACert = () => {
   }
 }
 
-const verifyCACert = memoize((data) => {
+const verifyCACert = memoize((data: string | Buffer) => {
   ensureCACert()
   if (!caCert) {
     return false
@@ -55,14 +60,26 @@ const verifyCACert = memoize((data) => {
   return cert.verify(caPublicKey)
 })
 
-const PoiInfo = styled(CustomTag)`
+const PoiInfo = styled(
+  CustomTag as React.ComponentType<{
+    tag?: string
+    className?: string
+    children?: React.ReactNode
+  }>,
+)`
   flex: 0 0 ${poiControlHeight}px;
   transform-origin: 0 0;
   align-items: stretch;
   display: flex;
 `
 
-const KanGame = styled(CustomTag)`
+const KanGame = styled(
+  CustomTag as React.ComponentType<{
+    tag?: string
+    className?: string
+    children?: React.ReactNode
+  }>,
+)`
   display: flex;
   flex-direction: column;
   margin-left: auto;
@@ -75,7 +92,7 @@ const KanGame = styled(CustomTag)`
   }
 `
 
-const KanGameWebview = styled(WebView)`
+const KanGameWebview = styled(ElectronWebView)`
   width: 100%;
   padding-top: 60%;
   position: relative;
@@ -89,51 +106,79 @@ const KanGameWebview = styled(WebView)`
   }
 `
 
-@connect((state) => ({
-  configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
-  actualWindowWidth: get(state, 'layout.webview.width', 1200),
-  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
-  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
-  muted: get(state, 'config.poi.content.muted', false),
-  useFixedResolution: get(state, 'config.poi.webview.useFixedResolution', true),
-  horizontalRatio: get(state, 'config.poi.webview.ratio.horizontal', 60),
-  verticalRatio: get(state, 'config.poi.webview.ratio.vertical', 50),
-  editable: get(state, 'config.poi.layout.editable', false),
-  windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
-  overlayPanel: get(state, 'config.poi.layout.overlay', false),
-  bypassGoogleRestriction: get(state, 'config.poi.misc.bypassgooglerestriction', false),
-  homepage: get(state, 'config.poi.misc.homepage', 'https://play.games.dmm.com/game/kancolle'),
-}))
-export class KanGameWrapper extends Component {
-  webview = React.createRef()
+interface AreaSize {
+  px: number
+  percent: number
+}
 
-  state = {
+interface KanGameWrapperOwnProps {
+  windowMode?: boolean
+}
+
+interface KanGameWrapperStateProps {
+  configWebviewWidth: number
+  actualWindowWidth: number
+  zoomLevel: number
+  isHorizontal: boolean
+  muted: boolean
+  useFixedResolution: boolean
+  horizontalRatio: number
+  verticalRatio: number
+  editable: boolean
+  windowSize: { width: number; height: number }
+  overlayPanel: boolean
+  bypassGoogleRestriction: boolean
+  homepage: string
+}
+
+interface KanGameWrapperDispatchProps {
+  dispatch: Dispatch<AnyAction>
+}
+
+type KanGameWrapperProps = KanGameWrapperOwnProps &
+  KanGameWrapperStateProps &
+  KanGameWrapperDispatchProps
+
+interface KanGameWrapperState {
+  url: string
+  key: number
+}
+
+class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperState> {
+  webview = createRef<ExtendedWebviewTag>()
+
+  state: KanGameWrapperState = {
     url: this.props.homepage,
     key: 0,
   }
 
+  resizableArea: ResizableAreaHandle | null = null
+  resizableAreaWidth: AreaSize = { px: 0, percent: 0 }
+  resizableAreaHeight: AreaSize = { px: 0, percent: 0 }
+  enableAudioMutePolyfill = false
+
   alignWebview = () => {
     try {
-      this.webview.current.executeJavaScript('window.align()')
+      this.webview.current?.executeJavaScript('window.align()')
     } catch (_) {
       return
     }
   }
 
-  setRatio = ({ width, height }) => {
+  setRatio = ({ width, height }: SizeState) => {
     if (this.props.isHorizontal) {
-      config.set('poi.webview.ratio.horizontal', width.percent)
+      config.set('poi.webview.ratio.horizontal', width.percent ?? 0)
     } else {
-      config.set('poi.webview.ratio.vertical', height.percent)
+      config.set('poi.webview.ratio.vertical', height.percent ?? 0)
     }
   }
 
-  handleResize = (entries) => {
+  handleResize = (entries: ResizeObserverEntry[]) => {
     entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
-        width !== getStore('layout.webview.width') ||
-        height !== getStore('layout.webview.height')
+        width !== window.getStore('layout.webview.width') ||
+        height !== window.getStore('layout.webview.height')
       ) {
         this.props.dispatch({
           type: '@@LayoutUpdate',
@@ -153,14 +198,20 @@ export class KanGameWrapper extends Component {
     })
   }
 
-  handleCertError = (event, url, error, certificate, callback) => {
+  handleCertError = (
+    _event: unknown,
+    url: string,
+    _error: unknown,
+    certificate: { data: string | Buffer; issuerName: string },
+    _callback: unknown,
+  ) => {
     const isSignedByCA = verifyCACert(certificate.data)
     if (isSignedByCA) {
       return
     }
 
-    const trusted = config.get('poi.misc.trustedCerts', [])
-    const untrusted = config.get('poi.misc.untrustedCerts', [])
+    const trusted: string[] = config.get('poi.misc.trustedCerts', [])
+    const untrusted: string[] = config.get('poi.misc.untrustedCerts', [])
     const hash = createHash('sha256').update(certificate.data).digest('base64')
     if (!trusted.includes(hash) && !untrusted.includes(hash)) {
       const title = i18next.t('others:Certificate error')
@@ -173,40 +224,39 @@ export class KanGameWrapper extends Component {
           })}
         />
       )
-      const footer = [
+      const footer: ButtonData[] = [
         {
           name: i18next.t('others:Ignore'),
-          func: () => this.setuntrustedCerts(hash),
+          func: () => this.setUntrustedCerts(hash),
           style: 'warning',
         },
         {
           name: i18next.t('others:Trust'),
-          func: () => this.settrustedCerts(hash),
+          func: () => this.setTrustedCerts(hash),
           style: 'warning',
         },
       ]
-      toggleModal(title, content, footer)
+      window.toggleModal(title, content, footer)
     }
   }
 
-  settrustedCerts = (hash) => {
-    const trusted = config.get('poi.misc.trustedCerts', [])
+  setTrustedCerts = (hash: string) => {
+    const trusted: string[] = config.get('poi.misc.trustedCerts', [])
     const newTrusted = [...trusted, hash]
     config.set('poi.misc.trustedCerts', newTrusted)
-    this.webview.current.reload()
+    this.webview.current?.reload()
   }
 
-  setuntrustedCerts = (hash) => {
-    const untrusted = config.get('poi.misc.untrustedCerts', [])
+  setUntrustedCerts = (hash: string) => {
+    const untrusted: string[] = config.get('poi.misc.untrustedCerts', [])
     const newUntrusted = [...untrusted, hash]
     config.set('poi.misc.untrustedCerts', newUntrusted)
   }
 
-  setProperWindowSize = (webviewWidth, webviewHeight) => {
+  setProperWindowSize = (webviewWidth: number, webviewHeight: number) => {
     const current = remote.getCurrentWindow()
     if (!config.get('poi.layout.overlay', false) && !config.get('poi.layout.isolate', false)) {
       current.setMinimumSize(getRealSize(webviewWidth), getRealSize(webviewHeight + getYOffset()))
-      // Dont set size on maximized
       if (current.isMaximized() || current.isFullScreen()) {
         return
       }
@@ -219,7 +269,10 @@ export class KanGameWrapper extends Component {
         current.setContentSize(width, height)
       }
 
-      if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
+      if (
+        layout !== 'vertical' &&
+        realHeight > getRealSize(window.getStore('layout.window.height'))
+      ) {
         let [width, height] = current.getContentSize()
         height = realHeight
         current.setContentSize(width, height)
@@ -231,7 +284,7 @@ export class KanGameWrapper extends Component {
 
   handleWebviewDestroyed = () => {
     console.warn('Webview crashed. reloading')
-    const url = this.webview.current.src
+    const url = this.webview.current?.src ?? ''
     const key = this.state.key + 1
     this.handleWebviewUnmount()
     this.setState({
@@ -249,10 +302,14 @@ export class KanGameWrapper extends Component {
       },
     })
     this.setProperWindowSize(
-      Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
-      Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
+      Number.isNaN(window.getStore('layout.webview.width'))
+        ? 1200
+        : window.getStore('layout.webview.width'),
+      Number.isNaN(window.getStore('layout.webview.height'))
+        ? 720
+        : window.getStore('layout.webview.height'),
     )
-    this.webview.current.getWebContents().addListener('certificate-error', this.handleCertError)
+    this.webview.current?.getWebContents().addListener('certificate-error', this.handleCertError)
   }
 
   handleWebviewUnmount = () => {
@@ -272,9 +329,9 @@ export class KanGameWrapper extends Component {
   handleWebviewMediaStartedPlaying = () => {
     if (this.props.muted && this.enableAudioMutePolyfill) {
       this.enableAudioMutePolyfill = false
-      this.webview.current.audioMuted = false
+      this.webview.current?.setAudioMuted(false)
       setImmediate(() => {
-        this.webview.current.audioMuted = true
+        this.webview.current?.setAudioMuted(true)
       })
     }
   }
@@ -283,10 +340,10 @@ export class KanGameWrapper extends Component {
     this.handleWebviewUnmount()
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = (_prevProps: KanGameWrapperProps, prevState: KanGameWrapperState) => {
     if (prevState.key === this.state.key) {
       if (!this.props.windowMode) {
-        this.resizableArea.setSize({
+        this.resizableArea?.setSize({
           width: this.resizableAreaWidth,
           height: this.resizableAreaHeight,
         })
@@ -310,7 +367,7 @@ export class KanGameWrapper extends Component {
       windowMode,
       bypassGoogleRestriction,
     } = this.props
-    const getZoomedSize = (value) => Math.round(value / zoomLevel)
+    const getZoomedSize = (value: number) => Math.round(value / zoomLevel)
     const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
     const ua = remote
       .getCurrentWebContents()
@@ -347,7 +404,7 @@ export class KanGameWrapper extends Component {
             <PoiToast />
           </div>
           <PoiInfo tag="poi-info">
-            <PoiControl weview={this.webview} />
+            <PoiControl />
             <PoiAlert />
             <PoiMapReminder />
           </PoiInfo>
@@ -367,7 +424,7 @@ export class KanGameWrapper extends Component {
         }
       }
 
-      const defaultWidth = useFixedResolution
+      const defaultWidth: AreaSize = useFixedResolution
         ? {
             px: getZoomedSize(1200),
             percent: 0,
@@ -386,7 +443,7 @@ export class KanGameWrapper extends Component {
                 px: windowWidth,
                 percent: 0,
               }
-      const defaultHeight = useFixedResolution
+      const defaultHeight: AreaSize = useFixedResolution
         ? {
             px: getZoomedSize(720) + poiControlHeight,
             percent: 0,
@@ -460,13 +517,13 @@ export class KanGameWrapper extends Component {
           }
           defaultHeight={defaultHeight}
           initHeight={this.resizableAreaHeight}
-          parentContainer={document.querySelector('poi-main')}
+          parentContainer={document.querySelector('poi-main') ?? undefined}
           disable={{
             width: disableWidth,
             height: disableHeight,
           }}
           onResized={this.setRatio}
-          ref={(r) => (this.resizableArea = r)}
+          ref={(r: ResizableAreaHandle | null) => (this.resizableArea = r)}
         >
           <KanGame tag="kan-game">
             <div
@@ -480,7 +537,7 @@ export class KanGameWrapper extends Component {
               <PoiToast />
             </div>
             <PoiInfo tag="poi-info">
-              <PoiControl weview={this.webview} />
+              <PoiControl />
               <PoiAlert />
               <PoiMapReminder />
             </PoiInfo>
@@ -490,3 +547,19 @@ export class KanGameWrapper extends Component {
     }
   }
 }
+
+export const KanGameWrapper = connect((state: RootState) => ({
+  configWebviewWidth: get(state, 'config.poi.webview.width', 1200),
+  actualWindowWidth: get(state, 'layout.webview.width', 1200),
+  zoomLevel: get(state, 'config.poi.appearance.zoom', 1),
+  isHorizontal: get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
+  muted: get(state, 'config.poi.content.muted', false),
+  useFixedResolution: get(state, 'config.poi.webview.useFixedResolution', true),
+  horizontalRatio: get(state, 'config.poi.webview.ratio.horizontal', 60),
+  verticalRatio: get(state, 'config.poi.webview.ratio.vertical', 50),
+  editable: get(state, 'config.poi.layout.editable', false),
+  windowSize: get(state, 'layout.window', { width: window.innerWidth, height: window.innerHeight }),
+  overlayPanel: get(state, 'config.poi.layout.overlay', false),
+  bypassGoogleRestriction: get(state, 'config.poi.misc.bypassgooglerestriction', false),
+  homepage: get(state, 'config.poi.misc.homepage', 'https://play.games.dmm.com/game/kancolle'),
+}))(KanGameWrapperInner)

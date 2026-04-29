@@ -1,24 +1,27 @@
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { RootState } from 'views/redux/reducer-factory'
+
 import * as remote from '@electron/remote'
 import { map, get, mapValues } from 'lodash'
-/* global config, getStore */
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { store } from 'views/create-store'
+import { config } from 'views/env-parts/config'
 import { buildArray } from 'views/utils/tools'
 
 const ipc = remote.require('./lib/ipc')
 
-function object2Array(obj) {
-  return buildArray(map(obj, (v, k) => [k, v]))
+function object2Array(obj: Record<string, unknown>) {
+  return buildArray(map(obj, (v, k) => [Number(k), v]))
 }
-function object2ArraySelectorFactory(path) {
-  const pathSelector = (state) => get(state, path)
+function object2ArraySelectorFactory(path: string) {
+  const pathSelector = (state: unknown) => get(state, path)
   return createSelector(pathSelector, (obj) => object2Array(obj))
 }
 
 // User config
-const language = Object.clone(window.language)
-delete window.language
+const language = window.language
 Object.defineProperty(window, 'language', {
   get: () => {
     return config.get('poi.misc.language', language)
@@ -141,11 +144,7 @@ Object.defineProperty(window, '_teitokuLv', {
 })
 Object.defineProperty(window, '_ndocks', {
   get: () => {
-    const ret = []
-    for (let i = 0; i < 4; i++) {
-      ret.push(window.getStore(`info.repairs.${i}.api_ship_id`))
-    }
-    return ret
+    return window.getStore('info.repairs')?.map((repair) => repair.api_ship_id) || []
   },
 })
 Object.defineProperty(window, '_eventMapRanks', {
@@ -168,19 +167,25 @@ Object.defineProperty(window, '_serverName', {
     return window.getStore('info.server.name')
   },
 })
-const initShips = (dispatch, current, previous) => {
+
+const initShips = () => {
   window._ships = new Proxy(
     { ...window.getStore('info.ships') },
     {
-      get: (target, property, receiver) => {
-        const ship = target[property]
+      get: (target, property) => {
+        const ship = target[Number(property)]
         if (typeof ship === 'undefined') {
           return undefined
         }
-        return new Proxy(ship, {
-          get: (innerTarget, innerProperty, innerReceiver) => {
-            if (ship[innerProperty] != null) return ship[innerProperty]
-            return window.getStore(`const.$ships.${ship.api_ship_id}.${innerProperty}`)
+        const shipRecord = ship
+        return new Proxy(shipRecord, {
+          get: (_innerTarget, innerProperty) => {
+            // @ts-expect-error force type assertion
+            const key: keyof APIShip = innerProperty
+            if (key in shipRecord) return shipRecord[key]
+            return window.getStore(
+              `const.$ships.${shipRecord.api_ship_id}.${String(innerProperty)}`,
+            )
           },
         })
       },
@@ -188,19 +193,24 @@ const initShips = (dispatch, current, previous) => {
   )
 }
 
-const initEquips = (dispatch, current, previous) => {
+const initEquips = () => {
   window._slotitems = new Proxy(
     { ...window.getStore('info.equips') },
     {
-      get: (target, property, receiver) => {
-        const equip = target[property]
+      get: (target, property) => {
+        const equip = target[Number(property)]
         if (typeof equip === 'undefined') {
           return undefined
         }
-        return new Proxy(equip, {
-          get: (innerTarget, innerProperty, innerReceiver) => {
-            if (equip[innerProperty] != null) return equip[innerProperty]
-            return window.getStore(`const.$equips.${equip.api_slotitem_id}.${innerProperty}`)
+        const equipRecord = equip
+        return new Proxy(equipRecord, {
+          get: (_innerTarget, innerProperty) => {
+            // @ts-expect-error force type assertion
+            const key: keyof APISlotItem = innerProperty
+            if (key in equipRecord) return equipRecord[key]
+            return window.getStore(
+              `const.$equips.${equipRecord.api_slotitem_id}.${String(innerProperty)}`,
+            )
           },
         })
       },
@@ -209,8 +219,9 @@ const initEquips = (dispatch, current, previous) => {
 }
 
 const initWebviewWidth = () => {
+  const w = window.getStore('layout.webview.width')
   ipc.register('WebView', {
-    width: Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
+    width: typeof w === 'number' && !Number.isNaN(w) ? w : 1200,
   })
 }
 
@@ -218,10 +229,13 @@ initShips()
 initEquips()
 initWebviewWidth()
 
-const shipsObserver = observer((state) => state.info.ships, initShips)
+const shipsObserver = observer((state: RootState) => state.info?.ships, initShips)
 
-const slotitemsObserver = observer((state) => state.info.equips, initEquips)
+const slotitemsObserver = observer((state: RootState) => state.info?.equips, initEquips)
 
-const webviewSizeObserver = observer((state) => state.layout.webview.width, initWebviewWidth)
+const webviewSizeObserver = observer(
+  (state: RootState) => state.layout?.webview?.width,
+  initWebviewWidth,
+)
 
 observe(store, [shipsObserver, slotitemsObserver, webviewSizeObserver])

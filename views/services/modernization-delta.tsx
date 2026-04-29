@@ -1,9 +1,15 @@
-const { unzip, sum } = require('lodash')
-/* global config */
+import type { APIReqKaisouPowerupRequest, APIReqKaisouPowerupResponse } from 'kcsapi'
+import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
+import type { GameRequestDetails, GameResponseDetails } from 'views/env-parts/data-resolver'
+import type { Ship } from 'views/redux/info/ships'
+
+import { unzip, sum } from 'lodash'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { shipDataSelectorFactory } from 'views/utils/selectors'
 
 const REMAINING_UNKNOWN = -10000
 
@@ -19,11 +25,10 @@ const nameStatuses = [
 
 const possibleStatusNum = nameStatuses.length
 
-// Stores information in onRequest, used in onResponse
-let requestRecord = null
+let requestRecord: Promise<(targetShipAfter: Ship & APIMstShip) => React.ReactNode> | null = null
 
 // Multiplied by a factor of 5 to do operations in integers
-const luckProviders = (id) => {
+const luckProviders = (id: number): number => {
   switch (id) {
     case 163:
       return 6 // Maruyu
@@ -33,42 +38,44 @@ const luckProviders = (id) => {
   return 0
 }
 
-const calcMaxDelta = (lst) => {
+const calcMaxDelta = (lst: number[]): number => {
   const baseSum = sum(lst)
-  // According to the formula provided by wiki
   return baseSum + Math.floor((baseSum + 1) / 5)
 }
 
-// Given sourceShips, the maximum statuses addable regardless of status cap
-const calcMaxDeltas = (sourceShips) => {
+const calcMaxDeltas = (sourceShips: number[]): number[] => {
   const maxFourDeltas = unzip(
-    sourceShips.map((id) => (window.$ships[id] || {}).api_powup || [0, 0, 0, 0]),
-  ).map((delta) => calcMaxDelta(delta))
+    sourceShips.map((id) => {
+      const ship = getStore('const.$ships')?.[id]
+      return (ship || {}).api_powup || [0, 0, 0, 0]
+    }),
+  ).map((delta) => calcMaxDelta(delta as number[]))
   const maxLuck = Math.ceil(sum(sourceShips.map((id) => luckProviders(id))) / 5 - 0.0001)
   return maxFourDeltas.concat([maxLuck, 0, 0])
 }
 
-// ... I have no idea how to get potential max HP and max ASW
 const apiStatuses = [
   'api_houg',
   'api_raig',
   'api_tyku',
   'api_souk',
   'api_luck',
-  '_NODATA_',
-  '_NODATA_',
-]
+  // '_NODATA_',
+  // '_NODATA_',
+] as const
 
-const calcRemainingStatuses = (ship) =>
-  [...Array(possibleStatusNum).keys()].map((i) => {
-    const statusPair = ship[apiStatuses[i]]
+const calcRemainingStatuses = (ship: Ship & APIMstShip): number[] =>
+  apiStatuses.map((apiStatus, i) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const statusPair = ship[apiStatus]
     if (!statusPair) {
       return REMAINING_UNKNOWN
     }
-    return statusPair[1] - (statusPair[0] + ship.api_kyouka[i])
+    const kyouka = ship.api_kyouka
+    return statusPair?.[1] - (statusPair?.[0] + kyouka[i])
   })
 
-const formatRemaining = (remaining) => {
+const formatRemaining = (remaining: number): string => {
   if (remaining == REMAINING_UNKNOWN) {
     return '?'
   } else if (remaining > 0) {
@@ -78,13 +85,14 @@ const formatRemaining = (remaining) => {
   }
 }
 
-const calcDisplayText = (targetShipBefore, sourceShips) => {
-  // Clone it because it may have been modified on response
+const calcDisplayText = (
+  targetShipBefore: Ship,
+  sourceShips: number[],
+): Promise<(targetShipAfter: Ship & APIMstShip) => React.ReactNode> => {
   const kyoukaBefore = targetShipBefore.api_kyouka.slice()
-  // Run unnecessary calculation in a promise to minimize the blocking of request
   return new Promise((resolve) => {
     const maxDeltas = calcMaxDeltas(sourceShips)
-    return resolve((targetShipAfter) => {
+    return resolve((targetShipAfter: Ship & APIMstShip) => {
       const kyoukaAfter = targetShipAfter.api_kyouka
       const remainingAfter = calcRemainingStatuses(targetShipAfter)
       return (
@@ -94,9 +102,6 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
             const delta = kyoukaAfter[i] - kyoukaBefore[i]
             const maxDelta = maxDeltas[i]
             const remaining = remainingAfter[i]
-            // Explaination for if condition:
-            //   1st term: Something could have been added, but maybe delta == 0
-            //   2nd term: Something has been added
             return (
               ((remaining > 0 && maxDelta != 0) || delta != 0) && (
                 <span key={i} style={{ margin: '0 6px' }}>
@@ -119,30 +124,34 @@ const calcDisplayText = (targetShipBefore, sourceShips) => {
   })
 }
 
-const onRequest = (e) => {
+const onRequest = (e: CustomEvent<GameRequestDetails>) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
-    const { api_id, api_id_items } = e.detail.body
-    // Read the status before modernization, use a copy because map's callback
-    // may be delayed to when ship is deleted from _ships
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const { api_id, api_id_items } = e.detail.body as unknown as APIReqKaisouPowerupRequest
     const sourceShips = api_id_items.split(',').map((id_item) => {
-      return (window._ships[id_item] || {}).api_ship_id
+      return (window.getStore('info.ships')?.[Number(id_item)] || {}).api_ship_id
     })
-    requestRecord = calcDisplayText(window._ships[api_id], sourceShips)
+    const [$ship, ship] = shipDataSelectorFactory(Number(api_id))(window.getStore()) ?? []
+    if ($ship && ship) {
+      requestRecord = calcDisplayText({ ...$ship, ...ship }, sourceShips)
+    }
   }
 }
 
-const onResponse = (e) => {
+const onResponse = (e: CustomEvent<GameResponseDetails>) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
-    // Read the status after modernization
-    if (e.detail.body.api_powerup_flag) {
-      const target = e.detail.body.api_ship
-      if (requestRecord != null) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const body = e.detail.body as unknown as APIReqKaisouPowerupResponse
+    if (body.api_powerup_flag) {
+      const target = body.api_ship
+      const $ship = window.getStore('const.$ships')?.[target.api_ship_id]
+      if (requestRecord != null && $ship) {
         requestRecord.then((calcText) =>
           setTimeout(
             window.success,
             100,
             calcText({
-              ...window.$ships[target.api_ship_id],
+              ...$ship,
               ...target,
             }),
           ),
@@ -154,7 +163,7 @@ const onResponse = (e) => {
   }
 }
 
-if (config.get('feature.modernizationDelta.enable', true)) {
+if (config.get('poi.modernizationDelta.enable', true)) {
   window.addEventListener('game.request', onRequest)
   window.addEventListener('game.response', onResponse)
 }

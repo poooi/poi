@@ -16,7 +16,6 @@ import { reduxSet } from 'views/utils/tools'
 declare global {
   interface Window {
     openSettings?: () => void
-    appTray?: { setContextMenu: (menu: Electron.Menu) => void }
   }
   interface Screen {
     availTop: number

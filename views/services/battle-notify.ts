@@ -1,14 +1,15 @@
-/* global config, notify, ROOT */
+/* global ROOT */
 import * as remote from '@electron/remote'
-import { join } from 'path-extra'
+import { join } from 'path'
 import { parse } from 'url'
+import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
 import { ResourceNotifier } from './resource-notifier'
 
 let inBattle = false
 
-const needNotification = (inBattle) => {
+const needNotification = (battling: boolean) => {
   const enabled = config.get('poi.notify.battleEnd.enabled')
   const noticeOnlyBackground = config.get('poi.notify.battleEnd.onlyBackground')
   const noticeOnlyMuted = config.get('poi.notify.battleEnd.onlyMuted')
@@ -16,28 +17,24 @@ const needNotification = (inBattle) => {
   const poiFocused =
     remote.getCurrentWindow().isFocused() ||
     remote.BrowserWindow.getAllWindows().some(
-      (win) => win.getURL().endsWith('?kangame') && win.isFocused(),
+      (win) => win.webContents.getURL().endsWith('?kangame') && win.isFocused(),
     )
-  if (!inBattle) {
-    // no need notice because not battling
+  if (!battling) {
     return false
   }
   if (!enabled) {
-    // not enabled
     return false
   }
   if (noticeOnlyMuted && !poiMuted) {
-    // no need notice because noticeOnlyMuted
     return false
   }
   if (noticeOnlyBackground && poiFocused) {
-    // no need notice because noticeOnlyBackground
     return false
   }
   return true
 }
 
-ResourceNotifier.addListener('request', (detail) => {
+ResourceNotifier.addListener('request', (detail: { url: string }) => {
   const { pathname } = parse(detail.url)
   switch (pathname) {
     case '/kcsapi/api_req_practice/battle':
@@ -62,7 +59,6 @@ ResourceNotifier.addListener('request', (detail) => {
       inBattle = true
       break
     }
-    // Battle Result
     case '/kcsapi/api_req_practice/battle_result':
     case '/kcsapi/api_req_sortie/battleresult':
     case '/kcsapi/api_req_combined_battle/battleresult': {
@@ -71,7 +67,7 @@ ResourceNotifier.addListener('request', (detail) => {
     }
     case '/kcs2/resources/se/217.mp3': {
       if (needNotification(inBattle)) {
-        notify(i18next.t('others:Battle is over'), {
+        window.notify(i18next.t('others:Battle is over'), {
           type: 'battleEnd',
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
         })

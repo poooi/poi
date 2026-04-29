@@ -12,7 +12,7 @@ import { ProxyConfig } from './proxy-config'
 
 type ConfigState = { config: Record<string, unknown> }
 
-const ProxiesConfig = () => {
+export const ProxiesConfig = () => {
   const { t } = useTranslation('setting')
   const use = String(useSelector((state: ConfigState) => get(state, 'config.proxy.use', 'none')))
 

@@ -1,15 +1,17 @@
+import type { ButtonData } from 'views/components/etc/modal'
+
 import { Tabs, Tab } from '@blueprintjs/core'
 import { map } from 'lodash'
-/* global config, POI_VERSION */
 import React from 'react'
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-remarkable'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { ResolutionConfig } from 'views/components/settings/display/resolution-config'
 import { ProxiesConfig } from 'views/components/settings/network'
+import { config } from 'views/env-parts/config'
+import i18next from 'views/env-parts/i18next'
 
-// Readme contents
-const dontShowAgain = () => config.set('poi.update.lastversion', POI_VERSION)
+const dontShowAgain = () => config.set('poi.update.lastversion', window.POI_VERSION)
 
 const SWITCHES = [
   {
@@ -28,9 +30,11 @@ const WelcomeMessage = () => {
   const { t } = useTranslation('setting')
   return (
     <div>
-      <ReactMarkdown source={t('others:welcome_markdown', { version: POI_VERSION })} />
+      <ReactMarkdown
+        source={String(t('others:welcome_markdown', { version: window.POI_VERSION }))}
+      />
       <div>
-        {map(SWITCHES, ({ label, configName, defaultValue, platform }) => (
+        {map(SWITCHES, ({ label, configName, defaultValue }) => (
           <div key={configName}>
             <SwitchConfig label={t(label)} configName={configName} defaultValue={defaultValue} />
           </div>
@@ -51,24 +55,24 @@ const Content = () => {
   const { t } = useTranslation('others')
   return (
     <Tabs id="welcome-tabs">
-      <Tab id="message" title={t('Message from poi team')} panel={<WelcomeMessage />} />
-      <Tab id="quick-settings" title={t('Quick settings')} panel={<QuickSettings />} />
+      <Tab id="message" title={String(t('Message from poi team'))} panel={<WelcomeMessage />} />
+      <Tab id="quick-settings" title={String(t('Quick settings'))} panel={<QuickSettings />} />
     </Tabs>
   )
 }
 
-const footer = [
+const footer: ButtonData[] = [
   {
-    name: <Trans>others:OK</Trans>,
+    name: String(i18next.t('others:OK')),
     func: dontShowAgain,
     style: 'success',
   },
 ]
 
-const toggle = () => window.toggleModal(<Trans>others:Welcome</Trans>, <Content />, footer)
+const toggle = () => window.toggleModal(String(i18next.t('others:Welcome')), <Content />, footer)
 
-// using setTimeout to avoid disturbing the magic being cast in layout.es
-if (config.get('poi.update.lastversion', '0.0.0') != POI_VERSION) {
+// using setTimeout to avoid disturbing the magic being cast in layout.ts
+if ((config.get('poi.update.lastversion', '0.0.0') as string) != window.POI_VERSION) {
   setTimeout(toggle, 5000)
 }
 
