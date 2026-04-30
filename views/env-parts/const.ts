@@ -9,6 +9,8 @@ import { join } from 'path'
 // Environments
 declare global {
   interface Window {
+    /** @deprecated Use `import { isMain } from 'views/env'` instead */
+    isMain: boolean
     /** @deprecated Use `import * as remote from '@electron/remote'` instead */
     remote: typeof remote
     /** @deprecated Use `import { ROOT } from 'views/env'` instead */
@@ -54,7 +56,7 @@ export const POI_VERSION = String(remote.getGlobal('POI_VERSION'))
 export const LATEST_COMMIT = String(remote.getGlobal('LATEST_COMMIT'))
 export const SERVER_HOSTNAME = String(remote.getGlobal('SERVER_HOSTNAME'))
 export const MODULE_PATH = String(remote.getGlobal('MODULE_PATH'))
-export const isMain: boolean | undefined = remote.getGlobal('isMain')
+export const isMain: boolean | undefined = window.isMain
 export const isSafeMode: boolean = remote.getGlobal('isSafeMode')
 export const isDevVersion: boolean = remote.getGlobal('isDevVersion')
 export const appTray: Tray = remote.getGlobal('appTray')

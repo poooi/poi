@@ -79,10 +79,10 @@ export function loadStyle(
   div.style.display = 'none'
 
   const reloadCustomCss = () => {
-    if (!document.querySelector('#custom-css')) {
+    if (!doc.querySelector('#custom-css')) {
       return
     }
-    document.querySelector('#custom-css')!.setAttribute('href', `file://${EXROOT}/hack/custom.css`)
+    doc.querySelector('#custom-css')!.setAttribute('href', `file://${EXROOT}/hack/custom.css`)
   }
 
   const delaySetClassName = (className: string) => {
@@ -148,7 +148,7 @@ export function loadStyle(
         'bp5-dark': isDark,
       }),
     )
-    const bootstrapEl = document.querySelector('#bootstrap-css')
+    const bootstrapEl = doc.querySelector('#bootstrap-css')
     if (bootstrapEl) {
       setRef(
         bootstrapEl,
@@ -159,7 +159,7 @@ export function loadStyle(
         ),
       )
     }
-    const blueprintEl = document.querySelector('#blueprint-css')
+    const blueprintEl = doc.querySelector('#blueprint-css')
     if (blueprintEl) {
       setRef(
         blueprintEl,
@@ -170,14 +170,14 @@ export function loadStyle(
         ),
       )
     }
-    const blueprintIconEl = document.querySelector('#blueprint-icon-css')
+    const blueprintIconEl = doc.querySelector('#blueprint-icon-css')
     if (blueprintIconEl) {
       setRef(
         blueprintIconEl,
         fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')),
       )
     }
-    const normalizeEl = document.querySelector('#normalize-css')
+    const normalizeEl = doc.querySelector('#normalize-css')
     if (normalizeEl) {
       setRef(normalizeEl, fileUrl(require.resolve('normalize.css/normalize.css')))
     }

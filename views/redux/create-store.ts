@@ -67,7 +67,6 @@ remote.getCurrentWindow().on('close', () => {
 
 declare global {
   interface Window {
-    dbg?: { isEnabled?: () => boolean }
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose
   }
 }

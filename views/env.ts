@@ -31,6 +31,7 @@ export {
 } from './env-parts/config'
 export * from './env-parts/const'
 export * from './env-parts/ipc'
+export * from './env-parts/dbg'
 
 // Fallback support of remote module
 if (!require('electron').remote) {
