@@ -339,6 +339,9 @@ export class KanGameWindowWrapper extends PureComponent<
 
   focusWindow = () => {
     if (this.checkBrowserWindowExistence()) {
+      if (this.currentWindow!.isMinimized()) {
+        this.currentWindow!.restore()
+      }
       this.currentWindow!.focus()
     }
   }

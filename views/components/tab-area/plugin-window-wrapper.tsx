@@ -128,6 +128,9 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
       () => ({
         focusWindow: () => {
           if (checkBrowserWindowExistence()) {
+            if (currentWindowRef.current!.isMinimized()) {
+              currentWindowRef.current!.restore()
+            }
             currentWindowRef.current?.focus()
           } else {
             setImmediate(() => {
