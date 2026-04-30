@@ -6,7 +6,7 @@ import type { SortieState } from 'views/redux/sortie'
 
 import { flatMap, map, get } from 'lodash'
 import { getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 interface DamagedCheckInfo {
   fleets: Fleet[]

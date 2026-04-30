@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom'
 import { StyleSheetManager, styled } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { WindowEnv } from 'views/components/etc/window-env'
+import { ROOT } from 'views/env'
 import { loadStyle } from 'views/env-parts/theme'
 import { fileUrl } from 'views/utils/tools'
 

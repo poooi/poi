@@ -3,6 +3,7 @@ import { join } from 'path'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Section } from 'views/components/settings/components/section'
+import { ROOT } from 'views/env'
 import { fileUrl } from 'views/utils/tools'
 
 export const GPUStatus = () => {

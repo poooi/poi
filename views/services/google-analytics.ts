@@ -1,6 +1,6 @@
 import { observer, observe } from 'redux-observers'
 import { store, getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 let heartbeat: ReturnType<typeof setInterval> | null = null
 

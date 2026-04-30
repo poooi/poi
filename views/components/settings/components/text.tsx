@@ -1,4 +1,4 @@
-import type { ConfigPath } from 'views/env-parts/config'
+import type { ConfigPath } from 'views/env'
 
 import { InputGroup } from '@blueprintjs/core'
 import { debounce, get } from 'lodash'

@@ -1,7 +1,7 @@
 import * as remote from '@electron/remote'
 import { debounce } from 'lodash'
 import { dispatch, getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
 

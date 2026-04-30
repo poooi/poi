@@ -8,7 +8,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import {
   configLayoutSelector,

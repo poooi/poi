@@ -1,5 +1,5 @@
 import type { FileFilter } from 'electron'
-import type { ConfigPath } from 'views/env-parts/config'
+import type { ConfigPath } from 'views/env'
 
 import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
@@ -11,7 +11,7 @@ import FA from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import { isSubdirectory } from 'views/utils/tools'
 
 const { dialog } = remote.require('electron')

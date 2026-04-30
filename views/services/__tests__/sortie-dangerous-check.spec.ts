@@ -1,4 +1,4 @@
-jest.mock('views/env-parts/config', () => ({
+jest.mock('views/env', () => ({
   config: { get: jest.fn() },
 }))
 jest.mock('views/create-store', () => ({

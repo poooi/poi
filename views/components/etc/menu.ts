@@ -1,4 +1,4 @@
-import type { Menu as MenuType, MenuItemConstructorOptions } from 'electron/main'
+import type { Menu as MenuType, MenuItemConstructorOptions, Tray } from 'electron/main'
 import type { Config } from 'lib/default-config'
 
 import * as remote from '@electron/remote'
@@ -389,8 +389,9 @@ if (process.platform === 'darwin') {
   win.setMenu(appMenu)
   win.setAutoHideMenuBar(true)
   win.setMenuBarVisibility(false)
-  if (window.appTray) {
-    window.appTray.setContextMenu(appMenu)
+  const appTray: Tray = remote.getGlobal('appTray')
+  if (appTray) {
+    appTray.setContextMenu(appMenu)
   }
 }
 

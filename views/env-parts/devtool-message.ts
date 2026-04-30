@@ -1,6 +1,8 @@
 import * as remote from '@electron/remote'
 import { getStore } from 'views/create-store'
 
+import { isMain } from './const'
+
 if (isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened', () => {
     const PLUGINS = (getStore('plugins') || []) as Array<{

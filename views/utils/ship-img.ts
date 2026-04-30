@@ -3,7 +3,7 @@ import fs from 'fs-extra'
 import { padStart } from 'lodash'
 import path from 'path'
 import url from 'url'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 const getCachePath = (pathname = '') => {
   const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))

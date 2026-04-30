@@ -6,7 +6,7 @@ import fetch from 'node-fetch'
 import React from 'react'
 import Markdown from 'react-remarkable'
 import semver from 'semver'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { toggleModal } from 'views/env-parts/modal'
 

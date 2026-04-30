@@ -16,6 +16,7 @@ import {
 } from 'views/components/etc/styled-components'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
 import { getStore } from 'views/create-store'
+import { ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { recoveryEndTime } from 'views/redux/timers/cond'
 import { getFleetSpeed, getSaku33, getSpeedLabel, getTyku } from 'views/utils/game-utils'

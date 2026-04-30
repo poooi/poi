@@ -4,13 +4,13 @@ import { readJSONSync, writeFileSync } from 'fs-extra'
 import glob from 'glob'
 import { createInstance } from 'i18next'
 import { toString, each, debounce } from 'lodash'
-/* global ROOT */
 import path from 'path'
 import { initReactI18next } from 'react-i18next'
 import { format } from 'util'
 import { readI18nResources, escapeI18nKey, cjkSpacing } from 'views/utils/tools'
 
 import { config } from './config'
+import { isMain, ROOT } from './const'
 import { dbg } from './dbg'
 
 const LOCALES = [
@@ -59,9 +59,13 @@ each(
 
 declare global {
   interface Window {
+    /** @deprecated Use `config.get('poi.misc.language')` instead */
     language?: string
+    /** @deprecated Use `import { LOCALES } from 'views/env-parts/i18next'` instead */
     LOCALES: Array<{ locale: string; lng: string }>
+    /** @deprecated Use `import i18next from 'views/env-parts/i18next'` instead */
     i18next?: ReturnType<typeof createInstance>
+    /** @deprecated Use `import { addGlobalI18n } from 'views/env-parts/i18next'` instead */
     i18n: Record<
       string,
       { __: TFunction; translate: (locale: string, str: string) => string; fixedT: TFunction }
@@ -88,9 +92,11 @@ const normalizeLanguage = (language: string) => {
 
 declare global {
   interface Window {
+    /** @deprecated Use `config.get('poi.misc.language')` instead */
     language?: string
   }
   // eslint-disable-next-line no-var
+  /** @deprecated Use `config.get('poi.misc.language')` instead */
   var language: string
 }
 
@@ -170,7 +176,7 @@ export const addGlobalI18n = (namespace: string) => {
   }
 }
 
-if (window.isMain) {
+if (isMain) {
   each(mainPoiNs, (ns) => addGlobalI18n(ns))
 }
 

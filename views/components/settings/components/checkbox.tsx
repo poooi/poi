@@ -1,4 +1,4 @@
-import type { ConfigPath } from 'views/env-parts/config'
+import type { ConfigPath } from 'views/env'
 
 import { Checkbox } from '@blueprintjs/core'
 import { get } from 'lodash'

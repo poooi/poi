@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
 import { getStore } from 'views/create-store'
+import { ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import {
   fleetsSelector,

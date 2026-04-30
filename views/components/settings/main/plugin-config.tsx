@@ -6,10 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { RadioConfig } from 'views/components/settings/components/radio'
 import { Section, Wrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
+import { ROOT } from 'views/env'
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const MIRRORS: Record<string, { name: string }> = require(
-  path.join(global.ROOT, 'assets', 'data', 'mirror.json'),
+  path.join(ROOT, 'assets', 'data', 'mirror.json'),
 )
 
 const MIRROR_OPTIONS = map(entries(MIRRORS), ([server, { name }]) => ({

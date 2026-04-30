@@ -6,7 +6,7 @@ import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 interface Props {
   plugin: Plugin

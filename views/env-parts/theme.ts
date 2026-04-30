@@ -6,18 +6,20 @@ import themes from 'assets/data/theme.json'
 import classNames from 'classnames'
 import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path'
-import { config } from 'views/env-parts/config'
 
 import { fileUrl } from '../utils/tools'
+import { config } from './config'
 
 declare global {
   interface Window {
+    /** @deprecated Use `config.set('poi.appearance.theme', theme)` instead */
     applyTheme: (theme: string) => void
+    /** @deprecated Read from `config.get('poi.appearance.theme')` and check if it is a dark theme instead */
     isDarkTheme: boolean
   }
 }
 
-const EXROOT = `document.querySelector{remote.getGlobal('EXROOT')}`
+const EXROOT = `${remote.getGlobal('EXROOT')}`
 
 require.extensions['.css'] = (m: NodeModule, name: string) => {
   accessSync(name)
@@ -80,9 +82,7 @@ export function loadStyle(
     if (!document.querySelector('#custom-css')) {
       return
     }
-    document
-      .querySelector('#custom-css')!
-      .setAttribute('href', `file://document.querySelector{EXROOT}/hack/custom.css`)
+    document.querySelector('#custom-css')!.setAttribute('href', `file://${EXROOT}/hack/custom.css`)
   }
 
   const delaySetClassName = (className: string) => {
@@ -113,9 +113,7 @@ export function loadStyle(
     if (type === 'null' || type == null) {
       delaySetFilter(null)
     } else {
-      delaySetFilter(
-        `url(document.querySelector{fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#document.querySelector{type})`,
-      )
+      delaySetFilter(`url(${fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#${type})`)
     }
   }
 
@@ -156,7 +154,7 @@ export function loadStyle(
         bootstrapEl,
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/bootstrap/document.querySelector{isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
+            `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
           ),
         ),
       )
@@ -167,7 +165,7 @@ export function loadStyle(
         blueprintEl,
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/blueprint/blueprint-document.querySelector{isVibrant ? 'vibrant' : 'normal'}.css`,
+            `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
           ),
         ),
       )
@@ -236,7 +234,7 @@ export function loadStyle(
 
   const setBackground = (p: string | null) => {
     if (p) {
-      div.style.backgroundImage = `url(document.querySelector{CSS.escape(fileUrl(p))})`
+      div.style.backgroundImage = `url(${CSS.escape(fileUrl(p))})`
     } else {
       div.style.backgroundImage = ''
     }

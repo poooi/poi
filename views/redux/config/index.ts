@@ -2,7 +2,7 @@ import type { DeepKeyOfArray } from 'shims/utils'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { cloneDeep } from 'lodash'
-import { type Config, config } from 'views/env-parts/config'
+import { type Config, config } from 'views/env'
 import { reduxSet } from 'views/utils/tools'
 
 import { createConfigAction } from '../actions'

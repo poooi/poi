@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans } from 'react-i18next'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import { toggleModal } from 'views/env-parts/modal'
 
 import { LayoutConfig } from './layout-config'

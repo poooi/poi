@@ -198,11 +198,11 @@ const proxyListener = {
   'network.error': handleProxyNetworkError,
 } as const
 
-window.listenerStatusFlag = false
+let listenerStatusFlag = false
 
 const addProxyListener = () => {
-  if (!window.listenerStatusFlag) {
-    window.listenerStatusFlag = true
+  if (!listenerStatusFlag) {
+    listenerStatusFlag = true
     let eventName: keyof typeof proxyListener
     for (eventName in proxyListener) {
       gameAPIBroadcaster.addListener(eventName, proxyListener[eventName])
@@ -217,8 +217,8 @@ window.addEventListener('load', () => {
 })
 
 window.addEventListener('unload', () => {
-  if (window.listenerStatusFlag) {
-    window.listenerStatusFlag = false
+  if (listenerStatusFlag) {
+    listenerStatusFlag = false
     let eventName: keyof typeof proxyListener
     for (eventName in proxyListener) {
       gameAPIBroadcaster.removeListener(eventName, proxyListener[eventName])

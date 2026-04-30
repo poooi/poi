@@ -2,6 +2,7 @@ import { FormGroup } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { ROOT } from 'views/env'
 
 import { FolderPickerConfig } from '../components/folder-picker'
 import { RadioConfig } from '../components/radio'

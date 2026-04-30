@@ -12,6 +12,7 @@ import {
   InfoTooltipEntry,
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
+import { ROOT } from 'views/env'
 
 const serverList = [
   'https://update.poi.moe/fcd/',

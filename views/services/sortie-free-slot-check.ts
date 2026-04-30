@@ -1,5 +1,5 @@
 import { getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { error } from 'views/services/alert'
 import { getSlotitemCount } from 'views/utils/game-utils'

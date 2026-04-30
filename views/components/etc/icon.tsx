@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import fs from 'fs-extra'
 import { memoize } from 'lodash'
 import React, { memo, useEffect, useRef, useState } from 'react'
+import { ROOT } from 'views/env'
 
 const getClassName = (props: string | undefined, isSVG: boolean) => {
   const type = isSVG ? 'svg' : 'png'

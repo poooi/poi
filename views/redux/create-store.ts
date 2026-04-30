@@ -6,6 +6,7 @@ import { get, set, debounce, compact, cloneDeep, isEqual } from 'lodash'
 import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
 import thunk from 'redux-thunk'
+import { isMain } from 'views/env'
 
 import { dispatchBattleResult } from './battle'
 import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
@@ -36,7 +37,7 @@ const storeCache: Record<string, unknown> = (function () {
 //### Utils ###
 
 const setLocalStorage = (): void => {
-  if (!window.isMain) {
+  if (!isMain) {
     return
   }
   process.nextTick(() => {
@@ -57,7 +58,7 @@ function autoCacheObserver(store: Store<RootState>, path: string) {
 }
 
 remote.getCurrentWindow().on('close', () => {
-  if (window.isMain) {
+  if (isMain) {
     localStorage.setItem(cachePosition, JSON.stringify(storeCache))
   }
 })
@@ -132,7 +133,7 @@ window.addEventListener('unload', () => {
 })
 
 const ipc = remote.require('./lib/ipc')
-if (!window.isMain) {
+if (!isMain) {
   store.dispatch({ type: '@@initIPC', content: ipc.list() })
 }
 ipc.on('update', (action: { type: string }) => store.dispatch(action))
@@ -141,10 +142,10 @@ observe(
   store,
   compact([
     // When any targetPath is modified, store it into localStorage
-    ...(window.isMain ? targetPaths.map((path) => autoCacheObserver(store, path)) : []),
+    ...(isMain ? targetPaths.map((path) => autoCacheObserver(store, path)) : []),
 
     // Save quest tracking to the file when it changes
-    window.isMain &&
+    isMain &&
       observer(
         (state: RootState) => state.info.quests.records,
         (_dispatch, current) => {
@@ -167,7 +168,7 @@ observe(
 )
 
 // publish data changes to plugin windows
-if (!window.isMain) {
+if (!isMain) {
   window.addEventListener('storage', (e: StorageEvent) => {
     if (e.key === '_storeCache' && e.newValue) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion

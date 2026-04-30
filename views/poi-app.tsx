@@ -7,7 +7,7 @@ import FontAwesome from 'react-fontawesome'
 import { useSelector } from 'react-redux'
 import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 import { ControlledTabArea } from './components/tab-area'
 

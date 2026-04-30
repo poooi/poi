@@ -8,7 +8,7 @@ import fetch from 'node-fetch'
 import { join } from 'path'
 import semver from 'semver'
 import { dispatch, getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config, PLUGIN_EXTRA_PATH, PLUGIN_PATH, ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { sortPlugins } from 'views/redux/plugins'
 

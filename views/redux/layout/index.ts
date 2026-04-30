@@ -1,6 +1,6 @@
 import type { ExtendedWebviewTag } from 'views/components/etc/webview'
 
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import { getZoomedSize } from 'views/services/utils'
 
 interface PaneSize {

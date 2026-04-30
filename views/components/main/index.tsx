@@ -10,7 +10,7 @@ import { Trans } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 
 import { AdmiralPanel } from './parts/admiral-panel'
 import { ConstructionPanel } from './parts/construction-panel'

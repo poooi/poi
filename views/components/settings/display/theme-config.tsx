@@ -20,6 +20,7 @@ import { styled } from 'styled-components'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
+import { EXROOT } from 'views/env'
 import { toggleModal } from 'views/env-parts/modal'
 import { fileUrl } from 'views/utils/tools'
 

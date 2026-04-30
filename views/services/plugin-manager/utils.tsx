@@ -25,7 +25,7 @@ import ReactMarkdown from 'react-remarkable'
 import semver from 'semver'
 import { promisify } from 'util'
 import { extendReducer } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config, ROOT } from 'views/env'
 import i18next, { addGlobalI18n, addResourceBundleDebounce } from 'views/env-parts/i18next'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
 

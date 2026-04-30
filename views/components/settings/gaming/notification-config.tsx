@@ -7,7 +7,7 @@ import { styled } from 'styled-components'
 import { IntegerConfig } from 'views/components/settings/components/integer'
 import { Section, Wrapper, HalfWrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import notifCenter from 'views/env-parts/notif-center'
 
 const InlineFormGroup = styled(FormGroup)`

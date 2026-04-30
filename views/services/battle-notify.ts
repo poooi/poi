@@ -1,8 +1,7 @@
-/* global ROOT */
 import * as remote from '@electron/remote'
 import { join } from 'path'
 import { parse } from 'url'
-import { config } from 'views/env-parts/config'
+import { config, ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import notifCenter from 'views/env-parts/notif-center'
 

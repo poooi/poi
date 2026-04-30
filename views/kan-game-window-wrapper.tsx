@@ -1,5 +1,5 @@
 import type { ConfigValue } from 'lib/config'
-import type { ConfigPath } from 'views/env-parts/config'
+import type { ConfigPath } from 'views/env'
 
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
@@ -11,7 +11,7 @@ import { styled, StyleSheetManager } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { dispatch, getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
+import { config, ROOT } from 'views/env'
 import { fileUrl, loadScript } from 'views/utils/tools'
 
 import { loadStyle } from './env-parts/theme'

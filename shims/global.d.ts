@@ -1,6 +1,3 @@
-import type * as remote from '@electron/remote'
-import type { Constant } from 'lib/constant'
-
 declare global {
   interface File {
     path: string
@@ -11,13 +8,9 @@ declare global {
       EXROOT: string
       ROOT: string
       DEFAULT_CACHE_PATH: string
+      PLUGIN_PATH: string
+      PLUGIN_EXTRA_PATH: string
     }
-  }
-  interface ModalButton {
-    name: string
-    func: () => void
-    style?: string
-    intent?: string
   }
 
   interface IpcManager {
@@ -32,18 +25,6 @@ declare global {
   }
 
   interface Window {
-    POI_VERSION: string
-    LATEST_COMMIT: string
-    SERVER_HOSTNAME: string
-    MODULE_PATH: string
-    APPDATA_PATH: string
-    CONST: Constant
-    isSafeMode: boolean
-    isDevVersion: boolean
-    remote: typeof remote
-    hack: Record<string, unknown>
-    listenerStatusFlag: boolean
-    dbg?: { isEnabled?: () => boolean }
     externalWindow?: Window
   }
 
@@ -63,7 +44,6 @@ declare global {
   var EXROOT: string
   var ROOT: string
   var DEFAULT_CACHE_PATH: string
-  var isMain: boolean | undefined
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
   var ipc: IpcManager

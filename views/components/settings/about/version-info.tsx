@@ -8,6 +8,7 @@ import osName from 'os-name'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { styled } from 'styled-components'
+import { ROOT } from 'views/env'
 
 import { Section } from '../components/section'
 

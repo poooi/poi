@@ -29,9 +29,6 @@ const config = remote.require('./lib/config')
 // Disable OSX zoom
 webFrame.setVisualZoomLevelLimits(1, 1)
 
-// Hackable panels
-window.hack = {}
-
 // Alert functions
 require('./services/alert')
 

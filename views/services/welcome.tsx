@@ -8,7 +8,7 @@ import ReactMarkdown from 'react-remarkable'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { ResolutionConfig } from 'views/components/settings/display/resolution-config'
 import { ProxiesConfig } from 'views/components/settings/network'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { toggleModal } from 'views/env-parts/modal'
 

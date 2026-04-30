@@ -10,6 +10,7 @@ import * as ReactBootstrap from 'react-bootstrap'
 import ReactDOM from 'react-dom'
 
 import { WindowEnv } from '../components/etc/window-env'
+import { isMain } from '../env-parts/const'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 const rb = ReactBootstrap as unknown as Record<string, React.ComponentType<Record<string, unknown>>>
@@ -363,7 +364,7 @@ Modal.Dialog = OriginModal.Dialog
 Dropdown.Toggle = OriginDropdown.Toggle
 Dropdown.Menu = OriginDropdown.Menu
 
-if (window.isMain) {
+if (isMain) {
   /* eslint-disable no-import-assign */
   ;(ReactBootstrap as Record<string, unknown>).OverlayTrigger = OverlayTrigger
   ;(ReactBootstrap as Record<string, unknown>).Modal = Modal

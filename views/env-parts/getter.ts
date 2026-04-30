@@ -8,8 +8,9 @@ import { map, get, mapValues } from 'lodash'
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { store, getStore } from 'views/create-store'
-import { config } from 'views/env-parts/config'
 import { buildArray } from 'views/utils/tools'
+
+import { config } from './config'
 
 const ipc = remote.require('./lib/ipc')
 

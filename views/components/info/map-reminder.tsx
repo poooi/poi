@@ -15,7 +15,7 @@ import { Avatar } from 'views/components/etc/avatar'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { Popover } from 'views/components/etc/overlay'
-import { config } from 'views/env-parts/config'
+import { config } from 'views/env'
 import {
   sortieMapDataSelector,
   sortieMapHpSelector,
