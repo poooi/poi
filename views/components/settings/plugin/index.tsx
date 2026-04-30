@@ -17,6 +17,7 @@ import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
+import { config } from 'views/env-parts/config'
 import pluginManager from 'views/services/plugin-manager'
 import { bundlePluginMetaToPlugin } from 'views/services/plugin-manager/utils'
 

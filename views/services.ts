@@ -2,7 +2,7 @@ import type { Dispatch } from 'redux'
 
 import * as remote from '@electron/remote'
 import { observer, observe } from 'redux-observers'
-import { store, getStore } from 'views/create-store'
+import { store, getStore, dispatch } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import { dbg } from 'views/env-parts/dbg'
 import i18next from 'views/env-parts/i18next'
@@ -50,7 +50,7 @@ const serverObserver = observer(
     }
   },
 )
-setUpdateServer(window.dispatch)
+setUpdateServer(dispatch)
 
 observe(store, [serverObserver])
 

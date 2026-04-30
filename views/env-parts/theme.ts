@@ -6,6 +6,7 @@ import themes from 'assets/data/theme.json'
 import classNames from 'classnames'
 import { accessSync, ensureFileSync } from 'fs-extra'
 import { join } from 'path'
+import { config } from 'views/env-parts/config'
 
 import { fileUrl } from '../utils/tools'
 

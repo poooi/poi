@@ -27,6 +27,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
 import { Popover } from 'views/components/etc/overlay'
+import { config } from 'views/env-parts/config'
 import { isInGame } from 'views/utils/game-utils'
 
 import type { PluginWindowWrapHandle } from './plugin-window-wrapper'

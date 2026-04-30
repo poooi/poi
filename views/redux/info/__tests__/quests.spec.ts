@@ -13,7 +13,7 @@ import {
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 import Scheduler from 'views/services/scheduler'
 
-import type { GoalKey, SubgoalRecord, QuestsState } from '../quests'
+import type { ActiveQuest, GoalKey, SubgoalRecord, QuestsState } from '../quests'
 
 import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
@@ -92,26 +92,16 @@ describe('saveQuestTracking', () => {
     __writeMock: jest.Mock
   }
 
+  const activeQuests: Record<string | number, ActiveQuest> = {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    1: { detail: { api_no: 1 } as unknown as ActiveQuest['detail'], time: 1 },
+  }
+  const admiralId = '100'
+
   beforeEach(() => {
     writeMock.mockReset()
     // @ts-expect-error APPDATA_PATH is injected by poi runtime
     globalThis.APPDATA_PATH = 'C:\\tmp'
-    globalThis.window = {
-      // @ts-expect-error mock jest.fn lacks lock/cache from combine-reducers polyfill
-      getStore: jest.fn((path: string) => {
-        if (path === 'info.quests') {
-          return {
-            activeQuests: {
-              1: { detail: { api_no: 1 }, time: 1 },
-            },
-          }
-        }
-        if (path === 'info.basic.api_member_id') {
-          return '100'
-        }
-        return undefined
-      }),
-    }
   })
 
   it('does not mutate input records', () => {
@@ -122,7 +112,7 @@ describe('saveQuestTracking', () => {
       },
     }
 
-    saveQuestTracking(records)
+    saveQuestTracking(records, activeQuests, admiralId)
 
     expect(records).toStrictEqual({
       1: {
@@ -140,7 +130,7 @@ describe('saveQuestTracking', () => {
       },
     }
 
-    saveQuestTracking(records)
+    saveQuestTracking(records, activeQuests, admiralId)
 
     expect(writeMock).toHaveBeenCalledTimes(1)
     const [, serialized] = writeMock.mock.calls[0]

@@ -6,6 +6,7 @@ import * as remote from '@electron/remote'
 import fs from 'fs-extra'
 import lodash from 'lodash'
 import { join } from 'path'
+import { config } from 'views/env-parts/config'
 
 import { setAllowedPath } from '../lib/module-path'
 import './polyfills/react-i18next'
@@ -89,7 +90,7 @@ window.ipc = remote.require('./lib/ipc')
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 window.CONST = Object.remoteClone(remote.require('./lib/constant')) as Constant
 
-if (process.env.NODE_ENV === 'production' && window.config.get?.('poi.misc.exceptionReporting')) {
+if (process.env.NODE_ENV === 'production' && config.get?.('poi.misc.exceptionReporting')) {
   init({
     build: window.LATEST_COMMIT,
     paths: [window.ROOT, window.APPDATA_PATH],

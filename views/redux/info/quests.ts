@@ -728,9 +728,11 @@ const fileWriter = new FileWriter()
 
 // Subscriber, used after the store is created
 // Need to observe on state quests.records
-export function saveQuestTracking(records: Record<string | number, QuestRecord>): void {
-  const { activeQuests } = window.getStore('info.quests')
-  const admiralId = String(window.getStore('info.basic.api_member_id') ?? '')
+export function saveQuestTracking(
+  records: Record<string | number, QuestRecord>,
+  activeQuests: Record<string | number, ActiveQuest>,
+  admiralId: string,
+): void {
   fileWriter.write(
     questTrackingPath(admiralId),
     CSON.stringify(processQuestRecords(records, activeQuests)),

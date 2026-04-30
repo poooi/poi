@@ -1,4 +1,6 @@
-import { isEqual, omit, get } from 'lodash'
+import type { RootState } from 'views/redux/reducer-factory'
+
+import { isEqual, omit } from 'lodash'
 import React, {
   Children,
   forwardRef,
@@ -85,8 +87,8 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TabContentsUnionInner = forwardRef<TabContentsUnionHandle, Props>(
   ({ children, activeTab }, ref) => {
-    const enableTransition = useSelector((state: any): boolean =>
-      get(state.config, 'poi.transition.enable', true),
+    const enableTransition = useSelector(
+      (state: RootState): boolean => state.config?.poi?.transition?.enable ?? true,
     )
 
     const [internalActiveTab, setInternalActiveTab] = useState(activeTab)

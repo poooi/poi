@@ -23,17 +23,6 @@ import { fileUrl } from 'views/utils/tools'
 
 import { PluginWrap } from './plugin-wrapper'
 
-const pickOptions = [
-  'ROOT',
-  'EXROOT',
-  'toast',
-  'notify',
-  'toggleModal',
-  'i18n',
-  'config',
-  'getStore',
-] as const
-
 const { BrowserWindow, screen } = remote
 const ipc: IPCType = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
@@ -216,10 +205,6 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           ;(externalWindowRef.current as any).isWindowMode = true
           loadStyle(externalWindowRef.current.document, currentWindow, false)
           remote.require('./lib/webcontent-utils').stopFileNavigate(currentWindow?.webContents.id)
-          for (const pickOption of pickOptions) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
-            ;(externalWindowRef.current as any)[pickOption] = window[pickOption]
-          }
           externalWindowRef.current.addEventListener('beforeunload', () => {
             setLoaded(false)
             config.set(`plugin.${plugin.id}.bounds`, currentWindowRef.current?.getBounds())

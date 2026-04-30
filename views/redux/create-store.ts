@@ -147,7 +147,11 @@ observe(
     window.isMain &&
       observer(
         (state: RootState) => state.info.quests.records,
-        (_dispatch, current) => saveQuestTracking(current),
+        (_dispatch, current) => {
+          const { activeQuests } = getStore('info.quests')
+          const admiralId = String(getStore('info.basic.api_member_id') ?? '')
+          saveQuestTracking(current, activeQuests, admiralId)
+        },
       ),
 
     // Dispatch an action '@@BattleResult' when a battle is completed
