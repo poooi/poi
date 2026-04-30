@@ -1,6 +1,7 @@
 import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { error } from 'views/services/alert'
 import { getSlotitemCount } from 'views/utils/game-utils'
 
 window.addEventListener('game.response', (e) => {
@@ -32,7 +33,7 @@ window.addEventListener('game.response', (e) => {
     }
     if (errMsg.length > 0) {
       const msg = errMsg.join('')
-      setTimeout(() => window.error(msg), 1000)
+      setTimeout(() => error(msg), 1000)
     }
   }
 })

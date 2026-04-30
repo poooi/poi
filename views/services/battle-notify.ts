@@ -4,6 +4,7 @@ import { join } from 'path'
 import { parse } from 'url'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import notifCenter from 'views/env-parts/notif-center'
 
 import { ResourceNotifier } from './resource-notifier'
 
@@ -67,7 +68,8 @@ ResourceNotifier.addListener('request', (detail: { url: string }) => {
     }
     case '/kcs2/resources/se/217.mp3': {
       if (needNotification(inBattle)) {
-        window.notify(i18next.t('others:Battle is over'), {
+        notifCenter.notify({
+          message: i18next.t('others:Battle is over').toString(),
           type: 'battleEnd',
           icon: join(ROOT, 'assets', 'img', 'operation', 'sortie.png'),
         })

@@ -8,6 +8,7 @@ import Markdown from 'react-remarkable'
 import semver from 'semver'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { toggleModal } from 'views/env-parts/modal'
 
 const fetchHeaders: Record<string, string> = {
   'Cache-Control': 'max-age=0',
@@ -122,7 +123,7 @@ const toggleUpdate = (version: string, log: string) => {
       style: 'primary',
     })
   }
-  window.toggleModal(title, content, footer)
+  toggleModal(title, content, footer)
 }
 
 if (config.get('poi.update.enable', true)) {

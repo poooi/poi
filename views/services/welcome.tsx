@@ -10,6 +10,7 @@ import { ResolutionConfig } from 'views/components/settings/display/resolution-c
 import { ProxiesConfig } from 'views/components/settings/network'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { toggleModal } from 'views/env-parts/modal'
 
 const dontShowAgain = () => config.set('poi.update.lastversion', window.POI_VERSION)
 
@@ -69,13 +70,21 @@ const footer: ButtonData[] = [
   },
 ]
 
-const toggle = () => window.toggleModal(String(i18next.t('others:Welcome')), <Content />, footer)
+export const toggleWelcomeDialog = () =>
+  toggleModal(String(i18next.t('others:Welcome')), <Content />, footer)
 
 // using setTimeout to avoid disturbing the magic being cast in layout.ts
 if ((config.get('poi.update.lastversion', '0.0.0') as string) != window.POI_VERSION) {
-  setTimeout(toggle, 5000)
+  setTimeout(toggleWelcomeDialog, 5000)
+}
+
+declare global {
+  interface Window {
+    /** @deprecated Use `import { toggleWelcomeDialog } from 'views/services/welcome'` instead */
+    toggleWelcomeDialog: () => void
+  }
 }
 
 if (window.dbg?.isEnabled?.()) {
-  window.toggleWelcomeDialog = toggle
+  window.toggleWelcomeDialog = toggleWelcomeDialog
 }

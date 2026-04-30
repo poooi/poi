@@ -20,6 +20,7 @@ import { styled } from 'styled-components'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
+import { toggleModal } from 'views/env-parts/modal'
 import { fileUrl } from 'views/utils/tools'
 
 const { openPath } = shell
@@ -89,7 +90,7 @@ export const ThemeConfig = () => {
       fs.ensureFileSync(d)
       void openPath(d)
     } catch (_) {
-      setTimeout(() => window.toggleModal(t('Edit custom CSS'), t('NoPermission'), []), 1500)
+      setTimeout(() => toggleModal(t('Edit custom CSS'), t('NoPermission'), []), 1500)
     }
   }
 

@@ -8,7 +8,7 @@ function dispatchAlertEvent(value: Message) {
   messageInstance.emit(value)
 }
 
-const mkAlert = (type: string, priority: number) => (msg: string, options: Message['options']) => {
+const mkAlert = (type: string, priority: number) => (msg: string, options?: Message['options']) => {
   const value = {
     content: msg,
     type,
@@ -19,16 +19,25 @@ const mkAlert = (type: string, priority: number) => (msg: string, options: Messa
   dispatchAlertEvent(value)
 }
 
-const log = mkAlert('default', 0)
-const success = mkAlert('success', 1)
-const warn = mkAlert('warning', 2)
-const error = mkAlert('danger', 4)
+export const log = mkAlert('default', 0)
+export const success = mkAlert('success', 1)
+export const warn = mkAlert('warning', 2)
+export const error = mkAlert('danger', 4)
 
-// @ts-expect-error backward compatibility
+declare global {
+  interface Window {
+    /** @deprecated Use `import { log } from 'views/services/alert'` instead */
+    log: typeof log
+    /** @deprecated Use `import { success } from 'views/services/alert'` instead */
+    success: typeof success
+    /** @deprecated Use `import { warn } from 'views/services/alert'` instead */
+    warn: typeof warn
+    /** @deprecated Use `import { error } from 'views/services/alert'` instead */
+    error: typeof error
+  }
+}
+
 window.log = log
-// @ts-expect-error backward compatibility
 window.success = success
-// @ts-expect-error backward compatibility
 window.warn = warn
-// @ts-expect-error backward compatibility
 window.error = error

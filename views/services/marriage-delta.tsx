@@ -6,6 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { success } from 'views/services/alert'
 
 interface KyoukaState {
   id: number
@@ -53,7 +54,7 @@ const onResponse = (e: CustomEvent<GameResponseDetails>) => {
             </span>
           </span>
         )
-        setTimeout(window.success, 100, msg)
+        setTimeout(success, 100, msg)
       }
     }
     kyoukaState = null

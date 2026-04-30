@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { Section, Wrapper } from 'views/components/settings/components/section'
+import { toggleModal } from 'views/env-parts/modal'
 
 const SVG = {
   horizontal: (
@@ -86,9 +87,7 @@ export const LayoutConfig = () => {
   const createConfirmModal = (callback: () => void) => {
     const title = t('Apply changes')
     const content = t('Game page will be refreshed')
-    window.toggleModal(title, content, [
-      { name: t('others:Confirm'), func: callback, style: 'warning' },
-    ])
+    toggleModal(title, content, [{ name: t('others:Confirm'), func: callback, style: 'warning' }])
   }
 
   const setLayout = (newLayout: string, rev: boolean) => {

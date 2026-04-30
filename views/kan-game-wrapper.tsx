@@ -18,6 +18,7 @@ import { CustomTag } from 'views/components/etc/custom-tag'
 import ElectronWebView from 'views/components/etc/webview'
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
+import { toggleModal } from 'views/env-parts/modal'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import { fileUrl } from 'views/utils/tools'
 
@@ -237,7 +238,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
           style: 'warning',
         },
       ]
-      window.toggleModal(title, content, footer)
+      toggleModal(title, content, footer)
     }
   }
 

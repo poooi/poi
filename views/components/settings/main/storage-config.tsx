@@ -8,6 +8,7 @@ import { styled } from 'styled-components'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
 import { IntegerConfig } from 'views/components/settings/components/integer'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
+import { toggleModal } from 'views/env-parts/modal'
 
 declare const APPDATA_PATH: string
 
@@ -60,7 +61,7 @@ export const StorageConfig = () => {
       .getCurrentWebContents()
       .session.clearStorageData({ storages: ['cookies'] })
       .then(() => {
-        window.toggleModal(t('Delete cookies'), t('Success!'), [])
+        toggleModal(t('Delete cookies'), t('Success!'), [])
       })
   }
 
@@ -69,7 +70,7 @@ export const StorageConfig = () => {
       .getCurrentWebContents()
       .session.clearCache()
       .then(() => {
-        window.toggleModal(t('Delete cache'), t('Success!'), [])
+        toggleModal(t('Delete cache'), t('Success!'), [])
       })
   }
 

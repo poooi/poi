@@ -28,6 +28,7 @@ const defaultNotifOptions = {
   title: 'poi',
   icon: NOTIFY_DEFAULT_ICON,
   audio: `file://${ROOT}/assets/audio/poi.mp3`,
+  volume: config.get('poi.notify.volume', 0.8),
   type: 'others',
 }
 
@@ -154,6 +155,16 @@ class NotificationCenter {
 const notifCenter = new NotificationCenter()
 
 export default notifCenter
+
+declare global {
+  interface Window {
+    /** @deprecated Use `import notifCenter from 'views/env-parts/notif-center'` and call `notifCenter.notify(...)` instead */
+    notify: (
+      msg: string,
+      options?: { type?: keyof ConfigValue<'poi.notify'>; volume?: number },
+    ) => void
+  }
+}
 
 // Backward compatibility
 window.notify = (

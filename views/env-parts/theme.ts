@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const EXROOT = `${remote.getGlobal('EXROOT')}`
+const EXROOT = `document.querySelector{remote.getGlobal('EXROOT')}`
 
 require.extensions['.css'] = (m: NodeModule, name: string) => {
   accessSync(name)
@@ -35,7 +35,6 @@ export function loadStyle(
   currentWindow: BrowserWindow = remote.getCurrentWindow(),
   isMainWindow = true,
 ): void {
-  const $ = (s: string): Element | null => doc.querySelector(s)
   const customCSSPath = join(EXROOT, 'hack', 'custom.css')
   ensureFileSync(customCSSPath)
   const customCSS = doc.createElement('link')
@@ -78,10 +77,12 @@ export function loadStyle(
   div.style.display = 'none'
 
   const reloadCustomCss = () => {
-    if (!$('#custom-css')) {
+    if (!document.querySelector('#custom-css')) {
       return
     }
-    $('#custom-css')!.setAttribute('href', `file://${EXROOT}/hack/custom.css`)
+    document
+      .querySelector('#custom-css')!
+      .setAttribute('href', `file://document.querySelector{EXROOT}/hack/custom.css`)
   }
 
   const delaySetClassName = (className: string) => {
@@ -112,7 +113,9 @@ export function loadStyle(
     if (type === 'null' || type == null) {
       delaySetFilter(null)
     } else {
-      delaySetFilter(`url(${fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#${type})`)
+      delaySetFilter(
+        `url(document.querySelector{fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#document.querySelector{type})`,
+      )
     }
   }
 
@@ -147,36 +150,36 @@ export function loadStyle(
         'bp5-dark': isDark,
       }),
     )
-    const bootstrapEl = $('#bootstrap-css')
+    const bootstrapEl = document.querySelector('#bootstrap-css')
     if (bootstrapEl) {
       setRef(
         bootstrapEl,
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/bootstrap/${isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
+            `poi-asset-themes/dist/bootstrap/document.querySelector{isDark ? 'darklykai' : 'cosmo'}-vibrant.css`,
           ),
         ),
       )
     }
-    const blueprintEl = $('#blueprint-css')
+    const blueprintEl = document.querySelector('#blueprint-css')
     if (blueprintEl) {
       setRef(
         blueprintEl,
         fileUrl(
           require.resolve(
-            `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
+            `poi-asset-themes/dist/blueprint/blueprint-document.querySelector{isVibrant ? 'vibrant' : 'normal'}.css`,
           ),
         ),
       )
     }
-    const blueprintIconEl = $('#blueprint-icon-css')
+    const blueprintIconEl = document.querySelector('#blueprint-icon-css')
     if (blueprintIconEl) {
       setRef(
         blueprintIconEl,
         fileUrl(require.resolve('@blueprintjs/icons/lib/css/blueprint-icons.css')),
       )
     }
-    const normalizeEl = $('#normalize-css')
+    const normalizeEl = document.querySelector('#normalize-css')
     if (normalizeEl) {
       setRef(normalizeEl, fileUrl(require.resolve('normalize.css/normalize.css')))
     }
@@ -233,7 +236,7 @@ export function loadStyle(
 
   const setBackground = (p: string | null) => {
     if (p) {
-      div.style.backgroundImage = `url(${CSS.escape(fileUrl(p))})`
+      div.style.backgroundImage = `url(document.querySelector{CSS.escape(fileUrl(p))})`
     } else {
       div.style.backgroundImage = ''
     }

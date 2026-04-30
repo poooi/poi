@@ -1,6 +1,7 @@
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { config } from 'views/env-parts/config'
+import { toggleModal } from 'views/env-parts/modal'
 
 import { LayoutConfig } from './layout-config'
 import { ResolutionConfig } from './resolution-config'
@@ -8,7 +9,7 @@ import { ThemeConfig } from './theme-config'
 import { ZoomingConfig } from './zooming-config'
 
 const toggleModalWithDelay = (title: React.ReactNode, content: React.ReactNode) =>
-  setTimeout(() => window.toggleModal(String(title), content, []), 1500)
+  setTimeout(() => toggleModal(String(title), content, []), 1500)
 
 config.on('config.set', (path: string, value: unknown) => {
   let event: CustomEvent

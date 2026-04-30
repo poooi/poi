@@ -1,7 +1,5 @@
 import type * as remote from '@electron/remote'
-import type { ConfigValue } from 'lib/config'
 import type { Constant } from 'lib/constant'
-import type lodash from 'lodash'
 
 declare global {
   interface File {
@@ -43,24 +41,10 @@ declare global {
     isSafeMode: boolean
     isDevVersion: boolean
     remote: typeof remote
-    notify: (
-      msg: string,
-      options?: { type?: keyof ConfigValue<'poi.notify'>; volume?: number; icon?: string },
-    ) => void
-    success: (msg: string, options?: unknown) => void
-    error: (msg: string, options?: unknown) => void
-    warn: (msg: string, options?: unknown) => void
     hack: Record<string, unknown>
     listenerStatusFlag: boolean
     dbg?: { isEnabled?: () => boolean }
-    _ships: Record<string | number, unknown>
-    _slotitems: Record<string | number, unknown>
-    $ships: Record<string | number, unknown>
     externalWindow?: Window
-    toggleWelcomeDialog?: () => void
-    _: typeof lodash
-    $: (selector: string) => Element | null
-    $$: (selector: string) => NodeListOf<Element>
   }
 
   namespace JSX {
@@ -83,11 +67,6 @@ declare global {
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
   var ipc: IpcManager
-  var ga: (...args: unknown[]) => void
-  var log: (msg: string, options?: unknown) => void
-  var error: (msg: string, options?: unknown) => void
-  var warn: (msg: string, options?: unknown) => void
-  var success: (msg: string, options?: unknown) => void
   /* eslint-enable no-var */
 }
 

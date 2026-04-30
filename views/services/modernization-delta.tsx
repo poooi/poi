@@ -10,6 +10,7 @@ import { Trans } from 'react-i18next'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
+import { success, warn } from 'views/services/alert'
 import { shipDataSelectorFactory } from 'views/utils/selectors'
 
 const REMAINING_UNKNOWN = -10000
@@ -149,7 +150,7 @@ const onResponse = (e: CustomEvent<GameResponseDetails>) => {
       if (requestRecord != null && $ship) {
         requestRecord.then((calcText) =>
           setTimeout(
-            window.success,
+            success,
             100,
             calcText({
               ...$ship,
@@ -159,7 +160,7 @@ const onResponse = (e: CustomEvent<GameResponseDetails>) => {
         )
       }
     } else {
-      setTimeout(window.warn, 100, <Trans>Modernization failed</Trans>)
+      setTimeout(warn, 100, <Trans>Modernization failed</Trans>)
     }
   }
 }

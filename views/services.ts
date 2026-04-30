@@ -7,6 +7,7 @@ import { config } from 'views/env-parts/config'
 import { dbg } from 'views/env-parts/dbg'
 import i18next from 'views/env-parts/i18next'
 import { toggleModal } from 'views/env-parts/modal'
+import { log, error } from 'views/services/alert'
 import { isInGame } from 'views/utils/game-utils'
 
 const gameAPIBroadcaster: GameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')

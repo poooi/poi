@@ -19,6 +19,7 @@ export const toggleModal = (
 
 declare global {
   interface Window {
+    /** @deprecated Use `import { toggleModal } from 'views/env-parts/modal'` instead */
     toggleModal: (
       title: string,
       content: ReactNode,

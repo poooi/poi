@@ -14,6 +14,8 @@ import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
+import { toggleModal } from 'views/env-parts/modal'
+import { error, success } from 'views/services/alert'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 const { openExternal } = shell
@@ -124,9 +126,9 @@ export const PoiControl = () => {
     [disableEditableMsg],
   )
 
-  const handleScreenshotFailure = useCallback((error?: Error) => {
-    if (error) console.error(error)
-    window.error(propsRef.current.t('Failed to save the screenshot'))
+  const handleScreenshotFailure = useCallback((err?: Error) => {
+    if (err) console.error(err)
+    error(propsRef.current.t('Failed to save the screenshot'))
   }, [])
 
   const handleScreenshotCaptured = useCallback(
@@ -139,7 +141,7 @@ export const PoiControl = () => {
       const image = nativeImage.createFromDataURL(dataURL)
       if (toClipboard) {
         clipboard.writeImage(image)
-        window.success(propsRef.current.t('screenshot saved to clipboard'))
+        success(propsRef.current.t('screenshot saved to clipboard'))
       } else {
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
         const date = formatDate(new Date())
@@ -147,7 +149,7 @@ export const PoiControl = () => {
         try {
           await fs.ensureDir(screenshotPath)
           await fs.writeFile(filename, buf)
-          window.success(`${propsRef.current.t('screenshot saved to')} ${filename}`)
+          success(`${propsRef.current.t('screenshot saved to')} ${filename}`)
         } catch (error) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           handleScreenshotFailure(error as Error)
@@ -228,11 +230,7 @@ export const PoiControl = () => {
       fs.ensureDirSync(path.join(dir, 'ToukenRanbu'))
       openItemAsync(dir, 'handleOpenCacheFolder')
     } catch (_) {
-      window.toggleModal(
-        propsRef.current.t('Open cache dir'),
-        propsRef.current.t('NoPermission'),
-        [],
-      )
+      toggleModal(propsRef.current.t('Open cache dir'), propsRef.current.t('NoPermission'), [])
     }
   }, [])
 
@@ -243,11 +241,7 @@ export const PoiControl = () => {
       fs.ensureDirSync(dir)
       openItemAsync(dir, 'handleOpenMakaiFolder')
     } catch (_) {
-      window.toggleModal(
-        propsRef.current.t('Open makai dir'),
-        propsRef.current.t('NoPermission'),
-        [],
-      )
+      toggleModal(propsRef.current.t('Open makai dir'), propsRef.current.t('NoPermission'), [])
     }
   }, [])
   void handleOpenMakaiFolder
@@ -263,11 +257,7 @@ export const PoiControl = () => {
         openItemAsync(screenshotPath, 'handleOpenScreenshotFolder')
       }
     } catch (_) {
-      window.toggleModal(
-        propsRef.current.t('Open screenshot dir'),
-        propsRef.current.t('NoPermission'),
-        [],
-      )
+      toggleModal(propsRef.current.t('Open screenshot dir'), propsRef.current.t('NoPermission'), [])
     }
   }, [])
 
@@ -296,7 +286,7 @@ export const PoiControl = () => {
       gameRefreshPage()
       return
     }
-    window.toggleModal(
+    toggleModal(
       propsRef.current.t('Confirm Refreshing'),
       <div>
         <Trans i18nKey="RefreshGameDialogTip">
@@ -324,7 +314,7 @@ export const PoiControl = () => {
       const { toggleRefreshConfirm, renderMainTouchbar } = remote.require('./lib/touchbar')
       switch (msg) {
         case 'refresh':
-          window.toggleModal(
+          toggleModal(
             propsRef.current.t('Confirm Refreshing'),
             <div>
               <Trans i18nKey="RefreshGameDialogTip">

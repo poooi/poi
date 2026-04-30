@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { config } from 'views/env-parts/config'
+import { toggleModal } from 'views/env-parts/modal'
 import pluginManager from 'views/services/plugin-manager'
 import { bundlePluginMetaToPlugin } from 'views/services/plugin-manager/utils'
 
@@ -123,7 +124,7 @@ export const PluginConfig = (): React.ReactElement => {
   }, [])
 
   const handleGracefulRepair = useCallback(() => {
-    window.toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
+    toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
       { name: t('others:Confirm'), func: gracefulRepair, style: 'warning' },
     ])
   }, [t, gracefulRepair])
@@ -187,7 +188,7 @@ export const PluginConfig = (): React.ReactElement => {
   }
 
   const handleInstallAll = () => {
-    window.toggleModal(t('Install all'), t('install-all-confirmation'), [
+    toggleModal(t('Install all'), t('install-all-confirmation'), [
       { name: t('others:Confirm'), func: doInstallAll, style: 'warning' },
     ])
   }

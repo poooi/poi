@@ -31,6 +31,12 @@ declare global {
     isSafeMode: boolean
     isDevVersion: boolean
     CONST: Constant
+    /** @deprecated Use `import lodash from 'lodash'` instead */
+    _: typeof lodash
+    /** @deprecated Use `document.querySelector` instead */
+    $: (selector: string) => Element | null
+    /** @deprecated Use `document.querySelectorAll` instead */
+    $$: (selector: string) => NodeListOf<Element>
   }
 }
 window.remote = remote
