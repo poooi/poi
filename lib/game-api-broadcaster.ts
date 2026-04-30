@@ -26,7 +26,7 @@ interface GameAPIBroadcasterEventMap {
   'kancolle.server.change': [KancolleServer]
 }
 
-export class GameAPIBroadcaster extends EventEmitter<GameAPIBroadcasterEventMap> {
+class GameAPIBroadcaster extends EventEmitter<GameAPIBroadcasterEventMap> {
   serverList: KancolleServerInfo = fs.readJsonSync(path.join(ROOT, 'assets', 'data', 'server.json'))
 
   serverInfo: KancolleServer = {}
@@ -124,3 +124,5 @@ export class GameAPIBroadcaster extends EventEmitter<GameAPIBroadcasterEventMap>
 }
 
 export default new GameAPIBroadcaster()
+
+export type { GameAPIBroadcaster }

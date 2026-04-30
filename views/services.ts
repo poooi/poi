@@ -9,7 +9,7 @@ import i18next from 'views/env-parts/i18next'
 import { toggleModal } from 'views/env-parts/modal'
 import { isInGame } from 'views/utils/game-utils'
 
-const gameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
+const gameAPIBroadcaster: GameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
 import './services/update'
 import './services/layout'
 import './services/welcome'
@@ -23,23 +23,24 @@ import './services/sortie-unused-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
 import './services/battle-notify'
+import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
+
+import { isEqual } from 'lodash'
+
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
 // Update server info
 const setUpdateServer = (dispatch: Dispatch) => {
-  gameAPIBroadcaster.addListener(
-    'kancolle.server.change',
-    ({ ip, num: id, name }: { ip: string; num: number; name: string }) => {
-      if (window.getStore('info.server.ip') !== ip) {
-        if (ip) {
-          dispatch({
-            type: '@@ServerReady',
-            serverInfo: { ip, id, name },
-          })
-        }
+  gameAPIBroadcaster.addListener('kancolle.server.change', ({ ip, num: id, name }) => {
+    if (!isEqual(window.getStore('info.server'), { ip, id, name })) {
+      if (ip) {
+        dispatch({
+          type: '@@ServerReady',
+          serverInfo: { ip, id, name },
+        })
       }
-    },
-  )
+    }
+  })
 }
 const serverObserver = observer(
   (state: { info: { server: { ip: string } } }) => state.info.server.ip,
