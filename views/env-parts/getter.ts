@@ -11,8 +11,7 @@ import { store, getStore } from 'views/create-store'
 import { buildArray } from 'views/utils/tools'
 
 import { config } from './config'
-
-const ipc = remote.require('./lib/ipc')
+import { ipc } from './ipc'
 
 function object2Array(obj: Record<string, unknown>) {
   return buildArray(map(obj, (v, k) => [Number(k), v]))

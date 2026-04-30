@@ -2,6 +2,7 @@ import type { ConfigInstance, ConfigStringPath, ConfigValue } from 'lib/config'
 import type { DeepKeyOf, DeepValueOf } from 'shims/utils'
 
 import * as remote from '@electron/remote'
+import ipc from 'lib/ipc'
 import { get, set, debounce, compact, cloneDeep, isEqual } from 'lodash'
 import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
@@ -129,7 +130,6 @@ window.addEventListener('unload', () => {
   remoteConfig.removeListener('config.set', solveConfSet)
 })
 
-const ipc = remote.require('./lib/ipc')
 if (!isMain) {
   store.dispatch({ type: '@@initIPC', content: ipc.list() })
 }

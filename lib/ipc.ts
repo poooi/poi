@@ -17,7 +17,22 @@ type IPCStore = Record<string, unknown> & {
 
 type Scope = keyof IPCStore
 
-class IPC extends EventEmitter {
+type IPCUpdateEventType = '@@registerIPC' | '@@unregisterIPC' | '@@unregisterAllIPC'
+type IPCUpdateEventPayload = {
+  scope: Scope
+  opts?: Record<string, unknown>
+  keys?: string | string[] | object
+}
+type IPCUpdateEvent = {
+  type: IPCUpdateEventType
+  value: IPCUpdateEventPayload
+}
+
+interface IPCEventMap {
+  update: [IPCUpdateEvent]
+}
+
+class IPC extends EventEmitter<IPCEventMap> {
   data: IPCStore = {}
 
   // scope:  string
