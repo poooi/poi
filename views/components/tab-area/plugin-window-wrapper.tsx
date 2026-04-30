@@ -1,5 +1,4 @@
 import type { ConfigPath, ConfigValue } from 'lib/config'
-import type { IPCType } from 'lib/ipc'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
@@ -18,14 +17,13 @@ import ReactDOM from 'react-dom'
 import { StyleSheetManager, styled } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { WindowEnv } from 'views/components/etc/window-env'
-import { ROOT } from 'views/env'
+import { ROOT, ipc } from 'views/env'
 import { loadStyle } from 'views/env-parts/theme'
 import { fileUrl } from 'views/utils/tools'
 
 import { PluginWrap } from './plugin-wrapper'
 
 const { BrowserWindow, screen } = remote
-const ipc: IPCType = remote.require('./lib/ipc')
 const { workArea } = screen.getPrimaryDisplay()
 
 interface WindowRect {

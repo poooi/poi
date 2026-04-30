@@ -109,7 +109,6 @@ export class KanGameWindowWrapper extends PureComponent<
         this.externalWindow.onbeforeunload = null
         this.externalWindow.close()
       }
-      window.externalWindow = undefined
     } catch (e) {
       console.error(e)
     }

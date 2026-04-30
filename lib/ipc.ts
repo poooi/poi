@@ -6,12 +6,23 @@ import { mapValues } from 'lodash'
 
 type IPCFunction = (...args: unknown[]) => unknown
 
+type IPCStore = Record<string, unknown> & {
+  WebView?: {
+    width?: number
+  }
+  MainWindow?: {
+    ipcFocusPlugin?: (id: string) => void
+  }
+}
+
+type Scope = keyof IPCStore
+
 class IPC extends EventEmitter {
-  data: Record<string, Record<string, IPCFunction>> = {}
+  data: IPCStore = {}
 
   // scope:  string
   // opts:   key-func Object
-  register = (scope: string, opts: Record<string, IPCFunction>) => {
+  register = (scope: Scope, opts: Record<string, unknown>) => {
     if (!(scope && opts)) {
       console.error('Invalid scope or opts:', scope, opts)
       return
@@ -20,8 +31,10 @@ class IPC extends EventEmitter {
       this.data[scope] = {}
     }
     this.unregister(scope, Object.keys(opts))
-    for (const key of Object.keys(opts)) {
-      this.data[scope][key] = opts[key]
+    let key: keyof typeof opts
+    for (key of Object.keys(opts)) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      ;(this.data[scope] as { [key: string]: unknown })[key] = opts[key]
     }
     this.emit('update', { type: '@@registerIPC', value: { scope, opts } })
     return
@@ -29,7 +42,7 @@ class IPC extends EventEmitter {
 
   // scope:  string
   // keys:   string / Array of string / key-func Object
-  unregister = (scope: string, keys: string | string[] | object) => {
+  unregister = (scope: Scope, keys: string | string[] | object) => {
     if (!(scope && keys)) {
       console.error('Invalid scope or keys:', scope, keys)
       return
@@ -46,33 +59,37 @@ class IPC extends EventEmitter {
       keysToRemove = Object.keys(keys)
     }
     for (const key of keysToRemove) {
-      delete this.data[scope][key]
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      delete (this.data[scope] as { [key: string]: unknown })[key]
     }
     this.emit('update', { type: '@@unregisterIPC', value: { scope, keys } })
     return
   }
 
-  unregisterAll = (scope: string) => {
+  unregisterAll = (scope: Scope) => {
     delete this.data[scope]
     this.emit('update', { type: '@@unregisterAllIPC', value: { scope } })
   }
 
-  access = (scope: string) => {
+  access = <S extends Scope>(scope: S): IPCStore[S] => {
     return this.data[scope]
   }
 
-  list = () => mapValues(this.data, (scope) => mapValues(scope, () => true))
+  list = () =>
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    mapValues(this.data, (scope) => mapValues(scope as { [key: string]: unknown }, () => true))
 
   // key:    string
   // args:   arguments passing to api
   foreachCall = (key: string, ...args: never[]) => {
     for (const scope in this.data) {
       if (Object.prototype.hasOwnProperty.call(this.data[scope], key)) {
-        this.data[scope][key].apply(null, args)
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        ;(this.data[scope] as { [key: string]: IPCFunction })[key].apply(null, args)
       }
     }
   }
 }
 
 export default new IPC()
-export type IPCType = IPC
+export { type IPC }

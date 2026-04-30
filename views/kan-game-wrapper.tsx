@@ -26,9 +26,9 @@ import { PoiAlert } from './components/info/alert'
 import { PoiControl } from './components/info/control'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiToast } from './components/info/toast'
+import { ipc } from './env'
 
 const config = remote.require('./lib/config')
-const ipc = remote.require('./lib/ipc')
 const { error } = remote.require('./lib/utils')
 const poiControlHeight = 30
 const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))

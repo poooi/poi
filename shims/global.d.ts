@@ -13,19 +13,9 @@ declare global {
     }
   }
 
-  interface IpcManager {
-    register: (namespace: string, handlers: Record<string, (...args: unknown[]) => unknown>) => void
-    unregisterAll: (namespace: string) => void
-    access: (namespace: string) => Record<string, (...args: unknown[]) => unknown>
-  }
-
   interface ObjectConstructor {
-    clone: (obj: unknown) => unknown
-    remoteClone: (obj: unknown) => unknown
-  }
-
-  interface Window {
-    externalWindow?: Window
+    clone: <T>(obj: T) => T
+    remoteClone: <T>(obj: T) => T
   }
 
   namespace JSX {
@@ -46,7 +36,6 @@ declare global {
   var DEFAULT_CACHE_PATH: string
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
-  var ipc: IpcManager
   /* eslint-enable no-var */
 }
 

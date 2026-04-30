@@ -30,6 +30,7 @@ export {
   type ConfigPath,
 } from './env-parts/config'
 export * from './env-parts/const'
+export * from './env-parts/ipc'
 
 // Fallback support of remote module
 if (!require('electron').remote) {
@@ -67,7 +68,6 @@ Object.remoteClone = (obj: unknown) =>
 
 // Node modules
 require('./env-parts/config')
-window.ipc = remote.require('./lib/ipc')
 
 if (process.env.NODE_ENV === 'production' && config.get?.('poi.misc.exceptionReporting')) {
   init({
