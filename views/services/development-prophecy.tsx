@@ -1,11 +1,12 @@
 import type { APIReqKousyouRemodelSlotResponse, APIReqKousyouCreateitemResponse } from 'kcsapi'
 
 import _ from 'lodash'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
 const lookupItemName = (slotitemId: number) =>
-  i18next.t(`resources:${window.getStore(`const.$equips.${slotitemId}.api_name`) ?? 'unknown'}`, {
+  i18next.t(`resources:${getStore(`const.$equips.${slotitemId}.api_name`) ?? 'unknown'}`, {
     keySeparator: '%%%%',
   })
 

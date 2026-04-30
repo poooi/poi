@@ -1,5 +1,6 @@
 import * as remote from '@electron/remote'
 import { debounce } from 'lodash'
+import { dispatch, getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 
 import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
@@ -35,7 +36,7 @@ const setIsolatedMainWindowSize = (isolateWindow: boolean) => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
-  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview') as {
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview') as {
     width: number
     height: number
   }
@@ -76,7 +77,7 @@ const setOverlayPanelWindowSize = (overlayPanel: boolean) => {
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
   const isolateWindow = config.get('poi.layout.isolate', false)
-  const { width: webviewWidth, height: webviewHeight } = window.getStore('layout.webview') as {
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview') as {
     width: number
     height: number
   }
@@ -144,9 +145,9 @@ const handleOverlayPanelResizeDebounced = debounce(handleOverlayPanelResize, 200
 const adjustSize = () => {
   try {
     setCSSDebounced()
-    window.dispatch({
+    dispatch({
       type: '@@LayoutUpdate/webview/useFixedResolution',
-      value: window.getStore('config.poi.webview.useFixedResolution'),
+      value: getStore('config.poi.webview.useFixedResolution'),
     })
     handleOverlayPanelResizeDebounced()
   } catch (error) {
@@ -157,7 +158,7 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  const webview = window.getStore('layout.webview') as { width: number; height: number }
+  const webview = getStore('layout.webview') as { width: number; height: number }
   let newWidth = webview.width
   let newHeight = webview.height
   newHeight += getYOffset()
@@ -181,7 +182,7 @@ config.on('config.set', (path: string, value: unknown) => {
       adjustSize()
       setTimeout(() => {
         remote.getCurrentWindow().setContentSize(width, height)
-        const webviewRef = window.getStore('layout.webview.ref')
+        const webviewRef = getStore('layout.webview.ref')
         if (webviewRef) {
           webviewRef.forceSyncZoom()
         }

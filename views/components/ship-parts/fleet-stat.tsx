@@ -15,6 +15,7 @@ import {
   InfoTooltipItem,
 } from 'views/components/etc/styled-components'
 import { CountdownTimer } from 'views/components/main/parts/countdown-timer'
+import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { recoveryEndTime } from 'views/redux/timers/cond'
 import { getFleetSpeed, getSaku33, getSpeedLabel, getTyku } from 'views/utils/game-utils'
@@ -35,7 +36,7 @@ import {
 } from 'views/utils/selectors'
 
 const isActive = () =>
-  ['ship-view', 'main-view'].includes(String(window.getStore('ui.activeMainTab') ?? ''))
+  ['ship-view', 'main-view'].includes(String(getStore('ui.activeMainTab') ?? ''))
 
 const FleetStats = styled.div`
   white-space: nowrap;

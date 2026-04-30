@@ -1,7 +1,7 @@
 import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
 
 import * as remote from '@electron/remote'
-/* global dispatch */
+import { dispatch, getStore } from 'views/create-store'
 import { onGameRequest, onGameResponse } from 'views/redux/reducer-factory'
 
 const gameAPIBroadcaster: GameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
@@ -135,7 +135,7 @@ const parseResponses = () => {
   }
 
   // DEBUG use
-  const questRecords = window.getStore('info.quests.records')
+  const questRecords = getStore('info.quests.records')
   if (!questRecords || typeof questRecords !== 'object' || !Object.keys(questRecords)) {
     console.warn('Quest record is cleared! ', details)
   }

@@ -20,6 +20,7 @@ import {
   ShipTabContent,
   ShipWrapper,
 } from 'views/components/ship-parts/styled-components'
+import { getStore } from 'views/create-store'
 import { DEFAULT_FLEET_NAMES, getFleetIntent } from 'views/utils/game-utils'
 import {
   fleetNameSelectorFactory,
@@ -200,8 +201,7 @@ const ShipViewInner = ({
         if (
           w !== 0 &&
           h !== 0 &&
-          (w !== window.getStore('layout.shippane.width') ||
-            h !== window.getStore('layout.shippane.height'))
+          (w !== getStore('layout.shippane.width') || h !== getStore('layout.shippane.height'))
         ) {
           dispatch({ type: '@@LayoutUpdate', value: { shippane: { width: w, height: h } } })
         }

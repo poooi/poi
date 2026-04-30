@@ -1,5 +1,6 @@
 import type { Ship } from 'views/redux/info/ships'
 
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
@@ -12,7 +13,7 @@ window.addEventListener('game.response', (e) => {
 
   const ignoreUnlocked = config.get('poi.unusedEquipmentSlotCheck.ignoreUnlocked', false)
 
-  const state = window.getStore()
+  const state = getStore()
   const fleets = state.info.fleets
   const ships = state.info.ships
 

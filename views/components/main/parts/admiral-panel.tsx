@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
+import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { getSlotitemCount } from 'views/utils/game-utils'
 import { configSelector, basicSelector } from 'views/utils/selectors'
@@ -163,7 +164,7 @@ const CardWrapper = styled(CardWrapperL)`
   align-items: center;
 `
 
-const isActive = () => window.getStore('ui.activeMainTab') === 'main-view'
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const CountdownContent = ({ moments }: { moments: Record<MomentKey, moment.Moment> }) => (
   <div>

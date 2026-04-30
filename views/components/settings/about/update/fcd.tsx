@@ -72,6 +72,7 @@ export const FCD = () => {
             for (const file of fileList) {
               const localVersion = get(version, file.name, '1970/01/01/01')
               if (file.version > localVersion) {
+                // eslint-disable-next-line no-console
                 console.log(
                   `Updating ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
                 )
@@ -84,6 +85,7 @@ export const FCD = () => {
                   flag = false
                 }
               } else {
+                // eslint-disable-next-line no-console
                 console.log(
                   `No newer version of ${file.name}: current ${localVersion}, remote ${file.version}, mode ${cacheMode}`,
                 )
@@ -94,6 +96,7 @@ export const FCD = () => {
           }
 
           if (flag) {
+            // eslint-disable-next-line no-console
             console.log(`Update fcd from ${server} successfully in mode ${cacheMode}.`)
             break
           } else {

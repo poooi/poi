@@ -1,5 +1,6 @@
 import React from 'react'
 import { Trans } from 'react-i18next'
+import { config } from 'views/env-parts/config'
 
 import { LayoutConfig } from './layout-config'
 import { ResolutionConfig } from './resolution-config'

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
+import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import {
   fleetsSelector,
@@ -100,7 +101,7 @@ const getTagIntent = (_props: unknown, timeRemaining: number): Intent =>
         ? Intent.SUCCESS
         : Intent.NONE
 
-const isActive = () => window.getStore('ui.activeMainTab') === 'main-view'
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const basicNotifyConfig = {
   type: 'expedition',

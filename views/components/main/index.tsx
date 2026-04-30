@@ -9,6 +9,7 @@ import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
 import { Trans } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 
 import { AdmiralPanel } from './parts/admiral-panel'
@@ -115,8 +116,8 @@ const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewI
         if (
           width !== 0 &&
           height !== 0 &&
-          (width !== window.getStore('layout.mainpane.width') ||
-            height !== window.getStore('layout.mainpane.height'))
+          (width !== getStore('layout.mainpane.width') ||
+            height !== getStore('layout.mainpane.height'))
         ) {
           dispatch({ type: '@@LayoutUpdate', value: { mainpane: { width, height } } })
         }

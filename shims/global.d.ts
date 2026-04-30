@@ -2,7 +2,6 @@ import type * as remote from '@electron/remote'
 import type { ConfigValue } from 'lib/config'
 import type { Constant } from 'lib/constant'
 import type lodash from 'lodash'
-import type { getStore as GetStore } from 'views/create-store'
 
 declare global {
   interface File {
@@ -84,7 +83,6 @@ declare global {
   var PLUGIN_PATH: string
   var PLUGIN_EXTRA_PATH: string
   var ipc: IpcManager
-  var getStore: typeof GetStore
   var ga: (...args: unknown[]) => void
   var log: (msg: string, options?: unknown) => void
   var error: (msg: string, options?: unknown) => void

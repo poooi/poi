@@ -7,6 +7,7 @@ import { unzip, sum } from 'lodash'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 import { shipDataSelectorFactory } from 'views/utils/selectors'
@@ -129,9 +130,9 @@ const onRequest = (e: CustomEvent<GameRequestDetails>) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const { api_id, api_id_items } = e.detail.body as unknown as APIReqKaisouPowerupRequest
     const sourceShips = api_id_items.split(',').map((id_item) => {
-      return (window.getStore('info.ships')?.[Number(id_item)] || {}).api_ship_id
+      return (getStore('info.ships')?.[Number(id_item)] || {}).api_ship_id
     })
-    const [$ship, ship] = shipDataSelectorFactory(Number(api_id))(window.getStore()) ?? []
+    const [$ship, ship] = shipDataSelectorFactory(Number(api_id))(getStore()) ?? []
     if ($ship && ship) {
       requestRecord = calcDisplayText({ ...$ship, ...ship }, sourceShips)
     }
@@ -144,7 +145,7 @@ const onResponse = (e: CustomEvent<GameResponseDetails>) => {
     const body = e.detail.body as unknown as APIReqKaisouPowerupResponse
     if (body.api_powerup_flag) {
       const target = body.api_ship
-      const $ship = window.getStore('const.$ships')?.[target.api_ship_id]
+      const $ship = getStore('const.$ships')?.[target.api_ship_id]
       if (requestRecord != null && $ship) {
         requestRecord.then((calcText) =>
           setTimeout(

@@ -2,7 +2,7 @@ import type { ConfigInstance, ConfigStringPath, ConfigValue } from 'lib/config'
 import type { DeepKeyOf, DeepValueOf } from 'shims/utils'
 
 import * as remote from '@electron/remote'
-import { get, set, debounce, compact, cloneDeep } from 'lodash'
+import { get, set, debounce, compact, cloneDeep, isEqual } from 'lodash'
 import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
 import thunk from 'redux-thunk'
@@ -162,6 +162,40 @@ observe(
   ]),
 )
 
+// publish data changes to plugin windows
+if (!window.isMain) {
+  window.addEventListener('storage', (e: StorageEvent) => {
+    if (e.key === '_storeCache' && e.newValue) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      const { fcd, wctf = {} } = JSON.parse(e.newValue) as {
+        fcd: Record<string, unknown>
+        wctf?: { lastModified?: unknown; version?: string }
+      }
+      for (const key of Object.keys(fcd)) {
+        if (!isEqual(fcd[key], get(getStore('fcd'), key))) {
+          // eslint-disable-next-line no-console
+          console.log(`Update ${key} from localStorage`)
+          store.dispatch({
+            type: '@@replaceFCD',
+            value: {
+              path: key,
+              data: fcd[key],
+            },
+          })
+        }
+      }
+      if (wctf.lastModified && wctf.lastModified !== getStore('wctf').lastModified) {
+        // eslint-disable-next-line no-console
+        console.log(`Update wctf-db to ${wctf.version} from localstorage`)
+        store.dispatch({
+          type: '@@wctf-db-update',
+          payload: wctf,
+        })
+      }
+    }
+  })
+}
+
 schedualDailyRefresh(store.dispatch)
 
 // Use this function to extend extra reducers to the store, such as plugin
@@ -191,18 +225,24 @@ export const extendReducer = (function () {
 
 declare global {
   interface Window {
+    /**
+     * @deprecated use import { getStore } from 'views/create-store' instead
+     */
     getStore: typeof getStore
+    /**
+     * @deprecated use import { dispatch } from 'views/create-store' instead
+     */
     dispatch: typeof store.dispatch
   }
-  // eslint-disable-next-line no-var
-  var dispatch: typeof store.dispatch
 }
+/** @deprecated Use `import { getStore } from 'views/create-store'` instead */
 window.getStore = getStore
+/** @deprecated Use `import { dispatch } from 'views/create-store'` instead */
 window.dispatch = store.dispatch
 window.config.get = (path, value) => {
   if (path === '') {
-    return window.getStore('config')
+    return getStore('config')
   }
-  const config = window.getStore('config')
+  const config = getStore('config')
   return get(isRecord(config) ? config : {}, path, value)
 }

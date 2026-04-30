@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
+import { getStore } from 'views/create-store'
 import {
   repairsSelector,
   constSelector,
@@ -66,7 +67,7 @@ const getTagIntent = (_props: unknown, timeRemaining: number): Intent =>
         ? Intent.SUCCESS
         : Intent.NONE
 
-const isActive = () => window.getStore('ui.activeMainTab') === 'main-view'
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const repairPanelSelector = createDeepCompareArraySelector(
   [

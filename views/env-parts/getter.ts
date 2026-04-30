@@ -6,7 +6,7 @@ import * as remote from '@electron/remote'
 import { map, get, mapValues } from 'lodash'
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
-import { store } from 'views/create-store'
+import { store, getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import { buildArray } from 'views/utils/tools'
 
@@ -72,105 +72,105 @@ Object.defineProperty(window.notify, 'expedition', {
 // Game data
 Object.defineProperty(window, '$slotitems', {
   get: () => {
-    return window.getStore('const.$equips') || {}
+    return getStore('const.$equips') || {}
   },
 })
 Object.defineProperty(window, '$slotitemTypes', {
   get: () => {
-    return window.getStore('const.$equipTypes') || {}
+    return getStore('const.$equipTypes') || {}
   },
 })
 const mapareasObject2ArraySelector = object2ArraySelectorFactory('const.$mapareas')
 Object.defineProperty(window, '$mapareas', {
   get: () => {
-    return mapareasObject2ArraySelector(window.getStore())
+    return mapareasObject2ArraySelector(getStore())
   },
 })
 Object.defineProperty(window, '$maps', {
   get: () => {
-    return window.getStore('const.$maps') || {}
+    return getStore('const.$maps') || {}
   },
 })
 const missionsObject2ArraySelector = object2ArraySelectorFactory('const.$missions')
 Object.defineProperty(window, '$missions', {
   get: () => {
-    return missionsObject2ArraySelector(window.getStore())
+    return missionsObject2ArraySelector(getStore())
   },
 })
 Object.defineProperty(window, '$shipTypes', {
   get: () => {
-    return window.getStore('const.$shipTypes') || {}
+    return getStore('const.$shipTypes') || {}
   },
 })
 Object.defineProperty(window, '$ships', {
   get: () => {
-    return window.getStore('const.$ships') || {}
+    return getStore('const.$ships') || {}
   },
 })
 Object.defineProperty(window, '$useitems', {
   get: () => {
-    return window.getStore('const.$useitems') || {}
+    return getStore('const.$useitems') || {}
   },
 })
 Object.defineProperty(window, '_decks', {
   get: () => {
-    return window.getStore('info.fleets') || []
+    return getStore('info.fleets') || []
   },
 })
 Object.defineProperty(window, '_nickName', {
   get: () => {
-    return window.getStore('info.basic.api_nickname') || ''
+    return getStore('info.basic.api_nickname') || ''
   },
 })
 Object.defineProperty(window, '_nickNameId', {
   get: () => {
-    return window.getStore('info.basic.api_nickname_id') || -1
+    return getStore('info.basic.api_nickname_id') || -1
   },
 })
 Object.defineProperty(window, '_teitokuId', {
   get: () => {
-    return window.getStore('info.basic.api_member_id') || -1
+    return getStore('info.basic.api_member_id') || -1
   },
 })
 Object.defineProperty(window, '_teitokuExp', {
   get: () => {
-    return window.getStore('info.basic.api_experience') || 0
+    return getStore('info.basic.api_experience') || 0
   },
 })
 Object.defineProperty(window, '_teitokuLv', {
   get: () => {
-    return window.getStore('info.basic.api_level') || 0
+    return getStore('info.basic.api_level') || 0
   },
 })
 Object.defineProperty(window, '_ndocks', {
   get: () => {
-    return window.getStore('info.repairs')?.map((repair) => repair.api_ship_id) || []
+    return getStore('info.repairs')?.map((repair) => repair.api_ship_id) || []
   },
 })
 Object.defineProperty(window, '_eventMapRanks', {
   get: () => {
-    return mapValues(window.getStore('info.maps'), (m) => get(m, 'api_eventmap.api_selected_rank'))
+    return mapValues(getStore('info.maps'), (m) => get(m, 'api_eventmap.api_selected_rank'))
   },
 })
 Object.defineProperty(window, '_serverIp', {
   get: () => {
-    return window.getStore('info.server.ip')
+    return getStore('info.server.ip')
   },
 })
 Object.defineProperty(window, '_serverId', {
   get: () => {
-    return window.getStore('info.server.id')
+    return getStore('info.server.id')
   },
 })
 Object.defineProperty(window, '_serverName', {
   get: () => {
-    return window.getStore('info.server.name')
+    return getStore('info.server.name')
   },
 })
 
 const initShips = () => {
   window._ships = new Proxy(
-    { ...window.getStore('info.ships') },
+    { ...getStore('info.ships') },
     {
       get: (target, property) => {
         const ship = target[Number(property)]
@@ -183,9 +183,7 @@ const initShips = () => {
             // @ts-expect-error force type assertion
             const key: keyof APIShip = innerProperty
             if (key in shipRecord) return shipRecord[key]
-            return window.getStore(
-              `const.$ships.${shipRecord.api_ship_id}.${String(innerProperty)}`,
-            )
+            return getStore(`const.$ships.${shipRecord.api_ship_id}.${String(innerProperty)}`)
           },
         })
       },
@@ -195,7 +193,7 @@ const initShips = () => {
 
 const initEquips = () => {
   window._slotitems = new Proxy(
-    { ...window.getStore('info.equips') },
+    { ...getStore('info.equips') },
     {
       get: (target, property) => {
         const equip = target[Number(property)]
@@ -208,9 +206,7 @@ const initEquips = () => {
             // @ts-expect-error force type assertion
             const key: keyof APISlotItem = innerProperty
             if (key in equipRecord) return equipRecord[key]
-            return window.getStore(
-              `const.$equips.${equipRecord.api_slotitem_id}.${String(innerProperty)}`,
-            )
+            return getStore(`const.$equips.${equipRecord.api_slotitem_id}.${String(innerProperty)}`)
           },
         })
       },
@@ -219,7 +215,7 @@ const initEquips = () => {
 }
 
 const initWebviewWidth = () => {
-  const w = window.getStore('layout.webview.width')
+  const w = getStore('layout.webview.width')
   ipc.register('WebView', {
     width: typeof w === 'number' && !Number.isNaN(w) ? w : 1200,
   })

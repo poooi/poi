@@ -1,10 +1,10 @@
 import type { FileFilter } from 'electron'
+import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Callout, Intent } from '@blueprintjs/core'
 import assert from 'assert'
 import { X509Certificate } from 'crypto'
 import fs from 'fs-extra'
-import { get } from 'lodash'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -16,8 +16,8 @@ const filters: FileFilter[] = [{ name: 'PEM', extensions: ['pem'] }]
 export const CustomCertificateAuthority = () => {
   const { t } = useTranslation('setting')
 
-  const value = useSelector((state: any) =>
-    get(state.config, 'poi.network.customCertificateAuthority', ''),
+  const value = useSelector(
+    (state: RootState) => state.config?.poi?.network?.customCertificateAuthority ?? '',
   )
 
   const handleDelete = useCallback(() => {

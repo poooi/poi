@@ -1,7 +1,7 @@
 import type { Config } from 'views/env-parts/config'
 import type { Plugin } from 'views/services/plugin-manager/utils'
 
-import { mapValues, isEqual, get } from 'lodash'
+import { mapValues } from 'lodash'
 
 import { createConfigAction } from './actions'
 import { reducer as battle, type BattleState } from './battle'
@@ -174,38 +174,4 @@ export function onConfigChange({
 }): ReturnType<typeof createConfigAction> {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return createConfigAction({ path, value: value as object })
-}
-
-// publish data changes to plugin windows
-if (!window.isMain) {
-  window.addEventListener('storage', (e: StorageEvent) => {
-    if (e.key === '_storeCache' && e.newValue) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      const { fcd, wctf = {} } = JSON.parse(e.newValue) as {
-        fcd: Record<string, unknown>
-        wctf?: { lastModified?: unknown; version?: string }
-      }
-      for (const key of Object.keys(fcd)) {
-        if (!isEqual(fcd[key], get(window.getStore('fcd'), key))) {
-          // eslint-disable-next-line no-console
-          console.log(`Update ${key} from localStorage`)
-          window.dispatch({
-            type: '@@replaceFCD',
-            value: {
-              path: key,
-              data: fcd[key],
-            },
-          })
-        }
-      }
-      if (wctf.lastModified && wctf.lastModified !== window.getStore('wctf').lastModified) {
-        // eslint-disable-next-line no-console
-        console.log(`Update wctf-db to ${wctf.version} from localstorage`)
-        window.dispatch({
-          type: '@@wctf-db-update',
-          payload: wctf,
-        })
-      }
-    }
-  })
 }

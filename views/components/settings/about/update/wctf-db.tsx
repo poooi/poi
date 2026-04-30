@@ -114,12 +114,14 @@ export const WctfDB = () => {
         try {
           await installPackage(PACKAGE_NAME, data?.version, npmConfig)
           void loadDB()
+          // eslint-disable-next-line no-console
           console.log(`wctf-db updated to ${data?.version}`)
         } catch (e) {
           console.error(e)
         }
       } else {
         if (force) void loadDB()
+        // eslint-disable-next-line no-console
         console.log(`No update for wctf-db, current: ${version}, remote: ${get(data, 'version')}`)
       }
 

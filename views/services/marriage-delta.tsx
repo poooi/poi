@@ -3,6 +3,7 @@ import type { GameRequestDetails, GameResponseDetails } from 'views/env-parts/da
 
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
@@ -17,7 +18,7 @@ const onRequest = (e: CustomEvent<GameRequestDetails>) => {
   if (e.detail.path === '/kcsapi/api_req_kaisou/marriage') {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const { api_id } = e.detail.body as unknown as APIReqKaisouMarriageRequest
-    const kyouka = window.getStore(`info.ships`)[Number(api_id)]?.api_kyouka
+    const kyouka = getStore(`info.ships`)[Number(api_id)]?.api_kyouka
     if (Array.isArray(kyouka)) {
       kyoukaState = { id: Number(api_id), kyouka }
     }

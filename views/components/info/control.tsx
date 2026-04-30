@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { Tooltip } from 'views/components/etc/overlay'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 
@@ -158,8 +159,8 @@ export const PoiControl = () => {
 
   const handleCapturePageOverWebContent = useCallback(
     async (toClipboard?: boolean) => {
-      const { width, height } = window.getStore('layout.webview')
-      const webContentId = window.getStore('layout.webview.ref')?.getWebContentsId()
+      const { width, height } = getStore('layout.webview')
+      const webContentId = getStore('layout.webview.ref')?.getWebContentsId()
       if (webContentId == null) {
         handleScreenshotFailure(new Error('WebContent is not available'))
         return
@@ -188,7 +189,7 @@ export const PoiControl = () => {
 
   const handleCapturePageOverCanvas = useCallback(
     async (toClipboard?: boolean) => {
-      const ref = window.getStore('layout.webview.ref')
+      const ref = getStore('layout.webview.ref')
       const webContents = ref?.getWebContents()
       if (!webContents) {
         await handleCapturePageOverWebContent(toClipboard)
@@ -273,20 +274,20 @@ export const PoiControl = () => {
   const handleOpenDevTools = useCallback(() => {
     remote.getCurrentWindow().webContents.openDevTools({ mode: 'detach' })
     setTimeout(() => {
-      window.getStore('layout.webview.ref')?.executeJavaScript('window.align()')
+      getStore('layout.webview.ref')?.executeJavaScript('window.align()')
     }, 500)
   }, [])
 
   const handleOpenWebviewDevTools = useCallback(() => {
-    window.getStore('layout.webview.ref')?.openDevTools()
+    getStore('layout.webview.ref')?.openDevTools()
   }, [])
 
   const handleUnlockWebview = useCallback(() => {
-    window.getStore('layout.webview.ref')?.executeJavaScript('window.unalign()')
+    getStore('layout.webview.ref')?.executeJavaScript('window.unalign()')
   }, [])
 
   const handleJustifyLayout = useCallback((e: React.MouseEvent) => {
-    window.getStore('layout.webview.ref')?.executeJavaScript('window.align()')
+    getStore('layout.webview.ref')?.executeJavaScript('window.align()')
     e.preventDefault()
   }, [])
 

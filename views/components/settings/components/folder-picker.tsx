@@ -6,12 +6,12 @@ import * as remote from '@electron/remote'
 import fs from 'fs-extra'
 import { get, split, map, size } from 'lodash'
 import path from 'path'
-/* global config */
 import React, { useState, useEffect, useCallback } from 'react'
 import FA from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
+import { config } from 'views/env-parts/config'
 import { isSubdirectory } from 'views/utils/tools'
 
 const { dialog } = remote.require('electron')

@@ -16,6 +16,7 @@ import { ResizableArea } from 'react-resizable-area'
 import { styled } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import ElectronWebView from 'views/components/etc/webview'
+import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import { fileUrl } from 'views/utils/tools'
@@ -177,8 +178,8 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
     entries.forEach((entry) => {
       const { width, height } = entry.contentRect
       if (
-        width !== window.getStore('layout.webview.width') ||
-        height !== window.getStore('layout.webview.height')
+        width !== getStore('layout.webview.width') ||
+        height !== getStore('layout.webview.height')
       ) {
         this.props.dispatch({
           type: '@@LayoutUpdate',
@@ -269,10 +270,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
         current.setContentSize(width, height)
       }
 
-      if (
-        layout !== 'vertical' &&
-        realHeight > getRealSize(window.getStore('layout.window.height'))
-      ) {
+      if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
         let [width, height] = current.getContentSize()
         height = realHeight
         current.setContentSize(width, height)
@@ -302,12 +300,8 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
       },
     })
     this.setProperWindowSize(
-      Number.isNaN(window.getStore('layout.webview.width'))
-        ? 1200
-        : window.getStore('layout.webview.width'),
-      Number.isNaN(window.getStore('layout.webview.height'))
-        ? 720
-        : window.getStore('layout.webview.height'),
+      Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
+      Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
     )
     this.webview.current?.getWebContents().addListener('certificate-error', this.handleCertError)
   }

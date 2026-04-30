@@ -12,6 +12,7 @@ import {
   ShipDeck,
   ShipTabContent,
 } from 'views/components/ship-parts/styled-components'
+import { getStore } from 'views/create-store'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
@@ -118,8 +119,8 @@ const MiniShipInner = ({
         if (
           width !== 0 &&
           height !== 0 &&
-          (width !== window.getStore('layout.minishippane.width') ||
-            height !== window.getStore('layout.minishippane.height'))
+          (width !== getStore('layout.minishippane.width') ||
+            height !== getStore('layout.minishippane.height'))
         ) {
           dispatch({ type: '@@LayoutUpdate', value: { minishippane: { width, height } } })
         }

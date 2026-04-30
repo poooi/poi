@@ -1,13 +1,14 @@
 import * as remote from '@electron/remote'
+import { getStore } from 'views/create-store'
 
 if (isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened', () => {
-    const PLUGINS = (window.getStore('plugins') || []) as Array<{
+    const PLUGINS = (getStore('plugins') || []) as Array<{
       enabled: boolean
       id: string
       version: string
     }>
-    const FCD = (window.getStore('fcd.version') || {}) as Record<string, string>
+    const FCD = (getStore('fcd.version') || {}) as Record<string, string>
 
     const pluginMessage = PLUGINS.filter((plugin) => plugin.enabled)
       .map((plugin) => `${plugin.id}@${plugin.version}`)

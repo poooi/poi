@@ -5,6 +5,7 @@ import type { Fleet } from 'views/redux/info/fleets'
 import type { SortieState } from 'views/redux/sortie'
 
 import { flatMap, map, get } from 'lodash'
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 
 interface DamagedCheckInfo {
@@ -59,15 +60,15 @@ export const damagedCheck = (
 }
 
 export const gameRefreshPage = () => {
-  window.getStore('layout.webview.ref')?.getWebContents().reload()
+  getStore('layout.webview.ref')?.getWebContents().reload()
 }
 
 export const gameRefreshPageIgnoringCache = () => {
-  window.getStore('layout.webview.ref')?.reloadIgnoringCache()
+  getStore('layout.webview.ref')?.reloadIgnoringCache()
 }
 
 export const gameReload = () => {
-  window.getStore('layout.webview.ref')?.executeJavaScript(`
+  getStore('layout.webview.ref')?.executeJavaScript(`
   var doc;
   if (document.getElementById('game_frame')) {
     doc = document.getElementById('game_frame').contentDocument;

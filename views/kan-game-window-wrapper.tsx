@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom'
 import { styled, StyleSheetManager } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { WindowEnv } from 'views/components/etc/window-env'
+import { dispatch, getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import { fileUrl, loadScript } from 'views/utils/tools'
 
@@ -142,7 +143,7 @@ export class KanGameWindowWrapper extends PureComponent<
             ),
           )
         }
-        window.dispatch({
+        dispatch({
           type: '@@LayoutUpdate/webview/windowUseFixedResolution',
           value,
         })
@@ -233,11 +234,11 @@ export class KanGameWindowWrapper extends PureComponent<
               ),
             )
           }
-          window.getStore('layout.webview.ref')?.executeJavaScript('window.align()')
+          getStore('layout.webview.ref')?.executeJavaScript('window.align()')
           const wv = this.externalWindow!.document.querySelector('webview')
           if (wv) {
             const { width: windowWidth, height: windowHeight } = wv.getBoundingClientRect()
-            window.dispatch({
+            dispatch({
               type: '@@LayoutUpdate/webview/size',
               value: { windowWidth, windowHeight },
             })
@@ -314,7 +315,7 @@ export class KanGameWindowWrapper extends PureComponent<
   }
 
   forceSyncZoom = (count = 0) => {
-    const webview = window.getStore('layout.webview.ref')
+    const webview = getStore('layout.webview.ref')
     if (webview) {
       webview.forceSyncZoom()
     } else if (count < 20) {

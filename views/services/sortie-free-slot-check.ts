@@ -1,3 +1,4 @@
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 import { getSlotitemCount } from 'views/utils/game-utils'
@@ -5,12 +6,11 @@ import { getSlotitemCount } from 'views/utils/game-utils'
 window.addEventListener('game.response', (e) => {
   const { path } = e.detail
   if (path === '/kcsapi/api_get_member/mapinfo') {
-    const basic = window.getStore('info.basic')
+    const basic = getStore('info.basic')
     const errMsg: string[] = []
     if (config.get('poi.mapStartCheck.ship.enable', false)) {
       const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4) as number
-      const shipSlots =
-        (basic.api_max_chara ?? 0) - Object.keys(window.getStore('info.ships')).length
+      const shipSlots = (basic.api_max_chara ?? 0) - Object.keys(getStore('info.ships')).length
       if (shipSlots < minShipSlots) {
         if (shipSlots > 0) {
           errMsg.push(i18next.t('main:ShipSlotWarning', { count: shipSlots }))
@@ -21,8 +21,7 @@ window.addEventListener('game.response', (e) => {
     }
     if (config.get('poi.mapStartCheck.item.enable', false)) {
       const minEquipSlots = config.get('poi.mapStartCheck.item.minFreeSlots', 10) as number
-      const equipSlots =
-        (basic.api_max_slotitem ?? 0) - getSlotitemCount(window.getStore('info.equips'))
+      const equipSlots = (basic.api_max_slotitem ?? 0) - getSlotitemCount(getStore('info.equips'))
       if (equipSlots < minEquipSlots) {
         if (equipSlots > 0) {
           errMsg.push(i18next.t('main:EquipSlotWarning', { count: equipSlots }))

@@ -1,5 +1,6 @@
 import type { Ship } from 'views/redux/info/ships'
 
+import { getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import i18next from 'views/env-parts/i18next'
 
@@ -33,7 +34,7 @@ window.addEventListener('game.request', (e) => {
   }
 
   if (path === '/kcsapi/api_get_member/sortie_conditions') {
-    const state = window.getStore()
+    const state = getStore()
     let flag = false
     let fleets = [0, 1, 2, 3]
     if (state.sortie.combinedFlag > 0) {

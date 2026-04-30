@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Avatar } from 'views/components/etc/avatar'
 import { MaterialIcon } from 'views/components/etc/icon'
+import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 
 import { CountdownNotifierLabel } from './countdown-timer'
@@ -41,7 +42,7 @@ const getTagIntent = ({ isLSC }: { isLSC?: boolean }, timeRemaining: number): In
           ? Intent.SUCCESS
           : Intent.NONE
 
-const isActive = () => window.getStore('ui.activeMainTab') === 'main-view'
+const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const basicNotifyConfig = {
   icon: path.join(window.ROOT, 'assets', 'img', 'operation', 'build.png'),

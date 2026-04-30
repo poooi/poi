@@ -16,7 +16,7 @@ import BasicAuth from './components/etc/http-basic-auth'
 import { TitleBarWrapper } from './components/etc/menu'
 import ModalTrigger from './components/etc/modal'
 import { WindowEnv } from './components/etc/window-env'
-import { store } from './create-store'
+import { store, getStore } from './create-store'
 import i18next from './env-parts/i18next'
 import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { KanGameWrapper } from './kan-game-wrapper'
@@ -57,8 +57,7 @@ const Poi = () => {
         if (
           width !== 0 &&
           height !== 0 &&
-          (width !== window.getStore('layout.window.width') ||
-            height !== window.getStore('layout.window.height'))
+          (width !== getStore('layout.window.width') || height !== getStore('layout.window.height'))
         ) {
           dispatch({
             type: '@@LayoutUpdate',

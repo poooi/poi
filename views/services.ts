@@ -2,7 +2,7 @@ import type { Dispatch } from 'redux'
 
 import * as remote from '@electron/remote'
 import { observer, observe } from 'redux-observers'
-import { store } from 'views/create-store'
+import { store, getStore } from 'views/create-store'
 import { config } from 'views/env-parts/config'
 import { dbg } from 'views/env-parts/dbg'
 import i18next from 'views/env-parts/i18next'
@@ -32,7 +32,7 @@ import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './ser
 // Update server info
 const setUpdateServer = (dispatch: Dispatch) => {
   gameAPIBroadcaster.addListener('kancolle.server.change', ({ ip, num: id, name }) => {
-    if (!isEqual(window.getStore('info.server'), { ip, id, name })) {
+    if (!isEqual(getStore('info.server'), { ip, id, name })) {
       if (ip) {
         dispatch({
           type: '@@ServerReady',

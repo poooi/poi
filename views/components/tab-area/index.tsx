@@ -23,7 +23,7 @@ import { get, sortBy } from 'lodash'
 import React, { Component, useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
 import { Popover } from 'views/components/etc/overlay'
@@ -278,17 +278,6 @@ const getResizableAreaProps = ({
 
 let lockedTab = false
 
-const dispatchTabChangeEvent = (
-  tabInfo: { activeMainTab?: string; activePluginName?: string },
-  autoSwitch = false,
-): void => {
-  dispatch({
-    type: '@@TabSwitch',
-    tabInfo,
-    autoSwitch,
-  })
-}
-
 const isPluginTab = (key: string): boolean => !['main-view', 'ship-view', 'settings'].includes(key)
 
 interface ControlledTabAreaProps {
@@ -338,6 +327,19 @@ const ControlledTabAreaFC = ({
   const resizableAreaRef = useRef<ResizableAreaHandle | null>(null)
   const windowRefs = useRef<Record<string, PluginWindowWrapHandle | null>>({})
   const listenerRef = useRef(false)
+
+  const dispatch = useDispatch()
+
+  const dispatchTabChangeEvent = useCallback(
+    (tabInfo: { activeMainTab?: string; activePluginName?: string }, autoSwitch = false): void => {
+      dispatch({
+        type: '@@TabSwitch',
+        tabInfo,
+        autoSwitch,
+      })
+    },
+    [dispatch],
+  )
 
   if (doubleTabbed !== prevDoubleTabbed) {
     dispatchTabChangeEvent({ activeMainTab: 'main-view' })
@@ -395,7 +397,7 @@ const ControlledTabAreaFC = ({
       }
       dispatchTabChangeEvent(tabInfo, autoSwitch)
     },
-    [doubleTabbed],
+    [doubleTabbed, dispatchTabChangeEvent],
   )
 
   const handleSelectTab = useCallback(
