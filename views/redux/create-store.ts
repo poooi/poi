@@ -99,8 +99,6 @@ export function getStore<const Path extends DeepKeyOf<RootState>>(
 export function getStore(path?: string): unknown {
   // cache and lock are used by the custom combineReducers polyfill
   if (getStore.lock) {
-    // eslint-disable-next-line no-console
-    console.warn(new Error('You should not call getStore() in reducer.'))
     const cached = getStore.cache
     const storeContent = isRecord(cached) ? cached : {}
     return path !== undefined ? get(storeContent, path) : storeContent
