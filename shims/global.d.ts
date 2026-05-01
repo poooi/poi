@@ -39,6 +39,4 @@ declare global {
   /* eslint-enable no-var */
 }
 
-declare module '*.css'
-
 export {}
