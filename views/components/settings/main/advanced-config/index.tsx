@@ -1,5 +1,5 @@
 import { FormGroup, Position, Tooltip } from '@blueprintjs/core'
-import { map, size, includes } from 'lodash'
+import { map, size, includes } from 'lodash-es'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'

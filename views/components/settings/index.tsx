@@ -1,5 +1,5 @@
 import { Tabs, Tab, Tooltip, Position } from '@blueprintjs/core'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import React, { useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans, useTranslation } from 'react-i18next'

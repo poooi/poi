@@ -1,5 +1,5 @@
 import { ResizeSensor } from '@blueprintjs/core'
-import { range, debounce } from 'lodash'
+import { range, debounce } from 'lodash-es'
 import React, { useState, useMemo } from 'react'
 import { styled } from 'styled-components'
 import { Section } from 'views/components/settings/components/section'

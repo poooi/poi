@@ -27,6 +27,7 @@ const createTargets = (targets) =>
 module.exports = {
   appId: 'org.poooi.poi',
   asar: true,
+  asarUnpack: ['dist/**'],
   copyright: `Copyright ©${new Date().getFullYear()} poi Contributors`,
   mac: {
     publish: [],

@@ -1,6 +1,6 @@
 import type { Plugin } from 'views/services/plugin-manager/utils'
 
-import { sortBy } from 'lodash'
+import { sortBy } from 'lodash-es'
 import { reduxSet } from 'views/utils/tools'
 
 import type { PoiReducer } from '../combine-reducers'

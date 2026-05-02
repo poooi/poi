@@ -28,6 +28,8 @@ const TARGET_LIST = [
   '.npmrc',
   // Folders
   'assets',
+  'assets/js',
+  'dist',
   'lib',
   'views',
   'node_modules',
@@ -106,6 +108,8 @@ export const build = async (poiVersion, dontRemove) => {
 
   // Stage1: Everything downloaded and translated
   await gitArchiveAndClone(tarPath, stage1App)
+  // Copy pre-built renderer bundle (produced by gulp build-renderer-production)
+  await fs.copy(path.join(ROOT, 'dist'), path.join(stage1App, 'dist'), { overwrite: true })
   await compileToJs(stage1App, false)
   log('stage 1 finished')
 

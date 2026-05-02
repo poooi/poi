@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ResizeSensor } from '@blueprintjs/core'
-import { memoize, times } from 'lodash'
+import { memoize, times } from 'lodash-es'
 import React, { useCallback, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans, useTranslation } from 'react-i18next'

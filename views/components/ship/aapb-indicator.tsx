@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, Tag, Tooltip } from '@blueprintjs/core'
-import { compact, isFinite } from 'lodash'
+import { compact, isFinite } from 'lodash-es'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

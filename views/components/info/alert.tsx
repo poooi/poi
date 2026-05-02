@@ -1,4 +1,4 @@
-import { take } from 'lodash'
+import { take } from 'lodash-es'
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { styled, keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'

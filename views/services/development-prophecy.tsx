@@ -1,6 +1,6 @@
 import type { APIReqKousyouRemodelSlotResponse, APIReqKousyouCreateitemResponse } from 'kcsapi'
 
-import _ from 'lodash'
+import _ from 'lodash-es'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'

@@ -2,7 +2,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, Tooltip } from '@blueprintjs/core'
 import classNames from 'classnames'
-import { memoize } from 'lodash'
+import { memoize } from 'lodash-es'
 import path from 'path'
 import React, { memo, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'

@@ -1,7 +1,7 @@
 import type { Config } from 'views/env'
 import type { Plugin } from 'views/services/plugin-manager/utils'
 
-import { mapValues } from 'lodash'
+import { mapValues } from 'lodash-es'
 
 import { createConfigAction } from './actions'
 import { reducer as battle, type BattleState } from './battle'

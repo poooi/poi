@@ -7,7 +7,7 @@
 */
 
 import type { PopoverProps } from '@blueprintjs/core'
-import type { Dictionary } from 'lodash'
+import type { Dictionary } from 'lodash-es'
 import type { DeepKeyOfArray, DeepValueOfArray } from 'shims/utils'
 
 import { readJsonSync } from 'fs-extra'
@@ -23,7 +23,7 @@ import _, {
   padStart,
   setWith,
   clone,
-} from 'lodash'
+} from 'lodash-es'
 import pangu from 'pangu'
 import path from 'path'
 import url from 'url'

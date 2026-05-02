@@ -2,7 +2,7 @@ import type { APIAirBase } from 'kcsapi/api_get_member/mapinfo/response'
 import type { APIBaseItem } from 'kcsapi/api_req_air_corps/change_deployment_base/response'
 
 import { createSlice } from '@reduxjs/toolkit'
-import { zip, findIndex, get, map, omit, unzip } from 'lodash'
+import { zip, findIndex, get, map, omit, unzip } from 'lodash-es'
 import { trimArray, compareUpdate, constructArray } from 'views/utils/tools'
 
 import {

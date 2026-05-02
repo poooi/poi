@@ -1,6 +1,6 @@
 import type { Middleware } from 'redux'
 
-import { countBy, get } from 'lodash'
+import { countBy, get } from 'lodash-es'
 
 import type { RootState } from '../reducer-factory'
 

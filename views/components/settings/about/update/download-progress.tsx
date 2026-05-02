@@ -2,7 +2,7 @@ import type { Updater } from 'lib/updater'
 
 import { ProgressBar, Intent } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { throttle } from 'lodash'
+import { throttle } from 'lodash-es'
 import React, { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { styled } from 'styled-components'

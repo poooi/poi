@@ -3,7 +3,7 @@ import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { GameRequestDetails, GameResponseDetails } from 'views/env-parts/data-resolver'
 import type { Ship } from 'views/redux/info/ships'
 
-import { unzip, sum } from 'lodash'
+import { unzip, sum } from 'lodash-es'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'

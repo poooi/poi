@@ -1,5 +1,5 @@
 import { Switch, Slider, FormGroup, Callout } from '@blueprintjs/core'
-import { get, map, capitalize } from 'lodash'
+import { get, map, capitalize } from 'lodash-es'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

@@ -1,4 +1,4 @@
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import { Models, Simulator } from 'poi-lib-battle'
 
 const { Battle, Fleet } = Models

@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import fs from 'fs-extra'
-import { memoize } from 'lodash'
+import { memoize } from 'lodash-es'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { ROOT } from 'views/env'
 

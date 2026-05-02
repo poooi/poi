@@ -2,7 +2,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Intent, Tooltip } from '@blueprintjs/core'
 import { sync as globSync } from 'glob'
-import { get, entries, map, max, values } from 'lodash'
+import { get, entries, map, max, values } from 'lodash-es'
 import fetch from 'node-fetch'
 import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -1,6 +1,6 @@
 import type { APIEDeckInfo } from 'kcsapi/api_req_map/next/response'
 
-import { isArray, get } from 'lodash'
+import { isArray, get } from 'lodash-es'
 
 /* FORMAT
  *   combinedFlag:                      // api_combined_flag

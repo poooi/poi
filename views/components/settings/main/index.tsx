@@ -1,6 +1,6 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import React from 'react'
 import { useSelector } from 'react-redux'
 

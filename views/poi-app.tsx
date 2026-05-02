@@ -1,7 +1,7 @@
 import type { ResizableAreaHandle, SizeState } from 'react-resizable-area'
 import type { RootState } from 'views/redux/reducer-factory'
 
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import React, { useState, useCallback, useRef } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useSelector } from 'react-redux'

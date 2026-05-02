@@ -1,5 +1,5 @@
 import { shell } from 'electron'
-import { map, memoize } from 'lodash'
+import { map, memoize } from 'lodash-es'
 import CONTRIBUTORS from 'poi-asset-contributor-data/dist/contributors.json'
 import React from 'react'
 import { styled } from 'styled-components'

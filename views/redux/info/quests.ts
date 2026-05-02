@@ -3,9 +3,10 @@ import type { Dispatch } from 'redux'
 
 import * as remote from '@electron/remote'
 import { createSlice } from '@reduxjs/toolkit'
-import { map, sortBy, mapValues, forEach, values, fromPairs, isEqual, range } from 'lodash'
+import { map, sortBy, mapValues, forEach, values, fromPairs, isEqual, range } from 'lodash-es'
 import moment from 'moment-timezone'
 import path from 'path'
+import { MODULE_PATH } from 'views/env-parts/const'
 import Scheduler from 'views/services/scheduler'
 import FileWriter from 'views/utils/file-writer'
 import { copyIfSame, arraySum } from 'views/utils/tools'
@@ -22,7 +23,8 @@ import {
 } from '../actions'
 
 // Workaround for https://github.com/electron/electron/issues/37404
-const CSON = remote.require('cson')
+// Use absolute path so remote.require resolves from the correct node_modules
+const CSON = remote.require(path.join(MODULE_PATH, 'cson'))
 
 // Type declarations
 // quest_goal.cson type declaration

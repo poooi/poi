@@ -2,7 +2,7 @@ import type { Layout, Layouts } from 'react-grid-layout'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { ResizeSensor } from '@blueprintjs/core'
-import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
+import { get, pick, isEqual, entries, fromPairs, map } from 'lodash-es'
 import React, { useCallback } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'

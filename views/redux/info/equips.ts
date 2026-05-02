@@ -1,7 +1,7 @@
 import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
 
 import { createSlice } from '@reduxjs/toolkit'
-import { keyBy, filter } from 'lodash'
+import { keyBy, filter } from 'lodash-es'
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
 
 import {

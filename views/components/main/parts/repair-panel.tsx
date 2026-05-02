@@ -4,7 +4,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
 import cls from 'classnames'
-import { join as joinString, range, get } from 'lodash'
+import { join as joinString, range, get } from 'lodash-es'
 import path from 'path'
 import React from 'react'
 import FA from 'react-fontawesome'

@@ -4,7 +4,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { ProgressBar, Position, PopoverInteractionKind, Intent, Button } from '@blueprintjs/core'
 import classNames from 'classnames'
-import { map, zip, each } from 'lodash'
+import { map, zip, each } from 'lodash-es'
 import { rgba } from 'polished'
 import React from 'react'
 import { useTranslation } from 'react-i18next'

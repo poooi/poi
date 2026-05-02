@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import moment from 'moment-timezone'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'

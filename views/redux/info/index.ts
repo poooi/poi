@@ -1,7 +1,7 @@
 import type { APIKdock } from 'kcsapi/api_get_member/require_info/response'
 import type { APIBasic as PortAPIBasic } from 'kcsapi/api_port/port/response'
 
-import { get, pick } from 'lodash'
+import { get, pick } from 'lodash-es'
 import reduceReducers from 'reduce-reducers'
 
 import type { AirBase } from './airbase'

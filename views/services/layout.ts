@@ -1,5 +1,5 @@
 import * as remote from '@electron/remote'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { dispatch, getStore } from 'views/create-store'
 import { config } from 'views/env'
 

@@ -1,4 +1,4 @@
-import { sortBy, cloneDeep, partial } from 'lodash'
+import { sortBy, cloneDeep, partial } from 'lodash-es'
 
 const INTERVAL = 1000
 

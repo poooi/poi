@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import { compareUpdate } from 'views/utils/tools'
 
 import {

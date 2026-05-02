@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import { compareUpdate, constructArray } from 'views/utils/tools'
 
 import {

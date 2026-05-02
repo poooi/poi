@@ -1,7 +1,7 @@
 import type { ConfigPath } from 'views/env'
 
 import { InputGroup } from '@blueprintjs/core'
-import { debounce, get } from 'lodash'
+import { debounce, get } from 'lodash-es'
 import React, { useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 

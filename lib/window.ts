@@ -1,7 +1,7 @@
 import type { Display, BrowserWindowConstructorOptions, Menu } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
-import { BrowserWindow, screen, webContents } from 'electron'
+import { BrowserWindow, nativeImage, screen, webContents } from 'electron'
 import path from 'path'
 
 /* eslint-disable no-var */
@@ -58,7 +58,7 @@ export default {
     options = Object.assign(
       {
         show: false,
-        icon: path.join(global.ROOT, 'assets', 'icons', 'poi.ico'),
+        icon: nativeImage.createFromPath(path.join(global.ROOT, 'assets', 'icons', 'poi.ico')),
       },
       normalizePosition(options),
     )

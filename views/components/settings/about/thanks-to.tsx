@@ -1,5 +1,5 @@
 import { shell } from 'electron'
-import { map, memoize } from 'lodash'
+import { map, memoize } from 'lodash-es'
 import React from 'react'
 import { styled } from 'styled-components'
 import { Section } from 'views/components/settings/components/section'

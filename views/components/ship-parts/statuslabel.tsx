@@ -2,7 +2,7 @@ import type { FcdShipTagState } from 'views/redux/fcd'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, Tag, Tooltip } from '@blueprintjs/core'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 import React, { memo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'

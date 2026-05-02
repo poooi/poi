@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
-import { join as joinString, map, range, isEqual, compact } from 'lodash'
+import { join as joinString, map, range, isEqual, compact } from 'lodash-es'
 import path from 'path'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -1,6 +1,6 @@
 import type { Middleware } from 'redux'
 
-import { flatMap } from 'lodash'
+import { flatMap } from 'lodash-es'
 
 import type { RootState } from '../reducer-factory'
 

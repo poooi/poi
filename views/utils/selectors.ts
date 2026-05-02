@@ -8,7 +8,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import type { SortieState } from 'views/redux/sortie'
 
 import memoize from 'fast-memoize'
-import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
+import { get, map, zip, flatMap, values, fromPairs } from 'lodash-es'
 import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
 
 //### Local Types ###

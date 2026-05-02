@@ -1,5 +1,5 @@
 import { FormGroup } from '@blueprintjs/core'
-import { map, entries } from 'lodash'
+import { map, entries } from 'lodash-es'
 import path from 'path'
 import React from 'react'
 import { useTranslation } from 'react-i18next'

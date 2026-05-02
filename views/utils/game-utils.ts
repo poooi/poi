@@ -3,7 +3,7 @@ import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/respo
 import type { Equip } from 'views/redux/info/equips'
 
 import { Intent } from '@blueprintjs/core'
-import _, { get } from 'lodash'
+import _, { get } from 'lodash-es'
 
 import { shipAvatarColor } from './color'
 import { between } from './tools'

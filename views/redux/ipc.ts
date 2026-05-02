@@ -1,4 +1,4 @@
-import { mapValues, omit } from 'lodash'
+import { mapValues, omit } from 'lodash-es'
 
 type IpcScope = Record<string, boolean>
 export type IpcState = Record<string, IpcScope>

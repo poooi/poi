@@ -1,7 +1,7 @@
 import type { ConfigPath } from 'views/env'
 
 import { Checkbox } from '@blueprintjs/core'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import React from 'react'
 import { useSelector } from 'react-redux'
 

@@ -1,7 +1,7 @@
 import type { DeepKeyOfArray } from 'shims/utils'
 
 import { createSlice } from '@reduxjs/toolkit'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import { type Config, config } from 'views/env'
 import { reduxSet } from 'views/utils/tools'
 

@@ -2,7 +2,7 @@ import type { QuestRecord, SubgoalRecord } from 'views/redux/info/quests'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
-import { map, range, forEach, values, sortBy } from 'lodash'
+import { map, range, forEach, values, sortBy } from 'lodash-es'
 import React, { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'

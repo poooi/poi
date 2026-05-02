@@ -12,6 +12,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'es', 'json', 'jsx', 'ts', 'tsx', 'node'],
   moduleNameMapper: {
     '^views/(.*)': '<rootDir>/views/$1',
+    '^lodash-es$': 'lodash',
   },
   testMatch: ['**/__tests__/**/*.[ejt]s?(x)', '**/?(*.)+(spec|test).[ejt]s?(x)'],
   setupFilesAfterEnv: ['./setup-tests.ts'],

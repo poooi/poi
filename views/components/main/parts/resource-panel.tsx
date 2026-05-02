@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { ResizeSensor } from '@blueprintjs/core'
-import { isEqual, range } from 'lodash'
+import { isEqual, range } from 'lodash-es'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'

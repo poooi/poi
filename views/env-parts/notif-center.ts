@@ -1,7 +1,7 @@
 import type { ConfigValue } from 'lib/config'
 
 import * as remote from '@electron/remote'
-import { get, memoize, throttle, debounce, pickBy } from 'lodash'
+import { get, memoize, throttle, debounce, pickBy } from 'lodash-es'
 import { join } from 'path'
 
 import { config } from './config'

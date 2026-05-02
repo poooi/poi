@@ -2,7 +2,7 @@ import type { app, BrowserWindow } from 'electron/main'
 
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { sortBy, round, sumBy, map, cloneDeep } from 'lodash'
+import { sortBy, round, sumBy, map, cloneDeep } from 'lodash-es'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Section } from 'views/components/settings/components/section'

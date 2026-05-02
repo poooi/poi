@@ -1,7 +1,7 @@
 import { Switch, HTMLSelect, NumericInput, FormGroup } from '@blueprintjs/core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ipcRenderer } from 'electron'
-import { debounce, get } from 'lodash'
+import { debounce, get } from 'lodash-es'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useSelector } from 'react-redux'

@@ -1,5 +1,5 @@
 import { Slider, FormGroup } from '@blueprintjs/core'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

@@ -8,7 +8,8 @@ import * as remote from '@electron/remote'
 import classnames from 'classnames'
 import { createHash, X509Certificate } from 'crypto'
 import fs from 'fs-extra'
-import { get, memoize } from 'lodash'
+import { get, memoize } from 'lodash-es'
+import { join } from 'path'
 import React, { Component, createRef } from 'react'
 import { connect } from 'react-redux'
 import ReactMarkdown from 'react-remarkable'
@@ -26,12 +27,12 @@ import { PoiAlert } from './components/info/alert'
 import { PoiControl } from './components/info/control'
 import { PoiMapReminder } from './components/info/map-reminder'
 import { PoiToast } from './components/info/toast'
-import { ipc } from './env'
+import { ipc, ROOT } from './env'
 
 const config = remote.require('./lib/config')
 const { error } = remote.require('./lib/utils')
 const poiControlHeight = 30
-const preloadUrl = fileUrl(require.resolve('assets/js/webview-preload'))
+const preloadUrl = fileUrl(join(ROOT, 'assets/js/webview-preload.js'))
 
 let caCert: X509Certificate | null = null
 let caCertError = false

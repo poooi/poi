@@ -1,6 +1,7 @@
 const electronRemote = require('@electron/remote/main')
 const { X509Certificate, createHash } = require('crypto')
 const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
+const esbuild = require('esbuild')
 const fs = require('fs-extra')
 const path = require('path-extra')
 
@@ -18,11 +19,8 @@ global.DEFAULT_SCREENSHOT_PATH =
 global.MODULE_PATH = path.join(global.ROOT, 'node_modules')
 
 const { ROOT } = global
-const poiIconPath = path.join(
-  ROOT,
-  'assets',
-  'icons',
-  process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico',
+const poiIconPath = nativeImage.createFromPath(
+  path.join(ROOT, 'assets', 'icons', process.platform === 'linux' ? 'poi_32x32.png' : 'poi.ico'),
 )
 
 electronRemote.initialize()
@@ -121,6 +119,9 @@ app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
 app.commandLine.appendSwitch('disable-site-isolation-trials')
 
 app.commandLine.appendSwitch('disable-features', 'CalculateNativeWinOcclusion')
+
+// Add support of require esm modules
+app.commandLine.appendSwitch('experimental-require-module')
 ;(() => {
   /*
     Configure extra command flags.
@@ -213,7 +214,49 @@ if (!getLock) {
   })
 }
 
-app.on('ready', () => {
+// --- Renderer ESM build ---
+let rendererBuildCtx = null
+
+async function buildRenderer() {
+  // In packaged production builds, dist/renderer.mjs is pre-built during packaging.
+  if (app.isPackaged) return
+  rendererBuildCtx = await esbuild.context({
+    entryPoints: [path.join(ROOT, 'views/entry.ts')],
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    target: ['chrome138'],
+    outfile: path.join(ROOT, 'dist/renderer.mjs'),
+    sourcemap: 'inline',
+    external: ['electron', 'electron/*', '@electron/remote', '@electron/remote/*'],
+    alias: {
+      '@sentry/electron': path.join(ROOT, 'node_modules/@sentry/electron/esm/renderer/index.js'),
+    },
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'production'),
+    },
+    plugins: [
+      {
+        name: 'renderer-reload',
+        setup(build) {
+          build.onEnd((result) => {
+            if (result.errors.length > 0) return
+            const win = global.mainWindow
+            if (win && !win.isDestroyed()) {
+              win.webContents.reload()
+            }
+          })
+        },
+      },
+    ],
+  })
+  // First build before window is shown
+  await rendererBuildCtx.rebuild()
+  rendererBuildCtx.watch()
+}
+
+app.on('ready', async () => {
+  await buildRenderer()
   require('electron-react-titlebar/main').initialize()
   const { screen } = require('electron')
   shortcut.register()

@@ -4,7 +4,7 @@ import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/respo
 import type { RootState } from 'views/redux/reducer-factory'
 
 import * as remote from '@electron/remote'
-import { map, get, mapValues } from 'lodash'
+import { map, get, mapValues } from 'lodash-es'
 import { observer, observe } from 'redux-observers'
 import { createSelector } from 'reselect'
 import { store, getStore } from 'views/create-store'

@@ -1,6 +1,6 @@
 import type { WebviewTag } from 'electron'
 
-import { camelCase } from 'lodash'
+import { camelCase } from 'lodash-es'
 import { useEffect } from 'react'
 
 // Local CamelCase type to convert kebab-case event names to camelCase handler names

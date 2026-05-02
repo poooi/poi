@@ -1,4 +1,4 @@
-import { compact } from 'lodash'
+import { compact } from 'lodash-es'
 import React, { useRef, useEffect, useState, useCallback } from 'react'
 import { styled } from 'styled-components'
 

@@ -2,7 +2,7 @@ import type { AirBase } from 'views/redux/info/airbase'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ButtonGroup, Intent, Position, Tag, Tooltip } from '@blueprintjs/core'
-import _, { map } from 'lodash'
+import _, { map } from 'lodash-es'
 import memoizeOne from 'memoize-one'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'

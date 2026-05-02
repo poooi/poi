@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Intent, FormGroup } from '@blueprintjs/core'
-import { get, compact } from 'lodash'
+import { get, compact } from 'lodash-es'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

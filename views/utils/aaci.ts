@@ -8,7 +8,7 @@ import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
 import type { APIShip } from 'kcsapi/api_port/port/response'
 import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
 
-import { maxBy } from 'lodash'
+import { maxBy } from 'lodash-es'
 
 export type GameShip = APIShip & APIMstShip
 export type GameEquip = APISlotItem & APIMstSlotitem

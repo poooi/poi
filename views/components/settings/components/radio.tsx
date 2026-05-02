@@ -2,7 +2,7 @@ import type { ConfigValue, ConfigPath } from 'lib/config'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import { get, map } from 'lodash'
+import { get, map } from 'lodash-es'
 import React from 'react'
 import { useSelector } from 'react-redux'
 

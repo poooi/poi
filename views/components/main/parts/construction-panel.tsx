@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position } from '@blueprintjs/core'
-import { join as joinString, range, map } from 'lodash'
+import { join as joinString, range, map } from 'lodash-es'
 import path from 'path'
 import React from 'react'
 import FA from 'react-fontawesome'

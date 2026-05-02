@@ -16,17 +16,20 @@ import {
   lstatSync,
 } from 'fs-extra'
 import glob from 'glob'
-import { omit, each } from 'lodash'
+import { omit, each } from 'lodash-es'
 import { Module } from 'module'
 import { join, basename } from 'path'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-remarkable'
 import semver from 'semver'
+import { pathToFileURL } from 'url'
 import { promisify } from 'util'
+import { appMenu } from 'views/components/etc/menu'
 import { extendReducer } from 'views/create-store'
 import { config, ROOT } from 'views/env'
 import i18next, { addGlobalI18n, addResourceBundleDebounce } from 'views/env-parts/i18next'
+import { pluginRequire } from 'views/env-parts/plugin-require'
 import { readI18nResources, normalizeURL } from 'views/utils/tools'
 
 const windowManager = remote.require('./lib/window')
@@ -52,6 +55,26 @@ function getString(obj: Record<string, unknown>, key: string): string | undefine
 function getNumber(obj: Record<string, unknown>, key: string): number | undefined {
   const val = obj[key]
   return typeof val === 'number' ? val : undefined
+}
+
+// Walk exports["."].require / exports["."].import to find the dual-package entry path.
+// The condition object can be a plain string or a nested { default, node, ... } map.
+function resolveExportsCondition(
+  packageData: Record<string, unknown>,
+  condition: 'require' | 'import',
+): string | undefined {
+  const rawExports = packageData['exports']
+  if (!isRecord(rawExports)) return undefined
+  // exports can be { '.': { require: ... } } or directly { require: ... }
+  const dotEntry = isRecord(rawExports['.']) ? rawExports['.'] : rawExports
+  if (!isRecord(dotEntry)) return undefined
+  const entry = dotEntry[condition]
+  if (typeof entry === 'string') return entry
+  if (isRecord(entry)) {
+    const v = entry['default'] ?? entry['node']
+    if (typeof v === 'string') return v
+  }
+  return undefined
 }
 
 function toStringRecord(obj: Record<string, unknown>): Record<string, string> {
@@ -448,7 +471,74 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
   if (plugin.needRollback) return plugin
   let pluginMain: Partial<Plugin>
   try {
-    const imported: Partial<Plugin> = await import(plugin.pluginPath)
+    // Dual-package aware entry resolution:
+    //   1. exports["."].require  — explicit CJS path for dual-package plugins
+    //   2. "main" + extension variants — legacy single-format plugins
+    //   3. index.* fallbacks
+    //   4. exports["."].import  — ESM-only plugins (loaded via dynamic import)
+    const mainFromPkg = getString(plugin.packageData, 'main')
+    const cjsFromExports = resolveExportsCondition(plugin.packageData, 'require')
+    const esmFromExports = resolveExportsCondition(plugin.packageData, 'import')
+
+    const cjsCandidates: string[] = [
+      ...(cjsFromExports ? [cjsFromExports] : []),
+      ...(mainFromPkg
+        ? [
+            mainFromPkg,
+            mainFromPkg.replace(/\.es$/, '.js'),
+            mainFromPkg.replace(/\.js$/, '.es'),
+            mainFromPkg.replace(/\.[jt]sx?$/, '.ts'),
+            mainFromPkg.replace(/\.[jt]sx?$/, '.tsx'),
+          ]
+        : []),
+      'index.js',
+      'index.es',
+      'index.ts',
+      'index.tsx',
+    ]
+
+    let entryAbsPath: string | undefined
+    for (const candidate of cjsCandidates) {
+      const abs = join(plugin.pluginPath, candidate)
+      try {
+        // resolve() returns the real (symlink-resolved) path — use that as
+        // entryAbsPath so cache deletion and require() both operate on the
+        // same canonical key, even when pluginPath contains symlinks.
+        entryAbsPath = pluginRequire.resolve(abs)
+        break
+      } catch {
+        /* file not found, try next candidate */
+      }
+    }
+
+    let rawImported: Record<string, unknown>
+    if (esmFromExports) {
+      // Prefer ESM: runs natively in V8 without Babel transpilation overhead.
+      // ESM imports of CJS packages (react, react-redux, …) still route through
+      // require.cache, so our bridged modules apply.
+      // ?t= busts the ESM module cache so re-enabling a plugin loads fresh code.
+      const esmAbsURL = `${pathToFileURL(join(plugin.pluginPath, esmFromExports)).href}?t=${Date.now()}`
+      rawImported = await import(esmAbsURL)
+    } else if (entryAbsPath) {
+      // CJS fallback for legacy plugins (.js / .es / .ts without an exports field).
+      // Clear require.cache so re-enabling loads fresh code.
+      delete pluginRequire.cache[entryAbsPath]
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      rawImported = pluginRequire(entryAbsPath)
+    } else {
+      throw new Error(
+        `No entry file found for plugin ${plugin.id} (pluginPath=${plugin.pluginPath}, main=${mainFromPkg})`,
+      )
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    const rawDefaultImport = rawImported?.default as Partial<Plugin> | undefined
+    // CJS plugins compiled with __esModule:true expose their exports nested under .default;
+    const imported: Partial<Plugin> =
+      rawDefaultImport !== undefined &&
+      typeof rawDefaultImport === 'object' &&
+      (rawDefaultImport.handleClick !== undefined || rawDefaultImport.reactClass !== undefined)
+        ? rawDefaultImport
+        : rawImported
     const rereadData: Partial<Plugin> = reread
       ? await readPlugin(plugin.pluginPath, plugin.isExtra)
       : {}
@@ -531,7 +621,7 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
     if (plugin.multiWindow) {
       plugin.handleClick = () => {
         const win: PluginWindow = windowManager.createWindow(windowOptions)
-        win.setMenu(require('views/components/etc/menu').appMenu)
+        win.setMenu(appMenu)
         win.setAutoHideMenuBar(true)
         win.setMenuBarVisibility(false)
         win.loadURL(windowURL)
@@ -542,7 +632,7 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
       plugin.handleClick = () => {
         if (plugin.pluginWindow == null) {
           plugin.pluginWindow = windowManager.createWindow(windowOptions)
-          plugin.pluginWindow?.setMenu(require('views/components/etc/menu').appMenu)
+          plugin.pluginWindow?.setMenu(appMenu)
           plugin.pluginWindow?.setAutoHideMenuBar(true)
           plugin.pluginWindow?.setMenuBarVisibility(false)
           plugin.pluginWindow?.on('close', () => {
@@ -556,7 +646,7 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
       }
     } else {
       plugin.pluginWindow = windowManager.createWindow(windowOptions)
-      plugin.pluginWindow?.setMenu(require('views/components/etc/menu').appMenu)
+      plugin.pluginWindow?.setMenu(appMenu)
       plugin.pluginWindow?.setAutoHideMenuBar(true)
       plugin.pluginWindow?.setMenuBarVisibility(false)
       plugin.pluginWindow?.loadURL(windowURL)

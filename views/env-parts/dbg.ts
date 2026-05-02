@@ -2,7 +2,14 @@ import type { DbgInstance } from 'lib/debug'
 
 import { isMain } from './const'
 
-export const dbg: DbgInstance = isMain ? require('../../lib/debug') : undefined
+function loadDbg(): DbgInstance | undefined {
+  if (!isMain) return undefined
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const mod: { default: DbgInstance } = require('../../lib/debug')
+  return mod.default
+}
+
+export const dbg = loadDbg()
 
 declare global {
   interface Window {

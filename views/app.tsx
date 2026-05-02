@@ -1,7 +1,7 @@
 import { ResizeSensor, Popover } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { webFrame } from 'electron'
-import { get } from 'lodash'
+import { get } from 'lodash-es'
 import React, { useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
@@ -10,6 +10,7 @@ import { ThemeProvider } from 'styled-components'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
+import './services/alert'
 import type { RootState } from './redux/reducer-factory'
 
 import BasicAuth from './components/etc/http-basic-auth'
@@ -28,9 +29,6 @@ const config = remote.require('./lib/config')
 
 // Disable OSX zoom
 webFrame.setVisualZoomLevelLimits(1, 1)
-
-// Alert functions
-require('./services/alert')
 
 // configure Popover (including Tooltip)
 // ATTENTION default props will be overridden by providing props

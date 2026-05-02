@@ -1,5 +1,5 @@
 import { HTMLSelect } from '@blueprintjs/core'
-import { get, map } from 'lodash'
+import { get, map } from 'lodash-es'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

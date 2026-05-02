@@ -19,7 +19,8 @@ import { IconNames } from '@blueprintjs/icons'
 import * as remote from '@electron/remote'
 import * as Sentry from '@sentry/electron'
 import classNames from 'classnames'
-import { get, sortBy } from 'lodash'
+import { ipcRenderer } from 'electron'
+import { get, sortBy } from 'lodash-es'
 import React, { Component, useCallback, useEffect, useRef, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
@@ -590,7 +591,7 @@ const ControlledTabAreaFC = ({
     })
 
     if (process.platform === 'darwin') {
-      require('electron').ipcRenderer.on('touchbartab', (_event: unknown, message: number) => {
+      ipcRenderer.on('touchbartab', (_event: unknown, message: number) => {
         let key: string | undefined
         switch (message) {
           case 0:

@@ -1,8 +1,6 @@
-require('@babel/register')(require('../babel-register.config'))
-
 import * as remote from '@electron/remote'
 import fs from 'fs-extra'
-import lodash from 'lodash'
+import lodash from 'lodash-es'
 import { join } from 'path'
 
 import { setAllowedPath } from '../lib/module-path'
@@ -17,6 +15,16 @@ import {
   PLUGIN_PATH,
   ROOT,
 } from './env-parts/const'
+import './env-parts/i18next'
+import './env-parts/notif-center'
+import './env-parts/modal'
+import './env-parts/theme'
+import './env-parts/data-resolver'
+import './env-parts/getter'
+import './env-parts/devtool-message'
+import './polyfills/react-fontawesome'
+import './polyfills/react-i18next'
+import './env-parts/plugin-require'
 
 // Add ROOT to `require` search path
 setAllowedPath(MODULE_PATH, ROOT)
@@ -50,8 +58,6 @@ if (isMain) {
   handleWebviewPreloadHack(remote.getCurrentWebContents().id)
 }
 
-require('./env-parts/dbg')
-
 // Disable eval
 window.eval = global.eval = function () {
   throw new Error('Sorry, this app does not support window.eval().')
@@ -67,38 +73,9 @@ Object.clone = (obj: unknown) => JSON.parse(JSON.stringify(obj))
 Object.remoteClone = (obj: unknown) =>
   JSON.parse(remote.require('./lib/utils').remoteStringify(obj))
 
-// Node modules
-require('./env-parts/config')
-
 if (process.env.NODE_ENV === 'production' && config.get?.('poi.misc.exceptionReporting')) {
   init({
     build: LATEST_COMMIT,
     paths: [ROOT, APPDATA_PATH],
   })
-}
-
-// Polyfill for old plugins
-require('./polyfills/react-bootstrap')
-require('./polyfills/react-fontawesome')
-require('./polyfills/react-i18next')
-
-// i18n config
-require('./env-parts/i18next')
-
-// window.notify
-require('./env-parts/notif-center')
-require('./env-parts/modal')
-
-// Custom theme
-require('./env-parts/theme')
-
-// Global data resolver
-require('./env-parts/data-resolver')
-
-// Getter
-require('./env-parts/getter')
-
-// Only used by main window
-if (isMain) {
-  require('./env-parts/devtool-message')
 }

@@ -1,6 +1,6 @@
 import * as remote from '@electron/remote'
 import fs from 'fs-extra'
-import { padStart } from 'lodash'
+import { padStart } from 'lodash-es'
 import path from 'path'
 import url from 'url'
 import { config } from 'views/env'

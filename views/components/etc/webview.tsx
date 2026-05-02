@@ -1,7 +1,10 @@
+import type * as remote from '@electron/remote'
 import type { DidFailLoadEvent, WebviewTag, WebContents } from 'electron'
 import type { CSSProperties } from 'react'
 
-import { webContents } from '@electron/remote'
+// webContents is set via Object.defineProperty in @electron/remote and is not in the ESM namespace.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const remoteBuiltins: typeof remote = require('@electron/remote')
 import React, { useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react'
 
 import type { HandlerFields } from './webview-util'
@@ -209,7 +212,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
           if (!id) {
             throw new Error('view not ready')
           }
-          const wc = webContents.fromId(id)
+          const wc = remoteBuiltins.webContents.fromId(id)
           if (!wc) {
             throw new Error('view destroyed')
           }

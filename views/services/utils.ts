@@ -4,7 +4,7 @@ import type { ConstState } from 'views/redux/const'
 import type { Fleet } from 'views/redux/info/fleets'
 import type { SortieState } from 'views/redux/sortie'
 
-import { flatMap, map, get } from 'lodash'
+import { flatMap, map, get } from 'lodash-es'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
 

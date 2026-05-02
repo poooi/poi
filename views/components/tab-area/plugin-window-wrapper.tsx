@@ -2,8 +2,11 @@ import type { ConfigPath, ConfigValue } from 'lib/config'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
+// screen and BrowserWindow are set via Object.defineProperty in @electron/remote and are not
+// in the ESM namespace; use the CJS require to get the live getters.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const remoteBuiltins: typeof remote = require('@electron/remote')
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import config from 'lib/config'
 import { join } from 'path'
 import React, {
   forwardRef,
@@ -18,13 +21,11 @@ import { StyleSheetManager, styled } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { WindowEnv } from 'views/components/etc/window-env'
 import { ROOT, ipc } from 'views/env'
+import { config } from 'views/env-parts/config'
 import { loadStyle } from 'views/env-parts/theme'
 import { fileUrl } from 'views/utils/tools'
 
 import { PluginWrap } from './plugin-wrapper'
-
-const { BrowserWindow, screen } = remote
-const { workArea } = screen.getPrimaryDisplay()
 
 interface WindowRect {
   x?: number
@@ -48,7 +49,8 @@ const getPluginWindowRect = (plugin: Plugin): WindowRect => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
-  if (!screen.getAllDisplays().some(withinDisplay)) {
+  if (!remoteBuiltins.screen.getAllDisplays().some(withinDisplay)) {
+    const { workArea } = remoteBuiltins.screen.getPrimaryDisplay()
     x = workArea.x
     y = workArea.y
   }
@@ -74,13 +76,13 @@ const stylesheetTagsWithID = [
   .join('')
 
 const stylesheetTagsWithHref = [
-  'assets/css/app.css',
-  'assets/css/global.css',
-  'electron-react-titlebar/assets/style.css',
-  'react-resizable/css/styles.css',
-  'react-grid-layout/css/styles.css',
+  join(ROOT, 'assets/css/app.css'),
+  join(ROOT, 'assets/css/global.css'),
+  require.resolve('electron-react-titlebar/assets/style.css'),
+  require.resolve('react-resizable/css/styles.css'),
+  require.resolve('react-grid-layout/css/styles.css'),
 ]
-  .map((href) => `<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve(href))}">`)
+  .map((href) => `<link rel="stylesheet" type="text/css" href="${fileUrl(href)}">`)
   .join('')
 
 interface Props {
@@ -111,7 +113,11 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
     const [windowId, setWindowId] = useState<number | undefined>()
 
     const checkBrowserWindowExistence = useCallback((): boolean => {
-      if (!windowId || !BrowserWindow.fromId(windowId) || !currentWindowRef.current) {
+      if (
+        !windowId ||
+        !remoteBuiltins.BrowserWindow.fromId(windowId) ||
+        !currentWindowRef.current
+      ) {
         console.warn('Plugin window not exists. Removing window...')
         try {
           closeWindowPortal()
@@ -180,7 +186,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
 
         externalWindow?.addEventListener('DOMContentLoaded', () => {
           if (!externalWindowRef.current) return
-          const currentWindow = BrowserWindow.getAllWindows().find((a) =>
+          const currentWindow = remoteBuiltins.BrowserWindow.getAllWindows().find((a) =>
             a.webContents.getURL().endsWith(plugin.id),
           )
           currentWindowRef.current = currentWindow

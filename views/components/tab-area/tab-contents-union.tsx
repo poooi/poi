@@ -1,6 +1,6 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
-import { isEqual, omit } from 'lodash'
+import { isEqual, omit } from 'lodash-es'
 import React, {
   Children,
   forwardRef,

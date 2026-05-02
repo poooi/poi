@@ -1,6 +1,7 @@
 import type { Dispatch } from 'redux'
 
 import * as remote from '@electron/remote'
+import { clipboard } from 'electron'
 import { observer, observe } from 'redux-observers'
 import { store, getStore, dispatch } from 'views/create-store'
 import { config } from 'views/env'
@@ -26,7 +27,7 @@ import './services/google-analytics'
 import './services/battle-notify'
 import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
 
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
@@ -125,7 +126,7 @@ class GameResponse {
     })
     Object.defineProperty(this, 'ClickToCopy -->', {
       get: () => {
-        require('electron').clipboard.writeText(JSON.stringify({ path, body, postBody }))
+        clipboard.writeText(JSON.stringify({ path, body, postBody }))
         return `Copied: ${this.path}`
       },
     })

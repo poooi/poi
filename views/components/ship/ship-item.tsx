@@ -3,7 +3,7 @@ import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, ProgressBar, Tag, Tooltip } from '@blueprintjs/core'
-import { isEqual, memoize, omit, pick } from 'lodash'
+import { isEqual, memoize, omit, pick } from 'lodash-es'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'

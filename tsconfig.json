@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "nodenext",
     "lib": [
       "ESNext",
       "DOM"
@@ -22,7 +22,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "ignoreDeprecations": "6.0"
   },
   "exclude": ["eslint.config.mts"]

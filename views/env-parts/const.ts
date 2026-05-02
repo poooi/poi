@@ -1,9 +1,9 @@
 import type { Tray } from 'electron/main'
 import type { Constant } from 'lib/constant'
-import type lodash from 'lodash'
+import type lodash from 'lodash-es'
 
 import * as remote from '@electron/remote'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 import { join } from 'path'
 
 // Environments
@@ -39,7 +39,7 @@ declare global {
     isDevVersion: boolean
     /** @deprecated Use `import type { Constant } from 'lib/constant'; remote.require('./lib/constant') as Constant` instead */
     CONST: Constant
-    /** @deprecated Use `import lodash from 'lodash'` instead */
+    /** @deprecated Use `import lodash from 'lodash-es'` instead */
     _: typeof lodash
     /** @deprecated Use `document.querySelector` instead */
     $: (selector: string) => Element | null
@@ -47,7 +47,7 @@ declare global {
     $$: (selector: string) => NodeListOf<Element>
   }
 }
-export const ROOT = join(__dirname, '..', '..')
+export const ROOT = String(remote.getGlobal('ROOT'))
 export const EXROOT = String(remote.getGlobal('EXROOT'))
 export const APPDATA_PATH = String(remote.getGlobal('APPDATA_PATH'))
 export const PLUGIN_PATH = join(APPDATA_PATH, 'plugins')

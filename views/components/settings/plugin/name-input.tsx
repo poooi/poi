@@ -1,5 +1,5 @@
 import { FormGroup, ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core'
-import { trim, last } from 'lodash'
+import { trim, last } from 'lodash-es'
 import npa from 'npm-package-arg'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'

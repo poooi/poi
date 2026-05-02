@@ -3,7 +3,7 @@ import type { ConfigPath } from 'views/env'
 
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import { debounce } from 'lodash'
+import { debounce } from 'lodash-es'
 import { join } from 'path'
 import React, { PureComponent, createRef } from 'react'
 import ReactDOM from 'react-dom'
@@ -22,9 +22,6 @@ declare global {
     externalWindow?: Window
   }
 }
-
-const { BrowserWindow, screen } = remote
-const { workArea } = screen.getPrimaryDisplay()
 
 interface WindowRect {
   x?: number
@@ -46,7 +43,8 @@ const getPluginWindowRect = (): WindowRect => {
     const wa = d.workArea
     return validate(x!, wa.x, wa.width) && validate(y!, wa.y, wa.height)
   }
-  if (!screen.getAllDisplays().some(withinDisplay)) {
+  if (!remote.screen.getAllDisplays().some(withinDisplay)) {
+    const { workArea } = remote.screen.getPrimaryDisplay()
     x = workArea.x
     y = workArea.y
   }
@@ -208,11 +206,11 @@ export class KanGameWindowWrapper extends PureComponent<
     )
     this.externalWindow!.addEventListener('DOMContentLoaded', () => {
       this.currentWindow =
-        BrowserWindow.getAllWindows().find((a) =>
+        remote.BrowserWindow.getAllWindows().find((a) =>
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
       loadScript(
-        fileUrl(require.resolve('assets/js/webview-window-preload.js')),
+        fileUrl(join(ROOT, 'assets/js/webview-window-preload.js')),
         this.externalWindow!.document,
       )
       this.currentWindow!.setResizable(!windowUseFixedResolution)
@@ -251,8 +249,8 @@ export class KanGameWindowWrapper extends PureComponent<
 <link rel="stylesheet" type="text/css" id="blueprint-css">
 <link rel="stylesheet" type="text/css" id="blueprint-icon-css">
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(join(ROOT, 'assets/css/app.css'))}">
+<link rel="stylesheet" type="text/css" href="${fileUrl(join(ROOT, 'assets/css/global.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(
         require.resolve('electron-react-titlebar/style'),
       )}">`
@@ -303,7 +301,7 @@ export class KanGameWindowWrapper extends PureComponent<
   }
 
   checkBrowserWindowExistence = () => {
-    if (!this.state.id || !BrowserWindow.fromId(this.state.id) || !this.currentWindow) {
+    if (!this.state.id || !remote.BrowserWindow.fromId(this.state.id) || !this.currentWindow) {
       if (this.state.loaded) {
         console.warn('Webview window not exists. Removing window...')
         config.set('poi.layout.isolate', false)

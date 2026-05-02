@@ -1,7 +1,7 @@
 import type { ButtonData } from 'views/components/etc/modal'
 
 import { Tabs, Tab } from '@blueprintjs/core'
-import { map } from 'lodash'
+import { map } from 'lodash-es'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-remarkable'

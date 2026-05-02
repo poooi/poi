@@ -11,7 +11,7 @@ import {
 import themes from 'assets/data/theme.json'
 import { shell } from 'electron'
 import fs from 'fs-extra'
-import { get, map } from 'lodash'
+import { get, map } from 'lodash-es'
 import { join } from 'path'
 import React from 'react'
 import { useTranslation } from 'react-i18next'

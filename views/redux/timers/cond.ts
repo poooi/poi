@@ -1,4 +1,4 @@
-import { forEach } from 'lodash'
+import { forEach } from 'lodash-es'
 
 const threeMinutes = 3 * 60 * 1000
 

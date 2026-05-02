@@ -1,7 +1,9 @@
 require('@babel/register')(require('./babel-register.config'))
 const childProcess = require('child_process')
+const esbuild = require('esbuild')
 const gulp = require('gulp')
 const { trim } = require('lodash')
+const path = require('path')
 
 global.ROOT = __dirname
 
@@ -25,9 +27,31 @@ gulp.task('getVersion', (done) => {
   })
 })
 
+gulp.task('build-renderer-production', async () => {
+  const ctx = await esbuild.context({
+    entryPoints: [path.join(__dirname, 'views/entry.ts')],
+    bundle: true,
+    format: 'esm',
+    platform: 'node',
+    target: ['chrome138'],
+    outfile: path.join(__dirname, 'dist/renderer.mjs'),
+    sourcemap: false,
+    external: ['electron', 'electron/*', '@electron/remote', '@electron/remote/*'],
+    alias: {
+      '@sentry/electron': path.join(
+        __dirname,
+        'node_modules/@sentry/electron/esm/renderer/index.js',
+      ),
+    },
+    define: { 'process.env.NODE_ENV': '"production"' },
+  })
+  await ctx.rebuild()
+  await ctx.dispose()
+})
+
 gulp.task(
   'build',
-  gulp.series('getVersion', () => build(poiVersion)),
+  gulp.series('getVersion', 'build-renderer-production', () => build(poiVersion)),
 )
 
 gulp.task(
