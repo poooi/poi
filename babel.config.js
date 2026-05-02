@@ -4,9 +4,10 @@ module.exports = {
       require.resolve('@babel/preset-env'),
       {
         targets: {
-          electron: '36.3',
+          electron: '38',
         },
         loose: true,
+        exclude: ['transform-dynamic-import'],
       },
     ],
     require.resolve('@babel/preset-react'),

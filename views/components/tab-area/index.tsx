@@ -135,13 +135,18 @@ const PluginDropdownButton = styled(Button)<{ double?: boolean }>`
       margin-right: 7px;
     `}
 `
+const PluginNonIdealState = styled(NonIdealState)`
+  height: 400px;
+  max-height: 100%;
+  padding: 50px;
+`
 
 const PluginDropdown = styled(Menu)<{ grid?: boolean }>`
   overflow: auto;
   ${({ grid }) =>
     grid
       ? css`
-          > * {
+          > *:not(${PluginNonIdealState}) {
             display: block;
             float: left;
             width: calc(100% / 3);
@@ -190,12 +195,6 @@ const PluginNameContainer = styled.div`
   justify-content: center;
   display: flex;
   gap: 8px;
-`
-
-const PluginNonIdealState = styled(NonIdealState)`
-  height: 400px;
-  max-height: 100%;
-  padding: 50px;
 `
 
 interface SizeOption {

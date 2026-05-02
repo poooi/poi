@@ -23,6 +23,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import ReactMarkdown from 'react-remarkable'
 import semver from 'semver'
+import { pathToFileURL } from 'url'
 import { promisify } from 'util'
 import { extendReducer } from 'views/create-store'
 import { config, ROOT } from 'views/env'
@@ -448,7 +449,14 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
   if (plugin.needRollback) return plugin
   let pluginMain: Partial<Plugin>
   try {
-    const imported: Partial<Plugin> = await import(plugin.pluginPath)
+    const resolved = require.resolve(plugin.pluginPath)
+    let imported: Partial<Plugin>
+    try {
+      imported = await import(`${pathToFileURL(resolved).href}?t=${Date.now()}`)
+    } catch {
+      clearPluginCache(plugin.pluginPath)
+      imported = await Promise.resolve(require(resolved))
+    }
     const rereadData: Partial<Plugin> = reread
       ? await readPlugin(plugin.pluginPath, plugin.isExtra)
       : {}
