@@ -24,7 +24,6 @@ module.exports = {
       '@babel/plugin-proposal-function-sent',
       '@babel/plugin-proposal-throw-expressions',
       'babel-plugin-add-module-exports',
-      'babel-plugin-dynamic-import-node',
     ].map((plugin) => require.resolve(plugin)),
   ),
   ignore: [],
