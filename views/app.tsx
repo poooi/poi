@@ -1,6 +1,6 @@
 import type { ConfigInstance } from 'lib/config'
 
-import { ResizeSensor, Popover } from '@blueprintjs/core'
+import { ResizeSensor, Popover, BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { webFrame } from 'electron'
 import { get } from 'lodash'
@@ -113,7 +113,9 @@ ReactRoot.render(
           mountPoint: document.body,
         }}
       >
-        <Poi />
+        <BlueprintProvider portalContainer={document.body}>
+          <Poi />
+        </BlueprintProvider>
       </WindowEnv.Provider>
     </Provider>
   </I18nextProvider>,

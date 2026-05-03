@@ -2,6 +2,7 @@ import type { ConfigPath, ConfigValue } from 'lib/config'
 import type * as WebContentUtils from 'lib/webcontent-utils'
 import type { Plugin } from 'views/services/plugin-manager'
 
+import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
 import config from 'lib/config'
@@ -17,11 +18,11 @@ import React, {
 import ReactDOM from 'react-dom'
 import { StyleSheetManager, styled } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
-import { WindowEnv } from 'views/components/etc/window-env'
 import { ROOT, ipc } from 'views/env'
 import { loadStyle } from 'views/env-parts/theme'
 import { fileUrl } from 'views/utils/tools'
 
+import { WindowEnv } from '../etc/window-env'
 import { PluginWrap } from './plugin-wrapper'
 
 const { BrowserWindow, screen } = remote
@@ -268,11 +269,13 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
             mountPoint: containerEl,
           }}
         >
-          <StyleSheetManager target={externalWindowRef.current.document.head}>
-            <PoiAppTabpane className="poi-app-tabpane" ref={pluginContainer}>
-              <PluginWrap key={plugin.id} plugin={plugin} />
-            </PoiAppTabpane>
-          </StyleSheetManager>
+          <BlueprintProvider portalContainer={containerEl}>
+            <StyleSheetManager target={externalWindowRef.current.document.head}>
+              <PoiAppTabpane className="poi-app-tabpane" ref={pluginContainer}>
+                <PluginWrap key={plugin.id} plugin={plugin} />
+              </PoiAppTabpane>
+            </StyleSheetManager>
+          </BlueprintProvider>
         </WindowEnv.Provider>
       </>,
       mountPoint,

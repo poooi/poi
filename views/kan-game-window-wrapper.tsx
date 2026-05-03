@@ -2,6 +2,7 @@ import type { ConfigValue } from 'lib/config'
 import type * as WebContentUtils from 'lib/webcontent-utils'
 import type { ConfigPath } from 'views/env'
 
+import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
 import { debounce } from 'lodash'
@@ -10,7 +11,6 @@ import React, { PureComponent, createRef } from 'react'
 import ReactDOM from 'react-dom'
 import { styled, StyleSheetManager } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
-import { WindowEnv } from 'views/components/etc/window-env'
 import { dispatch, getStore } from 'views/create-store'
 import { config, ROOT } from 'views/env'
 import { fileUrl, loadScript } from 'views/utils/tools'
@@ -363,18 +363,13 @@ export class KanGameWindowWrapper extends PureComponent<
             browserWindowId={this.currentWindow!.id}
           />
         )}
-        <WindowEnv.Provider
-          value={{
-            window: this.externalWindow,
-            mountPoint: this.containerEl,
-          }}
-        >
+        <BlueprintProvider portalContainer={this.containerEl}>
           <StyleSheetManager target={this.externalWindow.document.head}>
             <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
               <KanGameWrapper windowMode key="window" />
             </PoiAppTabpane>
           </StyleSheetManager>
-        </WindowEnv.Provider>
+        </BlueprintProvider>
       </>,
       this.externalWindow.document.querySelector('#plugin-mountpoint')!,
     )
