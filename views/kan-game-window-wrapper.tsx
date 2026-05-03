@@ -1,4 +1,5 @@
 import type { ConfigValue } from 'lib/config'
+import type * as WebContentUtils from 'lib/webcontent-utils'
 import type { ConfigPath } from 'views/env'
 
 import * as remote from '@electron/remote'
@@ -273,7 +274,7 @@ export class KanGameWindowWrapper extends PureComponent<
       this.externalWindow!.document.body.appendChild(this.containerEl)
       this.externalWindow!.document.title = 'poi'
       loadStyle(this.externalWindow!.document, this.currentWindow!, false)
-      const { stopFileNavigate, handleWebviewPreloadHack } =
+      const { stopFileNavigate, handleWebviewPreloadHack }: typeof WebContentUtils =
         remote.require('./lib/webcontent-utils')
       stopFileNavigate(this.currentWindow!.webContents.id)
       handleWebviewPreloadHack(this.currentWindow!.webContents.id)

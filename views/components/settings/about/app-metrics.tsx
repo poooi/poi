@@ -1,5 +1,3 @@
-import type { app, BrowserWindow } from 'electron/main'
-
 import { Button, Intent, HTMLTable } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { sortBy, round, sumBy, map, cloneDeep } from 'lodash'
@@ -11,9 +9,8 @@ type AppMetric = Electron.ProcessMetric
 type PidMap = Record<number, string>
 type MetricTotal = { workingSetSize: number; peakWorkingSetSize: number; percentCPUUsage: number }
 
-const getAppMetrics: (typeof app)['getAppMetrics'] = remote.require('electron').app.getAppMetrics
-const getAllWindows: (typeof BrowserWindow)['getAllWindows'] =
-  remote.require('electron').BrowserWindow.getAllWindows
+const getAppMetrics = remote.app.getAppMetrics
+const getAllWindows = remote.BrowserWindow.getAllWindows
 
 export const AppMetrics = () => {
   const { t } = useTranslation('setting')

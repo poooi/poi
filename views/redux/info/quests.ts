@@ -1,3 +1,4 @@
+import type * as Cson from 'cson'
 import type { APIListClass } from 'kcsapi/api_get_member/questlist/response'
 import type { Dispatch } from 'redux'
 
@@ -22,7 +23,7 @@ import {
 } from '../actions'
 
 // Workaround for https://github.com/electron/electron/issues/37404
-const CSON = remote.require('cson')
+const CSON: typeof Cson = remote.require('cson')
 
 // Type declarations
 // quest_goal.cson type declaration

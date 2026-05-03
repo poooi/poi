@@ -1,4 +1,5 @@
 import type { ConfigPath, ConfigValue } from 'lib/config'
+import type * as WebContentUtils from 'lib/webcontent-utils'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
@@ -206,7 +207,9 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
           ;(externalWindowRef.current as any).isWindowMode = true
           loadStyle(externalWindowRef.current.document, currentWindow, false)
-          remote.require('./lib/webcontent-utils').stopFileNavigate(currentWindow?.webContents.id)
+          const { stopFileNavigate }: typeof WebContentUtils =
+            remote.require('./lib/webcontent-utils')
+          stopFileNavigate(currentWindow?.webContents.id ?? -1)
           externalWindowRef.current.addEventListener('beforeunload', () => {
             setLoaded(false)
             config.set(`plugin.${plugin.id}.bounds`, currentWindowRef.current?.getBounds())

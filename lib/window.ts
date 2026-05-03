@@ -23,11 +23,11 @@ const state: boolean[] = [] // Window state before hide
 let hidden = false
 
 export interface PoiWindowOptions extends BrowserWindowConstructorOptions {
-  indexName: string
-  forceMinimize: boolean
-  realClose: boolean
-  navigatable: boolean
-  menu: Menu
+  indexName?: string
+  forceMinimize?: boolean
+  realClose?: boolean
+  navigatable?: boolean
+  menu?: Menu
 }
 
 const inRange = (n: number | undefined, min: number, range: number): boolean =>

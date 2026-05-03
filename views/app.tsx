@@ -1,3 +1,5 @@
+import type { ConfigInstance } from 'lib/config'
+
 import { ResizeSensor, Popover } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { webFrame } from 'electron'
@@ -6,10 +8,11 @@ import React, { useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { useDispatch, useSelector, Provider } from 'react-redux'
-import { ThemeProvider } from 'styled-components'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
+import { ThemeProvider } from 'styled-components'
+
 import type { RootState } from './redux/reducer-factory'
 
 import BasicAuth from './components/etc/http-basic-auth'
@@ -24,7 +27,7 @@ import { PoiApp } from './poi-app'
 import { darkTheme, lightTheme } from './theme'
 import { POPOVER_MODIFIERS } from './utils/tools'
 
-const config = remote.require('./lib/config')
+const config: ConfigInstance = remote.require('./lib/config')
 
 // Disable OSX zoom
 webFrame.setVisualZoomLevelLimits(1, 1)

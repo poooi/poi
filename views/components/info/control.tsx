@@ -1,3 +1,4 @@
+import type * as TouchBarUtil from 'lib/touchbar'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Position } from '@blueprintjs/core'
@@ -311,7 +312,8 @@ export const PoiControl = () => {
 
   const handleTouchbar = useCallback(
     (msg: string) => {
-      const { toggleRefreshConfirm, renderMainTouchbar } = remote.require('./lib/touchbar')
+      const { toggleRefreshConfirm, renderMainTouchbar }: typeof TouchBarUtil =
+        remote.require('./lib/touchbar')
       switch (msg) {
         case 'refresh':
           toggleModal(
@@ -407,7 +409,7 @@ export const PoiControl = () => {
   }, []) // mount-once; handleConfigChange and touchbarListener are stable
 
   if (process.platform === 'darwin') {
-    const { updateTouchbarInfoIcons } = remote.require('./lib/touchbar')
+    const { updateTouchbarInfoIcons }: typeof TouchBarUtil = remote.require('./lib/touchbar')
     updateTouchbarInfoIcons()
   }
 

@@ -12,7 +12,7 @@ import { toggleModal } from 'views/env-parts/modal'
 
 declare const APPDATA_PATH: string
 
-const { session } = remote.require('electron')
+const { session } = remote
 
 const _rawCachePath = remote.getGlobal('DEFAULT_CACHE_PATH')
 const defaultCachePath = typeof _rawCachePath === 'string' ? _rawCachePath : ''

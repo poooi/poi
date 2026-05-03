@@ -1,3 +1,4 @@
+import type * as Updater from 'lib/updater'
 import type { ButtonData } from 'views/components/etc/modal'
 
 import * as remote from '@electron/remote'
@@ -20,7 +21,8 @@ const defaultFetchOption = {
   headers: fetchHeaders,
 }
 
-const { updater } = process.platform !== 'linux' ? remote.require('./lib/updater') : {}
+const { updater }: typeof Updater =
+  process.platform !== 'linux' ? remote.require('./lib/updater') : {}
 const LANG = ['zh-CN', 'zh-TW', 'en-US']
 const doUpdate = async () => {
   if (process.platform == 'win32') {

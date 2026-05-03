@@ -1,4 +1,4 @@
-import type { Menu as MenuType, MenuItemConstructorOptions, Tray } from 'electron/main'
+import type { MenuItemConstructorOptions, Tray } from 'electron/main'
 import type { Config } from 'lib/default-config'
 
 import * as remote from '@electron/remote'
@@ -23,7 +23,7 @@ declare global {
   }
 }
 
-const Menu: typeof MenuType = remote.require('electron').Menu
+const Menu = remote.Menu
 const { openExternal } = shell
 
 const resetViews = () => {

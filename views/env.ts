@@ -1,5 +1,8 @@
 require('@babel/register')(require('../babel-register.config'))
 
+import type * as RemoteUtils from 'lib/utils'
+import type * as WebContentUtils from 'lib/webcontent-utils'
+
 import * as remote from '@electron/remote'
 import fs from 'fs-extra'
 import lodash from 'lodash'
@@ -44,7 +47,7 @@ if (isMain) {
   fs.ensureDirSync(PLUGIN_EXTRA_PATH)
   fs.ensureDirSync(join(PLUGIN_EXTRA_PATH, 'node_modules'))
 
-  const { stopNavigateAndHandleNewWindow, handleWebviewPreloadHack } =
+  const { stopNavigateAndHandleNewWindow, handleWebviewPreloadHack }: typeof WebContentUtils =
     remote.require('./lib/webcontent-utils')
   stopNavigateAndHandleNewWindow(remote.getCurrentWebContents().id)
   handleWebviewPreloadHack(remote.getCurrentWebContents().id)
@@ -63,9 +66,11 @@ window.$ = (param: string) => document.querySelector(param)
 window.$$ = (param: string) => document.querySelectorAll(param)
 
 // Polyfills
-Object.clone = (obj: unknown) => JSON.parse(JSON.stringify(obj))
-Object.remoteClone = (obj: unknown) =>
-  JSON.parse(remote.require('./lib/utils').remoteStringify(obj))
+Object.clone = (obj) => JSON.parse(JSON.stringify(obj))
+Object.remoteClone = (obj) => {
+  const { remoteStringify }: typeof RemoteUtils = remote.require('./lib/utils')
+  return JSON.parse(remoteStringify(obj))
+}
 
 // Node modules
 require('./env-parts/config')

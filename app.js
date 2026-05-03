@@ -268,6 +268,7 @@ app.on('ready', () => {
     },
     backgroundColor: '#00000000',
     backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
+    vibrancy: 'window',
     roundedCorners: true,
   })
 

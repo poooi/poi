@@ -14,7 +14,7 @@ import { styled } from 'styled-components'
 import { config } from 'views/env'
 import { isSubdirectory } from 'views/utils/tools'
 
-const { dialog } = remote.require('electron')
+const { dialog } = remote
 
 const PickerBox = styled.div`
   display: flex;
