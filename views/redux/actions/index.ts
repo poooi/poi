@@ -1,4 +1,4 @@
-export type { GameResponsePayload } from './types'
+export type { GameResponsePayload, GameRequestPayload } from './types'
 
 export { createConfigAction } from './config'
 
@@ -117,7 +117,7 @@ export {
   createAPIStart2GetOptionSettingRequestAction,
   createAPIReqPracticeBattleRequestAction,
 } from './request'
-export type { GameRequestPayload, APIReqPracticeBattlePostBody } from './request'
+export type { APIReqPracticeBattlePostBody } from './request'
 
 export {
   createInitIPCAction,
