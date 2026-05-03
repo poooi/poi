@@ -452,9 +452,20 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
     const resolved = require.resolve(plugin.pluginPath)
     let imported: Partial<Plugin>
     try {
-      imported = await import(`${pathToFileURL(resolved).href}?t=${Date.now()}`)
+      if (
+        resolved.endsWith('.ts') ||
+        resolved.endsWith('.tsx') ||
+        resolved.endsWith('.jsx') ||
+        resolved.endsWith('.es')
+      ) {
+        // untranspiled files can't be required directly, use require()
+        imported = await Promise.resolve(require(resolved))
+      } else {
+        // for transpiled files, use dynamic import to get better performance
+        imported = await import(`${pathToFileURL(resolved).href}?t=${Date.now()}`)
+      }
     } catch {
-      clearPluginCache(plugin.pluginPath)
+      // fallback
       imported = await Promise.resolve(require(resolved))
     }
     const rereadData: Partial<Plugin> = reread
