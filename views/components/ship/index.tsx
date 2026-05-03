@@ -21,6 +21,8 @@ import {
   ShipWrapper,
 } from 'views/components/ship-parts/styled-components'
 import { getStore } from 'views/create-store'
+import { createLayoutUpdateAction } from 'views/redux/actions/layout'
+import { createTabSwitchAction } from 'views/redux/actions/ui'
 import { DEFAULT_FLEET_NAMES, getFleetIntent } from 'views/utils/game-utils'
 import {
   fleetNameSelectorFactory,
@@ -184,14 +186,14 @@ const ShipViewInner = ({
   const handleClick = useCallback(
     (idx: number) => {
       if (idx !== activeFleetId) {
-        dispatch({ type: '@@TabSwitch', tabInfo: { activeFleetId: idx } })
+        dispatch(createTabSwitchAction({ tabInfo: { activeFleetId: idx } }))
       }
     },
     [dispatch, activeFleetId],
   )
 
   const changeMainView = useCallback(() => {
-    dispatch({ type: '@@TabSwitch', tabInfo: { activeMainTab: 'main-view' } })
+    dispatch(createTabSwitchAction({ tabInfo: { activeMainTab: 'main-view' } }))
   }, [dispatch])
 
   const handleResize = useCallback(
@@ -203,7 +205,7 @@ const ShipViewInner = ({
           h !== 0 &&
           (w !== getStore('layout.shippane.width') || h !== getStore('layout.shippane.height'))
         ) {
-          dispatch({ type: '@@LayoutUpdate', value: { shippane: { width: w, height: h } } })
+          dispatch(createLayoutUpdateAction({ shippane: { width: w, height: h } }))
         }
       })
     },

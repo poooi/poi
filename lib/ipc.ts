@@ -21,11 +21,11 @@ type IPCUpdateEventType = '@@registerIPC' | '@@unregisterIPC' | '@@unregisterAll
 type IPCUpdateEventPayload = {
   scope: Scope
   opts?: Record<string, unknown>
-  keys?: string | string[] | object
+  keys?: string[]
 }
 type IPCUpdateEvent = {
   type: IPCUpdateEventType
-  value: IPCUpdateEventPayload
+  payload: IPCUpdateEventPayload
 }
 
 interface IPCEventMap {
@@ -51,7 +51,7 @@ class IPC extends EventEmitter<IPCEventMap> {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       ;(this.data[scope] as { [key: string]: unknown })[key] = opts[key]
     }
-    this.emit('update', { type: '@@registerIPC', value: { scope, opts } })
+    this.emit('update', { type: '@@registerIPC', payload: { scope, opts } })
     return
   }
 
@@ -77,13 +77,13 @@ class IPC extends EventEmitter<IPCEventMap> {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       delete (this.data[scope] as { [key: string]: unknown })[key]
     }
-    this.emit('update', { type: '@@unregisterIPC', value: { scope, keys } })
+    this.emit('update', { type: '@@unregisterIPC', payload: { scope, keys: keysToRemove } })
     return
   }
 
   unregisterAll = (scope: Scope) => {
     delete this.data[scope]
-    this.emit('update', { type: '@@unregisterAllIPC', value: { scope } })
+    this.emit('update', { type: '@@unregisterAllIPC', payload: { scope } })
   }
 
   access = <S extends Scope>(scope: S): IPCStore[S] => {

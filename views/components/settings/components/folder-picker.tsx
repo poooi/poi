@@ -1,5 +1,6 @@
 import type { FileFilter } from 'electron'
 import type { ConfigPath } from 'views/env'
+import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Button, Intent, Classes, OverflowList, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
@@ -66,7 +67,9 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   const [locked, setLocked] = useState(false)
 
   const { t } = useTranslation('setting')
-  const value = useSelector((state: any) => get(state.config, configName, defaultValue))
+  const value: string = useSelector((state: RootState) =>
+    get(state.config, configName, defaultValue),
+  )
 
   const emitErrorMessage = useCallback(() => {
     window.toast(t('setting:DirectoryNotAvailable', { path: label }), {
@@ -93,6 +96,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       config.set(configName as ConfigPath, defaultValue as never)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // Only run on mount
 
   const handleOnDrag = useCallback((e: React.DragEvent<HTMLDivElement>) => {

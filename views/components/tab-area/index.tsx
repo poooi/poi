@@ -28,6 +28,7 @@ import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
 import { Popover } from 'views/components/etc/overlay'
 import { config, ipc } from 'views/env'
+import { createTabSwitchAction } from 'views/redux/actions/ui'
 import { isInGame } from 'views/utils/game-utils'
 
 import type { PluginWindowWrapHandle } from './plugin-window-wrapper'
@@ -332,11 +333,7 @@ const ControlledTabAreaFC = ({
 
   const dispatchTabChangeEvent = useCallback(
     (tabInfo: { activeMainTab?: string; activePluginName?: string }, autoSwitch = false): void => {
-      dispatch({
-        type: '@@TabSwitch',
-        tabInfo,
-        autoSwitch,
-      })
+      dispatch(createTabSwitchAction({ tabInfo, autoSwitch }))
     },
     [dispatch],
   )

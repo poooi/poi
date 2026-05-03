@@ -13,6 +13,10 @@ import { styled, StyleSheetManager } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { dispatch, getStore } from 'views/create-store'
 import { config, ROOT } from 'views/env'
+import {
+  createLayoutWebviewWindowUseFixedResolutionAction,
+  createLayoutWebviewSizeAction,
+} from 'views/redux/actions/layout'
 import { fileUrl, loadScript } from 'views/utils/tools'
 
 import { loadStyle } from './env-parts/theme'
@@ -143,10 +147,7 @@ export class KanGameWindowWrapper extends PureComponent<
             ),
           )
         }
-        dispatch({
-          type: '@@LayoutUpdate/webview/windowUseFixedResolution',
-          value,
-        })
+        dispatch(createLayoutWebviewWindowUseFixedResolutionAction(Boolean(value)))
         break
       }
       case 'poi.webview.windowWidth': {
@@ -238,10 +239,7 @@ export class KanGameWindowWrapper extends PureComponent<
           const wv = this.externalWindow!.document.querySelector('webview')
           if (wv) {
             const { width: windowWidth, height: windowHeight } = wv.getBoundingClientRect()
-            dispatch({
-              type: '@@LayoutUpdate/webview/size',
-              value: { windowWidth, windowHeight },
-            })
+            dispatch(createLayoutWebviewSizeAction({ windowWidth, windowHeight }))
           }
         }, 200),
       )

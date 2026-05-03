@@ -1,14 +1,21 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+import { createAPIPortPortResponseAction } from './actions/response'
 import { combineReducers } from './combine-reducers'
 
 export interface MiscState {
   canNotify: boolean
 }
 
-function canNotify(state = false, { type }: { type: string }): boolean {
-  if (type === '@@Response/kcsapi/api_port/port') return true
-  return state
-}
+const canNotifySlice = createSlice({
+  name: 'misc/canNotify',
+  initialState: false,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createAPIPortPortResponseAction, () => true)
+  },
+})
 
 export default combineReducers<MiscState>({
-  canNotify,
+  canNotify: canNotifySlice.reducer,
 })

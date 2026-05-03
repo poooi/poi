@@ -1,4 +1,7 @@
+import { createSlice } from '@reduxjs/toolkit'
 import { forEach } from 'lodash'
+
+import { createAPIPortPortResponseAction } from '../actions/response'
 
 const threeMinutes = 3 * 60 * 1000
 
@@ -18,16 +21,13 @@ const initState: CondState = {
   tick: Date.now(),
 }
 
-interface PortPortBody {
-  api_ship: Array<{ api_cond: number; api_id: number }>
-}
-
-export default function reducer(
-  state = initState,
-  { type, body }: { type: string; body?: PortPortBody },
-): CondState {
-  switch (type) {
-    case '@@Response/kcsapi/api_port/port': {
+const condSlice = createSlice({
+  name: 'timers/cond',
+  initialState: initState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createAPIPortPortResponseAction, (state, { payload }) => {
+      const body = payload.body
       if (!body) return state
       /* Algorithm:
        * 1. Record a "tick". Conds increase on a certain tick within every 3 minutes.
@@ -77,7 +77,8 @@ export default function reducer(
         ...state,
         ...newState,
       }
-    }
-  }
-  return state
-}
+    })
+  },
+})
+
+export default condSlice.reducer

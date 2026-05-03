@@ -20,6 +20,10 @@ import ElectronWebView from 'views/components/etc/webview'
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { toggleModal } from 'views/env-parts/modal'
+import {
+  createLayoutUpdateAction,
+  createLayoutWebviewUpdateWebviewRefAction,
+} from 'views/redux/actions/layout'
 import { getRealSize, getYOffset } from 'views/services/utils'
 import { fileUrl } from 'views/utils/tools'
 
@@ -185,15 +189,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
         width !== getStore('layout.webview.width') ||
         height !== getStore('layout.webview.height')
       ) {
-        this.props.dispatch({
-          type: '@@LayoutUpdate',
-          value: {
-            webview: {
-              width,
-              height,
-            },
-          },
-        })
+        this.props.dispatch(createLayoutUpdateAction({ webview: { width, height } }))
         this.setProperWindowSize(width, height)
         ipc.register('WebView', {
           width,
@@ -296,13 +292,9 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
   }
 
   handleWebviewMount = () => {
-    this.props.dispatch({
-      type: '@@LayoutUpdate/webview/UpdateWebviewRef',
-      value: {
-        ref: this.webview.current,
-        ts: Date.now(),
-      },
-    })
+    this.props.dispatch(
+      createLayoutWebviewUpdateWebviewRefAction({ ref: this.webview.current, ts: Date.now() }),
+    )
     this.setProperWindowSize(
       Number.isNaN(getStore('layout.webview.width')) ? 1200 : getStore('layout.webview.width'),
       Number.isNaN(getStore('layout.webview.height')) ? 720 : getStore('layout.webview.height'),
@@ -311,13 +303,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
   }
 
   handleWebviewUnmount = () => {
-    this.props.dispatch({
-      type: '@@LayoutUpdate/webview/UpdateWebviewRef',
-      value: {
-        ref: false,
-        ts: Date.now(),
-      },
-    })
+    this.props.dispatch(createLayoutWebviewUpdateWebviewRefAction({ ref: null, ts: Date.now() }))
   }
 
   handleDidFrameFinishLoad = () => {

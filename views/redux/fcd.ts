@@ -1,3 +1,7 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+import { createReplaceFCDAction, createUpdateFCDAction } from './actions/app'
+
 // Route entry: [fromNode | null (start), toNode]
 type MapRouteEntry = [string | null, string]
 
@@ -32,47 +36,41 @@ export interface FcdState {
   shiptag?: FcdShipTagState
 }
 
-type FcdValue =
-  | {
-      data?: FcdMapState
-      meta?: { name?: string; version?: string }
-      path?: 'map'
-    }
-  | {
-      data?: FcdShipAvatarState
-      meta?: { name?: string; version?: string }
-      path?: 'shipavatar'
-    }
-  | {
-      data?: FcdShipTagState
-      meta?: { name?: string; version?: string }
-      path?: 'shiptag'
-    }
+export interface FcdValue<K extends keyof FcdState = keyof FcdState> {
+  data?: FcdState[K]
+  meta?: { name?: string; version?: string }
+  path: K
+}
 
 const initState: FcdState = {
   version: {},
 }
 
-export function reducer(
-  state = initState,
-  { type, value }: { type: string; value?: FcdValue },
-): FcdState {
-  switch (type) {
-    case '@@updateFCD':
-      if (value?.data && value.meta) {
-        const { name, version } = value.meta
-        if (name && version) {
-          state = Object.assign({}, state, {
-            version: { ...state.version, [name]: version },
-            [name]: value.data,
-          }) as FcdState
+const fcdSlice = createSlice({
+  name: 'fcd',
+  initialState: initState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createUpdateFCDAction, (state, { payload }) => {
+        if (payload.data && payload.meta) {
+          const { name, version } = payload.meta
+          if (name && version) {
+            return Object.assign({}, state, {
+              version: { ...state.version, [name]: version },
+              [name]: payload.data,
+            }) as FcdState
+          }
         }
-      }
-      break
-    case '@@replaceFCD':
-      if (value?.path && value.data) {
-        state = Object.assign({}, state, { [value.path]: value.data })
-      }
-  }
-  return state
-}
+        return state
+      })
+      .addCase(createReplaceFCDAction, (state, { payload }) => {
+        if (payload.path && payload.data) {
+          return Object.assign({}, state, { [payload.path]: payload.data })
+        }
+        return state
+      })
+  },
+})
+
+export const reducer = fcdSlice.reducer

@@ -1,14 +1,23 @@
 import type { ExtendedWebviewTag } from 'views/components/etc/webview'
 
+import { createSlice } from '@reduxjs/toolkit'
 import { config } from 'views/env'
 import { getZoomedSize } from 'views/services/utils'
 
-interface PaneSize {
+import {
+  createLayoutUpdateAction,
+  createLayoutWebviewUseFixedResolutionAction,
+  createLayoutWebviewWindowUseFixedResolutionAction,
+  createLayoutWebviewUpdateWebviewRefAction,
+  createLayoutWebviewSizeAction,
+} from '../actions/layout'
+
+export interface PaneSize {
   width: number
   height: number
 }
 
-interface WebviewState extends PaneSize {
+export interface WebviewState extends PaneSize {
   windowWidth: number
   windowHeight: number
   useFixedResolution: boolean
@@ -76,61 +85,60 @@ function getIntegerSize<T extends SizeObject>(obj: T): T {
   return result
 }
 
-type LayoutAction =
-  | { type: '@@LayoutUpdate'; value: Partial<LayoutState> & { webview?: Partial<WebviewState> } }
-  | { type: '@@LayoutUpdate/webview/useFixedResolution'; value: boolean }
-  | { type: '@@LayoutUpdate/webview/windowUseFixedResolution'; value: boolean }
-  | {
-      type: '@@LayoutUpdate/webview/UpdateWebviewRef'
-      value: { ref: ExtendedWebviewTag | null; ts: number }
-    }
-  | { type: '@@LayoutUpdate/webview/size'; value: Partial<WebviewState> }
+const layoutSlice = createSlice({
+  name: 'layout',
+  initialState: initState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createLayoutUpdateAction, (state, { payload }) => {
+        return {
+          ...state,
+          ...getIntegerSize(payload as SizeObject),
+          webview: {
+            ...state.webview,
+            ...getIntegerSize((payload.webview ?? {}) as SizeObject),
+          },
+        }
+      })
+      .addCase(createLayoutWebviewUseFixedResolutionAction, (state, { payload }) => {
+        return {
+          ...state,
+          webview: {
+            ...state.webview,
+            useFixedResolution: payload,
+          },
+        }
+      })
+      .addCase(createLayoutWebviewWindowUseFixedResolutionAction, (state, { payload }) => {
+        return {
+          ...state,
+          webview: {
+            ...state.webview,
+            windowUseFixedResolution: payload,
+          },
+        }
+      })
+      .addCase(createLayoutWebviewUpdateWebviewRefAction, (state, { payload }) => {
+        return {
+          ...state,
+          webview: {
+            ...state.webview,
+            ref: payload.ref,
+            refts: payload.ts,
+          },
+        }
+      })
+      .addCase(createLayoutWebviewSizeAction, (state, { payload }) => {
+        return {
+          ...state,
+          webview: {
+            ...state.webview,
+            ...getIntegerSize(payload as SizeObject),
+          },
+        }
+      })
+  },
+})
 
-export function reducer(state = initState, action: LayoutAction): LayoutState {
-  switch (action.type) {
-    case '@@LayoutUpdate':
-      return {
-        ...state,
-        ...getIntegerSize(action.value),
-        webview: {
-          ...state.webview,
-          ...getIntegerSize(action.value.webview ?? {}),
-        },
-      }
-    case '@@LayoutUpdate/webview/useFixedResolution':
-      return {
-        ...state,
-        webview: {
-          ...state.webview,
-          useFixedResolution: action.value,
-        },
-      }
-    case '@@LayoutUpdate/webview/windowUseFixedResolution':
-      return {
-        ...state,
-        webview: {
-          ...state.webview,
-          windowUseFixedResolution: action.value,
-        },
-      }
-    case '@@LayoutUpdate/webview/UpdateWebviewRef':
-      return {
-        ...state,
-        webview: {
-          ...state.webview,
-          ref: action.value.ref,
-          refts: action.value.ts,
-        },
-      }
-    case '@@LayoutUpdate/webview/size':
-      return {
-        ...state,
-        webview: {
-          ...state.webview,
-          ...getIntegerSize(action.value),
-        },
-      }
-    default:
-      return state
-  }
-}
+export const reducer = layoutSlice.reducer

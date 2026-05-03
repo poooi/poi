@@ -24,6 +24,7 @@ import i18next from './env-parts/i18next'
 import { KanGameWindowWrapper } from './kan-game-window-wrapper'
 import { KanGameWrapper } from './kan-game-wrapper'
 import { PoiApp } from './poi-app'
+import { createLayoutUpdateAction } from './redux/actions/layout'
 import { darkTheme, lightTheme } from './theme'
 import { POPOVER_MODIFIERS } from './utils/tools'
 
@@ -59,15 +60,7 @@ const Poi = () => {
           height !== 0 &&
           (width !== getStore('layout.window.width') || height !== getStore('layout.window.height'))
         ) {
-          dispatch({
-            type: '@@LayoutUpdate',
-            value: {
-              window: {
-                width,
-                height,
-              },
-            },
-          })
+          dispatch(createLayoutUpdateAction({ window: { width, height } }))
         }
       })
     },

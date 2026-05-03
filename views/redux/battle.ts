@@ -1,6 +1,30 @@
 import { get } from 'lodash'
 import { Models, Simulator } from 'poi-lib-battle'
 
+import {
+  createAPIPortPortResponseAction,
+  createAPIReqMapNextResponseAction,
+  createAPIReqMapStartResponseAction,
+  createAPIReqSortieBattleResultResponseAction,
+  createAPIReqCombinedBattleBattleresultResponseAction,
+  createAPIReqSortieBattleResponseAction,
+  createAPIReqSortieAirbattleResponseAction,
+  createAPIReqSortieLdAirbattleResponseAction,
+  createAPIReqCombinedBattleBattleResponseAction,
+  createAPIReqCombinedBattleBattleWaterResponseAction,
+  createAPIReqCombinedBattleAirbattleResponseAction,
+  createAPIReqCombinedBattleLdAirbattleResponseAction,
+  createAPIReqCombinedBattleEcBattleResponseAction,
+  createAPIReqCombinedBattleEachBattleResponseAction,
+  createAPIReqCombinedBattleEachBattleWaterResponseAction,
+  createAPIReqBattleMidnightBattleResponseAction,
+  createAPIReqBattleMidnightSPMidnightResponseAction,
+  createAPIReqCombinedBattleMidnightBattleResponseAction,
+  createAPIReqCombinedBattleSPMidnightResponseAction,
+  createAPIReqCombinedBattleEcMidnightBattleResponseAction,
+  createAPIReqCombinedBattleEcNightToDayResponseAction,
+} from './actions/response'
+
 const { Battle, Fleet } = Models
 
 function isRecord(x: unknown): x is Record<string, unknown> {
@@ -162,9 +186,9 @@ export function reducer(
 ): BattleState {
   const { _status } = state
   switch (type) {
-    case '@@Response/kcsapi/api_port/port':
+    case createAPIPortPortResponseAction.type:
       return initState
-    case '@@Response/kcsapi/api_req_map/start':
+    case createAPIReqMapStartResponseAction.type:
       return {
         ...state,
         _status: {
@@ -178,7 +202,7 @@ export function reducer(
           enemyFormation: 0,
         },
       }
-    case '@@Response/kcsapi/api_req_map/next':
+    case createAPIReqMapNextResponseAction.type:
       return {
         ...state,
         _status: {
@@ -190,22 +214,22 @@ export function reducer(
         },
       }
     // Normal battle
-    case '@@Response/kcsapi/api_req_sortie/battle':
-    case '@@Response/kcsapi/api_req_sortie/airbattle':
-    case '@@Response/kcsapi/api_req_sortie/ld_airbattle':
-    case '@@Response/kcsapi/api_req_combined_battle/battle':
-    case '@@Response/kcsapi/api_req_combined_battle/battle_water':
-    case '@@Response/kcsapi/api_req_combined_battle/airbattle':
-    case '@@Response/kcsapi/api_req_combined_battle/ld_airbattle':
-    case '@@Response/kcsapi/api_req_combined_battle/ec_battle':
-    case '@@Response/kcsapi/api_req_combined_battle/each_battle':
-    case '@@Response/kcsapi/api_req_combined_battle/each_battle_water':
-    case '@@Response/kcsapi/api_req_battle_midnight/battle':
-    case '@@Response/kcsapi/api_req_battle_midnight/sp_midnight':
-    case '@@Response/kcsapi/api_req_combined_battle/midnight_battle':
-    case '@@Response/kcsapi/api_req_combined_battle/sp_midnight':
-    case '@@Response/kcsapi/api_req_combined_battle/ec_midnight_battle':
-    case '@@Response/kcsapi/api_req_combined_battle/ec_night_to_day': {
+    case createAPIReqSortieBattleResponseAction.type:
+    case createAPIReqSortieAirbattleResponseAction.type:
+    case createAPIReqSortieLdAirbattleResponseAction.type:
+    case createAPIReqCombinedBattleBattleResponseAction.type:
+    case createAPIReqCombinedBattleBattleWaterResponseAction.type:
+    case createAPIReqCombinedBattleAirbattleResponseAction.type:
+    case createAPIReqCombinedBattleLdAirbattleResponseAction.type:
+    case createAPIReqCombinedBattleEcBattleResponseAction.type:
+    case createAPIReqCombinedBattleEachBattleResponseAction.type:
+    case createAPIReqCombinedBattleEachBattleWaterResponseAction.type:
+    case createAPIReqBattleMidnightBattleResponseAction.type:
+    case createAPIReqBattleMidnightSPMidnightResponseAction.type:
+    case createAPIReqCombinedBattleMidnightBattleResponseAction.type:
+    case createAPIReqCombinedBattleSPMidnightResponseAction.type:
+    case createAPIReqCombinedBattleEcMidnightBattleResponseAction.type:
+    case createAPIReqCombinedBattleEcNightToDayResponseAction.type: {
       const sortieTypeFlag = store ? getSortieType(store) : 0
       const formation = body?.['api_formation']
       const enemyFormation = Array.isArray(formation)
@@ -240,8 +264,8 @@ export function reducer(
         },
       }
     }
-    case '@@Response/kcsapi/api_req_sortie/battleresult':
-    case '@@Response/kcsapi/api_req_combined_battle/battleresult':
+    case createAPIReqSortieBattleResultResponseAction.type:
+    case createAPIReqCombinedBattleBattleresultResponseAction.type:
       if (_status.result) {
         const isCombined = store ? getSortieType(store) > 0 : false
         const enemyInfo = body?.['api_enemy_info']

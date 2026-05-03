@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
+import { createLayoutUpdateAction } from 'views/redux/actions/layout'
 
 import { AdmiralPanel } from './parts/admiral-panel'
 import { ConstructionPanel } from './parts/construction-panel'
@@ -119,7 +120,7 @@ const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewI
           (width !== getStore('layout.mainpane.width') ||
             height !== getStore('layout.mainpane.height'))
         ) {
-          dispatch({ type: '@@LayoutUpdate', value: { mainpane: { width, height } } })
+          dispatch(createLayoutUpdateAction({ mainpane: { width, height } }))
         }
       })
     },

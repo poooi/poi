@@ -13,6 +13,8 @@ import {
   ShipTabContent,
 } from 'views/components/ship-parts/styled-components'
 import { getStore } from 'views/create-store'
+import { createLayoutUpdateAction } from 'views/redux/actions/layout'
+import { createTabSwitchAction } from 'views/redux/actions/ui'
 import { getFleetIntent, DEFAULT_FLEET_NAMES } from 'views/utils/game-utils'
 import { fleetStateSelectorFactory } from 'views/utils/selectors'
 
@@ -102,14 +104,14 @@ const MiniShipInner = ({
   const handleClick = useCallback(
     (idx: number) => {
       if (idx !== activeFleetId) {
-        dispatch({ type: '@@TabSwitch', tabInfo: { activeFleetId: idx } })
+        dispatch(createTabSwitchAction({ tabInfo: { activeFleetId: idx } }))
       }
     },
     [dispatch, activeFleetId],
   )
 
   const handleChangeShipView = useCallback(() => {
-    dispatch({ type: '@@TabSwitch', tabInfo: { activeMainTab: 'ship-view' } })
+    dispatch(createTabSwitchAction({ tabInfo: { activeMainTab: 'ship-view' } }))
   }, [dispatch])
 
   const handleResize = useCallback(
@@ -122,7 +124,7 @@ const MiniShipInner = ({
           (width !== getStore('layout.minishippane.width') ||
             height !== getStore('layout.minishippane.height'))
         ) {
-          dispatch({ type: '@@LayoutUpdate', value: { minishippane: { width, height } } })
+          dispatch(createLayoutUpdateAction({ minishippane: { width, height } }))
         }
       })
     },

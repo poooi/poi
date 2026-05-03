@@ -1,3 +1,7 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+import { createTabSwitchAction } from './actions/ui'
+
 export interface UiState {
   activeMainTab: string
   activeFleetId: number
@@ -9,18 +13,18 @@ const initState: UiState = {
   activeFleetId: 0,
 }
 
-export function reducer(
-  state = initState,
-  { type, tabInfo }: { type: string; tabInfo?: Partial<UiState> },
-): UiState {
-  switch (type) {
-    case '@@TabSwitch': {
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState: initState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createTabSwitchAction, (state, { payload }) => {
       return {
         ...state,
-        ...tabInfo,
+        ...payload.tabInfo,
       }
-    }
-    default:
-      return state
-  }
-}
+    })
+  },
+})
+
+export const reducer = uiSlice.reducer

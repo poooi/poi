@@ -1,49 +1,39 @@
+import { createSlice } from '@reduxjs/toolkit'
 import { mapValues, omit } from 'lodash'
+
+import {
+  createInitIPCAction,
+  createRegisterIPCAction,
+  createUnregisterIPCAction,
+  createUnregisterAllIPCAction,
+} from './actions/ipc'
 
 type IpcScope = Record<string, boolean>
 export type IpcState = Record<string, IpcScope>
 
-interface IpcActionValue {
-  scope?: string
-  opts?: Record<string, unknown>
-  keys?: string[]
-}
+const ipcSlice = createSlice({
+  name: 'ipc',
+  initialState: {} as IpcState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(createInitIPCAction, (state, { payload }) => ({
+        ...state,
+        ...payload,
+      }))
+      .addCase(createRegisterIPCAction, (state, { payload }) => ({
+        ...state,
+        [payload.scope]: mapValues(payload.opts, () => true),
+      }))
+      .addCase(createUnregisterIPCAction, (state, { payload }) => ({
+        ...state,
+        [payload.scope]: omit(state[payload.scope], ...payload.keys) as IpcScope,
+      }))
+      .addCase(
+        createUnregisterAllIPCAction,
+        (state, { payload }) => omit(state, payload.scope) as IpcState,
+      )
+  },
+})
 
-const INIT_STATE: IpcState = {}
-
-export const reducer = (
-  state = INIT_STATE,
-  {
-    type,
-    value: { scope, opts, keys } = {},
-    content,
-  }: { type: string; value?: IpcActionValue; content?: IpcState },
-): IpcState => {
-  switch (type) {
-    case '@@initIPC': {
-      return {
-        ...state,
-        ...content,
-      }
-    }
-    case '@@registerIPC': {
-      return {
-        ...state,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        [scope!]: mapValues(opts, () => true),
-      }
-    }
-    case '@@unregisterIPC': {
-      return {
-        ...state,
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        [scope!]: omit(state[scope!], ...(keys ?? [])) as IpcScope,
-      }
-    }
-    case '@@unregisterAllIPC': {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return omit(state, scope!) as IpcState
-    }
-  }
-  return state
-}
+export const reducer = ipcSlice.reducer

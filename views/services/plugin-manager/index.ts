@@ -10,6 +10,12 @@ import semver from 'semver'
 import { dispatch, getStore } from 'views/create-store'
 import { config, PLUGIN_EXTRA_PATH, PLUGIN_PATH, ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
+import {
+  createPluginAddAction,
+  createPluginChangeStatusAction,
+  createPluginInitializeAction,
+  createPluginRemoveAction,
+} from 'views/redux/actions/plugins'
 import { sortPlugins } from 'views/redux/plugins'
 
 import type { BundlePluginMeta, Plugin, NpmConfig } from './utils'
@@ -106,7 +112,7 @@ class PluginManager extends EventEmitter {
     const mergedPlugins = await this.enablePlugins(this.mergePlugins(plugins, extraPlugins))
     const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
-    dispatch({ type: '@@Plugin/initialize', value: mergedPlugins })
+    dispatch(createPluginInitializeAction(mergedPlugins))
     return mergedPlugins
   }
 
@@ -238,14 +244,15 @@ class PluginManager extends EventEmitter {
       latest = distTag['latest']
     }
     if (semver.gt(latest, plugin.version)) {
-      dispatch({
-        type: '@@Plugin/changeStatus',
-        value: plugin,
-        option: [
-          { path: 'isOutdated', status: true },
-          { path: 'latestVersion', status: latest },
-        ],
-      })
+      dispatch(
+        createPluginChangeStatusAction({
+          packageName: plugin.packageName,
+          option: [
+            { path: 'isOutdated', status: true },
+            { path: 'latestVersion', status: latest },
+          ],
+        }),
+      )
       return plugin
     }
     return undefined
@@ -285,11 +292,12 @@ class PluginManager extends EventEmitter {
     }
 
     if (installingByPluginName) {
-      dispatch({
-        type: '@@Plugin/changeStatus',
-        value: { packageName: packageSource },
-        option: [{ path: 'isUpdating', status: true }],
-      })
+      dispatch(
+        createPluginChangeStatusAction({
+          packageName: packageSource,
+          option: [{ path: 'isUpdating', status: true }],
+        }),
+      )
     }
 
     try {
@@ -319,14 +327,15 @@ class PluginManager extends EventEmitter {
       if (plugin.enabled) {
         plugin = await enablePlugin(plugin, false)
       }
-      dispatch({ type: '@@Plugin/add', value: plugin })
+      dispatch(createPluginAddAction(plugin))
     } catch (error) {
       if (nowPlugin) {
-        dispatch({
-          type: '@@Plugin/changeStatus',
-          value: nowPlugin,
-          option: [{ path: 'isUpdating', status: false }],
-        })
+        dispatch(
+          createPluginChangeStatusAction({
+            packageName: nowPlugin.packageName,
+            option: [{ path: 'isUpdating', status: false }],
+          }),
+        )
       }
       console.error(error instanceof Error ? error.stack : error)
       throw error
@@ -335,11 +344,12 @@ class PluginManager extends EventEmitter {
 
   async uninstallPlugin(plugin: Plugin): Promise<void> {
     try {
-      dispatch({
-        type: '@@Plugin/changeStatus',
-        value: plugin,
-        option: [{ path: 'isUninstalling', status: true }],
-      })
+      dispatch(
+        createPluginChangeStatusAction({
+          packageName: plugin.packageName,
+          option: [{ path: 'isUninstalling', status: true }],
+        }),
+      )
       this.removePlugin(plugin)
     } catch (error) {
       console.error(error instanceof Error ? error.stack : error)
@@ -373,13 +383,13 @@ class PluginManager extends EventEmitter {
       plugin = await enablePlugin(plugin)
     }
     config.set(`plugin.${plugin.id}.enable`, true)
-    dispatch({ type: '@@Plugin/add', value: plugin })
+    dispatch(createPluginAddAction(plugin))
   }
 
   async disablePlugin(plugin: Plugin): Promise<void> {
     config.set(`plugin.${plugin.id}.enable`, false)
     plugin = await disablePlugin(plugin)
-    dispatch({ type: '@@Plugin/add', value: plugin })
+    dispatch(createPluginAddAction(plugin))
   }
 
   removePlugin(plugin: Plugin): void {
@@ -388,7 +398,7 @@ class PluginManager extends EventEmitter {
     } catch (error) {
       console.error(error instanceof Error ? error.stack : error)
     }
-    dispatch({ type: '@@Plugin/remove', value: plugin })
+    dispatch(createPluginRemoveAction(plugin))
   }
 
   async reloadPlugin(plugin: Plugin): Promise<void> {

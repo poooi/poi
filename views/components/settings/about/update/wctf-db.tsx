@@ -7,6 +7,7 @@ import path from 'path'
 import React, { useState, useEffect, useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { createWctfDbUpdateAction } from 'views/redux/actions/app'
 import { installPackage, getNpmConfig } from 'views/services/plugin-manager/utils'
 import { wctfSelector } from 'views/utils/selectors'
 
@@ -69,14 +70,13 @@ export const WctfDB = () => {
       const meta = (await fs.readJSON(DB_META_PATH)) as { version: string }
       const data = await parseData()
       if (data) {
-        dispatch({
-          type: '@@wctf-db-update',
-          payload: {
+        dispatch(
+          createWctfDbUpdateAction({
             version: meta.version,
             lastModified: +new Date(),
             ...data,
-          },
-        })
+          }),
+        )
       }
     } catch (e) {
       console.error(e instanceof Error ? e.stack : String(e))

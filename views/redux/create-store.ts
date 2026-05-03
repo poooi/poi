@@ -9,6 +9,10 @@ import { observer, observe } from 'redux-observers'
 import thunk from 'redux-thunk'
 import { isMain } from 'views/env'
 
+import type { FcdState, FcdValue } from './fcd'
+
+import { createReplaceFCDAction, createWctfDbUpdateAction } from './actions/app'
+import { createInitIPCAction } from './actions/ipc'
 import { dispatchBattleResult } from './battle'
 import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
 import { dockingCompleteObserver } from './info/repairs'
@@ -131,7 +135,7 @@ window.addEventListener('unload', () => {
 })
 
 if (!isMain) {
-  store.dispatch({ type: '@@initIPC', content: ipc.list() })
+  store.dispatch(createInitIPCAction(ipc.list()))
 }
 ipc.on('update', (action: { type: string }) => store.dispatch(action))
 
@@ -170,29 +174,25 @@ if (!isMain) {
     if (e.key === '_storeCache' && e.newValue) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       const { fcd, wctf = {} } = JSON.parse(e.newValue) as {
-        fcd: Record<string, unknown>
+        fcd: FcdState
         wctf?: { lastModified?: unknown; version?: string }
       }
-      for (const key of Object.keys(fcd)) {
-        if (!isEqual(fcd[key], get(getStore('fcd'), key))) {
+      let key: keyof FcdState
+      for (key in fcd) {
+        if (fcd[key] && !isEqual(fcd[key], get(getStore('fcd'), key))) {
           // eslint-disable-next-line no-console
           console.log(`Update ${key} from localStorage`)
-          store.dispatch({
-            type: '@@replaceFCD',
-            value: {
-              path: key,
-              data: fcd[key],
-            },
-          })
+          const payload: FcdValue<typeof key> = {
+            path: key,
+            data: fcd[key],
+          }
+          store.dispatch(createReplaceFCDAction(payload))
         }
       }
       if (wctf.lastModified && wctf.lastModified !== getStore('wctf').lastModified) {
         // eslint-disable-next-line no-console
         console.log(`Update wctf-db to ${wctf.version} from localstorage`)
-        store.dispatch({
-          type: '@@wctf-db-update',
-          payload: wctf,
-        })
+        store.dispatch(createWctfDbUpdateAction(wctf))
       }
     }
   })

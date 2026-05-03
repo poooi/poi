@@ -1,16 +1,19 @@
+import { createSlice } from '@reduxjs/toolkit'
+
+import { createWctfDbUpdateAction } from './actions/app'
+
 export type WctfState = Record<string, unknown>
 
-export const reducer = (
-  state: WctfState = {},
-  { type, payload }: { type: string; payload?: WctfState },
-): WctfState => {
-  switch (type) {
-    case '@@wctf-db-update': {
-      return {
-        ...state,
-        ...payload,
-      }
-    }
-  }
-  return state
-}
+const wctfSlice = createSlice({
+  name: 'wctf',
+  initialState: {} as WctfState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createWctfDbUpdateAction, (state, { payload }) => ({
+      ...state,
+      ...payload,
+    }))
+  },
+})
+
+export const reducer = wctfSlice.reducer
