@@ -213,7 +213,8 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           stopFileNavigate(currentWindow?.webContents.id ?? -1)
           externalWindowRef.current.addEventListener('beforeunload', () => {
             setLoaded(false)
-            config.set(`plugin.${plugin.id}.bounds`, currentWindowRef.current?.getBounds())
+            const bounds = currentWindowRef.current?.getBounds()
+            config.set(`plugin.${plugin.id}.bounds`, bounds)
             try {
               closeWindowPortal()
             } catch (e) {

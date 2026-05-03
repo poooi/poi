@@ -278,8 +278,9 @@ export class KanGameWindowWrapper extends PureComponent<
         remote.require('./lib/webcontent-utils')
       stopFileNavigate(this.currentWindow!.webContents.id)
       handleWebviewPreloadHack(this.currentWindow!.webContents.id)
-      this.externalWindow!.addEventListener('beforeunload', () => {
-        config.set('poi.kangameWindow.bounds', this.currentWindow!.getBounds())
+      this.externalWindow?.addEventListener('beforeunload', () => {
+        const bounds = this.currentWindow?.getBounds()
+        config.set('poi.kangameWindow.bounds', bounds)
       })
       if (windowUseFixedResolution) {
         const width = config.get('poi.webview.windowWidth', 1200) as number
