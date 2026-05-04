@@ -1,5 +1,6 @@
 import type { ConfigValue } from 'lib/config'
 import type * as WebContentUtils from 'lib/webcontent-utils'
+import type { ReactNode } from 'react'
 import type { ConfigPath } from 'views/env'
 
 import { BlueprintProvider } from '@blueprintjs/core'
@@ -77,17 +78,19 @@ interface KanGameWindowWrapperState {
   hasError?: boolean
 }
 
-export class KanGameWindowWrapper extends PureComponent<
-  Record<string, never>,
-  KanGameWindowWrapperState
-> {
+interface Props {
+  titleExtra?: ReactNode
+  pinned: boolean
+}
+
+export class KanGameWindowWrapper extends PureComponent<Props, KanGameWindowWrapperState> {
   containerEl: HTMLDivElement
   externalWindow: Window | null = null
   currentWindow: Electron.BrowserWindow | null = null
   resizable: boolean | undefined
   kangameContainer = createRef<HTMLDivElement>()
 
-  constructor(props: Record<string, never>) {
+  constructor(props: Props) {
     super(props)
     this.containerEl = document.createElement('div')
     this.containerEl.id = 'plugin-mountpoint'
@@ -112,6 +115,7 @@ export class KanGameWindowWrapper extends PureComponent<
     try {
       if (this.externalWindow) {
         this.externalWindow.onbeforeunload = null
+        this.currentWindow?.setClosable(true)
         this.externalWindow.close()
       }
     } catch (e) {
@@ -125,6 +129,7 @@ export class KanGameWindowWrapper extends PureComponent<
     try {
       if (this.externalWindow) {
         this.externalWindow.onbeforeunload = null
+        this.currentWindow?.setClosable(true)
         this.externalWindow.close()
       }
     } catch (e) {
@@ -360,7 +365,16 @@ export class KanGameWindowWrapper extends PureComponent<
           <TitleBar
             icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
             browserWindowId={this.currentWindow!.id}
-          />
+            disableClose
+            {...(this.props.pinned
+              ? {
+                  disableMaximize: true,
+                  disableMinimize: true,
+                }
+              : undefined)}
+          >
+            {this.props.titleExtra}
+          </TitleBar>
         )}
         <BlueprintProvider portalContainer={this.containerEl}>
           <StyleSheetManager target={this.externalWindow.document.head}>

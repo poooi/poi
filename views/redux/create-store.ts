@@ -20,7 +20,7 @@ import { equipsCrossSliceMiddleware } from './middlewares/equips-cross-slice'
 import { questsCrossSliceMiddleware } from './middlewares/quests-cross-slice'
 import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-slice'
 import { shipsCrossSliceMiddleware } from './middlewares/ships-cross-slice'
-import { reducerFactory, onConfigChange, type RootState } from './reducer-factory'
+import { reducerFactory, onConfigChange, type RootState, onConfigDelete } from './reducer-factory'
 
 function isRecord(x: unknown): x is Record<string, unknown> {
   return typeof x === 'object' && x !== null
@@ -128,10 +128,15 @@ const solveConfSet = <P extends ConfigStringPath>(path: P, value: ConfigValue<P>
   }
   store.dispatch(onConfigChange(details))
 }
+const solveConfDelete = <P extends ConfigStringPath>(path: P): void => {
+  store.dispatch(onConfigDelete({ path }))
+}
 const remoteConfig: ConfigInstance = remote.require('./lib/config')
 remoteConfig.addListener('config.set', solveConfSet)
+remoteConfig.addListener('config.delete', solveConfDelete)
 window.addEventListener('unload', () => {
   remoteConfig.removeListener('config.set', solveConfSet)
+  remoteConfig.removeListener('config.delete', solveConfDelete)
 })
 
 if (!isMain) {

@@ -13,6 +13,7 @@ interface Props {
   onClick: () => void
   id?: string
   grid?: boolean
+  handlePluginPin: (plugin: Plugin) => void
 }
 
 type Mode = 'legacy-window' | 'window' | 'tab'
@@ -70,10 +71,11 @@ const PluginMenuItem = styled(MenuItem)<{ grid?: boolean }>`
         `}
 `
 
-const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid }) => {
+const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid, handlePluginPin }) => {
   const { t } = useTranslation('setting')
   const pluginConfig = useSelector((state: RootState) => state.config?.poi?.plugin)
   const isFavorite = pluginConfig?.favorite?.[plugin.id]
+  const pinConfig = pluginConfig?.pin?.[plugin.id]
   const mode: Mode = plugin.handleClick
     ? 'legacy-window'
     : (pluginConfig?.windowmode?.[plugin.id] ?? plugin.windowMode)
@@ -105,6 +107,17 @@ const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid }) => {
           }}
         />
       )}
+      {mode === 'window' && (
+        <MenuItem
+          icon={pinConfig ? 'pin' : 'unpin'}
+          text={pinConfig ? t('Unpin') : t('Pin')}
+          onClick={(e) => {
+            e.preventDefault()
+            if (mode !== 'window') return
+            handlePluginPin(plugin)
+          }}
+        />
+      )}
     </Menu>
   )
 
@@ -120,6 +133,7 @@ const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid }) => {
         labelElement={
           <StatusIndicator>
             {isFavorite && <Icon icon="star" />}
+            {mode === 'window' && pinConfig && <Icon icon="pin" />}
             {mode === 'legacy-window' && <Icon icon="open-application" />}
             {mode === 'window' && <Icon icon="applications" />}
           </StatusIndicator>

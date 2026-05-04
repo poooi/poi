@@ -175,7 +175,7 @@ const changeBounds = () => {
 window.addEventListener('game.start', adjustSize)
 window.addEventListener('resize', adjustSize)
 
-config.on('config.set', (path: string, value: unknown) => {
+config.on('config.set', (path, value) => {
   switch (path) {
     case 'poi.appearance.zoom': {
       const [width, height] = remote.getCurrentWindow().getContentSize()

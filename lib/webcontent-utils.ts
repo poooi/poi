@@ -1,7 +1,7 @@
 import type { BrowserWindowConstructorOptions } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
-import { webContents, shell, webFrameMain } from 'electron'
+import { BrowserWindow, webContents, shell, webFrameMain } from 'electron'
 import _ from 'lodash'
 import os from 'os'
 
@@ -114,6 +114,8 @@ export function stopNavigateAndHandleNewWindow(id: number) {
         },
       }
     } else if (frameName.startsWith('plugin')) {
+      const pluginId = url.split('?').pop()
+      const parentWindow = BrowserWindow.fromWebContents(webContent)
       const options: BrowserWindowConstructorOptions = {
         resizable: true,
         frame: false,
@@ -131,6 +133,20 @@ export function stopNavigateAndHandleNewWindow(id: number) {
         },
         transparent: isModernDarwin,
         backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
+      }
+      const pinConfig = config.get(`poi.plugin.pin.${pluginId}`, undefined)
+      if (pinConfig && parentWindow) {
+        const bounds = parentWindow.getBounds()
+        options.x = bounds.x + pinConfig.deltaX
+        options.y = bounds.y + pinConfig.deltaY
+        options.width = pinConfig.width
+        options.height = pinConfig.height
+        options.parent = parentWindow
+        options.resizable = false
+        options.movable = false
+        options.minimizable = false
+        options.maximizable = false
+        options.closable = false
       }
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true

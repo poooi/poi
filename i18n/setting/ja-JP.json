@@ -247,5 +247,7 @@
   "Favorite": "お気に入り",
   "Unfavorite": "お気に入り解除",
   "Open in tab": "タブで開く",
-  "Open in window": "ウィンドウで開く"
+  "Open in window": "ウィンドウで開く",
+  "Pin": "ピン留め",
+  "Unpin": "ピン留め解除"
 }

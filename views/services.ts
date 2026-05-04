@@ -25,6 +25,7 @@ import './services/sortie-unused-slot-check'
 import './services/event-sortie-check'
 import './services/google-analytics'
 import './services/battle-notify'
+import './services/window-pin'
 import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
 
 import { isEqual } from 'lodash'

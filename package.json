@@ -81,7 +81,7 @@
     "electron-devtools-installer": "^3.2.0",
     "electron-drag-click": "^1.0.6",
     "electron-log": "^4.4.8",
-    "electron-react-titlebar": "^1.2.1",
+    "electron-react-titlebar": "^2.0.0",
     "electron-updater": "^5.2.1",
     "fast-memoize": "^2.5.2",
     "fbjs": "^3.0.4",

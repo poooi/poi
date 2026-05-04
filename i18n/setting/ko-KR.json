@@ -239,5 +239,7 @@
   "Favorite": "즐겨찾기",
   "Unfavorite": "즐겨찾기 해제",
   "Open in tab": "탭에서 열기",
-  "Open in window": "창에서 열기"
+  "Open in window": "창에서 열기",
+  "Pin": "고정",
+  "Unpin": "고정 해제"
 }

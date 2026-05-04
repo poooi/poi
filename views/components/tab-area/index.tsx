@@ -1,4 +1,4 @@
-import type { ConfigStringPath } from 'lib/config'
+import type { ConfigStringPath, ConfigValue } from 'lib/config'
 import type { UpdateMainTouchbar } from 'lib/touchbar'
 import type { ResizableAreaHandle } from 'react-resizable-area'
 import type { RootState } from 'views/redux/reducer-factory'
@@ -292,8 +292,9 @@ interface ControlledTabAreaProps {
   mainPanelWidth: SizeOption
   mainPanelHeight: SizeOption
   editable: boolean
-  windowmode: Record<string, boolean>
-  favorite: Record<string, boolean>
+  windowmode: ConfigValue<'poi.plugin.windowmode'>
+  favorite: ConfigValue<'poi.plugin.favorite'>
+  pinConfig: ConfigValue<'poi.plugin.pin'>
   async: boolean
 }
 
@@ -316,6 +317,7 @@ const ControlledTabAreaFC = ({
   editable,
   windowmode,
   favorite,
+  pinConfig,
 }: ControlledTabAreaProps): React.ReactElement => {
   const [openedWindow, setOpenedWindow] = useState<Record<string, boolean>>({})
   const [prevDoubleTabbed, setPrevDoubleTabbed] = useState(doubleTabbed)
@@ -344,11 +346,11 @@ const ControlledTabAreaFC = ({
   }
 
   // sort plugins by favorite and priority
-  const plugins = sortBy(rawPlugins, [(plugin) => (favorite[plugin.id] ? 0 : 1), 'priority'])
+  const plugins = sortBy(rawPlugins, [(plugin) => (favorite?.[plugin.id] ? 0 : 1), 'priority'])
 
   const isWindowMode = useCallback(
     (plugin: Plugin): boolean =>
-      windowmode[plugin.id] != null ? windowmode[plugin.id] : (plugin.windowMode ?? false),
+      windowmode?.[plugin.id] != null ? windowmode[plugin.id] : (plugin.windowMode ?? false),
     [windowmode],
   )
 
@@ -643,6 +645,76 @@ const ControlledTabAreaFC = ({
     }
   }, [activeMainTab, activePluginName, t, tabbedPlugins])
 
+  // handle window plugin pin
+  useEffect(() => {
+    for (const pluginId in pinConfig) {
+      if (!openedWindow[pluginId]) {
+        // open the plugin window if pin is set but window is not opened
+        const plugin = plugins.find((p) => p.id === pluginId)
+        if (plugin) {
+          openWindow(plugin)
+        }
+      }
+    }
+  }, [pinConfig, openWindow, plugins, openedWindow])
+  // handle window plugin pin set
+  const handlePluginPin = useCallback(
+    (plugin: Plugin): void => {
+      const currentPinConfig = pinConfig?.[plugin.id]
+      if (currentPinConfig) {
+        config.delete(`poi.plugin.pin.${plugin.id}`)
+      } else {
+        const parentBounds = remote.getCurrentWindow().getBounds()
+        const pluginWindow = remote.BrowserWindow.getAllWindows().find((win) => {
+          const url = win.webContents.getURL()
+          return url.includes(`?${plugin.id}`)
+        })
+        if (pluginWindow) {
+          const pluginBounds = pluginWindow.getBounds()
+          config.set(`poi.plugin.pin.${plugin.id}`, {
+            deltaX: pluginBounds.x - parentBounds.x,
+            deltaY: pluginBounds.y - parentBounds.y,
+            width: pluginBounds.width,
+            height: pluginBounds.height,
+          })
+        } else {
+          // plugin window is not opened, set config and open it
+          const pluginBounds = config.get(`plugin.${plugin.id}.bounds`, {
+            x: parentBounds.x + 50,
+            y: parentBounds.y + 50,
+            width: 800,
+            height: 600,
+          })
+          config.set(`poi.plugin.pin.${plugin.id}`, {
+            deltaX: pluginBounds.x - parentBounds.x,
+            deltaY: pluginBounds.y - parentBounds.y,
+            width: pluginBounds.width,
+            height: pluginBounds.height,
+          })
+        }
+      }
+    },
+    [pinConfig],
+  )
+  const getPinButton = (plugin: Plugin) => {
+    const isPinned = !!pinConfig?.[plugin.id]
+    return (
+      <Button
+        icon={isPinned ? 'pin' : 'unpin'}
+        active={isPinned}
+        minimal
+        onClick={() => handlePluginPin(plugin)}
+        title={isPinned ? t('setting:Unpin') : t('setting:Pin')}
+        small
+        style={{
+          alignSelf: 'center',
+          // @ts-expect-error custom css prop to make the button not draggable in the titlebar
+          WebkitAppRegion: 'no-drag',
+        }}
+      />
+    )
+  }
+
   const currentTabbedPlugins = tabbedPlugins()
   const currentWindowModePlugins = windowModePlugins()
   const pluginsToList = listedPlugins()
@@ -676,6 +748,7 @@ const ControlledTabAreaFC = ({
               plugin={plugin}
               key={plugin.id}
               grid={useGridMenu}
+              handlePluginPin={handlePluginPin}
             />
           )
         })
@@ -695,6 +768,8 @@ const ControlledTabAreaFC = ({
         windowRefs.current[plugin.id] = r
       }}
       closeWindowPortal={() => closeWindow(plugin)}
+      titleExtra={getPinButton(plugin)}
+      pinned={!!pinConfig?.[plugin.id]}
     />
   ))
 
@@ -884,6 +959,7 @@ export const ControlledTabArea = (): React.ReactElement => {
   const plugins = useSelector((state: RootState) => state.plugins)
   const windowmode = useSelector((state: RootState) => state.config.poi?.plugin?.windowmode ?? {})
   const favorite = useSelector((state: RootState) => state.config.poi?.plugin?.favorite ?? {})
+  const pinConfig = useSelector((state: RootState) => state.config.poi?.plugin?.pin ?? {})
   const activePluginName = useSelector((state: RootState): string => {
     const fromState = state?.ui?.activePluginName
     if (fromState != null) return fromState
@@ -935,6 +1011,7 @@ export const ControlledTabArea = (): React.ReactElement => {
       editable={editable}
       windowmode={windowmode}
       favorite={favorite}
+      pinConfig={pinConfig}
       async={asyncProp}
     />
   )

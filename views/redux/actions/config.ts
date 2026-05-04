@@ -5,4 +5,9 @@ interface ConfigPayload {
   value: object
 }
 
+interface ConfigDeletePayload {
+  path: string
+}
+
 export const createConfigAction = createAction<ConfigPayload>('@@Config')
+export const createConfigDeleteAction = createAction<ConfigDeletePayload>('@@ConfigDelete')

@@ -88,6 +88,8 @@ const stylesheetTagsWithHref = [
 interface Props {
   plugin: Plugin
   closeWindowPortal: () => void
+  titleExtra?: React.ReactNode
+  pinned: boolean
 }
 
 export interface PluginWindowWrapHandle {
@@ -95,7 +97,7 @@ export interface PluginWindowWrapHandle {
 }
 
 export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
-  ({ plugin, closeWindowPortal }, ref) => {
+  ({ plugin, closeWindowPortal, titleExtra, pinned }, ref) => {
     const containerElRef = useRef<HTMLDivElement | null>(null)
     if (!containerElRef.current) {
       const el = document.createElement('div')
@@ -238,7 +240,11 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
       return () => {
         config.removeListener('config.set', handleZoom)
         try {
-          externalWindowRef.current?.close()
+          if (externalWindowRef.current) {
+            externalWindowRef.current.onbeforeunload = null
+            currentWindowRef.current?.setClosable(true)
+            externalWindowRef.current.close()
+          }
         } catch (e) {
           console.error(e)
         }
@@ -262,7 +268,16 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           <TitleBar
             icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
             browserWindowId={currentWindowRef.current.id}
-          />
+            {...(pinned
+              ? {
+                  disableClose: true,
+                  disableMaximize: true,
+                  disableMinimize: true,
+                }
+              : undefined)}
+          >
+            {titleExtra}
+          </TitleBar>
         )}
         <WindowEnv.Provider
           value={{

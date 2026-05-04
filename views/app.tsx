@@ -1,12 +1,11 @@
 import type { ConfigInstance } from 'lib/config'
 
-import { ResizeSensor, Popover, BlueprintProvider } from '@blueprintjs/core'
+import { ResizeSensor, Popover, BlueprintProvider, Button } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { webFrame } from 'electron'
-import { get } from 'lodash'
 import React, { useCallback } from 'react'
 import { createRoot } from 'react-dom/client'
-import { I18nextProvider } from 'react-i18next'
+import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector, Provider } from 'react-redux'
 
 import '../assets/css/app.css'
@@ -42,14 +41,16 @@ Popover.defaultProps.modifiers = POPOVER_MODIFIERS
 
 const Poi = () => {
   const dispatch = useDispatch()
+  const { t } = useTranslation()
   const isHorizontal = useSelector(
-    (state: RootState) => get(state, 'config.poi.layout.mode', 'horizontal') === 'horizontal',
+    (state: RootState) => (state.config?.poi?.layout?.mode ?? 'horizontal') === 'horizontal',
   )
-  const reversed = useSelector((state: RootState) => get(state, 'config.poi.layout.reverse', false))
-  const isolateGameWindow = useSelector((state: RootState) =>
-    get(state, 'config.poi.layout.isolate', false),
+  const pinConfig = useSelector((state: RootState) => state.config?.poi?.plugin?.pin?.kangame)
+  const reversed = useSelector((state: RootState) => state.config?.poi?.layout?.reverse ?? false)
+  const isolateGameWindow = useSelector(
+    (state: RootState) => state.config?.poi?.layout?.isolate ?? false,
   )
-  const theme = useSelector((state: RootState) => get(state, 'config.poi.appearance.theme', 'dark'))
+  const theme = useSelector((state: RootState) => state.config?.poi?.appearance?.theme ?? 'dark')
 
   const handleResize = useCallback(
     (entries: ResizeObserverEntry[]) => {
@@ -65,6 +66,41 @@ const Poi = () => {
       })
     },
     [dispatch],
+  )
+
+  const handlePin = () => {
+    if (pinConfig) {
+      config.delete('poi.plugin.pin.kangame')
+    } else {
+      const mainWindow = remote.getCurrentWindow()
+      const bounds = mainWindow.getBounds()
+      const kangameWindow = remote.BrowserWindow.getAllWindows().find((win) =>
+        win.webContents.getURL().includes('kangame'),
+      )
+      const kangameBounds = kangameWindow?.getBounds()
+      config.set('poi.plugin.pin.kangame', {
+        deltaX: (kangameBounds?.x ?? bounds.x) - bounds.x,
+        deltaY: (kangameBounds?.y ?? bounds.y) - bounds.y,
+        width: kangameBounds?.width ?? bounds.width,
+        height: kangameBounds?.height ?? bounds.height,
+      })
+    }
+  }
+
+  const pinButton = (
+    <Button
+      icon={pinConfig ? 'pin' : 'unpin'}
+      active={!!pinConfig}
+      minimal
+      onClick={() => handlePin()}
+      title={pinConfig ? t('setting:Unpin') : t('setting:Pin')}
+      small
+      style={{
+        alignSelf: 'center',
+        // @ts-expect-error custom css prop to make the button not draggable in the titlebar
+        WebkitAppRegion: 'no-drag',
+      }}
+    />
   )
 
   return (
@@ -85,7 +121,11 @@ const Poi = () => {
               ...(!isHorizontal && { overflow: 'hidden' }),
             }}
           >
-            {isolateGameWindow ? <KanGameWindowWrapper /> : <KanGameWrapper key="frame" />}
+            {isolateGameWindow ? (
+              <KanGameWindowWrapper titleExtra={pinButton} pinned={!!pinConfig} />
+            ) : (
+              <KanGameWrapper key="frame" />
+            )}
             <PoiApp />
           </poi-main>
         </ResizeSensor>

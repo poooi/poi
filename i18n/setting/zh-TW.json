@@ -247,5 +247,7 @@
   "Favorite": "收藏",
   "Unfavorite": "取消收藏",
   "Open in tab": "在標籤頁中打開",
-  "Open in window": "在新視窗中打開"
+  "Open in window": "在新視窗中打開",
+  "Pin": "固定",
+  "Unpin": "取消固定"
 }
