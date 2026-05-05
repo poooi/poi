@@ -198,6 +198,11 @@ const PluginNameContainer = styled.div`
   gap: 8px;
 `
 
+const PinButton = styled(Button)`
+  align-self: center;
+  -webkit-app-region: no-drag;
+`
+
 interface SizeOption {
   px?: number
   percent?: number
@@ -699,18 +704,13 @@ const ControlledTabAreaFC = ({
   const getPinButton = (plugin: Plugin) => {
     const isPinned = !!pinConfig?.[plugin.id]
     return (
-      <Button
+      <PinButton
         icon={isPinned ? 'pin' : 'unpin'}
         active={isPinned}
         minimal
         onClick={() => handlePluginPin(plugin)}
         title={isPinned ? t('setting:Unpin') : t('setting:Pin')}
         small
-        style={{
-          alignSelf: 'center',
-          // @ts-expect-error custom css prop to make the button not draggable in the titlebar
-          WebkitAppRegion: 'no-drag',
-        }}
       />
     )
   }

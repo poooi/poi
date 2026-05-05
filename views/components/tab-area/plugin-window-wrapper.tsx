@@ -65,6 +65,13 @@ const PoiAppTabpane = styled.div`
   overflow: hidden;
 `
 
+const FloatContainer = styled.div`
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  z-index: 1000;
+`
+
 const stylesheetTagsWithID = [
   'bootstrap',
   'normalize',
@@ -263,37 +270,37 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
     )
 
     return ReactDOM.createPortal(
-      <>
-        {showCustomTitleBar && currentWindowRef.current && (
-          <TitleBar
-            icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
-            browserWindowId={currentWindowRef.current.id}
-            {...(pinned
-              ? {
-                  disableClose: true,
-                  disableMaximize: true,
-                  disableMinimize: true,
-                }
-              : undefined)}
-          >
-            {titleExtra}
-          </TitleBar>
-        )}
-        <WindowEnv.Provider
-          value={{
-            window: externalWindowRef.current,
-            mountPoint: containerEl,
-          }}
-        >
-          <BlueprintProvider portalContainer={containerEl}>
-            <StyleSheetManager target={externalWindowRef.current.document.head}>
-              <PoiAppTabpane className="poi-app-tabpane" ref={pluginContainer}>
-                <PluginWrap key={plugin.id} plugin={plugin} />
-              </PoiAppTabpane>
-            </StyleSheetManager>
-          </BlueprintProvider>
-        </WindowEnv.Provider>
-      </>,
+      <WindowEnv.Provider
+        value={{
+          window: externalWindowRef.current,
+          mountPoint: containerEl,
+        }}
+      >
+        <BlueprintProvider portalContainer={containerEl}>
+          <StyleSheetManager target={externalWindowRef.current.document.head}>
+            {showCustomTitleBar && currentWindowRef.current ? (
+              <TitleBar
+                icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+                browserWindowId={currentWindowRef.current.id}
+                {...(pinned
+                  ? {
+                      disableClose: true,
+                      disableMaximize: true,
+                      disableMinimize: true,
+                    }
+                  : undefined)}
+              >
+                {titleExtra}
+              </TitleBar>
+            ) : (
+              <FloatContainer>{titleExtra}</FloatContainer>
+            )}
+            <PoiAppTabpane className="poi-app-tabpane" ref={pluginContainer}>
+              <PluginWrap key={plugin.id} plugin={plugin} />
+            </PoiAppTabpane>
+          </StyleSheetManager>
+        </BlueprintProvider>
+      </WindowEnv.Provider>,
       mountPoint,
     )
   },

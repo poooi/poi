@@ -10,7 +10,7 @@ import { useDispatch, useSelector, Provider } from 'react-redux'
 
 import '../assets/css/app.css'
 import '../assets/css/global.css'
-import { ThemeProvider } from 'styled-components'
+import { styled, ThemeProvider } from 'styled-components'
 
 import type { RootState } from './redux/reducer-factory'
 
@@ -38,6 +38,11 @@ require('./services/alert')
 // configure Popover (including Tooltip)
 // ATTENTION default props will be overridden by providing props
 Popover.defaultProps.modifiers = POPOVER_MODIFIERS
+
+const PinButton = styled(Button)`
+  align-self: center;
+  -webkit-app-region: no-drag;
+`
 
 const Poi = () => {
   const dispatch = useDispatch()
@@ -88,18 +93,13 @@ const Poi = () => {
   }
 
   const pinButton = (
-    <Button
+    <PinButton
       icon={pinConfig ? 'pin' : 'unpin'}
       active={!!pinConfig}
       minimal
       onClick={() => handlePin()}
       title={pinConfig ? t('setting:Unpin') : t('setting:Pin')}
       small
-      style={{
-        alignSelf: 'center',
-        // @ts-expect-error custom css prop to make the button not draggable in the titlebar
-        WebkitAppRegion: 'no-drag',
-      }}
     />
   )
 

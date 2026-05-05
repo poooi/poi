@@ -72,6 +72,13 @@ const PoiAppTabpane = styled.div`
   overflow: auto;
 `
 
+const FloatContainer = styled.div`
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  z-index: 1000;
+`
+
 interface Props {
   titleExtra?: ReactNode
   pinned: boolean
@@ -383,26 +390,26 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
 
   return ReactDOM.createPortal(
-    <>
-      {customTitlebar && (
-        <TitleBar
-          icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
-          browserWindowId={currentWindowRef.current!.id}
-          disableClose
-          disableMaximize={pinned || windowUseFixedResolution}
-          disableMinimize={pinned}
-        >
-          {titleExtra}
-        </TitleBar>
-      )}
-      <BlueprintProvider portalContainer={containerEl}>
-        <StyleSheetManager target={externalWindowRef.current.document.head}>
-          <PoiAppTabpane className="poi-app-tabpane" ref={kangameContainerRef}>
-            <KanGameWrapper windowMode key="window" />
-          </PoiAppTabpane>
-        </StyleSheetManager>
-      </BlueprintProvider>
-    </>,
+    <BlueprintProvider portalContainer={containerEl}>
+      <StyleSheetManager target={externalWindowRef.current.document.head}>
+        {customTitlebar ? (
+          <TitleBar
+            icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            browserWindowId={currentWindowRef.current!.id}
+            disableClose
+            disableMaximize={pinned || windowUseFixedResolution}
+            disableMinimize={pinned}
+          >
+            {titleExtra}
+          </TitleBar>
+        ) : (
+          <FloatContainer>{titleExtra}</FloatContainer>
+        )}
+        <PoiAppTabpane className="poi-app-tabpane" ref={kangameContainerRef}>
+          <KanGameWrapper windowMode key="window" />
+        </PoiAppTabpane>
+      </StyleSheetManager>
+    </BlueprintProvider>,
     externalWindowRef.current.document.querySelector('#plugin-mountpoint')!,
   )
 }
