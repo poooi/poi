@@ -29,13 +29,10 @@ const pinConfigObserver = observer(
           win.setMovable(true)
           win.setMinimizable(true)
           if (pluginId === 'kangame') {
-            // workaround: reset config to restore setting of kangame window
             const windowUseFixedResolution = config.get('poi.webview.windowUseFixedResolution')
-            const windowWidth = config.get('poi.webview.windowWidth')
-            config.delete('poi.webview.windowUseFixedResolution')
-            config.delete('poi.webview.windowWidth')
-            config.set('poi.webview.windowUseFixedResolution', windowUseFixedResolution)
-            config.set('poi.webview.windowWidth', windowWidth)
+            win.setResizable(!windowUseFixedResolution)
+            win.setMaximizable(!windowUseFixedResolution)
+            win.setClosable(false)
           } else {
             // For non-kangame plugins, allow resizing and maximizing after unpinning
             win.setResizable(true)

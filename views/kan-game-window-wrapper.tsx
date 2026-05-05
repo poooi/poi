@@ -1,15 +1,15 @@
-import type { ConfigValue } from 'lib/config'
 import type * as WebContentUtils from 'lib/webcontent-utils'
 import type { ReactNode } from 'react'
-import type { ConfigPath } from 'views/env'
+import type { RootState } from 'views/redux/reducer-factory'
 
 import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
 import { debounce } from 'lodash'
 import { join } from 'path'
-import React, { PureComponent, createRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
+import { useSelector } from 'react-redux'
 import { styled, StyleSheetManager } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
 import { dispatch, getStore } from 'views/create-store'
@@ -72,125 +72,147 @@ const PoiAppTabpane = styled.div`
   overflow: auto;
 `
 
-interface KanGameWindowWrapperState {
-  loaded?: boolean
-  id?: number
-  hasError?: boolean
-}
-
 interface Props {
   titleExtra?: ReactNode
   pinned: boolean
 }
 
-export class KanGameWindowWrapper extends PureComponent<Props, KanGameWindowWrapperState> {
-  containerEl: HTMLDivElement
-  externalWindow: Window | null = null
-  currentWindow: Electron.BrowserWindow | null = null
-  resizable: boolean | undefined
-  kangameContainer = createRef<HTMLDivElement>()
+// ---------------------------------------------------------------------------
+// Error boundary — preserves componentDidCatch semantics
+// ---------------------------------------------------------------------------
 
-  constructor(props: Props) {
-    super(props)
-    this.containerEl = document.createElement('div')
-    this.containerEl.id = 'plugin-mountpoint'
-    this.containerEl.style.display = 'flex'
-    this.containerEl.style.flexDirection = 'column'
-    this.containerEl.style.height = '100vh'
-  }
+interface ErrorBoundaryProps {
+  children: ReactNode
+  onCatch: (error: Error, info: React.ErrorInfo) => void
+}
 
-  state: KanGameWindowWrapperState = {}
+class KanGameWindowErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  { hasError: boolean }
+> {
+  state = { hasError: false }
 
-  componentDidMount() {
-    try {
-      this.initWindow()
-      config.addListener('config.set', this.handleConfigChange)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  componentWillUnmount() {
-    config.removeListener('config.set', this.handleConfigChange)
-    try {
-      if (this.externalWindow) {
-        this.externalWindow.onbeforeunload = null
-        this.currentWindow?.setClosable(true)
-        this.externalWindow.close()
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  componentDidCatch = (error: Error, info: React.ErrorInfo) => {
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
     console.error(error, info)
     this.setState({ hasError: true })
-    try {
-      if (this.externalWindow) {
-        this.externalWindow.onbeforeunload = null
-        this.currentWindow?.setClosable(true)
-        this.externalWindow.close()
-      }
-    } catch (e) {
-      console.error(e)
-    }
+    this.props.onCatch(error, info)
   }
 
-  handleConfigChange = <P extends ConfigPath, V extends ConfigValue<P>>(path: P, value: V) => {
-    if (!this.externalWindow && !this.currentWindow) return
-    switch (path) {
-      case 'poi.webview.windowUseFixedResolution': {
-        this.currentWindow!.setResizable(!value)
-        this.resizable = !value as boolean
-        if (value) {
-          const width = config.get('poi.webview.windowWidth', 1200)
-          this.currentWindow!.setContentSize(
-            width,
-            Math.round(
-              (width / 1200) * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1),
-            ),
-          )
-        }
-        dispatch(createLayoutWebviewWindowUseFixedResolutionAction(Boolean(value)))
-        break
-      }
-      case 'poi.webview.windowWidth': {
-        if (typeof value === 'number') {
-          this.currentWindow!.setContentSize(
-            value,
-            Math.round(
-              (value / 1200) * 720 + this.getYOffset() * config.get('poi.appearance.zoom', 1),
-            ),
-          )
-        }
-        break
-      }
-      case 'poi.appearance.zoom': {
-        if (typeof value === 'number') {
-          this.onZoomChange(value)
-        }
-        break
-      }
-    }
+  render() {
+    if (this.state.hasError) return null
+    return this.props.children
   }
+}
 
-  useCustomTitlebar = () =>
-    config.get(
-      'poi.appearance.customtitlebar',
-      process.platform === 'win32' || process.platform === 'linux',
-    )
+// ---------------------------------------------------------------------------
+// Inner functional component
+// ---------------------------------------------------------------------------
 
-  getYOffset = () => (this.useCustomTitlebar() ? 60 : 30)
+const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerProps) => {
+  // Config values from Redux store (replaces config event listener)
+  const zoom = useSelector((state: RootState) => state.config?.poi?.appearance?.zoom ?? 1)
+  const windowUseFixedResolution = useSelector(
+    (state: RootState) => state.config?.poi?.webview?.windowUseFixedResolution ?? true,
+  )
+  const windowWidth = useSelector(
+    (state: RootState) => state.config?.poi?.webview?.windowWidth ?? 1200,
+  )
+  const customTitlebar = useSelector(
+    (state: RootState) =>
+      state.config?.poi?.appearance?.customtitlebar ??
+      (process.platform === 'win32' || process.platform === 'linux'),
+  )
 
-  initWindow = () => {
+  const [loaded, setLoaded] = useState(false)
+  const [windowId, setWindowId] = useState<number | undefined>()
+
+  // Stable container element created once
+  const containerElRef = useRef<HTMLDivElement | null>(null)
+  if (containerElRef.current === null) {
+    const el = document.createElement('div')
+    el.id = 'plugin-mountpoint'
+    el.style.display = 'flex'
+    el.style.flexDirection = 'column'
+    el.style.height = '100vh'
+    containerElRef.current = el
+  }
+  const containerEl = containerElRef.current
+
+  const externalWindowRef = useRef<Window | null>(null)
+  const currentWindowRef = useRef<Electron.BrowserWindow | null>(null)
+  const kangameContainerRef = useRef<HTMLDivElement>(null)
+
+  // Latest-value refs: allow effects to read current values without becoming
+  // reactive to them (avoids unintended cross-effect triggers).
+  const latestZoom = useRef(zoom)
+  const latestWindowWidth = useRef(windowWidth)
+  const latestCustomTitlebar = useRef(customTitlebar)
+  latestZoom.current = zoom
+  latestWindowWidth.current = windowWidth
+  latestCustomTitlebar.current = customTitlebar
+
+  const getYOffset = useCallback(() => (latestCustomTitlebar.current ? 60 : 30), [])
+
+  // Loaded state ref — allows callbacks to see the current loaded value without
+  // being listed as deps and triggering unnecessary re-renders.
+  const loadedRef = useRef(loaded)
+  const windowIdRef = useRef(windowId)
+  loadedRef.current = loaded
+  windowIdRef.current = windowId
+
+  const checkBrowserWindowExistence = useCallback(() => {
+    if (
+      !windowIdRef.current ||
+      !BrowserWindow.fromId(windowIdRef.current) ||
+      !currentWindowRef.current
+    ) {
+      if (loadedRef.current) {
+        console.warn('Webview window not exists. Removing window...')
+        config.set('poi.layout.isolate', false)
+      }
+      return false
+    }
+    return true
+  }, [])
+
+  const forceSyncZoom = useCallback((count = 0) => {
+    const webview = getStore('layout.webview.ref')
+    if (webview) {
+      webview.forceSyncZoom()
+    } else if (count < 20) {
+      setTimeout(() => forceSyncZoom(count + 1), 100)
+    }
+  }, [])
+
+  const onZoomChange = useCallback(
+    (value: number) => {
+      if (
+        loadedRef.current &&
+        checkBrowserWindowExistence() &&
+        currentWindowRef.current?.webContents
+      ) {
+        const [width, height] = currentWindowRef.current.getContentSize()
+        currentWindowRef.current.setContentSize(width - 10, height - 10)
+        currentWindowRef.current.setContentSize(width, height)
+        currentWindowRef.current.webContents.setZoomFactor(value)
+        forceSyncZoom()
+      }
+    },
+    [checkBrowserWindowExistence, forceSyncZoom],
+  )
+
+  // Keep a ref so the mount effect below can read the initial value at open time
+  const latestWindowUseFixedResolution = useRef(windowUseFixedResolution)
+  latestWindowUseFixedResolution.current = windowUseFixedResolution
+
+  // Mount: open the external window once
+  useEffect(() => {
     const windowOptions = getPluginWindowRect()
-    const windowUseFixedResolution = config.get('poi.webview.windowUseFixedResolution', true)
-    if (windowUseFixedResolution) {
-      windowOptions.width = config.get('poi.webview.windowWidth', 1200) as number
+    const initialWindowUseFixedResolution = latestWindowUseFixedResolution.current
+    if (initialWindowUseFixedResolution) {
+      windowOptions.width = latestWindowWidth.current
       windowOptions.height = Math.round(
-        (windowOptions.width / 1200) * 720 +
-          this.getYOffset() * (config.get('poi.appearance.zoom', 1) as number),
+        (windowOptions.width / 1200) * 720 + getYOffset() * latestZoom.current,
       )
     }
     const windowFeatures = Object.keys(windowOptions)
@@ -207,48 +229,56 @@ export class KanGameWindowWrapper extends PureComponent<Props, KanGameWindowWrap
         }
       })
       .join(',')
-    this.externalWindow = open(
+
+    const extWindow = open(
       `${fileUrl(join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
       windowFeatures +
         ',nodeIntegration=no,nodeIntegrationInSubFrames=yes,webSecurity=no,contextIsolation=no',
     )
-    this.externalWindow!.addEventListener('DOMContentLoaded', () => {
-      this.currentWindow =
+    externalWindowRef.current = extWindow
+    windowRefsRef.current.externalWindow = extWindow
+
+    extWindow?.addEventListener('DOMContentLoaded', () => {
+      const curWindow =
         BrowserWindow.getAllWindows().find((a) =>
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
+      currentWindowRef.current = curWindow
+      windowRefsRef.current.currentWindow = curWindow
+
       loadScript(
         fileUrl(require.resolve('assets/js/webview-window-preload.js')),
-        this.externalWindow!.document,
+        extWindow!.document,
       )
-      this.currentWindow!.setResizable(!windowUseFixedResolution)
-      this.resizable = !windowUseFixedResolution
-      this.currentWindow!.setAspectRatio(1200 / 720, {
+      curWindow?.setClosable(false)
+      curWindow?.setResizable(!initialWindowUseFixedResolution)
+      curWindow?.setAspectRatio(1200 / 720, {
         width: 0,
-        height: Math.round(this.getYOffset() * config.get('poi.appearance.zoom', 1)),
+        height: Math.round(getYOffset() * latestZoom.current),
       })
-      this.externalWindow!.addEventListener(
+
+      extWindow?.addEventListener(
         'resize',
         debounce(() => {
           if (process.platform !== 'darwin') {
-            this.currentWindow!.setContentSize(
-              Math.round(this.externalWindow!.innerWidth * config.get('poi.appearance.zoom', 1)),
-              Math.round(
-                ((this.externalWindow!.innerWidth / 1200) * 720 + this.getYOffset()) *
-                  config.get('poi.appearance.zoom', 1),
-              ),
+            curWindow?.setContentSize(
+              Math.round(extWindow.innerWidth * latestZoom.current),
+              Math.round(((extWindow.innerWidth / 1200) * 720 + getYOffset()) * latestZoom.current),
             )
           }
           getStore('layout.webview.ref')?.executeJavaScript('window.align()')
-          const wv = this.externalWindow!.document.querySelector('webview')
+          const wv = extWindow.document.querySelector('webview')
           if (wv) {
-            const { width: windowWidth, height: windowHeight } = wv.getBoundingClientRect()
-            dispatch(createLayoutWebviewSizeAction({ windowWidth, windowHeight }))
+            const { width: wvWidth, height: wvHeight } = wv.getBoundingClientRect()
+            dispatch(
+              createLayoutWebviewSizeAction({ windowWidth: wvWidth, windowHeight: wvHeight }),
+            )
           }
         }, 200),
       )
-      this.externalWindow!.document.head.innerHTML = `<meta charset="utf-8">
+
+      extWindow!.document.head.innerHTML = `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
 <link rel="stylesheet" type="text/css" id="bootstrap-css">
 <link rel="stylesheet" type="text/css" id="normalize-css">
@@ -257,9 +287,8 @@ export class KanGameWindowWrapper extends PureComponent<Props, KanGameWindowWrap
 <link rel="stylesheet" type="text/css" id="fontawesome-css">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/app.css'))}">
 <link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('assets/css/global.css'))}">
-<link rel="stylesheet" type="text/css" href="${fileUrl(
-        require.resolve('electron-react-titlebar/style'),
-      )}">`
+<link rel="stylesheet" type="text/css" href="${fileUrl(require.resolve('electron-react-titlebar/style'))}">`
+
       if (process.platform === 'darwin') {
         const div = document.createElement('div')
         div.style.position = 'absolute'
@@ -268,123 +297,154 @@ export class KanGameWindowWrapper extends PureComponent<Props, KanGameWindowWrap
         div.style.width = '100%'
         div.style.setProperty('-webkit-app-region', 'drag')
         div.style.setProperty('pointer-events', 'none')
-        this.externalWindow!.document.body.appendChild(div)
+        extWindow!.document.body.appendChild(div)
       } else {
-        this.currentWindow!.setMenu(appMenu)
-        this.currentWindow!.setAutoHideMenuBar(true)
-        this.currentWindow!.setMenuBarVisibility(false)
+        curWindow?.setMenu(appMenu)
+        curWindow?.setAutoHideMenuBar(true)
+        curWindow?.setMenuBarVisibility(false)
       }
-      this.externalWindow!.document.body.appendChild(this.containerEl)
-      this.externalWindow!.document.title = 'poi'
-      loadStyle(this.externalWindow!.document, this.currentWindow!, false)
+
+      extWindow!.document.body.appendChild(containerEl)
+      extWindow!.document.title = 'poi'
+      loadStyle(extWindow!.document, curWindow!, false)
+
       const { stopFileNavigate, handleWebviewPreloadHack }: typeof WebContentUtils =
         remote.require('./lib/webcontent-utils')
-      stopFileNavigate(this.currentWindow!.webContents.id)
-      handleWebviewPreloadHack(this.currentWindow!.webContents.id)
-      this.externalWindow?.addEventListener('beforeunload', () => {
-        const bounds = this.currentWindow?.getBounds()
+      stopFileNavigate(curWindow!.webContents.id)
+      handleWebviewPreloadHack(curWindow!.webContents.id)
+
+      extWindow?.addEventListener('beforeunload', () => {
+        const bounds = curWindow?.getBounds()
         config.set('poi.kangameWindow.bounds', bounds)
       })
-      if (windowUseFixedResolution) {
-        const width = config.get('poi.webview.windowWidth', 1200) as number
-        this.currentWindow!.setContentSize(
-          width,
-          Math.round(
-            (width / 1200) * 720 +
-              this.getYOffset() * (config.get('poi.appearance.zoom', 1) as number),
-          ),
+
+      if (initialWindowUseFixedResolution) {
+        const w = latestWindowWidth.current
+        curWindow?.setContentSize(
+          w,
+          Math.round((w / 1200) * 720 + getYOffset() * latestZoom.current),
         )
       }
-      this.currentWindow!.blur()
-      this.currentWindow!.focus()
-      this.setState(
-        {
-          loaded: true,
-          id: this.currentWindow!.id,
-        },
-        () => this.onZoomChange(config.get('poi.appearance.zoom', 1)),
-      )
+
+      curWindow?.blur()
+      curWindow?.focus()
+      setLoaded(true)
+      setWindowId(curWindow?.id)
     })
-  }
 
-  checkBrowserWindowExistence = () => {
-    if (!this.state.id || !BrowserWindow.fromId(this.state.id) || !this.currentWindow) {
-      if (this.state.loaded) {
-        console.warn('Webview window not exists. Removing window...')
-        config.set('poi.layout.isolate', false)
+    return () => {
+      try {
+        if (externalWindowRef.current) {
+          externalWindowRef.current.onbeforeunload = null
+          currentWindowRef.current?.setClosable(true)
+          externalWindowRef.current.close()
+        }
+      } catch (e) {
+        console.error(e)
+      } finally {
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- windowRefsRef.current is a stable object; clearing fields at unmount time is intentional
+        windowRefsRef.current.externalWindow = null
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- same as above
+        windowRefsRef.current.currentWindow = null
       }
-      return false
     }
-    return true
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  forceSyncZoom = (count = 0) => {
-    const webview = getStore('layout.webview.ref')
-    if (webview) {
-      webview.forceSyncZoom()
-    } else if (count < 20) {
-      setTimeout(() => this.forceSyncZoom(count + 1), 100)
+  // Effect: run zoom change whenever zoom or loaded changes
+  useEffect(() => {
+    if (!loaded) return
+    onZoomChange(zoom)
+  }, [zoom, loaded, onZoomChange])
+
+  // Effect: apply windowUseFixedResolution changes after window is open
+  useEffect(() => {
+    if (!loaded || !currentWindowRef.current) return
+    currentWindowRef.current.setResizable(!windowUseFixedResolution)
+    if (windowUseFixedResolution) {
+      const w = latestWindowWidth.current
+      currentWindowRef.current.setContentSize(
+        w,
+        Math.round((w / 1200) * 720 + getYOffset() * latestZoom.current),
+      )
     }
-  }
+    dispatch(createLayoutWebviewWindowUseFixedResolutionAction(windowUseFixedResolution))
+  }, [windowUseFixedResolution, loaded, getYOffset])
 
-  onZoomChange = (value: number) => {
-    if (
-      this.state.loaded &&
-      this.checkBrowserWindowExistence() &&
-      this.currentWindow?.webContents
-    ) {
-      const [width, height] = this.currentWindow!.getContentSize()
-      this.currentWindow!.setContentSize(width - 10, height - 10)
-      this.currentWindow!.setContentSize(width, height)
+  // Effect: apply windowWidth changes after window is open
+  useEffect(() => {
+    if (!loaded || !currentWindowRef.current) return
+    currentWindowRef.current.setContentSize(
+      windowWidth,
+      Math.round((windowWidth / 1200) * 720 + getYOffset() * latestZoom.current),
+    )
+  }, [windowWidth, loaded, getYOffset])
 
-      this.currentWindow!.webContents.setZoomFactor(value)
-      this.forceSyncZoom()
-    }
-  }
+  if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
 
-  focusWindow = () => {
-    if (this.checkBrowserWindowExistence()) {
-      if (this.currentWindow!.isMinimized()) {
-        this.currentWindow!.restore()
+  return ReactDOM.createPortal(
+    <>
+      {customTitlebar && (
+        <TitleBar
+          icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+          browserWindowId={currentWindowRef.current!.id}
+          disableClose
+          disableMaximize={pinned || windowUseFixedResolution}
+          disableMinimize={pinned}
+        >
+          {titleExtra}
+        </TitleBar>
+      )}
+      <BlueprintProvider portalContainer={containerEl}>
+        <StyleSheetManager target={externalWindowRef.current.document.head}>
+          <PoiAppTabpane className="poi-app-tabpane" ref={kangameContainerRef}>
+            <KanGameWrapper windowMode key="window" />
+          </PoiAppTabpane>
+        </StyleSheetManager>
+      </BlueprintProvider>
+    </>,
+    externalWindowRef.current.document.querySelector('#plugin-mountpoint')!,
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Public export: inner component wrapped in the error boundary
+// ---------------------------------------------------------------------------
+
+interface WindowRefs {
+  externalWindow: Window | null
+  currentWindow: Electron.BrowserWindow | null
+}
+
+interface InnerProps extends Props {
+  windowRefsRef: React.MutableRefObject<WindowRefs>
+}
+
+export const KanGameWindowWrapper = ({ titleExtra, pinned }: Props) => {
+  // Shared ref object that the inner component populates.  The error boundary
+  // reads from it in onCatch so it can close the window after a render error.
+  const windowRefsRef = useRef<WindowRefs>({ externalWindow: null, currentWindow: null })
+
+  const handleCatch = useCallback((_error: Error, _info: React.ErrorInfo) => {
+    try {
+      const { externalWindow, currentWindow } = windowRefsRef.current
+      if (externalWindow) {
+        externalWindow.onbeforeunload = null
+        currentWindow?.setClosable(true)
+        externalWindow.close()
       }
-      this.currentWindow!.focus()
+    } catch (e) {
+      console.error(e)
     }
-  }
+  }, [])
 
-  render() {
-    if (
-      this.state.hasError ||
-      !this.state.loaded ||
-      !this.externalWindow ||
-      !this.checkBrowserWindowExistence()
-    )
-      return null
-    return ReactDOM.createPortal(
-      <>
-        {this.useCustomTitlebar() && (
-          <TitleBar
-            icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
-            browserWindowId={this.currentWindow!.id}
-            disableClose
-            {...(this.props.pinned
-              ? {
-                  disableMaximize: true,
-                  disableMinimize: true,
-                }
-              : undefined)}
-          >
-            {this.props.titleExtra}
-          </TitleBar>
-        )}
-        <BlueprintProvider portalContainer={this.containerEl}>
-          <StyleSheetManager target={this.externalWindow.document.head}>
-            <PoiAppTabpane className="poi-app-tabpane" ref={this.kangameContainer}>
-              <KanGameWrapper windowMode key="window" />
-            </PoiAppTabpane>
-          </StyleSheetManager>
-        </BlueprintProvider>
-      </>,
-      this.externalWindow.document.querySelector('#plugin-mountpoint')!,
-    )
-  }
+  return (
+    <KanGameWindowErrorBoundary onCatch={handleCatch}>
+      <KanGameWindowWrapperInner
+        titleExtra={titleExtra}
+        pinned={pinned}
+        windowRefsRef={windowRefsRef}
+      />
+    </KanGameWindowErrorBoundary>
+  )
 }
