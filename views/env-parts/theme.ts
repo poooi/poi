@@ -135,74 +135,24 @@ export function loadStyle(
     }
   }
 
-  const updateBlueprintVibrantTokens = () => {
-    const styleId = 'blueprint-vibrant-css'
-    let styleEl = doc.querySelector(`#${styleId}`) as HTMLStyleElement | null
+  const blueprintVibrantCSSPath = require.resolve('assets/css/blueprint-vibrant.css')
 
-    if (config.get('poi.appearance.vibrant', 0) !== 1) {
-      if (styleEl) {
-        styleEl.textContent = ''
-      }
+  const updateBlueprintVibrantTokens = (isVibrant?: boolean | number) => {
+    const linkId = 'blueprint-vibrant-css'
+    let linkEl = doc.querySelector(`#${linkId}`) as HTMLLinkElement | null
+
+    if (!isVibrant) {
+      linkEl?.remove()
       return
     }
 
-    if (!styleEl) {
-      styleEl = doc.createElement('style')
-      styleEl.id = styleId
-      doc.head.appendChild(styleEl)
+    if (!linkEl) {
+      linkEl = doc.createElement('link')
+      linkEl.id = linkId
+      linkEl.rel = 'stylesheet'
+      linkEl.href = fileUrl(blueprintVibrantCSSPath)
+      doc.head.appendChild(linkEl)
     }
-
-    styleEl.textContent = `
-      :root {
-        --bp-surface-background-color-default-rest: rgba(255, 255, 255, 0.6);
-        --bp-surface-background-color-default-hover: rgba(246, 247, 249, 0.6);
-        --bp-surface-background-color-default-active: rgba(237, 239, 242, 0.6);
-        --bp-surface-background-color-default-disabled: rgba(255, 255, 255, 0.6);
-      }
-
-
-      .bp6-dark {
-        --bp-surface-background-color-default-rest: rgba(17, 20, 24, 0.6);
-        --bp-surface-background-color-default-hover: rgba(28, 33, 39, 0.6);
-        --bp-surface-background-color-default-active: rgba(37, 42, 49, 0.6);
-        --bp-surface-background-color-default-disabled: rgba(17, 20, 24, 0.6);
-      }
-
-      .bp6-button:not([class*=bp6-intent-]):not([class*=bp6-minimal]) {
-        background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
-      }
-      .bp6-button:not([class*=bp6-intent-]):not([class*=bp6-minimal]):hover {
-        background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha - 0.25)) !important;
-      }
-      .bp6-button:not([class*=bp6-intent-]):not([class*=bp6-minimal]):active {
-        background-color: oklch(from var(--bp-surface-background-color-default-active) l c h / calc(alpha - 0.15)) !important;
-      }
-
-      .bp6-input {
-        background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
-      }
-
-      .bp6-card,
-      .bp6-html-select select, .bp6-select select {
-        background-color:  oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
-      }
-
-      .bp6-dialog-header {
-        background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.55)) !important;
-      }
-
-      .bp6-dialog  {
-        background-color: var(--bp-surface-background-color-default-rest) !important;
-      }
-
-      .bp6-popover:not(.bp6-dark):not(.bp6-tooltip) .bp6-popover-content {
-        background-color: oklch(from #ffffff l c h / calc(alpha - 0.15));
-      }
-
-      .bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-content, .bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-        background-color: oklch(from #2f343c l c h / calc(alpha - 0.15));
-      }
-    `
   }
 
   const loadTheme = (theme = 'dark', isVibrant?: boolean | number) => {
@@ -244,7 +194,7 @@ export function loadStyle(
     if (normalizeEl) {
       setRef(normalizeEl, fileUrl(require.resolve('normalize.css/normalize.css')))
     }
-    updateBlueprintVibrantTokens()
+    updateBlueprintVibrantTokens(isVibrant)
     reloadCustomCss()
   }
 
