@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 import { isInGame } from 'views/utils/game-utils'
 
 let lockedTab = false
@@ -21,6 +21,18 @@ export const useTabKeyboard = ({
   onNumberKey,
 }: UseTabKeyboardOptions) => {
   const registeredRef = useRef(false)
+  const onCtrlTabRef = useRef(onCtrlTab)
+  const onShiftTabRef = useRef(onShiftTab)
+  const onTabRef = useRef(onTab)
+  const onNumberKeyRef = useRef(onNumberKey)
+
+  // Keep refs in sync with the latest callbacks after every render
+  useLayoutEffect(() => {
+    onCtrlTabRef.current = onCtrlTab
+    onShiftTabRef.current = onShiftTab
+    onTabRef.current = onTab
+    onNumberKeyRef.current = onNumberKey
+  })
 
   const register = useCallback(() => {
     if (registeredRef.current) return
@@ -40,21 +52,21 @@ export const useTabKeyboard = ({
           lockedTab = false
         }, 200)
         if (e.ctrlKey || e.metaKey) {
-          onCtrlTab()
+          onCtrlTabRef.current()
         } else if (e.shiftKey) {
-          onShiftTab()
+          onShiftTabRef.current()
         } else {
-          onTab()
+          onTabRef.current()
         }
       } else if (e.ctrlKey || e.metaKey) {
         if (e.keyCode >= '1'.charCodeAt(0) && e.keyCode <= '9'.charCodeAt(0)) {
-          onNumberKey(e.keyCode - 48)
+          onNumberKeyRef.current(e.keyCode - 48)
         } else if (e.keyCode === '0'.charCodeAt(0)) {
-          onNumberKey(10)
+          onNumberKeyRef.current(10)
         }
       }
     })
-  }, [onCtrlTab, onShiftTab, onTab, onNumberKey])
+  }, [])
 
   return { register }
 }
