@@ -44,12 +44,12 @@ const PluginMenuItem = styled(MenuItem)<{ grid?: boolean }>`
             right: 15px;
           }
 
-          .bp5-menu-item-icon {
+          .bp6-menu-item-icon {
             margin-right: 0;
             height: auto;
           }
 
-          .bp5-text-overflow-ellipsis {
+          .bp6-text-overflow-ellipsis {
             margin-right: 0;
             height: auto;
             line-height: 1.4;

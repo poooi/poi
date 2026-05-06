@@ -31,8 +31,6 @@ export const PluginDropdownContent = ({
   return (
     <PluginDropdownMenu className="plugin-dropdown" large={!useGridMenu} grid={useGridMenu}>
       {plugins.length === 0 ? (
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error Blueprint v5 NonIdealState children type issue with styled-components
         <PluginNonIdealState
           icon="cloud-download"
           title={t('setting:No plugin found')}
@@ -66,8 +64,6 @@ export const NoPluginPlaceholder = (): React.ReactElement => {
   return (
     <PluginAppTabpane key="no-plugin" id="no-plugin">
       <Card>
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/* @ts-expect-error Blueprint v5 NonIdealState children type issue with styled-components */}
         <PluginNonIdealState
           icon="cloud-download"
           title={t('setting:No plugin found')}

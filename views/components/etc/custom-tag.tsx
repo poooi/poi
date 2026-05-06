@@ -3,7 +3,7 @@ import type { ReactNode, FC } from 'react'
 import React from 'react'
 
 interface CustomTagProps {
-  tag?: keyof JSX.IntrinsicElements
+  tag?: keyof React.JSX.IntrinsicElements
   children?: ReactNode
   className?: string
 }

@@ -82,6 +82,7 @@ function CountdownTimerInner({
   const [timeRemaining, setTimeRemaining] = useState(() => getTimeRemaining(completeTime))
 
   const latestRef = useRef({ completeTime, countdownId, tickCallback, completeCallback, isActive })
+  // eslint-disable-next-line react-hooks/refs
   latestRef.current = { completeTime, countdownId, tickCallback, completeCallback, isActive }
 
   const tick = useCallback((currentTime: number) => {
@@ -152,6 +153,7 @@ function CountdownNotifierLabelInner({
     isActive,
     minimal,
   })
+  // eslint-disable-next-line react-hooks/refs
   propsRef.current = {
     timerKey,
     completeTime,
@@ -168,9 +170,11 @@ function CountdownNotifierLabelInner({
     return fn(props, getTimeRemaining(props.completeTime))
   }, [])
 
+  // eslint-disable-next-line react-hooks/refs
   const [style, setStyle] = useState<Intent>(() => computeStyle())
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStyle(computeStyle())
   }, [computeStyle])
 

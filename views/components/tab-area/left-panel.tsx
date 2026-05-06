@@ -47,15 +47,15 @@ interface LeftPanelProps {
   onSelectTab: (key: string) => void
   onOpenWindow: (plugin: Plugin) => void
   handlePluginPin: (plugin: Plugin) => void
+  windowModePlugins: Plugin[]
   pinConfig: Record<string, unknown>
-  openedWindow: Record<string, boolean>
   windowRefs: React.MutableRefObject<Record<string, PluginWindowWrapHandle | null>>
   onCloseWindow: (plugin: Plugin) => void
   getPinButton: (plugin: Plugin) => React.ReactElement
-  tabsRef: React.RefObject<Tabs>
-  tabKeyUnionRef: React.RefObject<TabContentsUnionHandle>
-  mainTabKeyUnionRef: React.RefObject<TabContentsUnionHandle>
-  triggerRef: React.RefObject<HTMLButtonElement>
+  tabsRef: React.RefObject<Tabs | null>
+  tabKeyUnionRef: React.RefObject<TabContentsUnionHandle | null>
+  mainTabKeyUnionRef: React.RefObject<TabContentsUnionHandle | null>
+  triggerRef: React.RefObject<HTMLButtonElement | null>
 }
 
 export const LeftPanel = ({
@@ -70,8 +70,8 @@ export const LeftPanel = ({
   onSelectTab,
   onOpenWindow,
   handlePluginPin,
+  windowModePlugins,
   pinConfig,
-  openedWindow,
   windowRefs,
   onCloseWindow,
   getPinButton,
@@ -104,20 +104,18 @@ export const LeftPanel = ({
     <PluginWrap key={plugin.id} plugin={plugin} container={PluginAppTabpane} />
   ))
 
-  const windowModePluginContents = tabbedPlugins
-    .filter((plugin) => isWindowMode(plugin) && openedWindow[plugin.id])
-    .map((plugin) => (
-      <PluginWindowWrap
-        key={plugin.id}
-        plugin={plugin}
-        ref={(r) => {
-          windowRefs.current[plugin.id] = r
-        }}
-        closeWindowPortal={() => onCloseWindow(plugin)}
-        titleExtra={getPinButton(plugin)}
-        pinned={!!pinConfig?.[plugin.id]}
-      />
-    ))
+  const windowModePluginContents = windowModePlugins.map((plugin) => (
+    <PluginWindowWrap
+      key={plugin.id}
+      plugin={plugin}
+      ref={(r) => {
+        windowRefs.current[plugin.id] = r
+      }}
+      closeWindowPortal={() => onCloseWindow(plugin)}
+      titleExtra={getPinButton(plugin)}
+      pinned={!!pinConfig?.[plugin.id]}
+    />
+  ))
 
   const nav = (
     <NavTabs
@@ -126,6 +124,8 @@ export const LeftPanel = ({
       selectedTabId={isPluginTab(activeMainTab) ? 'plugin' : activeMainTab}
       className="top-nav"
       onChange={handleSelectTab}
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
       ref={tabsRef}
     >
       <Tab key="main-view" id="main-view" icon={MAIN_VIEW.icon}>
@@ -153,7 +153,13 @@ export const LeftPanel = ({
           popoverClassName="plugin-dropdown-container"
           modifiers={pluginDropDownModifier}
         >
-          <PluginDropdownButton icon="chevron-down" minimal ref={triggerRef} />
+          <PluginDropdownButton
+            icon="chevron-down"
+            minimal
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
+            ref={triggerRef}
+          />
         </Popover>
       )}
       {!doubleTabbed && (
@@ -171,6 +177,8 @@ export const LeftPanel = ({
 
   const content = (
     <TabContentsUnion
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
       ref={doubleTabbed ? mainTabKeyUnionRef : tabKeyUnionRef}
       activeTab={activeMainTab}
     >

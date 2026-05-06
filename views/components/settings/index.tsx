@@ -24,11 +24,11 @@ const TABS = [
 const SettingsTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typeof Tabs>>)`
   height: 100%;
 
-  .bp5-tab-list {
+  .bp6-tab-list {
     justify-content: space-between;
   }
 
-  .bp5-tab {
+  .bp6-tab {
     flex: 1 0 30px;
     text-align: center;
     justify-content: center;
@@ -40,7 +40,7 @@ const SettingsTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typ
     }
   }
 
-  .bp5-tab-panel {
+  .bp6-tab-panel {
     margin: 0;
     height: calc(100% - 30px);
     overflow-y: scroll;

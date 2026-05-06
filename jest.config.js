@@ -7,8 +7,9 @@ module.exports = {
   clearMocks: true,
   coverageDirectory: 'coverage',
   transform: {
-    '^.+\\.(es|ts|tsx)$': 'babel-jest',
+    '^.+\\.(js|es|ts|tsx)$': 'babel-jest',
   },
+  transformIgnorePatterns: ['/node_modules/(?!(chalk)/)'],
   moduleFileExtensions: ['js', 'es', 'json', 'jsx', 'ts', 'tsx', 'node'],
   moduleNameMapper: {
     '^views/(.*)': '<rootDir>/views/$1',

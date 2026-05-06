@@ -47,6 +47,7 @@ export const ShortcutConfig = <P extends ConfigPath>({
   )
   const [recording, setRecording] = useState(false)
   const valueRef = useRef(value)
+  // eslint-disable-next-line react-hooks/refs
   valueRef.current = value
 
   const keyShouldIgnore = (character: string) => {

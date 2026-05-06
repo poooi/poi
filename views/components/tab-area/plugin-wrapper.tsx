@@ -1,4 +1,4 @@
-import type { TFunction } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import { Card, TextArea, Button, Intent } from '@blueprintjs/core'

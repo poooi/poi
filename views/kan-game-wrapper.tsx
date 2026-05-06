@@ -96,7 +96,7 @@ const KanGame = styled(
   overflow: hidden;
   width: 100%;
 
-  .bp5-toast-container {
+  .bp6-toast-container {
     overflow: hidden !important;
   }
 `
@@ -211,8 +211,8 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
       return
     }
 
-    const trusted: string[] = config.get('poi.misc.trustedCerts', [])
-    const untrusted: string[] = config.get('poi.misc.untrustedCerts', [])
+    const trusted: string[] = config.get('poi.misc.trustedCerts', []) ?? []
+    const untrusted: string[] = config.get('poi.misc.untrustedCerts', []) ?? []
     const hash = createHash('sha256').update(certificate.data).digest('base64')
     if (!trusted.includes(hash) && !untrusted.includes(hash)) {
       const title = i18next.t('others:Certificate error')
@@ -242,14 +242,14 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
   }
 
   setTrustedCerts = (hash: string) => {
-    const trusted: string[] = config.get('poi.misc.trustedCerts', [])
+    const trusted: string[] = config.get('poi.misc.trustedCerts', []) ?? []
     const newTrusted = [...trusted, hash]
     config.set('poi.misc.trustedCerts', newTrusted)
     this.webview.current?.reload()
   }
 
   setUntrustedCerts = (hash: string) => {
-    const untrusted: string[] = config.get('poi.misc.untrustedCerts', [])
+    const untrusted: string[] = config.get('poi.misc.untrustedCerts', []) ?? []
     const newUntrusted = [...untrusted, hash]
     config.set('poi.misc.untrustedCerts', newUntrusted)
   }
@@ -265,15 +265,13 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
       const realWidth = getRealSize(webviewWidth)
       const realHeight = getRealSize(webviewHeight + getYOffset())
       if (layout === 'vertical' && realWidth > getRealSize(window.innerWidth)) {
-        let [width, height] = current.getContentSize()
-        width = realWidth
-        current.setContentSize(width, height)
+        const [_, height] = current.getContentSize()
+        current.setContentSize(realWidth, height)
       }
 
       if (layout !== 'vertical' && realHeight > getRealSize(getStore('layout.window.height'))) {
-        let [width, height] = current.getContentSize()
-        height = realHeight
-        current.setContentSize(width, height)
+        const [width, _] = current.getContentSize()
+        current.setContentSize(width, realHeight)
       }
     } else {
       current.setMinimumSize(1, 1)
@@ -507,7 +505,9 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
             height: disableHeight,
           }}
           onResized={this.setRatio}
-          ref={(r: ResizableAreaHandle | null) => (this.resizableArea = r)}
+          ref={(r: ResizableAreaHandle | null) => {
+            this.resizableArea = r
+          }}
         >
           <KanGame tag="kan-game">
             <div

@@ -21,7 +21,9 @@ export const TextConfig = ({ configName, defaultValue = '', ...rest }: Props) =>
   const [value, setValue] = useState(sv)
   const prevSv = useRef(sv)
   // Replicate getDerivedStateFromProps: sync local state when store value changes externally
+  // eslint-disable-next-line react-hooks/refs
   if (sv !== prevSv.current) {
+    // eslint-disable-next-line react-hooks/refs
     prevSv.current = sv
     setValue(sv)
   }

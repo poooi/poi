@@ -58,9 +58,8 @@ export const FCD = () => {
           }
         }
 
-        let flag = false
         for (const server of serverList) {
-          flag = true
+          let flag = true
           const fileList = await fetch(`${server}meta.json`, defaultFetchOption)
             .then((res) =>
               res.ok
@@ -82,7 +81,10 @@ export const FCD = () => {
                   .then((res) => (res.ok ? res.json() : undefined))
                   .catch(() => undefined)
                 if (data) {
-                  dispatch(createUpdateFCDAction(data))
+                  dispatch(
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+                    createUpdateFCDAction(data as Parameters<typeof createUpdateFCDAction>[0]),
+                  )
                 } else {
                   flag = false
                 }

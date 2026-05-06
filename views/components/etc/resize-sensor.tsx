@@ -21,5 +21,9 @@ export const ResizeSensor: React.FC<ResizeSensorProps> = ({ onResize, children }
     }
   }, [ref, observer])
 
-  return React.cloneElement(React.Children.only(children), { ref: setRef })
+  return React.cloneElement(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    React.Children.only(children) as React.ReactElement<{ ref?: React.Ref<HTMLElement> }>,
+    { ref: setRef },
+  )
 }

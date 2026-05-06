@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next'
 import type { APIShip } from 'kcsapi/api_port/port/response'
 import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { RootState } from 'views/redux/reducer-factory'
@@ -315,7 +316,7 @@ const HPProgress = styled.div`
   grid-row: 2 / 3;
   grid-column: 3 / 6;
 
-  .bp5-progress-bar {
+  .bp6-progress-bar {
     flex: auto;
     height: 7px;
     margin-top: 3px;
@@ -368,7 +369,7 @@ interface MiniShipRowInnerProps {
   shipAvatarColor: string
   enableAvatar?: boolean
   compact?: boolean
-  t: (key: string, opts?: object) => string
+  t: TFunction
 }
 
 const MiniShipRowInner = memo(

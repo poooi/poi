@@ -104,14 +104,6 @@ export const PluginConfig = (): React.ReactElement => {
     }
   }, [])
 
-  const showGracefulRepairToast = useCallback(() => {
-    window.toast(t('plugin-install-failed-message'), {
-      // @ts-expect-error toast options type mismatch with action
-      action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
-      intent: 'danger',
-    })
-  }, [t]) // eslint-disable-line react-hooks/exhaustive-deps
-
   const gracefulRepair = useCallback(async () => {
     setNpmWorking(true)
     try {
@@ -123,14 +115,25 @@ export const PluginConfig = (): React.ReactElement => {
     }
   }, [])
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleGracefulRepair = useCallback(() => {
     toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
       { name: t('others:Confirm'), func: gracefulRepair, style: 'warning' },
     ])
   }, [t, gracefulRepair])
 
+  const showGracefulRepairToast = useCallback(() => {
+    window.toast(t('plugin-install-failed-message'), {
+      // @ts-expect-error toast options type mismatch with action
+      action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
+      intent: 'danger',
+    })
+  }, [t]) // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCheckingUpdate(true)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setNpmWorking(true)
 
     const isNotif = config.get('packageManager.enablePluginCheck', true) && !autoUpdate

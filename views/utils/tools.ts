@@ -24,7 +24,7 @@ import _, {
   setWith,
   clone,
 } from 'lodash'
-import pangu from 'pangu'
+import * as pangu from 'pangu'
 import path from 'path'
 import url from 'url'
 
@@ -399,4 +399,5 @@ export const loadScript = (path: string, document = window.document): void => {
  */
 export const POPOVER_MODIFIERS: PopoverProps['modifiers'] = {}
 
-export const cjkSpacing = (str: string) => (isString(str) ? pangu.spacing(str) : toString(str))
+export const cjkSpacing = (str: string) =>
+  isString(str) ? pangu.pangu.spacingText(str) : toString(str)

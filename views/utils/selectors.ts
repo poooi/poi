@@ -9,7 +9,7 @@ import type { SortieState } from 'views/redux/sortie'
 
 import memoize from 'fast-memoize'
 import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
-import { createSelector, createSelectorCreator, defaultMemoize } from 'reselect'
+import { createSelector, createSelectorCreator, lruMemoize } from 'reselect'
 
 //### Local Types ###
 
@@ -36,10 +36,7 @@ function deepCompareArray(currentVal: unknown, previousVal: unknown): boolean {
 
 // This kind of selector specially treats array arguments by `===` comparing
 // its items one by one
-export const createDeepCompareArraySelector = createSelectorCreator(
-  defaultMemoize,
-  deepCompareArray,
-)
+export const createDeepCompareArraySelector = createSelectorCreator(lruMemoize, deepCompareArray)
 
 // This wrapper prevents different array (in terms of ===) being returned
 // despite having the same elements

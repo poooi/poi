@@ -21,7 +21,7 @@ const PickerBox = styled.div`
   display: flex;
   width: 100%;
 
-  .bp5-overflow-list {
+  .bp6-overflow-list {
     flex: 1;
   }
 
@@ -29,7 +29,7 @@ const PickerBox = styled.div`
     margin-left: 1em;
   }
 
-  .bp5-breadcrumb {
+  .bp6-breadcrumb {
     font-size: 12px;
   }
 `
@@ -67,7 +67,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   const [locked, setLocked] = useState(false)
 
   const { t } = useTranslation('setting')
-  const value: string = useSelector((state: RootState) =>
+  const value: string | undefined = useSelector((state: RootState) =>
     get(state.config, configName, defaultValue),
   )
 
@@ -91,7 +91,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
   )
 
   useEffect(() => {
-    if (exclude.length && exclude.some((parent) => isSubdirectory(parent, value))) {
+    if (exclude.length && value && exclude.some((parent) => isSubdirectory(parent, value))) {
       emitErrorMessage()
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       config.set(configName as ConfigPath, defaultValue as never)
@@ -123,7 +123,7 @@ export const FolderPickerConfig: React.FC<FolderPickerConfigProps> = ({
     let defaultPath: string | undefined
     try {
       if (isFolder) {
-        fs.ensureDirSync(value)
+        if (value) fs.ensureDirSync(value)
         defaultPath = value
       }
     } catch (_e) {

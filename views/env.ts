@@ -86,6 +86,8 @@ if (process.env.NODE_ENV === 'production' && config.get?.('poi.misc.exceptionRep
 require('./polyfills/react-bootstrap')
 require('./polyfills/react-fontawesome')
 require('./polyfills/react-i18next')
+require('./polyfills/react-window')
+require('./polyfills/reselect')
 
 // i18n config
 require('./env-parts/i18next')

@@ -21,7 +21,7 @@ export const PluginAppTabpane = styled(PoiAppTabpane)`
   height: 100%;
   padding-bottom: 8px;
 
-  & > .bp5-card {
+  & > .bp6-card {
     padding: 4px;
     height: 100%;
     display: flex;

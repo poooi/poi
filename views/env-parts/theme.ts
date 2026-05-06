@@ -144,8 +144,8 @@ export function loadStyle(
     glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
-      classNames('bp5-focus-disabled', {
-        'bp5-dark': isDark,
+      classNames('bp6-focus-disabled', {
+        'bp6-dark': isDark,
       }),
     )
     const bootstrapEl = doc.querySelector('#bootstrap-css')
@@ -161,14 +161,7 @@ export function loadStyle(
     }
     const blueprintEl = doc.querySelector('#blueprint-css')
     if (blueprintEl) {
-      setRef(
-        blueprintEl,
-        fileUrl(
-          require.resolve(
-            `poi-asset-themes/dist/blueprint/blueprint-${isVibrant ? 'vibrant' : 'normal'}.css`,
-          ),
-        ),
-      )
+      setRef(blueprintEl, fileUrl(require.resolve(`@blueprintjs/core/lib/css/blueprint.css`)))
     }
     const blueprintIconEl = doc.querySelector('#blueprint-icon-css')
     if (blueprintIconEl) {

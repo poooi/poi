@@ -428,7 +428,8 @@ export class TitleBarWrapper extends PureComponent<Record<string, never>, TitleB
             newTemplate,
             // @ts-expect-error type is wrong
             [themepos, 'submenu', i, 'checked'] as const,
-            get(newTemplate, `${themepos}.submenu.${i}.label`).toLowerCase() === value,
+            String(get(newTemplate, `${themepos}.submenu.${i}.label`) ?? '').toLowerCase() ===
+              value,
           )
         }
       }

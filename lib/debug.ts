@@ -72,7 +72,7 @@ class Debug {
 }
 
 // Globals
-console.assert(process, `process doesn't exist`)
+console.assert(!!process, `process doesn't exist`)
 
 // The debug instance depends on Electron process type
 const isRenderer = (process || {}).type === 'renderer'

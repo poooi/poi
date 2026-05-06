@@ -30,28 +30,28 @@ poi-main {
   position: relative;
 }
 
-.bp5-popover-content,
-.bp5-dialog {
+.bp6-popover-content,
+.bp6-dialog {
   backdrop-filter: blur(5px);
 }
 
-.bp5-tooltip .bp5-popover-content {
+.bp6-tooltip .bp6-popover-content {
   max-width: calc(50vw - 20px);
   overflow: hidden;
 }
 
 .plugin-dropdown-container,
-.plugin-dropdown-container .bp5-popover-content {
+.plugin-dropdown-container .bp6-popover-content {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
 
-.plugin-dropdown-container > .bp5-popover-content > .bp5-menu {
+.plugin-dropdown-container > .bp6-popover-content > .bp6-menu {
   background: transparent;
 }
 
-.bp5-html-select select,
-.bp5-select select {
+.bp6-html-select select,
+.bp6-select select {
   background-image: none;
 }
 
@@ -81,8 +81,8 @@ poi-main {
   margin: 6px 10px !important;
 }
 
-body:not(.bp5-dark) #electron-app-title-bar .window-controls button:not(:hover),
-body:not(.bp5-dark) #electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:not(:hover) {
+body:not(.bp6-dark) #electron-app-title-bar .window-controls button:not(:hover),
+body:not(.bp6-dark) #electron-app-title-bar #app-menu-bar .toolbar-dropdown:not(.open) > .toolbar-button > button:not(:hover) {
   color: #24292e;
 }
 

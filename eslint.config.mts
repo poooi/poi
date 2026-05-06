@@ -2,14 +2,24 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 import type { Linter } from 'eslint'
-import { includeIgnoreFile } from '@eslint/compat'
+import { includeIgnoreFile, fixupConfigRules } from '@eslint/compat'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import globals from 'globals'
 import perfectionist from 'eslint-plugin-perfectionist'
 
-import babelParser from '@babel/eslint-parser'
+import _babelParser from '@babel/eslint-parser'
 import tsParser from '@typescript-eslint/parser'
+
+// @babel/eslint-parser's scope manager uses eslint-scope v5 which lacks addGlobals(),
+// required by ESLint v10. Dropping it here makes ESLint create its own (eslint-scope v9).
+const babelParser: typeof _babelParser = {
+  ..._babelParser,
+  parseForESLint(text, options) {
+    const { scopeManager: _, ...rest } = _babelParser.parseForESLint(text, options)
+    return rest as ReturnType<typeof _babelParser.parseForESLint>
+  },
+}
 import tsEslint from '@typescript-eslint/eslint-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -25,14 +35,14 @@ const config: Linter.Config[] = [
   // Keep behavior in sync with the previous CLI use of --ignore-path .gitignore
   includeIgnoreFile(join(__dirname, '.gitignore')),
 
-  ...compat.extends(
+  ...fixupConfigRules(compat.extends(
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
     'plugin:import-x/errors',
     'plugin:import-x/warnings',
     'plugin:prettier/recommended',
-  ),
+  )),
 
   {
     languageOptions: {

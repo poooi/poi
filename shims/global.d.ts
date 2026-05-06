@@ -1,3 +1,18 @@
+// React 19 moved JSX types into the React module (React.JSX).
+// Augment React.JSX.IntrinsicElements so custom HTML elements are recognized in TSX files.
+declare module 'react' {
+  namespace JSX {
+    interface IntrinsicElements {
+      'title-bar': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-main': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-nav': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-nav-tabs': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-info': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'kan-game': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+    }
+  }
+}
+
 declare global {
   interface File {
     path: string
@@ -16,17 +31,6 @@ declare global {
   interface ObjectConstructor {
     clone: <T>(obj: T) => T
     remoteClone: <T>(obj: T) => T
-  }
-
-  namespace JSX {
-    interface IntrinsicElements {
-      'title-bar': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-      'poi-main': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-      'poi-nav': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-      'poi-nav-tabs': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-      'poi-info': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-      'kan-game': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>
-    }
   }
 
   // let and const do not show up on globalThis

@@ -22,12 +22,12 @@ const ButtonArea = styled(Wrapper)`
     margin-left: 10px;
   }
 
-  .bp5-callout {
+  .bp6-callout {
     margin-top: 0.5em;
   }
 `
 const InlineFormGroup = styled(FormGroup)`
-  .bp5-form-content {
+  .bp6-form-content {
     display: flex;
     align-items: center;
   }
@@ -49,6 +49,7 @@ export const StorageConfig = () => {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     handleUpdateCacheSize().catch(() => null)
     const cycle = setInterval(handleUpdateCacheSize, 6000000)
     return () => clearInterval(cycle)

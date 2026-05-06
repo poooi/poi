@@ -6,7 +6,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import * as remote from '@electron/remote'
-import * as Sentry from '@sentry/electron'
+import * as Sentry from '@sentry/electron/renderer'
 import classNames from 'classnames'
 import { get, sortBy } from 'lodash'
 import React, { Component, useCallback, useEffect, useRef, useState } from 'react'
@@ -294,10 +294,10 @@ const ControlledTabAreaFC = ({
         <PinButton
           icon={isPinned ? 'pin' : 'unpin'}
           active={isPinned}
-          minimal
+          variant="minimal"
           onClick={() => handlePluginPin(plugin)}
           title={isPinned ? t('setting:Unpin') : t('setting:Pin')}
-          small
+          size="small"
         />
       )
     },
@@ -392,6 +392,7 @@ const ControlledTabAreaFC = ({
     for (const pluginId in pinConfig) {
       if (!openedWindow[pluginId]) {
         const plugin = plugins.find((p) => p.id === pluginId)
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (plugin) openWindow(plugin)
       }
     }
@@ -407,6 +408,10 @@ const ControlledTabAreaFC = ({
     verticalDoubleTabbed,
     mainPanelHeight,
   })
+
+  const windowModePlugins = plugins.filter(
+    (plugin) => plugin.enabled && isWindowMode(plugin) && openedWindow[plugin.id],
+  )
 
   const sharedPanelProps = {
     activePlugin,
@@ -432,6 +437,7 @@ const ControlledTabAreaFC = ({
         className={classNames({
           'width-resize': doubleTabbed && editable && !verticalDoubleTabbed,
         })}
+        // eslint-disable-next-line react-hooks/refs
         parentContainer={resizeContainerRef.current ?? undefined}
         {...resizableAreaProps}
       >
@@ -439,8 +445,8 @@ const ControlledTabAreaFC = ({
           {...sharedPanelProps}
           doubleTabbed={doubleTabbed}
           activePluginName={activePluginName}
+          windowModePlugins={windowModePlugins}
           pinConfig={pinConfig ?? {}}
-          openedWindow={openedWindow}
           windowRefs={windowRefs}
           onCloseWindow={closeWindow}
           getPinButton={getPinButton}

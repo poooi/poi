@@ -1,11 +1,11 @@
-import type { Layout, Layouts } from 'react-grid-layout'
+import type { Layout, LayoutItem, ResponsiveLayouts as Layouts } from 'react-grid-layout'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { ResizeSensor } from '@blueprintjs/core'
 import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
 import React, { useCallback } from 'react'
 import FontAwesome from 'react-fontawesome'
-import { Responsive as ResponsiveReactGridLayout } from 'react-grid-layout'
+import { Responsive as ResponsiveReactGridLayout, verticalCompactor } from 'react-grid-layout'
 import { Trans } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
@@ -60,8 +60,8 @@ if (!isEqual(newLayout, configLayout)) {
 
 function layoutConfigOutdated(layoutConfig: Layouts): boolean {
   return (
-    !layoutConfig.sm.find((a) => a.i === 'repair-panel') ||
-    !layoutConfig.lg.find((a) => a.i === 'repair-panel')
+    !layoutConfig.sm?.find((a) => a.i === 'repair-panel') ||
+    !layoutConfig.lg?.find((a) => a.i === 'repair-panel')
   )
 }
 
@@ -78,14 +78,13 @@ if (layoutConfigOutdated(config.get('poi.mainpanel.layout', defaultLayout))) {
 
 const configKey = ['x', 'y', 'h', 'w', 'i', 'minW', 'maxW', 'minH', 'maxH'] as const
 
-function isPositionEqual(pos1: Layout, pos2: Layout): boolean {
+function isPositionEqual(pos1: LayoutItem, pos2: LayoutItem): boolean {
   return isEqual(pick(pos1, configKey), pick(pos2, configKey))
 }
 
-function isLayoutEqual(layout1: Layout[], layout2: Layout[]): boolean {
-  return layout1
-    .map((_, i) => isPositionEqual(layout1[i], layout2[i]))
-    .reduce((a, b) => a && b, true)
+function isLayoutEqual(layout1: Layout | undefined, layout2: Layout | undefined): boolean {
+  if (!layout1 || !layout2) return false
+  return layout1.map((item, i) => isPositionEqual(item, layout2[i])).reduce((a, b) => a && b, true)
 }
 
 function isLayoutsEqual(layouts1: Layouts, layouts2: Layouts): boolean {
@@ -103,7 +102,7 @@ interface MainViewInnerProps {
 }
 
 const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewInnerProps) => {
-  const onLayoutChange = useCallback((_layout: Layout[], newLayouts: Layouts) => {
+  const onLayoutChange = useCallback((_layout: Layout, newLayouts: Layouts) => {
     const currentLayouts = config.get('poi.mainpanel.layout')
     if (!isLayoutsEqual(newLayouts, currentLayouts)) {
       config.set('poi.mainpanel.layout', newLayouts)
@@ -138,9 +137,9 @@ const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewI
           cols={{ lg: 20, sm: 10 }}
           breakpoints={{ lg: 750, sm: 0 }}
           width={mainpanewidth}
-          isResizable={editable}
-          isDraggable={editable}
-          compactType="vertical"
+          resizeConfig={{ enabled: editable }}
+          dragConfig={{ enabled: editable }}
+          compactor={verticalCompactor}
         >
           <div className="teitoku-panel" key="teitoku-panel">
             <AdmiralPanel editable={editable} />

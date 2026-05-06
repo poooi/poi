@@ -1,24 +1,24 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`config initially, should be filled with default value 1`] = `Array []`;
+exports[`config initially, should be filled with default value 1`] = `[]`;
 
 exports[`config initially, should be filled with default value 2`] = `
-Object {
+{
   "foo": "bar",
 }
 `;
 
 exports[`config should be set and get a object correctly 1`] = `
-Array [
-  Array [
-    Object {
-      "another": Object {
+[
+  [
+    {
+      "another": {
         "a": "b",
         "c": 187,
       },
       "foo": "bar",
-      "path": Object {
-        "to": Object {
+      "path": {
+        "to": {
           "value": "Dead Beef",
         },
       },
@@ -32,12 +32,12 @@ Array [
 exports[`config should be set and get a object correctly 2`] = `"CSON Stringified"`;
 
 exports[`config should be set and get a string correctly 1`] = `
-Array [
-  Array [
-    Object {
+[
+  [
+    {
       "foo": "bar",
-      "path": Object {
-        "to": Object {
+      "path": {
+        "to": {
           "value": "Dead Beef",
         },
       },

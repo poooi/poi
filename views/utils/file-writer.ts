@@ -14,14 +14,14 @@ import { dirname } from 'path'
 // }
 export default class FileWriter {
   private writing: boolean
-  private _queue: Array<[string, string, WriteFileOptions | BufferEncoding | string]>
+  private _queue: Array<[string, string, WriteFileOptions]>
 
   constructor() {
     this.writing = false
     this._queue = []
   }
 
-  write(path: string, data: string, options: WriteFileOptions | BufferEncoding | string) {
+  write(path: string, data: string, options: WriteFileOptions) {
     this._queue.push([path, data, options])
     this._continueWriting()
   }
@@ -30,7 +30,7 @@ export default class FileWriter {
     if (this.writing) return
     this.writing = true
     while (this._queue.length > 0) {
-      const [path, data, options] = this._queue.shift() || ['', '', '']
+      const [path, data, options] = this._queue.shift() || ['', '', {}]
       await ensureDir(dirname(path))
       await writeFile(path, data, options)
     }

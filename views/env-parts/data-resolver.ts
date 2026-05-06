@@ -205,7 +205,8 @@ const addProxyListener = () => {
     listenerStatusFlag = true
     let eventName: keyof typeof proxyListener
     for (eventName in proxyListener) {
-      gameAPIBroadcaster.addListener(eventName, proxyListener[eventName])
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      gameAPIBroadcaster.addListener(eventName, proxyListener[eventName] as never)
     }
   }
 }
@@ -221,7 +222,8 @@ window.addEventListener('unload', () => {
     listenerStatusFlag = false
     let eventName: keyof typeof proxyListener
     for (eventName in proxyListener) {
-      gameAPIBroadcaster.removeListener(eventName, proxyListener[eventName])
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      gameAPIBroadcaster.removeListener(eventName, proxyListener[eventName] as never)
     }
   }
 })

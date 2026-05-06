@@ -17,7 +17,7 @@ const NumericResolution = styled.div`
   align-items: center;
   flex: 1;
 
-  .bp5-input-group {
+  .bp6-input-group {
     flex-shrink: 1;
   }
 `

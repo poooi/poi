@@ -6,7 +6,7 @@ import ipc from 'lib/ipc'
 import { get, set, debounce, compact, cloneDeep, isEqual } from 'lodash'
 import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
-import thunk from 'redux-thunk'
+import { thunk } from 'redux-thunk'
 import { isMain } from 'views/env'
 
 import type { FcdState, FcdValue } from './fcd'
@@ -79,8 +79,6 @@ declare global {
 const composeEnhancers =
   (window.dbg?.isEnabled() && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-// @ts-expect-error TS2589: Redux PreloadedState<RootState> recurses into DOM types via
-// LayoutState.webview.ref (ExtendedWebviewTag extends HTMLElement); pre-existing issue.
 export const store: Store<RootState> = createStore(
   reducerFactory(),
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion

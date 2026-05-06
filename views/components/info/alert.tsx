@@ -133,6 +133,7 @@ export const PoiAlert: React.FC = () => {
   const [containerHeight, setContainerHeight] = useState(0)
   const [historyHeight, setHistoryHeight] = useState(0)
   const [msgWidth, setMsgWidth] = useState(0)
+  // eslint-disable-next-line react-hooks/purity
   const stickyEnd = useRef(Date.now())
 
   const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
@@ -204,10 +205,10 @@ export const PoiAlert: React.FC = () => {
     // @ts-expect-error wrong type definition
     <PoiAlertTag tag="poi-alert">
       <ResizeSensor onResize={handleAlertMainResize}>
-        <AlertMain id="alert-main" className="alert-main bp5-popover">
+        <AlertMain id="alert-main" className="alert-main bp6-popover">
           <AlertContainer
             id="alert-container"
-            className={`bp5-callout bp5-intent-${current.type} alert-container`}
+            className={`bp6-callout bp6-intent-${current.type} alert-container`}
             onClick={toggleHistory}
           >
             <AlertPosition
@@ -229,7 +230,7 @@ export const PoiAlert: React.FC = () => {
           <ResizeSensor onResize={handleAlertLogResize}>
             <AlertLog
               id="alert-log"
-              className="alert-log bp5-popover-content"
+              className="alert-log bp6-popover-content"
               $toggle={showHistory}
               $height={historyHeight}
               $containerHeight={containerHeight}
@@ -239,7 +240,7 @@ export const PoiAlert: React.FC = () => {
               {history.reverse().map((h) => (
                 <AlertLogContent
                   key={h.ts}
-                  className={`bp5-callout bp5-intent-${h.type}`}
+                  className={`bp6-callout bp6-intent-${h.type}`}
                   data-ts={h.ts}
                 >
                   {h.content}

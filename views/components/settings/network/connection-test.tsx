@@ -17,7 +17,7 @@ const timeout = (): Promise<void> =>
 export const ConnectionTest: FC = () => {
   const [loading, setLoading] = useState(false)
   const { t } = useTranslation('setting')
-  const controller = useRef<AbortController>()
+  const controller = useRef<AbortController | undefined>(undefined)
 
   const connect = useCallback(async () => {
     controller.current = new AbortController()

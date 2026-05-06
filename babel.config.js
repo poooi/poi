@@ -28,6 +28,6 @@ module.exports = {
     ].map((plugin) => require.resolve(plugin)),
   ),
   ignore: [],
-  only: [/\.(es|ts|tsx)$/],
+  only: process.env.JEST_WORKER_ID ? [/\.(js|es|ts|tsx)$/] : [/\.(es|ts|tsx)$/],
   babelrc: false,
 }

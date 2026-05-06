@@ -258,7 +258,8 @@ class OverlayTriggerInner extends Component<OverlayTriggerInnerProps, OverlayTri
     const triggerProps: Record<string, unknown> = {}
 
     if (this.state.show) {
-      triggerProps['aria-describedby'] = overlay.props.id
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      triggerProps['aria-describedby'] = (overlay.props as Record<string, unknown>)['id']
     }
 
     triggerProps.onClick = createChainedFunction(

@@ -25,8 +25,9 @@ function isApplyProgressAction(action: AnyAction): action is ApplyProgressAction
 
 function createCaptureStore(preloadedState: unknown) {
   const seen: AnyAction[] = []
-  const captureMiddleware = () => (next: (a: AnyAction) => unknown) => (action: AnyAction) => {
-    seen.push(action)
+  const captureMiddleware = () => (next: (a: unknown) => unknown) => (action: unknown) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    seen.push(action as AnyAction)
     return next(action)
   }
 

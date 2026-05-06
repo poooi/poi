@@ -110,6 +110,7 @@ const CountdownLabel = memo(
   ({ fleetId, completeTime, shouldNotify, fleetName }: CountdownLabelProps) => {
     const notifier = useRef(new CountdownNotifier())
     const propsRef = useRef({ shouldNotify, completeTime, fleetName })
+    // eslint-disable-next-line react-hooks/refs
     propsRef.current = { shouldNotify, completeTime, fleetName }
 
     const tick = useCallback(() => {

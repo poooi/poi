@@ -115,7 +115,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
     const containerEl = containerElRef.current
 
     const externalWindowRef = useRef<Window | null>(null)
-    const currentWindowRef = useRef<Electron.BrowserWindow | undefined>()
+    const currentWindowRef = useRef<Electron.BrowserWindow | undefined>(undefined)
     const pluginContainer = useRef<HTMLDivElement>(null)
 
     const [loaded, setLoaded] = useState(false)

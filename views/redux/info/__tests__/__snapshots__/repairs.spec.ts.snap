@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`repairs reducer should handle api_get_member/ndock 1`] = `
-Array [
-  Object {
+[
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 1,
@@ -14,7 +14,7 @@ Array [
     "api_ship_id": 0,
     "api_state": 0,
   },
-  Object {
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 2,
@@ -26,7 +26,7 @@ Array [
     "api_ship_id": 0,
     "api_state": 0,
   },
-  Object {
+  {
     "api_complete_time": 1613465689647,
     "api_complete_time_str": "2021-02-16 17:54:49",
     "api_id": 3,
@@ -38,7 +38,7 @@ Array [
     "api_ship_id": 262,
     "api_state": 1,
   },
-  Object {
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 4,
@@ -54,8 +54,8 @@ Array [
 `;
 
 exports[`repairs reducer should handle api_port/port 1`] = `
-Array [
-  Object {
+[
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 1,
@@ -67,7 +67,7 @@ Array [
     "api_ship_id": 0,
     "api_state": 0,
   },
-  Object {
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 2,
@@ -79,7 +79,7 @@ Array [
     "api_ship_id": 0,
     "api_state": 0,
   },
-  Object {
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 3,
@@ -91,7 +91,7 @@ Array [
     "api_ship_id": 0,
     "api_state": 0,
   },
-  Object {
+  {
     "api_complete_time": 0,
     "api_complete_time_str": "0",
     "api_id": 4,

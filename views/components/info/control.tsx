@@ -85,6 +85,7 @@ export const PoiControl = () => {
   const [transition, setTransition] = useState(false)
   const editableTimeoutRef = useRef(0)
   const propsRef = useRef({ muted, editable, t })
+  // eslint-disable-next-line react-hooks/refs
   propsRef.current = { muted, editable, t }
 
   const disableEditableMsg = useCallback(() => {
@@ -464,15 +465,16 @@ export const PoiControl = () => {
     },
   ]
 
+  // eslint-disable-next-line react-hooks/refs
+  const listItems = list.map(({ label, ...props }) => (
+    <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={transition}>
+      <Button {...(props as object)} minimal />
+    </Tooltip>
+  ))
+
   return (
     <PoiControlTag tag="poi-control" extend={extend} onTransitionEnd={() => setTransition(false)}>
-      <PoiControlInner>
-        {list.map(({ label, ...props }) => (
-          <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={transition}>
-            <Button {...(props as object)} minimal />
-          </Tooltip>
-        ))}
-      </PoiControlInner>
+      <PoiControlInner>{listItems}</PoiControlInner>
       <div>
         <Button
           icon={extend ? 'chevron-left' : 'chevron-right'}

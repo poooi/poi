@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next'
 import type { APIShip } from 'kcsapi/api_port/port/response'
 import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { RootState } from 'views/redux/reducer-factory'
@@ -99,7 +100,7 @@ type ShipRowInnerProps = ShipRowProps & {
   $shipTypes: Record<string, { api_name?: string }>
   labelStatus: number
   shipAvatarColor: string
-  t: (key: string, opts?: object) => string
+  t: TFunction
 }
 
 const ShipRowInner = memo(

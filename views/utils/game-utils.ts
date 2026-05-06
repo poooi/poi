@@ -323,7 +323,6 @@ export function getSaku25(
   let reconSaku = 0
   let shipSaku = 0
   let radarSaku = 0
-  let totalSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
     if (!shipsData[i] || !equipsData[i]) continue
     const [_ship] = shipsData[i]
@@ -355,7 +354,7 @@ export function getSaku25(
   }
   reconSaku = reconSaku * 2.0
   shipSaku = Math.sqrt(shipSaku)
-  totalSaku = reconSaku + radarSaku + shipSaku
+  const totalSaku = reconSaku + radarSaku + shipSaku
 
   return {
     recon: parseFloat(reconSaku.toFixed(2)),
@@ -370,10 +369,8 @@ export function getSaku25a(
   equipsData: [Equip, APIMstSlotitem, number | undefined][][],
   teitokuLv: number,
 ): { ship: number; item: number; teitoku: number; total: number } {
-  let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
-  let teitokuSaku = 0
   for (let i = 0; i < equipsData.length; i++) {
     if (!shipsData[i] || !equipsData[i]) continue
     const [_ship] = shipsData[i]
@@ -417,8 +414,8 @@ export function getSaku25a(
     }
     shipSaku += Math.sqrt(shipPureSaku) * 1.69
   }
-  teitokuSaku = 0.61 * Math.floor((teitokuLv + 4) / 5) * 5
-  totalSaku = shipSaku + equipSaku - teitokuSaku
+  const teitokuSaku = 0.61 * Math.floor((teitokuLv + 4) / 5) * 5
+  const totalSaku = shipSaku + equipSaku - teitokuSaku
 
   return {
     ship: parseFloat(shipSaku.toFixed(2)),
@@ -436,10 +433,8 @@ export function getSaku33(
   mapModifier = 1.0,
   slotCount = 6,
 ): { ship: number; item: number; teitoku: number; total: number } {
-  let totalSaku = 0
   let shipSaku = 0
   let equipSaku = 0
-  let teitokuSaku = 0
   let emptySlot = slotCount
   for (let i = 0; i < equipsData.length; i++) {
     if (!shipsData[i] || !equipsData[i]) continue
@@ -479,8 +474,8 @@ export function getSaku33(
     shipSaku += Math.sqrt(shipPureSaku)
   }
   equipSaku *= mapModifier
-  teitokuSaku = Math.ceil(teitokuLv * 0.4)
-  totalSaku = shipSaku + equipSaku - teitokuSaku + 2 * emptySlot
+  const teitokuSaku = Math.ceil(teitokuLv * 0.4)
+  const totalSaku = shipSaku + equipSaku - teitokuSaku + 2 * emptySlot
 
   return {
     ship: parseFloat(shipSaku.toFixed(2)),

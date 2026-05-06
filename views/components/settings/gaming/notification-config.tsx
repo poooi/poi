@@ -11,7 +11,7 @@ import { config } from 'views/env'
 import notifCenter from 'views/env-parts/notif-center'
 
 const InlineFormGroup = styled(FormGroup)`
-  .bp5-form-content {
+  .bp6-form-content {
     display: flex;
     align-items: center;
   }

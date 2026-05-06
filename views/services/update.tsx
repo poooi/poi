@@ -71,14 +71,15 @@ export const checkUpdate = async () => {
     `https://${UPDATE_SERVER}/update/latest.json`,
     defaultFetchOption as Parameters<typeof fetch>[1],
   )
-    .then((res) => res.json())
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    .then((res) => res.json() as Promise<{ version?: string; betaVersion?: string }>)
     .catch((e: Error) => {
       console.warn('Check update error.', e.stack)
-      return {}
+      return {} as { version?: string; betaVersion?: string }
     })
   if (versionInfo.version) {
     const version =
-      betaChannel && semver.gt(versionInfo.betaVersion, versionInfo.version)
+      betaChannel && semver.gt(versionInfo.betaVersion ?? '0.0.0', versionInfo.version ?? '0.0.0')
         ? versionInfo.betaVersion || 'v0.0.0'
         : versionInfo.version
     const channel = version.includes('beta') ? '-beta' : ''

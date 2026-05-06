@@ -1,4 +1,4 @@
-import type { Layouts } from 'react-grid-layout'
+import type { ResponsiveLayouts as Layouts } from 'react-grid-layout'
 
 import type { PluginID } from './utils'
 

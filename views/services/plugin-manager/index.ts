@@ -193,6 +193,7 @@ class PluginManager extends EventEmitter {
   getPluginOutdateInfo = async (plugin: Plugin): Promise<Plugin | undefined> => {
     if (plugin.needRollback) return undefined
     const npmConfig = getNpmConfig(PLUGIN_PATH)
+    // @ts-expect-error type casting
     const data: Record<string, unknown> | undefined = await fetch(
       `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
@@ -209,6 +210,7 @@ class PluginManager extends EventEmitter {
     }
     if (npmConfig.enableBetaPluginCheck) {
       const innerNpmConfig = getNpmConfig(PLUGIN_PATH)
+      // @ts-expect-error type casting
       const betaData: Record<string, unknown> | undefined = await fetch(
         `${innerNpmConfig.registry}${plugin.packageName}/beta`,
         defaultFetchOption,

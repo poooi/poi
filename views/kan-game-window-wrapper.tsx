@@ -143,6 +143,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     el.style.height = '100vh'
     containerElRef.current = el
   }
+  // eslint-disable-next-line react-hooks/refs
   const containerEl = containerElRef.current
 
   const externalWindowRef = useRef<Window | null>(null)
@@ -154,8 +155,11 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   const latestZoom = useRef(zoom)
   const latestWindowWidth = useRef(windowWidth)
   const latestCustomTitlebar = useRef(customTitlebar)
+  // eslint-disable-next-line react-hooks/refs
   latestZoom.current = zoom
+  // eslint-disable-next-line react-hooks/refs
   latestWindowWidth.current = windowWidth
+  // eslint-disable-next-line react-hooks/refs
   latestCustomTitlebar.current = customTitlebar
 
   const getYOffset = useCallback(() => (latestCustomTitlebar.current ? 60 : 30), [])
@@ -164,7 +168,9 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   // being listed as deps and triggering unnecessary re-renders.
   const loadedRef = useRef(loaded)
   const windowIdRef = useRef(windowId)
+  // eslint-disable-next-line react-hooks/refs
   loadedRef.current = loaded
+  // eslint-disable-next-line react-hooks/refs
   windowIdRef.current = windowId
 
   const checkBrowserWindowExistence = useCallback(() => {
@@ -187,6 +193,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     if (webview) {
       webview.forceSyncZoom()
     } else if (count < 20) {
+      // eslint-disable-next-line react-hooks/immutability
       setTimeout(() => forceSyncZoom(count + 1), 100)
     }
   }, [])
@@ -210,6 +217,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
 
   // Keep a ref so the mount effect below can read the initial value at open time
   const latestWindowUseFixedResolution = useRef(windowUseFixedResolution)
+  // eslint-disable-next-line react-hooks/refs
   latestWindowUseFixedResolution.current = windowUseFixedResolution
 
   // Mount: open the external window once
@@ -387,14 +395,19 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     )
   }, [windowWidth, loaded, getYOffset])
 
+  // eslint-disable-next-line react-hooks/refs
   if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
 
   return ReactDOM.createPortal(
     <BlueprintProvider portalContainer={containerEl}>
-      <StyleSheetManager target={externalWindowRef.current.document.head}>
+      <StyleSheetManager
+        // eslint-disable-next-line react-hooks/refs
+        target={externalWindowRef.current.document.head}
+      >
         {customTitlebar ? (
           <TitleBar
             icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            // eslint-disable-next-line react-hooks/refs
             browserWindowId={currentWindowRef.current!.id}
             disableClose
             disableMaximize={pinned || windowUseFixedResolution}
@@ -410,6 +423,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         </PoiAppTabpane>
       </StyleSheetManager>
     </BlueprintProvider>,
+    // eslint-disable-next-line react-hooks/refs
     externalWindowRef.current.document.querySelector('#plugin-mountpoint')!,
   )
 }

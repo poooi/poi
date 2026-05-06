@@ -234,6 +234,7 @@ const CountDownControl = () => {
     <TeitokuTimer className="teitoku-timer">
       <Tooltip
         position={Position.LEFT_BOTTOM}
+        // eslint-disable-next-line react-hooks/refs
         content={<CountdownContent moments={momentsRef.current} />}
       >
         <Tag intent={intent} minimal>

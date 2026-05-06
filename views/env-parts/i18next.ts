@@ -68,7 +68,11 @@ declare global {
     /** @deprecated Use `import { addGlobalI18n } from 'views/env-parts/i18next'` instead */
     i18n: Record<
       string,
-      { __: TFunction; translate: (locale: string, str: string) => string; fixedT: TFunction }
+      {
+        __: (key: string, ...args: unknown[]) => string
+        translate: (locale: string, str: string) => string
+        fixedT: TFunction
+      }
     >
   }
 }
@@ -151,8 +155,8 @@ if (dbg?.isEnabled()) {
 
 export interface FallbackInstance {
   fixedT: TFunction
-  __: TFunction
-  __n: TFunction
+  __: (key: string, ...args: unknown[]) => string
+  __n: (key: string, ...args: unknown[]) => string
   setLocale: (locale: string) => void
 }
 
@@ -164,9 +168,9 @@ const i18nHack = (window.i18n = {} as Record<string, FallbackInstance>)
 // export addGlobalI18n for plugin manager usage
 export const addGlobalI18n = (namespace: string) => {
   const fixedT = i18next.getFixedT(language, namespace)
-  const __: TFunction = (str, ...args) =>
+  const __: (key: string, ...args: unknown[]) => string = (str, ...args) =>
     format(i18nHack[namespace].fixedT(escapeI18nKey(str)), ...args)
-  const __n: TFunction = (str, ...args) =>
+  const __n: (key: string, ...args: unknown[]) => string = (str, ...args) =>
     format(i18nHack[namespace].fixedT(escapeI18nKey(str)), ...args)
   i18nHack[namespace] = {
     fixedT,

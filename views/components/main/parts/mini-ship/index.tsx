@@ -23,7 +23,7 @@ import { CardWrapper as CardWrapperL } from '../styled-components'
 import { PaneBodyMini, LBViewMini } from './mini-ship-pane'
 
 const FleetNameButton = styled(FleetNameButtonLarge)`
-  .bp5-button {
+  .bp6-button {
     border-width: 0 0 1px;
     height: 18px;
     min-height: 18px;

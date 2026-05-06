@@ -161,7 +161,7 @@ export const findInstalledTarball = async (
   const filename = basename(tarballPath)
   const pluginPaths = await globAsync(join(pluginRoot, 'poi-plugin-*'))
   const packageDatas: Array<Record<string, unknown>> = await Promise.all(
-    pluginPaths.map((p) => readJson(join(p, 'package.json'))),
+    pluginPaths.map((p: string) => readJson(join(p, 'package.json'))),
   )
   const nameMatchDatas = packageDatas.filter((packageData) => {
     const requested = packageData['_requested']

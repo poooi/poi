@@ -76,23 +76,23 @@ describe('views/utils/tools', () => {
   describe('cjkSpacing', () => {
     expect(cjkSpacing('你好world')).toMatchInlineSnapshot(`"你好 world"`)
     expect(cjkSpacing('こんいちわworld')).toMatchInlineSnapshot(`"こんいちわ world"`)
-    expect(cjkSpacing('芸術は爆發だ!')).toMatchInlineSnapshot(`"芸術は爆發だ！"`)
+    expect(cjkSpacing('芸術は爆發だ!')).toMatchInlineSnapshot(`"芸術は爆發だ!"`)
   })
 
   describe('constructArray', () => {
     expect(constructArray([1], ['foo'])).toMatchInlineSnapshot(`
-      Array [
-        ,
-        "foo",
-      ]
+     [
+       ,
+       "foo",
+     ]
     `)
-    expect(constructArray([-1], ['foo'])).toMatchInlineSnapshot(`Array []`)
+    expect(constructArray([-1], ['foo'])).toMatchInlineSnapshot(`[]`)
     // @ts-expect-error testing passing non number
-    expect(constructArray(['bar'], ['foo'])).toMatchInlineSnapshot(`Array []`)
+    expect(constructArray(['bar'], ['foo'])).toMatchInlineSnapshot(`[]`)
     expect(constructArray([0.92], ['foo'])).toMatchInlineSnapshot(`
-      Array [
-        "foo",
-      ]
+     [
+       "foo",
+     ]
     `)
   })
 })
