@@ -380,7 +380,7 @@ class PluginManager extends EventEmitter {
   }
 
   async enablePlugin(plugin: Plugin): Promise<void> {
-    plugin.enabled = true
+    plugin = { ...plugin, enabled: true }
     if (!plugin.isBroken) {
       plugin = await enablePlugin(plugin)
     }
@@ -406,8 +406,7 @@ class PluginManager extends EventEmitter {
   async reloadPlugin(plugin: Plugin): Promise<void> {
     try {
       await this.disablePlugin(plugin)
-      plugin.isBroken = false
-      await this.enablePlugin(plugin)
+      await this.enablePlugin({ ...plugin, isBroken: false })
     } catch (error) {
       console.error(error instanceof Error ? error.stack : error)
     }
