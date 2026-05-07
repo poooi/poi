@@ -2,6 +2,7 @@
 // Process Command Line Arguments
 import chalk from 'chalk'
 import { app } from 'electron'
+// eslint-disable-next-line import-x/no-rename-default
 import { default as yargs } from 'yargs'
 
 // eslint-disable-next-line import-x/no-rename-default
