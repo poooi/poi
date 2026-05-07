@@ -8,6 +8,7 @@ import {
   createAPIReqKousyouRemodelSlotResponseAction,
   createAPIReqMemberItemuseResponseAction,
   createInfoEquipsRemoveByIdsAction,
+  createAPIReqKousyouRemodelSlotRecoverResponseAction,
 } from 'views/redux/actions'
 
 import type { EquipsState, Equip } from '../equips'
@@ -133,6 +134,42 @@ describe('equips reducer', () => {
     const result = reducer(initialState, createAPIReqKousyouRemodelSlotResponseAction(payload))
 
     expect(result).toEqual({
+      '2': createEquip(2, 2),
+      '3': { api_id: 3, api_slotitem_id: 30, api_locked: 0, api_level: 0 },
+    })
+  })
+
+  it('should handle api_req_kousyou/remodel_slot_recover - updates equips', () => {
+    const initialState: EquipsState = {
+      '1': createEquip(1, 1),
+      '2': createEquip(2, 2),
+    }
+
+    const payload: Parameters<typeof createAPIReqKousyouRemodelSlotRecoverResponseAction>[0] = {
+      ...remodelSlotFixture,
+      postBody: {
+        api_dev_num: '1',
+        api_menu_id: '1',
+        api_slot_id: '3',
+        api_verno: '1',
+      },
+      body: {
+        api_recover_flag: 1,
+        api_after_slot: {
+          api_id: 3,
+          api_slotitem_id: 30,
+          api_level: 0,
+          api_locked: 0,
+        },
+      },
+    }
+    const result = reducer(
+      initialState,
+      createAPIReqKousyouRemodelSlotRecoverResponseAction(payload),
+    )
+
+    expect(result).toEqual({
+      '1': createEquip(1, 1),
       '2': createEquip(2, 2),
       '3': { api_id: 3, api_slotitem_id: 30, api_locked: 0, api_level: 0 },
     })

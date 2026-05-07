@@ -139,8 +139,9 @@ import type {
   APIReqHenseiPresetOrderChangeRequest,
   APIReqMemberUpdatedecknameResponse,
   APIReqMemberUpdatedecknameRequest,
+  APIReqKousyouRemodelSlotRecoverResponse,
+  APIReqKousyouRemodelSlotRecoverRequest,
 } from 'kcsapi'
-import type { APIShipDatum } from 'kcsapi/api_req_map/anchorage_repair/response'
 
 import { createAction } from '@reduxjs/toolkit'
 
@@ -338,32 +339,22 @@ export const createAPIReqKousyouRemodelSlotResponseAction = createAction<
   GameResponsePayload<APIReqKousyouRemodelSlotResponse, APIReqKousyouRemodelSlotRequest>
 >('@@Response/kcsapi/api_req_kousyou/remodel_slot')
 
-// NOTE: response-saver payloads include these optional fields, but kcsapi types do not.
-export type APIReqKousyouRemodelSlotlistDetailResponseCompat =
-  APIReqKousyouRemodelSlotlistDetailResponse & {
-    api_req_useitem_id?: number
-    api_req_useitem_num?: number
-    api_req_useitem_id2?: number
-    api_req_useitem_num2?: number
-  }
-
 export const createAPIReqKousyouRemodelSlotlistDetailResponseAction = createAction<
   GameResponsePayload<
-    APIReqKousyouRemodelSlotlistDetailResponseCompat,
+    APIReqKousyouRemodelSlotlistDetailResponse,
     APIReqKousyouRemodelSlotlistDetailRequest
   >
 >('@@Response/kcsapi/api_req_kousyou/remodel_slotlist_detail')
 
-// NOTE: response-saver payloads sometimes omit fields that kcsapi requires (e.g. api_sally_area).
-export type APIReqMapAnchorageRepairResponseCompat = Omit<
-  APIReqMapAnchorageRepairResponse,
-  'api_ship_data'
-> & {
-  api_ship_data: Array<Partial<APIShipDatum> & { api_id: number }>
-}
+export const createAPIReqKousyouRemodelSlotRecoverResponseAction = createAction<
+  GameResponsePayload<
+    APIReqKousyouRemodelSlotRecoverResponse,
+    APIReqKousyouRemodelSlotRecoverRequest
+  >
+>('@@Response/kcsapi/api_req_kousyou/remodel_slot_recover')
 
 export const createAPIReqMapAnchorageRepairResponseAction = createAction<
-  GameResponsePayload<APIReqMapAnchorageRepairResponseCompat, APIReqMapAnchorageRepairRequest>
+  GameResponsePayload<APIReqMapAnchorageRepairResponse, APIReqMapAnchorageRepairRequest>
 >('@@Response/kcsapi/api_req_map/anchorage_repair')
 
 export const createAPIReqMapSelectEventmapRankResponseAction = createAction<

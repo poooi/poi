@@ -66,6 +66,7 @@ export {
   createAPIReqKousyouDestroyshipResponseAction,
   createAPIReqKousyouRemodelSlotResponseAction,
   createAPIReqKousyouRemodelSlotlistDetailResponseAction,
+  createAPIReqKousyouRemodelSlotRecoverResponseAction,
   createAPIReqMapAnchorageRepairResponseAction,
   createAPIReqMapSelectEventmapRankResponseAction,
   createAPIReqMapStartResponseAction,
@@ -95,11 +96,6 @@ export {
   createAPIReqCombinedBattleSPMidnightResponseAction,
   createAPIReqCombinedBattleEcMidnightBattleResponseAction,
   createAPIReqCombinedBattleEcNightToDayResponseAction,
-} from './response'
-
-export type {
-  APIReqKousyouRemodelSlotlistDetailResponseCompat,
-  APIReqMapAnchorageRepairResponseCompat,
 } from './response'
 
 export { createTabSwitchAction } from './ui'

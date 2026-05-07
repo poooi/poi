@@ -16,6 +16,7 @@ import {
   createAPIReqKousyouRemodelSlotResponseAction,
   createAPIReqMemberItemuseResponseAction,
   createInfoEquipsRemoveByIdsAction,
+  createAPIReqKousyouRemodelSlotRecoverResponseAction,
 } from '../actions'
 
 export type Equip = APISlotItem
@@ -89,6 +90,17 @@ const equipsSlice = createSlice({
           nextState = removeEquips(nextState, body.api_use_slot_id)
         }
         if (body.api_remodel_flag === 1 && body.api_after_slot != null) {
+          nextState = {
+            ...nextState,
+            [body.api_after_slot.api_id]: body.api_after_slot,
+          }
+        }
+        return nextState
+      })
+      .addCase(createAPIReqKousyouRemodelSlotRecoverResponseAction, (state, { payload }) => {
+        const body = payload.body
+        let nextState = state
+        if (body.api_after_slot != null) {
           nextState = {
             ...nextState,
             [body.api_after_slot.api_id]: body.api_after_slot,
