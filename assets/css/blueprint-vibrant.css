@@ -13,29 +13,29 @@
 }
 
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]) {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.3)) !important;
 }
 
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]):hover {
-  background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha - 0.25)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha - 0.2)) !important;
 }
 
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]):active {
-  background-color: oklch(from var(--bp-surface-background-color-default-active) l c h / calc(alpha - 0.15)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-active) l c h / calc(alpha - 0.1)) !important;
 }
 
 .bp6-input {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.3)) !important;
 }
 
 .bp6-card,
 .bp6-html-select select,
 .bp6-select select {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.35)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.3)) !important;
 }
 
 .bp6-dialog-header {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.55)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.5)) !important;
 }
 
 .bp6-dialog {
