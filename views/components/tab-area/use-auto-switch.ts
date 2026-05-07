@@ -2,7 +2,7 @@ import type { Plugin } from 'views/services/plugin-manager'
 
 type SwitchPluginPath = string | { path: string; valid?: () => boolean }
 
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { config } from 'views/env'
 
 interface UseAutoSwitchOptions {
@@ -15,7 +15,7 @@ interface UseAutoSwitchOptions {
  * to the relevant tab based on the API path.
  */
 export const useAutoSwitch = ({ plugins, selectTab }: UseAutoSwitchOptions) => {
-  const handleResponse = useCallback(
+  const handleResponseImpl = useCallback(
     (e: Event): void => {
       if (!(e instanceof CustomEvent)) return
       const detail: { path: string } = e.detail
@@ -57,6 +57,17 @@ export const useAutoSwitch = ({ plugins, selectTab }: UseAutoSwitchOptions) => {
     },
     [plugins, selectTab],
   )
+
+  // Keep a ref so the stable `handleResponse` below always calls the latest
+  // implementation even though the parent effect registers it only once.
+  const handleResponseRef = useRef(handleResponseImpl)
+  useEffect(() => {
+    handleResponseRef.current = handleResponseImpl
+  }, [handleResponseImpl])
+
+  const handleResponse = useCallback((e: Event) => {
+    handleResponseRef.current(e)
+  }, [])
 
   return { handleResponse }
 }
