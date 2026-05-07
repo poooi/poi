@@ -22,7 +22,7 @@
     "lint": "npm run lint:js && npm run lint:style",
     "lint:fix": "npm run lint:js:fix && npm run lint:style:fix",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
