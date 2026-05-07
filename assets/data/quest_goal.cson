@@ -137,6 +137,12 @@ for more details see views/redux/quests.es
     description: "近代化改修"
     required: 2
     init: 0
+1166: # 続：装備の改修強化
+  type: 1
+  "remodel_item":
+    description: "改修"
+    required: 1
+    init: 0
 
 ###
 # Someday
@@ -319,6 +325,12 @@ for more details see views/redux/quests.es
   "destory_item@魚雷":
     description: "廃棄 - 魚雷"
     slotitemType2: [5] # 5=魚雷
+    required: 3
+    init: 0
+1167: # 装備の改修集中強化
+  type: 2
+  "remodel_item":
+    description: "改修"
     required: 3
     init: 0
 ###
