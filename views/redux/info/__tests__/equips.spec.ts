@@ -50,6 +50,7 @@ describe('equips reducer', () => {
   })
 
   it('should handle api_get_member/require_info', () => {
+    // @ts-expect-error fixture api_unsetslot missing api_slottype46 added in newer kcsapi
     const result = reducer({}, createAPIGetMemberRequireInfoAction(requireInfoLargeFixture))
     expect(Object.keys(result).length).toBeGreaterThan(0)
   })

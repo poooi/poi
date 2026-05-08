@@ -124,7 +124,11 @@ describe('fleets reducer', () => {
       createAPIReqKousyouDestroyshipResponseAction({
         method: 'POST',
         path: '/kcsapi/api_req_kousyou/destroyship',
-        body: { api_material: [0, 0, 0, 0], api_unset_list: {} },
+        body: {
+          api_material: [0, 0, 0, 0],
+          // @ts-expect-error api_unset_list simplified for test; real type requires all slot type keys
+          api_unset_list: {},
+        },
         postBody: { api_ship_id: '102,103', api_slot_dest_flag: '0', api_verno: '1' },
         time: 0,
       }),

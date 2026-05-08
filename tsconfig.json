@@ -25,5 +25,5 @@
     "moduleResolution": "node",
     "ignoreDeprecations": "6.0"
   },
-  "exclude": ["eslint.config.mts"]
+  "exclude": ["eslint.config.mts", "app_compiled"]
 }

@@ -5,14 +5,12 @@ import type {
   APIGetMemberUseitemResponse,
   APIReqCombinedBattleBattleresultResponse,
   APIReqKousyouRemodelSlotlistDetailRequest,
+  APIReqKousyouRemodelSlotlistDetailResponse,
   APIReqMissionResultRequest,
   APIReqMissionResultResponse,
   APIReqSortieBattleresultResponse,
 } from 'kcsapi'
-import type {
-  APIReqKousyouRemodelSlotlistDetailResponseCompat,
-  GameResponsePayload,
-} from 'views/redux/actions'
+import type { GameResponsePayload } from 'views/redux/actions'
 
 import {
   createAPIGetMemberRequireInfoAction,
@@ -64,6 +62,7 @@ describe('useitems reducer', () => {
         api_oss_setting: { api_language_type: 0, api_oss_items: [] },
         api_skin_id: 0,
         api_slot_item: [],
+        // @ts-expect-error dummy data
         api_unsetslot: {},
         api_useitem: body.api_useitem,
       },
@@ -105,7 +104,7 @@ describe('useitems reducer', () => {
     }
 
     const payload: GameResponsePayload<
-      APIReqKousyouRemodelSlotlistDetailResponseCompat,
+      APIReqKousyouRemodelSlotlistDetailResponse,
       APIReqKousyouRemodelSlotlistDetailRequest
     > = {
       method: 'POST',
@@ -141,7 +140,7 @@ describe('useitems reducer', () => {
     const initialState: UseItemsState = {}
 
     const payload: GameResponsePayload<
-      APIReqKousyouRemodelSlotlistDetailResponseCompat,
+      APIReqKousyouRemodelSlotlistDetailResponse,
       APIReqKousyouRemodelSlotlistDetailRequest
     > = {
       method: 'POST',

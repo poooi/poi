@@ -146,6 +146,7 @@ describe('equipsCrossSliceMiddleware', () => {
         path: '/kcsapi/api_req_kousyou/destroyship',
         body: {
           api_material: [],
+          // @ts-expect-error api_unset_list simplified for test; real type requires all slot type keys
           api_unset_list: {},
         },
         postBody: {

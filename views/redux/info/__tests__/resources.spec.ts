@@ -80,7 +80,11 @@ describe('resources reducer', () => {
       createAPIReqKousyouDestroyshipResponseAction({
         method: 'POST',
         path: '/kcsapi/api_req_kousyou/destroyship',
-        body: { api_material: [20, 21, 22, 23], api_unset_list: {} },
+        body: {
+          api_material: [20, 21, 22, 23],
+          // @ts-expect-error api_unset_list simplified for test; real type requires all slot type keys
+          api_unset_list: {},
+        },
         postBody: { api_ship_id: '1', api_slot_dest_flag: '0', api_verno: '1' },
         time: 0,
       }),

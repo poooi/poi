@@ -28,11 +28,12 @@ import type {
   APIReqKousyouGetshipRequest,
   APIReqKousyouGetshipResponse,
   APIReqMapAnchorageRepairRequest,
+  APIReqMapAnchorageRepairResponse,
   APIReqNyukyoStartRequest,
   APIReqNyukyoStartResponse,
 } from 'kcsapi'
 
-import type { APIReqMapAnchorageRepairResponseCompat, GameResponsePayload } from '../../actions'
+import type { GameResponsePayload } from '../../actions'
 import type { ShipsState, Ship } from '../ships'
 
 import {
@@ -139,6 +140,7 @@ describe('ships reducer', () => {
       path: '/kcsapi/api_req_kousyou/destroyship',
       body: {
         api_material: [0, 0, 0, 0, 0, 0, 0, 0],
+        // @ts-expect-error api_unset_list simplified for test; real type requires all slot type keys
         api_unset_list: {},
       },
       postBody: {
@@ -447,8 +449,9 @@ describe('ships reducer', () => {
   })
 
   it('should handle api_req_map/anchorage_repair', () => {
+    // @ts-expect-error fixture api_ship_data missing api_sally_area in some entries
     const payload: GameResponsePayload<
-      APIReqMapAnchorageRepairResponseCompat,
+      APIReqMapAnchorageRepairResponse,
       APIReqMapAnchorageRepairRequest
     > = anchorageRepairFixture
 
@@ -468,12 +471,12 @@ describe('ships reducer', () => {
   it('should return current state for api_req_map/anchorage_repair when body is invalid', () => {
     const initialState: ShipsState = { '1': createShip(1, 100) }
     const badPayload: GameResponsePayload<
-      APIReqMapAnchorageRepairResponseCompat,
+      APIReqMapAnchorageRepairResponse,
       APIReqMapAnchorageRepairRequest
     > = {
       method: 'POST',
       path: '/kcsapi/api_req_map/anchorage_repair',
-      // @ts-expect-error intentionally invalid body to test guard branch
+      // @ts-expect-error body is intentionally empty to test invalid payload guard
       body: {},
       postBody: { api_verno: '1' },
       time: 0,
