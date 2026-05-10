@@ -84,7 +84,6 @@ interface Props {
   activeTab: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const TabContentsUnionInner = forwardRef<TabContentsUnionHandle, Props>(
   ({ children, activeTab }, ref) => {
     const enableTransition = useSelector(

@@ -1,9 +1,10 @@
+import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
 import type { APIShip } from 'kcsapi/api_port/port/response'
 import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
 import type { Equip } from 'views/redux/info/equips'
 
 import { Intent } from '@blueprintjs/core'
-import _, { get } from 'lodash'
+import _ from 'lodash'
 
 import { shipAvatarColor } from './color'
 import { between } from './tools'
@@ -191,9 +192,8 @@ export function getHpStyle(percent: number): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function equipIsAircraft(equip: any): boolean {
-  if (Number.isInteger(equip)) {
+export function equipIsAircraft(equip: APIMstSlotitem | number): boolean {
+  if (typeof equip === 'number') {
     return (
       equip != null &&
       (between(equip, 6, 10) ||
@@ -203,7 +203,7 @@ export function equipIsAircraft(equip: any): boolean {
         [33, 56].includes(equip))
     )
   } else {
-    const id = get(equip, 'api_type.2', 0)
+    const id = equip?.api_type?.[2]
     return (
       between(id, 6, 11) ||
       between(id, 25, 26) ||
@@ -425,7 +425,6 @@ export function getSaku25a(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getSaku33(
   shipsData: [APIShip, APIMstShip][],
   equipsData: [Equip, APIMstSlotitem, number | undefined][][],
@@ -485,7 +484,6 @@ export function getSaku33(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getFleetSpeed = (shipsData: [APIShip, APIMstShip][]): { speed: number } => ({
   speed:
     _(shipsData)
@@ -513,8 +511,7 @@ export async function isInGame(): Promise<boolean> {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getSlotitemCount = (slotitems: Record<string, any>): number => {
+export const getSlotitemCount = (slotitems: Record<string, APISlotItem>): number => {
   return Object.values(slotitems).filter(
     ({ api_slotitem_id }) => !uncountedSlotitemId.includes(api_slotitem_id),
   ).length
