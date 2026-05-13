@@ -757,24 +757,40 @@ declareAACI({
   ),
 })
 
-// id 49: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni
+// id 49: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni
 
 const isFujinamiK2 = shipIdIs(981)
+const isHayanamiK2 = shipIdIs(982)
+const isHamanamiK2 = shipIdIs(983)
+const isTamananiK2 = shipIdIs(1033)
+
 const isFubukiK2 = shipIdIs(426)
+const isFubukiK3 = shipIdIs(1035)
+const isFubukiK3go = shipIdIs(1040)
 const isShirayukiK2 = shipIdIs(986)
+const isHatsuyukiK2 = shipIdIs(987)
 
 declareAACI({
-  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  name: ['藤波改二', '吹雪改二', '白雪改二', '初雪改二', '早波改二', '浜波改二', '玉波改二'],
   id: 49,
   fixed: 5,
   modifier: 1.5,
-  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
+  shipValid: (ship) =>
+    isFubukiK2(ship) ||
+    isFubukiK3(ship) ||
+    isFubukiK3go(ship) ||
+    isShirayukiK2(ship) ||
+    isHatsuyukiK2(ship) ||
+    isFujinamiK2(ship) ||
+    isHayanamiK2(ship) ||
+    isHamanamiK2(ship) ||
+    isTamananiK2(ship),
   equipsValid: validAny(
     validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAdvancedAARadar)),
   ),
 })
 
-// id 50: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni / Akizuki Class
+// id 50: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni / Akizuki Class
 
 const isType94AAFD = equipIdIs(121)
 const is100mmTwinMountKai = equipIdIs(553)
@@ -782,12 +798,30 @@ const is100mmTwinMountKaiOrAAFD = (equip: GameEquip) =>
   is100mmTwinMountKaiAAFD(equip) || is100mmTwinMountKai(equip)
 
 declareAACI({
-  name: ['藤波改二', '吹雪改二', '白雪改二', 'Akizuki Class'],
+  name: [
+    '吹雪改二',
+    '白雪改二',
+    '初雪改二',
+    '藤波改二',
+    '早波改二',
+    '浜波改二',
+    '玉波改二',
+    'Akizuki Class',
+  ],
   id: 50,
   fixed: 7,
   modifier: 1.5,
   shipValid: (ship) =>
-    isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship) || isAkizukiClass(ship),
+    isFubukiK2(ship) ||
+    isFubukiK3(ship) ||
+    isFubukiK3go(ship) ||
+    isShirayukiK2(ship) ||
+    isHatsuyukiK2(ship) ||
+    isFujinamiK2(ship) ||
+    isHayanamiK2(ship) ||
+    isHamanamiK2(ship) ||
+    isTamananiK2(ship) ||
+    isAkizukiClass(ship),
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKaiOrAAFD, 2),
@@ -797,25 +831,43 @@ declareAACI({
   ),
 })
 
-// id 51~52: Fujinami Kai Ni / Fubuki Kai Ni / Shirayuki Kai Ni
+// id 51~52: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni
 
 declareAACI({
-  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  name: ['吹雪改二', '白雪改二', '初雪改二', '藤波改二', '早波改二', '浜波改二', '玉波改二'],
   id: 51,
   fixed: 5,
   modifier: 1.35,
-  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
+  shipValid: (ship) =>
+    isFubukiK2(ship) ||
+    isFubukiK3(ship) ||
+    isFubukiK3go(ship) ||
+    isShirayukiK2(ship) ||
+    isHatsuyukiK2(ship) ||
+    isFujinamiK2(ship) ||
+    isHayanamiK2(ship) ||
+    isHamanamiK2(ship) ||
+    isTamananiK2(ship),
   equipsValid: validAny(
     validAll(hasSome(is100mmTwinMountKaiOrAAFD), hasSome(isAdvancedAARadar), hasSome(isAAGun)),
   ),
 })
 
 declareAACI({
-  name: ['藤波改二', '吹雪改二', '白雪改二'],
+  name: ['吹雪改二', '白雪改二', '初雪改二', '藤波改二', '早波改二', '浜波改二', '玉波改二'],
   id: 52,
   fixed: 4,
   modifier: 1.4,
-  shipValid: (ship) => isFujinamiK2(ship) || isFubukiK2(ship) || isShirayukiK2(ship),
+  shipValid: (ship) =>
+    isFubukiK2(ship) ||
+    isFubukiK3(ship) ||
+    isFubukiK3go(ship) ||
+    isShirayukiK2(ship) ||
+    isHatsuyukiK2(ship) ||
+    isFujinamiK2(ship) ||
+    isHayanamiK2(ship) ||
+    isHamanamiK2(ship) ||
+    isTamananiK2(ship),
   equipsValid: validAny(validAll(hasAtLeast(is100mmTwinMountKai, 2), hasSome(isType94AAFD))),
 })
 
