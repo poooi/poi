@@ -766,7 +766,7 @@ const isTamananiK2 = shipIdIs(1033)
 
 const isFubukiK2 = shipIdIs(426)
 const isFubukiK3 = shipIdIs(1035)
-const isFubukiK3go = shipIdIs(1040)
+const isFubukiK3Go = shipIdIs(1040)
 const isShirayukiK2 = shipIdIs(986)
 const isHatsuyukiK2 = shipIdIs(987)
 
@@ -778,7 +778,7 @@ declareAACI({
   shipValid: (ship) =>
     isFubukiK2(ship) ||
     isFubukiK3(ship) ||
-    isFubukiK3go(ship) ||
+    isFubukiK3Go(ship) ||
     isShirayukiK2(ship) ||
     isHatsuyukiK2(ship) ||
     isFujinamiK2(ship) ||
@@ -814,7 +814,7 @@ declareAACI({
   shipValid: (ship) =>
     isFubukiK2(ship) ||
     isFubukiK3(ship) ||
-    isFubukiK3go(ship) ||
+    isFubukiK3Go(ship) ||
     isShirayukiK2(ship) ||
     isHatsuyukiK2(ship) ||
     isFujinamiK2(ship) ||
@@ -841,7 +841,7 @@ declareAACI({
   shipValid: (ship) =>
     isFubukiK2(ship) ||
     isFubukiK3(ship) ||
-    isFubukiK3go(ship) ||
+    isFubukiK3Go(ship) ||
     isShirayukiK2(ship) ||
     isHatsuyukiK2(ship) ||
     isFujinamiK2(ship) ||
@@ -861,7 +861,7 @@ declareAACI({
   shipValid: (ship) =>
     isFubukiK2(ship) ||
     isFubukiK3(ship) ||
-    isFubukiK3go(ship) ||
+    isFubukiK3Go(ship) ||
     isShirayukiK2(ship) ||
     isHatsuyukiK2(ship) ||
     isFujinamiK2(ship) ||

@@ -35,6 +35,7 @@ const isDE = (ship: GameShip) => ship.api_stype === 1
 const isCVL = (ship: GameShip) => ship.api_stype === 7
 
 const isIsuzuK2 = shipIdIs(141)
+const isFubukiK3Go = shipIdIs(1040)
 const isJClassKai: OASWPredicate = (ship) =>
   ship.api_ship_id === 394 || ship.api_ship_id === 893 || ship.api_ship_id === 906
 const isTatsutaKai = shipIdIs(478)
@@ -104,6 +105,7 @@ export const isOASW: OASWPredicate = overSome(
   isSamuelKai,
   isFletcherClassOrKai,
   isSamuelKaiNi,
+  isFubukiK3Go,
   // 海防艦
   overEvery(
     isDE,
