@@ -511,7 +511,7 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
   if (plugin.windowURL) {
     const vibrancy =
       ['darwin'].includes(process.platform) && config.get('poi.appearance.vibrant', 0) === 1
-        ? 'window'
+        ? 'under-window'
         : undefined
 
     const windowOptions: PoiWindowOptions = {
