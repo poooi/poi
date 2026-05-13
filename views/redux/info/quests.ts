@@ -1,9 +1,8 @@
-import type * as Cson from 'cson'
 import type { APIList } from 'kcsapi/api_get_member/questlist/response'
 import type { Dispatch } from 'redux'
 
-import * as remote from '@electron/remote'
 import { createSlice } from '@reduxjs/toolkit'
+import CSON from 'cson'
 import { map, sortBy, mapValues, forEach, values, fromPairs, isEqual, range } from 'lodash'
 import moment from 'moment-timezone'
 import path from 'path'
@@ -21,9 +20,6 @@ import {
   createInfoQuestsApplyProgressAction,
   createInfoQuestsDailyRefreshAction,
 } from '../actions'
-
-// Workaround for https://github.com/electron/electron/issues/37404
-const CSON: typeof Cson = remote.require('cson')
 
 // Type declarations
 // quest_goal.cson type declaration
