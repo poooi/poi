@@ -24,15 +24,9 @@ import mapStartFixture from './__fixtures__/api_req_map_start_updates_event_gaug
 import missionResultFixture from './__fixtures__/api_req_mission_result_success.json'
 import practiceResultFixture from './__fixtures__/api_req_practice_battle_result_rank_a.json'
 
-jest.mock('@electron/remote', () => ({
-  require: (moduleName: string) => {
-    if (moduleName === 'cson') {
-      return {
-        stringify: (value: unknown) => JSON.stringify(value),
-      }
-    }
-    throw new Error(`Unexpected remote.require: ${moduleName}`)
-  },
+jest.mock('cson', () => ({
+  parseCSONFile: () => ({}),
+  stringify: (value: unknown) => JSON.stringify(value),
 }))
 
 jest.mock('views/utils/file-writer', () => {

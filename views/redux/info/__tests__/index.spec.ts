@@ -1,13 +1,6 @@
-jest.mock('@electron/remote', () => ({
-  require: (moduleName: string) => {
-    if (moduleName === 'cson') {
-      return {
-        stringify: (value: unknown) => JSON.stringify(value),
-        parseCSONFile: () => ({}),
-      }
-    }
-    throw new Error(`Unexpected remote.require: ${moduleName}`)
-  },
+jest.mock('cson', () => ({
+  parseCSONFile: () => ({}),
+  stringify: (value: unknown) => JSON.stringify(value),
 }))
 
 jest.mock('views/services/scheduler', () => ({
