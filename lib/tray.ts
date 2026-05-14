@@ -1,4 +1,4 @@
-import { app, Tray, systemPreferences, nativeTheme } from 'electron'
+import { app, nativeImage, Tray } from 'electron'
 import path from 'path'
 
 /* eslint-disable no-var */
@@ -12,9 +12,6 @@ const getIcon = (platform: NodeJS.Platform) => {
     return 'poi_32x32.png'
   }
   if (platform === 'darwin') {
-    if (nativeTheme.shouldUseDarkColors) {
-      return 'poi_ribbon_dark.png'
-    }
     return 'poi_ribbon_light.png'
   }
   return 'poi.ico'
@@ -25,7 +22,13 @@ const getIconPath = (platform: NodeJS.Platform) =>
 
 let tray: Tray | null = null
 app.on('ready', () => {
-  tray = new Tray(getIconPath(process.platform))
+  const iconPath = getIconPath(process.platform)
+  tray = new Tray(iconPath)
+  if (process.platform === 'darwin') {
+    const icon = nativeImage.createFromPath(iconPath)
+    icon.setTemplateImage(true)
+    tray.setImage(icon)
+  }
   global.appTray = tray
   tray.on('click', () => {
     if (global.mainWindow?.isMinimized()) {
@@ -36,9 +39,3 @@ app.on('ready', () => {
   })
   tray.setToolTip(app.getName())
 })
-
-if (process.platform === 'darwin') {
-  systemPreferences.subscribeNotification('AppleInterfaceThemeChangedNotification', () => {
-    tray?.setImage(getIconPath(process.platform))
-  })
-}
