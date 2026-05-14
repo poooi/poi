@@ -120,7 +120,7 @@ export function loadStyle(
   const setBackgroundColor = (isDark: boolean, isVibrant: boolean | number) => {
     if (isVibrant) {
       if ('darwin' === process.platform) {
-        delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.59)' : 'rgba(246, 247, 249, 0.59)')
+        delaySetBackgroundColor('transparent')
       } else {
         delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.5)' : 'rgba(246, 247, 249, 0.25)')
       }
