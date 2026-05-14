@@ -4,7 +4,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
 import cls from 'classnames'
-import { join as joinString, range, get } from 'lodash'
+import { range, get } from 'lodash'
 import path from 'path'
 import React from 'react'
 import FA from 'react-fontawesome'
@@ -199,8 +199,7 @@ const RepairPanelRow = ({
   const { t } = useTranslation('main')
 
   const notifyTitle = t('main:Docking')
-  const notifyMessage = (names: string) =>
-    `${joinString(names, ', ')} ${t('main:repair completed')}`
+  const notifyMessage = (names: string) => `${names} ${t('main:repair completed')}`
 
   const dockName =
     dock.api_state === -1

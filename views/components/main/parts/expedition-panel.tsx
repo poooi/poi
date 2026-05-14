@@ -1,7 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
-import { join as joinString, map, range, isEqual, compact } from 'lodash'
+import { map, range, isEqual, compact } from 'lodash'
 import path from 'path'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -107,7 +107,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 const basicNotifyConfig = {
   type: 'expedition',
   title: i18next.t('main:Expedition'),
-  message: (names: string) => `${joinString(names, ', ')} ${i18next.t('main:mission complete')}`,
+  message: (names: string) => `${names} ${i18next.t('main:mission complete')}`,
   icon: path.join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
 }
 
