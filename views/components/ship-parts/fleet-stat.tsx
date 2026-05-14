@@ -2,7 +2,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import type { CountdownNotifyOptions } from 'views/utils/notifiers'
 
 import { Position, Tooltip } from '@blueprintjs/core'
-import { join as joinString, memoize } from 'lodash'
+import { memoize } from 'lodash'
 import path from 'path'
 import React, { memo, useCallback, useId, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -345,7 +345,7 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
           <Item label={inExpedition ? t('main:Expedition') : t('main:Resting')}>
             <CountdownLabel
               fleetId={`${timerId}-${fleetId}`}
-              fleetName={joinString(fleetName ?? '', ', ')}
+              fleetName={fleetName}
               completeTime={completeTime}
               shouldNotify={!inExpedition && !inBattle && !isMainView && !!canNotify}
             />
