@@ -48,5 +48,5 @@
 
 .bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-content,
 .bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from #2f343c l c h / calc(alpha - 0.15));
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha + 0.2));
 }
