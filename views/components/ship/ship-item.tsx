@@ -180,6 +180,7 @@ const ShipRowInner = memo(
       <Tooltip
         position={Position.TOP}
         disabled={!hideShipName}
+        fill
         content={
           <div className="ship-tooltip-info">
             <div>{apiName ? t(`resources:${apiName}`) : '??'}</div>

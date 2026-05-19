@@ -77,6 +77,7 @@ export const SquardRow = memo(({ squardId, enableAvatar, compact }: SquardRowPro
           </div>
         </div>
       }
+      fill
     >
       <ShipItem className="ship-item" avatar={enableAvatar} shipName={!hideLBACName} isLBAC>
         {enableAvatar && !!equipsData?.[0]?.[0]?.api_slotitem_id && (

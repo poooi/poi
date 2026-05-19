@@ -348,6 +348,7 @@ const ShipTile = styled.div`
   justify-content: space-between;
   margin: 4px 0;
   position: relative;
+  width: 100%;
 
   .ship-item-wrapper {
     width: 100%;
@@ -410,6 +411,7 @@ const MiniShipRowInner = memo(
             <Slotitems shipId={ship.api_id as number} />
           </ShipTooltip>
         }
+        fill
       >
         <ShipItem
           className="ship-item"
