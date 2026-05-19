@@ -4,7 +4,7 @@ import type { ButtonData } from 'views/components/etc/modal'
 import { modalEventEmitter } from 'views/components/etc/modal'
 
 export const toggleModal = (
-  title: string,
+  title: ReactNode,
   content: ReactNode,
   footer: ButtonData[],
   onClosing?: () => void,
@@ -21,7 +21,7 @@ declare global {
   interface Window {
     /** @deprecated Use `import { toggleModal } from 'views/env-parts/modal'` instead */
     toggleModal: (
-      title: string,
+      title: ReactNode,
       content: ReactNode,
       footer: ButtonData[],
       onClosing?: () => void,

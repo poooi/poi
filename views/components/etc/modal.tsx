@@ -15,7 +15,7 @@ export interface ButtonData {
 }
 
 export interface ModalEvent {
-  title: string
+  title: ReactNode
   content: ReactNode
   footer: ButtonData[]
   onClosing?: () => void

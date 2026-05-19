@@ -9,7 +9,7 @@ import { ThemeConfig } from './theme-config'
 import { ZoomingConfig } from './zooming-config'
 
 const toggleModalWithDelay = (title: React.ReactNode, content: React.ReactNode) =>
-  setTimeout(() => toggleModal(String(title), content, []), 1500)
+  setTimeout(() => toggleModal(title, content, []), 1500)
 
 config.on('config.set', (path: string, value: unknown) => {
   let event: CustomEvent
