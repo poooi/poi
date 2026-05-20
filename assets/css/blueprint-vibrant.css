@@ -14,6 +14,10 @@
   --poi-background-color: rgb(47 52 60 / 0.5) !important;
 }
 
+body.darwin {
+  background-color: transparent !important;
+}
+
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]) {
   background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.3)) !important;
 }
@@ -42,16 +46,14 @@
 
 .bp6-dialog {
   background-color: var(--bp-surface-background-color-default-rest) !important;
-  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color)) drop-shadow(0 0 50px var(--poi-background-color)) blur(30px);
+  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque))  blur(30px);
 }
 
-.blur .bp6-popover-content,
-.blur.bp6-popover-content {
-  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color)) drop-shadow(0 0 50px var(--poi-background-color)) blur(30px);
+.bp6-popover-content {
+  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque)) drop-shadow(0 0 50px var(--poi-background-color-opaque)) blur(30px);
 }
 
-.blur .bp6-popover-content::before,
-.blur.bp6-popover-content::before {
+.bp6-popover-content::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -61,10 +63,10 @@
 }
 
 .bp6-popover:not(.bp6-dark, .bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.1)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha - 0.3)) !important;
 }
 
 .bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-content,
 .bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.1)) !important;
+  background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha - 0.3)) !important;
 }

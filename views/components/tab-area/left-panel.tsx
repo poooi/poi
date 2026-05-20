@@ -151,7 +151,7 @@ export const LeftPanel = ({
           usePortal={false}
           position={Position.BOTTOM_RIGHT}
           content={pluginDropdownContent}
-          popoverClassName="plugin-dropdown-container blur"
+          popoverClassName="plugin-dropdown-container"
           modifiers={pluginDropDownModifier}
         >
           <PluginDropdownButton

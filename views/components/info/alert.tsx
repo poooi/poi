@@ -229,7 +229,7 @@ export const PoiAlert: React.FC = () => {
           <ResizeSensor onResize={handleAlertLogResize}>
             <AlertLog
               id="alert-log"
-              className="alert-log bp6-popover-content blur"
+              className="alert-log bp6-popover-content"
               $toggle={showHistory}
               $height={historyHeight}
               $containerHeight={containerHeight}

@@ -1,9 +1,11 @@
 :root {
   --poi-background-color: rgb(246 247 249);
+  --poi-background-color-opaque: rgb(246 247 249);
 }
 
 .bp6-dark {
   --poi-background-color: rgb(47 52 60);
+  --poi-background-color-opaque: rgb(47 52 60);
 }
 
 body {

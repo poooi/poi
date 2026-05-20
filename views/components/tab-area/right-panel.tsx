@@ -79,7 +79,7 @@ export const RightPanel = ({
       <Popover
         minimal
         hasBackdrop={false}
-        popoverClassName="plugin-dropdown-container blur"
+        popoverClassName="plugin-dropdown-container"
         position={Position.BOTTOM}
         content={pluginDropdownContent}
         className="nav-tab"

@@ -93,14 +93,6 @@ export function loadStyle(
     }
   }
 
-  const delaySetBackgroundColor = (value: string) => {
-    if (doc.body) {
-      doc.body.style.backgroundColor = value
-    } else {
-      setTimeout(() => delaySetBackgroundColor(value), 100)
-    }
-  }
-
   const delaySetFilter = (value: string | null) => {
     if (doc.body) {
       doc.body.style.filter = value ?? ''
@@ -115,16 +107,6 @@ export function loadStyle(
     } else {
       delaySetFilter(`url(${fileUrl(join(ROOT, 'assets', 'svg', 'ui', 'filter.svg'))}#${type})`)
     }
-  }
-
-  const setBackgroundColor = (isDark: boolean, isVibrant: boolean | number) => {
-    if (isVibrant) {
-      if ('darwin' === process.platform) {
-        delaySetBackgroundColor('transparent')
-        return
-      }
-    }
-    delaySetBackgroundColor('')
   }
 
   const setRef = (el: Element, url: string) => {
@@ -158,12 +140,12 @@ export function loadStyle(
     isVibrant = typeof isVibrant === 'boolean' ? isVibrant : config.get('poi.appearance.vibrant', 0)
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
-    setBackgroundColor(isDark, isVibrant)
     glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp6-focus-disabled', {
         'bp6-dark': isDark,
+        darwin: process.platform === 'darwin',
       }),
     )
     const bootstrapEl = doc.querySelector('#bootstrap-css')
