@@ -1,3 +1,15 @@
+:root {
+  --poi-background-color: rgb(246 247 249);
+}
+
+.bp6-dark {
+  --poi-background-color: rgb(47 52 60);
+}
+
+body {
+  background-color: var(--poi-background-color);
+}
+
 .poi {
   display: flex;
   flex-direction: column;
@@ -28,11 +40,6 @@ poi-main {
   max-height: max-content;
   width: 100%;
   position: relative;
-}
-
-.bp6-popover-content,
-.bp6-dialog {
-  backdrop-filter: blur(5px);
 }
 
 .bp6-tooltip .bp6-popover-content {

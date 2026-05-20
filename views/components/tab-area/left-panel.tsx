@@ -147,10 +147,11 @@ export const LeftPanel = ({
       {!doubleTabbed && (
         <Popover
           minimal
-          hasBackdrop
+          hasBackdrop={false}
+          usePortal={false}
           position={Position.BOTTOM_RIGHT}
           content={pluginDropdownContent}
-          popoverClassName="plugin-dropdown-container"
+          popoverClassName="plugin-dropdown-container blur"
           modifiers={pluginDropDownModifier}
         >
           <PluginDropdownButton

@@ -3,6 +3,7 @@
   --bp-surface-background-color-default-hover: rgb(246 247 249 / 0.6);
   --bp-surface-background-color-default-active: rgb(237 239 242 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(255 255 255 / 0.6);
+  --poi-background-color: rgb(246 247 249 / 0.25) !important;
 }
 
 .bp6-dark {
@@ -10,6 +11,7 @@
   --bp-surface-background-color-default-hover: rgb(28 33 39 / 0.6);
   --bp-surface-background-color-default-active: rgb(37 42 49 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(17 20 24 / 0.6);
+  --poi-background-color: rgb(47 52 60 / 0.5) !important;
 }
 
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]) {
@@ -40,13 +42,29 @@
 
 .bp6-dialog {
   background-color: var(--bp-surface-background-color-default-rest) !important;
+  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color)) drop-shadow(0 0 50px var(--poi-background-color)) blur(30px);
+}
+
+.blur .bp6-popover-content,
+.blur.bp6-popover-content {
+  backdrop-filter: drop-shadow(0 0 50px var(--poi-background-color)) drop-shadow(0 0 50px var(--poi-background-color)) blur(30px);
+}
+
+.blur .bp6-popover-content::before,
+.blur.bp6-popover-content::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .bp6-popover:not(.bp6-dark, .bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from #fff l c h / calc(alpha - 0.15));
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.1)) !important;
 }
 
 .bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-content,
 .bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha + 0.2));
+  background-color: oklch(from var(--bp-surface-background-color-default-rest) l c h / calc(alpha - 0.1)) !important;
 }

@@ -78,8 +78,8 @@ export const RightPanel = ({
     <PoiTabContainer className="poi-tab-container">
       <Popover
         minimal
-        hasBackdrop
-        popoverClassName="plugin-dropdown-container"
+        hasBackdrop={false}
+        popoverClassName="plugin-dropdown-container blur"
         position={Position.BOTTOM}
         content={pluginDropdownContent}
         className="nav-tab"

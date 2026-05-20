@@ -121,12 +121,10 @@ export function loadStyle(
     if (isVibrant) {
       if ('darwin' === process.platform) {
         delaySetBackgroundColor('transparent')
-      } else {
-        delaySetBackgroundColor(isDark ? 'rgba(47, 52, 60, 0.5)' : 'rgba(246, 247, 249, 0.25)')
+        return
       }
-    } else {
-      delaySetBackgroundColor(isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)')
     }
+    delaySetBackgroundColor('')
   }
 
   const setRef = (el: Element, url: string) => {

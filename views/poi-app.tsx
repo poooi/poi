@@ -67,7 +67,7 @@ const PoiAppContainer = styled.div<{ overlay?: boolean; isDarkTheme?: boolean }>
   ${({ overlay, isDarkTheme }) =>
     overlay &&
     css`
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(30px);
       background: ${isDarkTheme ? 'rgb(32 43 51 / 0.9)' : 'rgb(245 248 250 / 0.9)'};
     `}
 `

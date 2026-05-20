@@ -75,7 +75,6 @@ const AlertLog = styled.div<{ $toggle: boolean; $height: number; $containerHeigh
   overflow: hidden;
   transition: 0.3s;
   z-index: 1;
-  backdrop-filter: blur(5px);
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   ${({ $toggle, $height, $containerHeight }) =>
@@ -230,7 +229,7 @@ export const PoiAlert: React.FC = () => {
           <ResizeSensor onResize={handleAlertLogResize}>
             <AlertLog
               id="alert-log"
-              className="alert-log bp6-popover-content"
+              className="alert-log bp6-popover-content blur"
               $toggle={showHistory}
               $height={historyHeight}
               $containerHeight={containerHeight}
