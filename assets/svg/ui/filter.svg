@@ -76,8 +76,8 @@
                 0,     0,     0,     1, 0"/>
     </filter>
     <filter id="blur"
-      x="-100%" y="-100%"
-      width="300%" height="300%"
+      x="-50%" y="-50%"
+      width="200%" height="200%"
       color-interpolation-filters="sRGB"
     >
       <!-- Step 1: un-premultiply RGB for semi-transparent background -->
