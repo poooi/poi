@@ -1,4 +1,4 @@
-import type { Tabs } from '@blueprintjs/core'
+import type { PopperModifierOverrides, Tabs } from '@blueprintjs/core'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import { Position, Tab } from '@blueprintjs/core'
@@ -26,11 +26,10 @@ import {
 } from './styles'
 import { TabContentsUnion } from './tab-contents-union'
 
-const pluginDropDownModifier = {
+const pluginDropDownModifier: PopperModifierOverrides = {
   flip: { enabled: false },
-  preventOverflow: { boundariesElement: 'window', enabled: false },
+  preventOverflow: { enabled: false },
   hide: { enabled: false },
-  computeStyle: { gpuAcceleration: false },
 }
 
 const isPluginTab = (key: string): boolean => !['main-view', 'ship-view', 'settings'].includes(key)

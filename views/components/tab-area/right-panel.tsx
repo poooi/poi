@@ -1,3 +1,4 @@
+import type { PopperModifierOverrides } from '@blueprintjs/core'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import { Position } from '@blueprintjs/core'
@@ -18,11 +19,10 @@ import {
 } from './styles'
 import { TabContentsUnion } from './tab-contents-union'
 
-const pluginDropDownModifier = {
+const pluginDropDownModifier: PopperModifierOverrides = {
   flip: { enabled: false },
-  preventOverflow: { boundariesElement: 'window', enabled: false },
+  preventOverflow: { enabled: false },
   hide: { enabled: false },
-  computeStyle: { gpuAcceleration: false },
 }
 
 interface RightPanelProps {
