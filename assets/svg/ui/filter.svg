@@ -75,5 +75,65 @@
                 0.163, 0.320, 0.516, 0, 0
                 0,     0,     0,     1, 0"/>
     </filter>
+    <filter id="blur-50-opacity"
+      x="-100%" y="-100%"
+      width="300%" height="300%"
+      color-interpolation-filters="sRGB"
+    >
+      <!-- un-premultiply -->
+      <feComponentTransfer in="SourceGraphic" result="unpremul">
+        <feFuncR type="linear" slope="2"/>
+        <feFuncG type="linear" slope="2"/>
+        <feFuncB type="linear" slope="2"/>
+        <feFuncA type="linear" slope="0" intercept="1"/>
+      </feComponentTransfer>
+
+      <!-- blur your own pixels -->
+      <feGaussianBlur in="unpremul" stdDeviation="30"
+        edgeMode="duplicate" result="blurred"/>
+
+      <!-- restore alpha -->
+      <feColorMatrix in="SourceGraphic" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+        result="alpha-only"/>
+      <feGaussianBlur in="alpha-only" stdDeviation="30"
+        edgeMode="duplicate" result="alpha-blurred"/>
+      <feComposite in="blurred" in2="alpha-blurred" operator="in" result="blurred-clipped"/>
+
+      <!-- boost opacity of result to suppress background bleed -->
+      <feComponentTransfer in="blurred-clipped">
+        <feFuncA type="linear" slope="1.8"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="blur-25-opacity"
+      x="-100%" y="-100%"
+      width="300%" height="300%"
+      color-interpolation-filters="sRGB"
+    >
+      <!-- un-premultiply -->
+      <feComponentTransfer in="SourceGraphic" result="unpremul">
+        <feFuncR type="linear" slope="4"/>
+        <feFuncG type="linear" slope="4"/>
+        <feFuncB type="linear" slope="4"/>
+        <feFuncA type="linear" slope="0" intercept="1"/>
+      </feComponentTransfer>
+
+      <!-- blur your own pixels -->
+      <feGaussianBlur in="unpremul" stdDeviation="30"
+        edgeMode="duplicate" result="blurred"/>
+
+      <!-- restore alpha -->
+      <feColorMatrix in="SourceGraphic" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+        result="alpha-only"/>
+      <feGaussianBlur in="alpha-only" stdDeviation="30"
+        edgeMode="duplicate" result="alpha-blurred"/>
+      <feComposite in="blurred" in2="alpha-blurred" operator="in" result="blurred-clipped"/>
+
+      <!-- boost opacity of result to suppress background bleed -->
+      <feComponentTransfer in="blurred-clipped">
+        <feFuncA type="linear" slope="1.8"/>
+      </feComponentTransfer>
+    </filter>
   </defs>
 </svg>

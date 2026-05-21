@@ -46,18 +46,23 @@ body.darwin {
 
 .bp6-dialog {
   background-color: var(--bp-surface-background-color-default-rest) !important;
-  backdrop-filter: drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque))  blur(30px);
 }
 
+.bp6-dialog,
 .bp6-popover-content {
-  backdrop-filter: drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque)) drop-shadow(0 0 15px var(--poi-background-color-opaque)) blur(30px);
+  backdrop-filter: url("../svg/ui/filter.svg#blur-25-opacity") !important;
+}
+
+.bp6-dark .bp6-dialog,
+.bp6-dark .bp6-popover-content {
+  backdrop-filter: url("../svg/ui/filter.svg#blur-50-opacity") !important;
 }
 
 .bp6-popover-content::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
   opacity: 0.5;
   pointer-events: none;
 }
