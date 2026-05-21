@@ -406,7 +406,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       >
         {customTitlebar ? (
           <TitleBar
-            icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+            icon={join(ROOT, 'assets', 'icons', 'poi_monochrome.svg')}
             // eslint-disable-next-line react-hooks/refs
             browserWindowId={currentWindowRef.current!.id}
             disableClose

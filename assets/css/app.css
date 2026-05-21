@@ -88,6 +88,8 @@ poi-main {
 
 #electron-app-title-bar img.icon {
   margin: 6px 10px !important;
+  height: 18px !important;
+  width: 18px !important;
 }
 
 body:not(.bp6-dark) #electron-app-title-bar .window-controls button:not(:hover),

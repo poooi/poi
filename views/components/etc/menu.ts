@@ -449,7 +449,7 @@ export class TitleBarWrapper extends PureComponent<Record<string, never>, TitleB
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return React.createElement(TitleBar as React.ComponentType<any>, {
       menu: this.state.menu,
-      icon: path.join(window.ROOT, 'assets', 'icons', 'poi_32x32.png'),
+      icon: path.join(window.ROOT, 'assets', 'icons', 'poi_monochrome.svg'),
     })
   }
 }

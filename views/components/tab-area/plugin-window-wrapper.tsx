@@ -280,7 +280,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           <StyleSheetManager target={externalWindowRef.current.document.head}>
             {showCustomTitleBar && currentWindowRef.current ? (
               <TitleBar
-                icon={join(ROOT, 'assets', 'icons', 'poi_32x32.png')}
+                icon={join(ROOT, 'assets', 'icons', 'poi_monochrome.svg')}
                 browserWindowId={currentWindowRef.current.id}
                 {...(pinned
                   ? {

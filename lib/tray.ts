@@ -12,7 +12,7 @@ const getIcon = (platform: NodeJS.Platform) => {
     return 'poi_32x32.png'
   }
   if (platform === 'darwin') {
-    return 'poi_ribbon_light.png'
+    return 'poi_monochrome.png'
   }
   return 'poi.ico'
 }

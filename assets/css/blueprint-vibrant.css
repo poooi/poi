@@ -51,6 +51,9 @@ body.darwin {
 .bp6-dialog,
 .bp6-popover-content {
   backdrop-filter: url("../svg/ui/filter.svg#blur") !important;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  text-rendering: geometricprecision;
 }
 
 .bp6-popover-content::before {
