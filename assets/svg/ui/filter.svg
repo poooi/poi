@@ -75,63 +75,50 @@
                 0.163, 0.320, 0.516, 0, 0
                 0,     0,     0,     1, 0"/>
     </filter>
-    <filter id="blur-50-opacity"
+    <filter id="blur"
       x="-100%" y="-100%"
       width="300%" height="300%"
       color-interpolation-filters="sRGB"
     >
-      <!-- un-premultiply -->
+      <!-- Step 1: un-premultiply RGB for semi-transparent background -->
+      <!-- slope = 1 / background-alpha. For alpha=0.5, slope=2 -->
       <feComponentTransfer in="SourceGraphic" result="unpremul">
-        <feFuncR type="linear" slope="2"/>
-        <feFuncG type="linear" slope="2"/>
-        <feFuncB type="linear" slope="2"/>
+        <feFuncR type="linear" slope="1"/>
+        <feFuncG type="linear" slope="1"/>
+        <feFuncB type="linear" slope="1"/>
         <feFuncA type="linear" slope="0" intercept="1"/>
       </feComponentTransfer>
 
-      <!-- blur your own pixels -->
-      <feGaussianBlur in="unpremul" stdDeviation="30"
+      <!-- Step 2: dilate to thicken thin text strokes -->
+      <feMorphology in="unpremul" operator="dilate"
+        radius="0.5" result="thickened"/>
+
+      <!-- Step 3: blur the thickened opaque RGB copy -->
+      <feGaussianBlur in="thickened" stdDeviation="30"
         edgeMode="duplicate" result="blurred"/>
 
-      <!-- restore alpha -->
+      <!-- Step 4: extract original alpha channel -->
       <feColorMatrix in="SourceGraphic" type="matrix"
-        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
+        values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 1 0"
         result="alpha-only"/>
-      <feGaussianBlur in="alpha-only" stdDeviation="30"
+
+      <!-- Step 5: dilate alpha to match thickened RGB -->
+      <feMorphology in="alpha-only" operator="dilate"
+        radius="8" result="alpha-dilated"/>
+
+      <!-- Step 6: blur the alpha mask -->
+      <feGaussianBlur in="alpha-dilated" stdDeviation="30"
         edgeMode="duplicate" result="alpha-blurred"/>
-      <feComposite in="blurred" in2="alpha-blurred" operator="in" result="blurred-clipped"/>
 
-      <!-- boost opacity of result to suppress background bleed -->
-      <feComponentTransfer in="blurred-clipped">
-        <feFuncA type="linear" slope="1.8"/>
-      </feComponentTransfer>
-    </filter>
-    <filter id="blur-25-opacity"
-      x="-100%" y="-100%"
-      width="300%" height="300%"
-      color-interpolation-filters="sRGB"
-    >
-      <!-- un-premultiply -->
-      <feComponentTransfer in="SourceGraphic" result="unpremul">
-        <feFuncR type="linear" slope="4"/>
-        <feFuncG type="linear" slope="4"/>
-        <feFuncB type="linear" slope="4"/>
-        <feFuncA type="linear" slope="0" intercept="1"/>
-      </feComponentTransfer>
+      <!-- Step 7: clip blurred RGB to soft alpha boundary -->
+      <feComposite in="blurred" in2="alpha-blurred"
+        operator="in" result="blurred-clipped"/>
 
-      <!-- blur your own pixels -->
-      <feGaussianBlur in="unpremul" stdDeviation="30"
-        edgeMode="duplicate" result="blurred"/>
-
-      <!-- restore alpha -->
-      <feColorMatrix in="SourceGraphic" type="matrix"
-        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0"
-        result="alpha-only"/>
-      <feGaussianBlur in="alpha-only" stdDeviation="30"
-        edgeMode="duplicate" result="alpha-blurred"/>
-      <feComposite in="blurred" in2="alpha-blurred" operator="in" result="blurred-clipped"/>
-
-      <!-- boost opacity of result to suppress background bleed -->
-      <feComponentTransfer in="blurred-clipped">
+      <!-- Step 8: re-boost opacity to suppress background bleed -->
+      <feComponentTransfer in="thinned">
         <feFuncA type="linear" slope="1.8"/>
       </feComponentTransfer>
     </filter>

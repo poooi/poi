@@ -50,12 +50,7 @@ body.darwin {
 
 .bp6-dialog,
 .bp6-popover-content {
-  backdrop-filter: url("../svg/ui/filter.svg#blur-25-opacity") !important;
-}
-
-.bp6-dark .bp6-dialog,
-.bp6-dark .bp6-popover-content {
-  backdrop-filter: url("../svg/ui/filter.svg#blur-50-opacity") !important;
+  backdrop-filter: url("../svg/ui/filter.svg#blur") !important;
 }
 
 .bp6-popover-content::before {
