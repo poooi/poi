@@ -81,11 +81,7 @@
       color-interpolation-filters="sRGB"
     >
       <!-- Step 1: un-premultiply RGB for semi-transparent background -->
-      <!-- slope = 1 / background-alpha. For alpha=0.5, slope=2 -->
       <feComponentTransfer in="SourceGraphic" result="unpremul">
-        <feFuncR type="linear" slope="1"/>
-        <feFuncG type="linear" slope="1"/>
-        <feFuncB type="linear" slope="1"/>
         <feFuncA type="linear" slope="0" intercept="1"/>
       </feComponentTransfer>
 
@@ -118,7 +114,7 @@
         operator="in" result="blurred-clipped"/>
 
       <!-- Step 8: re-boost opacity to suppress background bleed -->
-      <feComponentTransfer in="thinned">
+      <feComponentTransfer in="blurred-clipped">
         <feFuncA type="linear" slope="1.8"/>
       </feComponentTransfer>
     </filter>
