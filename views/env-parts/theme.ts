@@ -61,6 +61,7 @@ export function loadStyle(
   glass.style.backgroundRepeat = 'no-repeat'
   glass.style.backgroundPosition = 'center center'
   glass.style.backgroundSize = 'cover'
+  glass.style.backgroundColor = 'var(--poi-background-color)'
   glass.style.color = '#000'
   glass.style.display = 'none'
 
@@ -140,7 +141,6 @@ export function loadStyle(
     isVibrant = typeof isVibrant === 'boolean' ? isVibrant : config.get('poi.appearance.vibrant', 0)
     const isDark = theme === 'dark'
     window.isDarkTheme = isDark
-    glass.style.backgroundColor = isDark ? 'rgb(47, 52, 60)' : 'rgb(246, 247, 249)'
     setFilter(config.get('poi.appearance.colorblindFilter'))
     delaySetClassName(
       classNames('bp6-focus-disabled', {
@@ -236,7 +236,7 @@ export function loadStyle(
 
   const toggleBackground = (value: number) => {
     if (value === 2) {
-      div.style.filter = 'blur(10px) saturate(50%)'
+      div.style.filter = 'blur(30px) saturate(50%)'
       div.style.display = 'block'
       glass.style.display = 'block'
     } else {
