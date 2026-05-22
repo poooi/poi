@@ -103,7 +103,7 @@
 
       <!-- Step 5: dilate alpha to match thickened RGB -->
       <feMorphology in="alpha-only" operator="dilate"
-        radius="8" result="alpha-dilated"/>
+        radius="12" result="alpha-dilated"/>
 
       <!-- Step 6: blur the alpha mask -->
       <feGaussianBlur in="alpha-dilated" stdDeviation="30"
