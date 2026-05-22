@@ -142,7 +142,7 @@ export const LeftPanel = ({
           arrow={false}
           hasBackdrop={false}
           usePortal={false}
-          placement="bottom"
+          placement="bottom-end"
           content={pluginDropdownContent}
           popoverClassName="plugin-dropdown-container"
         >

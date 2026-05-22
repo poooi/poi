@@ -337,8 +337,8 @@ const PoiMapReminderInner = () => {
         disabled={!mapData}
         middleware={{
           offset: {
-            mainAxis: 15,
-            crossAxis: -15,
+            mainAxis: 12,
+            crossAxis: -10,
           },
         }}
         content={
