@@ -49,12 +49,6 @@ poi-main {
   overflow: hidden;
 }
 
-.plugin-dropdown-container,
-.plugin-dropdown-container .bp6-popover-content {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
 .plugin-dropdown-container > .bp6-popover-content > .bp6-menu {
   background: transparent;
 }

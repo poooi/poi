@@ -16,6 +16,12 @@
 
 body.darwin {
   background-color: transparent !important;
+
+  --poi-background-color: rgb(255 255 255 / 0.1) !important;
+}
+
+body.darwin.bp6-dark {
+  --poi-background-color: rgb(24 24 24 / 0.1) !important;
 }
 
 .bp6-button:not([class*="bp6-intent-"], [class*="bp6-minimal"]) {
@@ -71,4 +77,8 @@ body.darwin {
 
 .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
   background-color: var(--bp-surface-background-color-default-rest) !important;
+}
+
+.bp6-popover.plugin-dropdown-container .bp6-popover-content {
+  background-color: var(--poi-background-color) !important;
 }
