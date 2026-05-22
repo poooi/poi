@@ -1,11 +1,9 @@
-import type { PopperModifierOverrides } from '@blueprintjs/core'
 import type { Plugin } from 'views/services/plugin-manager'
 
-import { Position } from '@blueprintjs/core'
+import { PopoverNext } from '@blueprintjs/core'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import { Popover } from 'views/components/etc/overlay'
 
 import type { TabContentsUnionHandle } from './tab-contents-union'
 
@@ -18,12 +16,6 @@ import {
   PoiTabContainer,
 } from './styles'
 import { TabContentsUnion } from './tab-contents-union'
-
-const pluginDropDownModifier: PopperModifierOverrides = {
-  flip: { enabled: false },
-  preventOverflow: { enabled: false },
-  hide: { enabled: false },
-}
 
 interface RightPanelProps {
   activePluginName: string
@@ -76,21 +68,21 @@ export const RightPanel = ({
 
   return (
     <PoiTabContainer className="poi-tab-container">
-      <Popover
-        minimal
+      <PopoverNext
+        animation="minimal"
+        arrow={false}
         hasBackdrop={false}
         popoverClassName="plugin-dropdown-container"
-        position={Position.BOTTOM}
+        placement="bottom"
         content={pluginDropdownContent}
         className="nav-tab"
-        modifiers={pluginDropDownModifier}
       >
         <PluginDropdownButton
           ref={triggerRef}
-          minimal
-          large
+          variant="minimal"
+          size="large"
           double
-          rightIcon="chevron-down"
+          endIcon="chevron-down"
           text={
             <PluginNameContainer>
               {activePlugin.displayIcon || defaultPluginIcon}
@@ -98,7 +90,7 @@ export const RightPanel = ({
             </PluginNameContainer>
           }
         />
-      </Popover>
+      </PopoverNext>
       <TabContentsUnion
         ref={tabKeyUnionRef}
         activeTab={pluginContents.length ? activePluginName : 'no-plugin'}

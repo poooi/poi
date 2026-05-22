@@ -1,11 +1,10 @@
-import type { PopperModifierOverrides, Tabs } from '@blueprintjs/core'
+import type { Tabs } from '@blueprintjs/core'
 import type { Plugin } from 'views/services/plugin-manager'
 
-import { Position, Tab } from '@blueprintjs/core'
+import { PopoverNext, Tab } from '@blueprintjs/core'
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
-import { Popover } from 'views/components/etc/overlay'
 
 import type { PluginWindowWrapHandle } from './plugin-window-wrapper'
 import type { TabContentsUnionHandle } from './tab-contents-union'
@@ -25,12 +24,6 @@ import {
   ShipViewTabpanel,
 } from './styles'
 import { TabContentsUnion } from './tab-contents-union'
-
-const pluginDropDownModifier: PopperModifierOverrides = {
-  flip: { enabled: false },
-  preventOverflow: { enabled: false },
-  hide: { enabled: false },
-}
 
 const isPluginTab = (key: string): boolean => !['main-view', 'ship-view', 'settings'].includes(key)
 
@@ -144,23 +137,23 @@ export const LeftPanel = ({
         </Tab>
       )}
       {!doubleTabbed && (
-        <Popover
-          minimal
+        <PopoverNext
+          animation="minimal"
+          arrow={false}
           hasBackdrop={false}
           usePortal={false}
-          position={Position.BOTTOM_RIGHT}
+          placement="bottom"
           content={pluginDropdownContent}
           popoverClassName="plugin-dropdown-container"
-          modifiers={pluginDropDownModifier}
         >
           <PluginDropdownButton
             icon="chevron-down"
-            minimal
+            variant="minimal"
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
             ref={triggerRef}
           />
-        </Popover>
+        </PopoverNext>
       )}
       {!doubleTabbed && (
         <Tab
