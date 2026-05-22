@@ -66,9 +66,9 @@ body.darwin {
 }
 
 .bp6-popover-arrow-fill {
-  fill: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha + 0.1)) !important;
+  fill: var(--bp-surface-background-color-default-rest) !important;
 }
 
 .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-  background-color: oklch(from var(--bp-surface-background-color-default-hover) l c h / calc(alpha + 0.1)) !important;
+  background-color: var(--bp-surface-background-color-default-rest) !important;
 }
