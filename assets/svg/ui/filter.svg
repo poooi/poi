@@ -87,7 +87,7 @@
 
       <!-- Step 2: dilate to thicken thin text strokes -->
       <feMorphology in="unpremul" operator="dilate"
-        radius="0.5" result="thickened"/>
+        radius="0.2" result="thickened"/>
 
       <!-- Step 3: blur the thickened opaque RGB copy -->
       <feGaussianBlur in="thickened" stdDeviation="30"
