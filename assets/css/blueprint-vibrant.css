@@ -4,6 +4,11 @@
   --bp-surface-background-color-default-active: rgb(237 239 242 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(255 255 255 / 0.6);
   --poi-background-color: rgb(246 247 249 / 0.25) !important;
+  --plugin-dropdown-background-color: rgb(255 255 255 / 0.62);
+  --plugin-dropdown-border-top: 1px solid rgb(255 255 255 / 0.8);
+  --plugin-dropdown-border-left: 1px solid rgb(255 255 255 / 0.06);
+  --plugin-dropdown-border-right: 1px solid rgb(255 255 255 / 0.08);
+  --plugin-dropdown-border-bottom: 1px solid rgb(255 255 255 / 0.12);
 }
 
 .bp6-dark {
@@ -12,6 +17,11 @@
   --bp-surface-background-color-default-active: rgb(37 42 49 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(17 20 24 / 0.6);
   --poi-background-color: rgb(47 52 60 / 0.5) !important;
+  --plugin-dropdown-background-color: rgb(210 220 235 / 0.12);
+  --plugin-dropdown-border-top: 1px solid rgb(255 255 255 / 0.35);
+  --plugin-dropdown-border-left: 1px solid rgb(255 255 255 / 0.15);
+  --plugin-dropdown-border-right: 1px solid rgb(255 255 255 / 0.08);
+  --plugin-dropdown-border-bottom: 1px solid rgb(255 255 255 / 0.05);
 }
 
 body.darwin {
@@ -79,6 +89,15 @@ body.darwin.bp6-dark {
   background-color: var(--bp-surface-background-color-default-rest) !important;
 }
 
+.bp6-popover.plugin-dropdown-container {
+  box-shadow: none !important;
+}
+
 .bp6-popover.plugin-dropdown-container .bp6-popover-content {
-  background-color: var(--poi-background-color) !important;
+  background-color: var(--plugin-dropdown-background-color) !important;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35);
+  border-top: var(--plugin-dropdown-border-bottom);
+  border-left: var(--plugin-dropdown-border-left);
+  border-right: var(--plugin-dropdown-border-right);
+  border-bottom: var(--plugin-dropdown-border-bottom);
 }
