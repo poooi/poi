@@ -215,7 +215,11 @@ export const DrawerScrollShadow = styled(ScrollShadow)`
 export const PluginDrawerOverlay = styled(PluginDropdownMenu)`
   background: transparent;
   overflow: visible;
-  grid-auto-rows: 80px;
+  grid-auto-rows: 72px;
+
+  .bp6-context-menu {
+    align-content: center;
+  }
 `
 
 /* Permanent wrapper — never conditionally unmounted so TabContentsUnion ref stays stable. */
