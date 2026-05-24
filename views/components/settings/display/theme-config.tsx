@@ -39,7 +39,6 @@ const WrappedLabel = styled(Label)`
 const SWITCHES = [
   { label: 'Use SVG Icon', configName: 'poi.appearance.svgicon', defaultValue: false },
   { label: 'Enable Smooth Transition', configName: 'poi.transition.enable', defaultValue: true },
-  { label: 'Use Gridded Plugin Menu', configName: 'poi.tabarea.grid', defaultValue: true },
   {
     label: 'Display detailed fleet info in main panel',
     configName: 'poi.appearance.enableOverviewFleetDetail',

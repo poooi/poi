@@ -26,7 +26,6 @@ interface RightPanelProps {
   activePlugin: Partial<Plugin>
   tabbedPlugins: Plugin[]
   listedPlugins: Plugin[]
-  useGridMenu: boolean
   activeMainTab: string
   isWindowMode: (plugin: Plugin) => boolean
   onOpenWindow: (plugin: Plugin) => void
@@ -41,7 +40,6 @@ export const RightPanel = ({
   activePlugin,
   tabbedPlugins,
   listedPlugins,
-  useGridMenu: _useGridMenu,
   activeMainTab,
   isWindowMode,
   onOpenWindow,

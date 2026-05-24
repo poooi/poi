@@ -38,7 +38,6 @@ interface LeftPanelProps {
   activePlugin: Partial<Plugin>
   tabbedPlugins: Plugin[]
   listedPlugins: Plugin[]
-  useGridMenu: boolean
   isWindowMode: (plugin: Plugin) => boolean
   onSelectTab: (key: string) => void
   onOpenWindow: (plugin: Plugin) => void
@@ -61,7 +60,6 @@ export const LeftPanel = ({
   activePlugin,
   tabbedPlugins,
   listedPlugins,
-  useGridMenu: _useGridMenu,
   isWindowMode,
   onSelectTab,
   onOpenWindow,

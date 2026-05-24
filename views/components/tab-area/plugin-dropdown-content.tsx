@@ -9,7 +9,6 @@ import { PluginAppTabpane, PluginDropdownMenu, PluginNonIdealState } from './sty
 
 interface PluginDropdownContentProps {
   plugins: Plugin[]
-  useGridMenu: boolean
   activeMainTab: string
   isWindowMode: (plugin: Plugin) => boolean
   onOpenWindow: (plugin: Plugin) => void
@@ -19,7 +18,6 @@ interface PluginDropdownContentProps {
 
 export const PluginDropdownContent = ({
   plugins,
-  useGridMenu,
   activeMainTab,
   isWindowMode,
   onOpenWindow,
@@ -29,7 +27,7 @@ export const PluginDropdownContent = ({
   const { t } = useTranslation(['setting'])
 
   return (
-    <PluginDropdownMenu className="plugin-dropdown" large={!useGridMenu} grid={useGridMenu}>
+    <PluginDropdownMenu className="plugin-dropdown" size="large">
       {plugins.length === 0 ? (
         <PluginNonIdealState
           icon="cloud-download"
@@ -49,7 +47,6 @@ export const PluginDropdownContent = ({
               id={activeMainTab === plugin.id ? '' : plugin.id}
               plugin={plugin}
               key={plugin.id}
-              grid={useGridMenu}
               handlePluginPin={handlePluginPin}
             />
           )

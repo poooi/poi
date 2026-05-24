@@ -106,23 +106,18 @@ export const PluginNonIdealState = styled(NonIdealState)`
   padding: 50px;
 `
 
-export const PluginDropdownMenu = styled(Menu)<{ grid?: boolean }>`
+export const PluginDropdownMenu = styled(Menu)`
   overflow: auto;
-  ${({ grid }) =>
-    grid
-      ? css`
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          grid-auto-rows: 72px;
-          align-content: start;
-          background: transparent !important;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 72px;
+  align-content: start;
+  background: transparent !important;
 
-          > ${PluginNonIdealState} {
-            grid-column: 1 / -1;
-            height: auto;
-          }
-        `
-      : ''}
+  > ${PluginNonIdealState} {
+    grid-column: 1 / -1;
+    height: auto;
+  }
 `
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion

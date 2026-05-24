@@ -117,7 +117,6 @@ interface MainPanelDimension {
 interface PoiTabarea {
   vertical: boolean
   double: boolean
-  grid: boolean
   mainpanelwidth: MainPanelDimension
   mainpanelheight: MainPanelDimension
   overlaypanelwidth?: MainPanelDimension
@@ -367,7 +366,6 @@ const defaultConfig: Config = {
     tabarea: {
       vertical: false,
       double: false,
-      grid: true,
       mainpanelwidth: {
         px: 0,
         percent: 50,

@@ -111,7 +111,6 @@ interface ControlledTabAreaProps {
   plugins: Plugin[]
   doubleTabbed: boolean
   verticalDoubleTabbed: boolean
-  useGridMenu: boolean
   activeMainTab: string
   activePluginName: string
   mainPanelWidth: SizeOption
@@ -134,7 +133,6 @@ const ControlledTabAreaFC = ({
   plugins: rawPlugins,
   doubleTabbed,
   verticalDoubleTabbed,
-  useGridMenu,
   activeMainTab,
   activePluginName,
   mainPanelWidth,
@@ -433,7 +431,6 @@ const ControlledTabAreaFC = ({
     activePlugin,
     tabbedPlugins,
     listedPlugins,
-    useGridMenu,
     activeMainTab,
     isWindowMode,
     onOpenWindow: openWindow,
@@ -540,9 +537,6 @@ export const ControlledTabArea = (): React.ReactElement => {
   const verticalDoubleTabbed = useSelector(
     (state: RootState): boolean => state.config.poi?.tabarea?.vertical ?? false,
   )
-  const useGridMenu = useSelector(
-    (state: RootState): boolean => state.config.poi?.tabarea?.grid ?? true,
-  )
   const activeMainTab = useSelector(
     (state: RootState): string => state.ui?.activeMainTab ?? 'main-view',
   )
@@ -567,7 +561,6 @@ export const ControlledTabArea = (): React.ReactElement => {
       plugins={plugins}
       doubleTabbed={doubleTabbed}
       verticalDoubleTabbed={verticalDoubleTabbed}
-      useGridMenu={useGridMenu}
       activeMainTab={activeMainTab}
       activePluginName={activePluginName}
       mainPanelWidth={mainPanelWidth}
