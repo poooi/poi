@@ -3,6 +3,7 @@ import type React from 'react'
 import { Classes, Colors, Button, Card, Menu, NonIdealState, Tabs } from '@blueprintjs/core'
 import { IconNames } from '@blueprintjs/icons'
 import { styled, css, keyframes } from 'styled-components'
+import ScrollShadow from 'views/components/etc/scroll-shadow'
 
 export const PoiAppTabpane = styled.div`
   flex: 1;
@@ -194,7 +195,7 @@ export const PluginDrawerCard = styled(Card)<{ $closing?: boolean }>`
   position: absolute;
   inset: 8px;
   z-index: 10;
-  padding: 4px;
+  padding: 0;
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -210,10 +211,15 @@ export const PluginDrawerCard = styled(Card)<{ $closing?: boolean }>`
         `};
 `
 
-export const PluginDrawerOverlay = styled(PluginDropdownMenu)`
+export const DrawerScrollShadow = styled(ScrollShadow)`
   flex: 1;
   overflow-y: auto;
+  padding: 4px;
+`
+
+export const PluginDrawerOverlay = styled(PluginDropdownMenu)`
   background: transparent;
+  overflow: visible;
   grid-auto-rows: 80px;
 `
 
