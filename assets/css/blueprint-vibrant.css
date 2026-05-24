@@ -54,9 +54,9 @@ body.darwin.bp6-dark {
   background-color: var(--bp-surface-background-color-default-rest) !important;
 }
 
-.bp6-popover-arrow::before,
+.bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow::before,
 .bp6-dialog,
-.bp6-popover-content {
+.bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
   backdrop-filter: url("../svg/ui/filter.svg#blur") !important;
   will-change: backdrop-filter;
   text-rendering: geometricprecision;
@@ -71,7 +71,7 @@ body.darwin.bp6-dark {
   pointer-events: none;
 }
 
-.bp6-popover-arrow-fill {
+.bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow-fill {
   fill: var(--bp-surface-background-color-default-rest) !important;
 }
 
