@@ -329,8 +329,10 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
       extWindow?.addEventListener('beforeunload', () => {
-        const bounds = curWindow?.getBounds()
-        config.set('poi.kangameWindow.bounds', bounds)
+        if (curWindow && !curWindow.isDestroyed()) {
+          const bounds = curWindow.getBounds()
+          config.set('poi.kangameWindow.bounds', bounds)
+        }
       })
 
       if (initialWindowUseFixedResolution) {

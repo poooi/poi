@@ -222,8 +222,11 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           stopFileNavigate(currentWindow?.webContents.id ?? -1)
           externalWindowRef.current.addEventListener('beforeunload', () => {
             setLoaded(false)
-            const bounds = currentWindowRef.current?.getBounds()
-            config.set(`plugin.${plugin.id}.bounds`, bounds)
+            const win = currentWindowRef.current
+            if (win && !win.isDestroyed()) {
+              const bounds = win.getBounds()
+              config.set(`plugin.${plugin.id}.bounds`, bounds)
+            }
             try {
               closeWindowPortal()
             } catch (e) {
