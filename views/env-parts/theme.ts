@@ -87,18 +87,26 @@ export function loadStyle(
   }
 
   const delaySetClassName = (className: string) => {
-    if (doc.body) {
-      doc.body.className = className
-    } else {
-      setTimeout(() => delaySetClassName(className), 100)
+    try {
+      if (doc.body) {
+        doc.body.className = className
+      } else {
+        setTimeout(() => delaySetClassName(className), 100)
+      }
+    } catch (_e) {
+      // Window may have been closed between the retry and execution
     }
   }
 
   const delaySetFilter = (value: string | null) => {
-    if (doc.body) {
-      doc.body.style.filter = value ?? ''
-    } else {
-      setTimeout(() => delaySetFilter(value), 100)
+    try {
+      if (doc.body) {
+        doc.body.style.filter = value ?? ''
+      } else {
+        setTimeout(() => delaySetFilter(value), 100)
+      }
+    } catch (_e) {
+      // Window may have been closed between the retry and execution
     }
   }
 
@@ -200,7 +208,11 @@ export function loadStyle(
   setVibrancy(config.get('poi.appearance.vibrant', 0))
 
   currentWindow.on('focus', () => {
-    setVibrancy(config.get('poi.appearance.vibrant', 0))
+    try {
+      setVibrancy(config.get('poi.appearance.vibrant', 0))
+    } catch (_e) {
+      // Window may have been closed
+    }
   })
 
   const themeChangeHandler = <P extends ConfigStringPath>(configPath: P, value: ConfigValue<P>) => {
@@ -247,12 +259,16 @@ export function loadStyle(
   }
 
   currentWindow.webContents.on('dom-ready', () => {
-    doc.body.appendChild(customCSS)
-    doc.head.appendChild(FACSS)
-    doc.body.appendChild(div)
-    doc.body.appendChild(glass)
-    setBackground(config.get('poi.appearance.background') ?? null)
-    toggleBackground(config.get('poi.appearance.vibrant', 0))
+    try {
+      doc.body.appendChild(customCSS)
+      doc.head.appendChild(FACSS)
+      doc.body.appendChild(div)
+      doc.body.appendChild(glass)
+      setBackground(config.get('poi.appearance.background') ?? null)
+      toggleBackground(config.get('poi.appearance.vibrant', 0))
+    } catch (_e) {
+      // Window may have been closed
+    }
   })
 
   void isMainWindow

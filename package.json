@@ -80,6 +80,7 @@
     "dom-helpers": "^6.0.1",
     "electron-devtools-installer": "^4.0.0",
     "electron-drag-click": "^1.0.6",
+    "electron-extension-installer": "^2.0.1",
     "electron-log": "^5.4.3",
     "electron-react-titlebar": "^2.0.0",
     "electron-updater": "^6.8.3",

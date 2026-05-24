@@ -328,20 +328,14 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       stopFileNavigate(curWindow!.webContents.id)
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
-      extWindow?.addEventListener('beforeunload', () => {
-        // Adopt containerEl into the main document before portal unmount —
-        // React cleaning up portal DOM nodes in a closing window throws
-        // "illegal access", which corrupts the fiber reconciler and breaks
-        // all Blueprint overlays (dialogs, tooltips, menus) in the main window.
+      curWindow?.once('close', () => {
         try {
-          document.body.appendChild(document.adoptNode(containerEl))
-          containerEl.style.display = 'none'
-        } catch (_e) {
-          // ignore — proceed with cleanup regardless
-        }
-        if (curWindow && !curWindow.isDestroyed()) {
-          const bounds = curWindow.getBounds()
-          config.set('poi.kangameWindow.bounds', bounds)
+          if (curWindow && !curWindow.isDestroyed()) {
+            const bounds = curWindow.getBounds()
+            config.set('poi.kangameWindow.bounds', bounds)
+          }
+        } catch (e) {
+          console.error(e)
         }
       })
 
@@ -373,10 +367,6 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         windowRefsRef.current.externalWindow = null
         // eslint-disable-next-line react-hooks/exhaustive-deps -- same as above
         windowRefsRef.current.currentWindow = null
-      }
-      // Remove containerEl if it was relocated to the main document during window close
-      if (containerEl.ownerDocument === document) {
-        containerEl.remove()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -414,6 +404,16 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   // eslint-disable-next-line react-hooks/refs
   if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
 
+  // eslint-disable-next-line react-hooks/refs
+  let mountPoint: Element | null
+  try {
+    // eslint-disable-next-line react-hooks/refs
+    mountPoint = externalWindowRef.current.document.querySelector('#plugin-mountpoint')
+  } catch (_e) {
+    return null
+  }
+  if (!mountPoint) return null
+
   return ReactDOM.createPortal(
     <BlueprintProvider portalContainer={containerEl}>
       <StyleSheetManager
@@ -439,8 +439,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         </PoiAppTabpane>
       </StyleSheetManager>
     </BlueprintProvider>,
-    // eslint-disable-next-line react-hooks/refs
-    externalWindowRef.current.document.querySelector('#plugin-mountpoint')!,
+    mountPoint,
   )
 }
 

@@ -1,6 +1,6 @@
 import type { Plugin } from 'views/services/plugin-manager'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 
@@ -56,13 +56,6 @@ export const RightPanel = ({
 
   const [drawerState, setDrawerState] = useState<DrawerState>('closed')
 
-  // Fallback: if animationend never fires, force-close after the animation duration
-  useEffect(() => {
-    if (drawerState !== 'closing') return
-    const timer = setTimeout(() => setDrawerState('closed'), 200)
-    return () => clearTimeout(timer)
-  }, [drawerState])
-
   const toggleDrawer = () => {
     if (drawerState === 'closed') setDrawerState('open')
     else if (drawerState === 'open') setDrawerState('closing')
@@ -113,9 +106,16 @@ export const RightPanel = ({
             onSelectTab={onSelectTab}
             handlePluginPin={handlePluginPin}
             onSelect={handleDrawerSelect}
-            onClose={() => setDrawerState('closing')}
+            onClose={() => {
+              setDrawerState('closing')
+              setTimeout(() => {
+                setDrawerState((state) => (state === 'closing' ? 'closed' : state))
+              }, 200)
+            }}
             closing={drawerState === 'closing'}
-            onCloseAnimationEnd={() => setDrawerState('closed')}
+            onCloseAnimationEnd={() => {
+              setDrawerState('closed')
+            }}
           />
         )}
       </PluginContentArea>

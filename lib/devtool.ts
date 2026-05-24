@@ -1,7 +1,7 @@
 import installExtension, {
   REACT_DEVELOPER_TOOLS,
   REDUX_DEVTOOLS,
-} from 'electron-devtools-installer'
+} from 'electron-extension-installer'
 
 import { log, error } from './utils'
 

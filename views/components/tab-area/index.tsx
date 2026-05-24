@@ -493,6 +493,7 @@ interface ErrorBoundaryState {
 
 class TabAreaErrorBoundary extends Component<ControlledTabAreaProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false }
+  private _recoveryCount = 0
 
   componentDidCatch(error: Error, info: React.ErrorInfo): void {
     console.error(error, info)
@@ -502,6 +503,12 @@ class TabAreaErrorBoundary extends Component<ControlledTabAreaProps, ErrorBounda
       const eventId = Sentry.captureException(error)
       this.setState({ hasError: true, error, info, eventId })
     })
+    // Auto-recover from transient errors (e.g. cleanup errors when closing a plugin
+    // window). Rate-limited to prevent infinite crash-recovery loops from genuine bugs.
+    if (this._recoveryCount < 3) {
+      this._recoveryCount++
+      setTimeout(() => this.setState({ hasError: false }), 0)
+    }
   }
 
   render(): React.ReactNode {
