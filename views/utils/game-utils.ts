@@ -1,7 +1,6 @@
-import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
 import type { APIShip } from 'kcsapi/api_port/port/response'
 import type { APIMstShip, APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
-import type { Equip } from 'views/redux/info/equips'
+import type { Equip, EquipsState } from 'views/redux/info/equips'
 
 import { Intent } from '@blueprintjs/core'
 import _ from 'lodash'
@@ -511,7 +510,7 @@ export async function isInGame(): Promise<boolean> {
   }
 }
 
-export const getSlotitemCount = (slotitems: Record<string, APISlotItem>): number => {
+export const getSlotitemCount = (slotitems: EquipsState): number => {
   return Object.values(slotitems).filter(
     ({ api_slotitem_id }) => !uncountedSlotitemId.includes(api_slotitem_id),
   ).length

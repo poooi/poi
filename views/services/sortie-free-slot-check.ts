@@ -10,7 +10,7 @@ window.addEventListener('game.response', (e) => {
     const basic = getStore('info.basic')
     const errMsg: string[] = []
     if (config.get('poi.mapStartCheck.ship.enable', false)) {
-      const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4) as number
+      const minShipSlots = config.get('poi.mapStartCheck.ship.minFreeSlots', 4)
       const shipSlots = (basic.api_max_chara ?? 0) - Object.keys(getStore('info.ships')).length
       if (shipSlots < minShipSlots) {
         if (shipSlots > 0) {
@@ -21,7 +21,7 @@ window.addEventListener('game.response', (e) => {
       }
     }
     if (config.get('poi.mapStartCheck.item.enable', false)) {
-      const minEquipSlots = config.get('poi.mapStartCheck.item.minFreeSlots', 10) as number
+      const minEquipSlots = config.get('poi.mapStartCheck.item.minFreeSlots', 10)
       const equipSlots = (basic.api_max_slotitem ?? 0) - getSlotitemCount(getStore('info.equips'))
       if (equipSlots < minEquipSlots) {
         if (equipSlots > 0) {

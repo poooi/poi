@@ -59,10 +59,7 @@ const setOverlayPanelWindowSize = (overlayPanel: boolean) => {
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
   const isolateWindow = config.get('poi.layout.isolate', false)
-  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview') as {
-    width: number
-    height: number
-  }
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   const useFixedResolution = config.get('poi.webview.useFixedResolution', true)
   if (overlayPanel && !isolateWindow) {

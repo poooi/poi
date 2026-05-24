@@ -159,7 +159,7 @@ const sortieSlice = createSlice({
       .addCase(createAPIPortPortResponseAction, (state, { payload }) => ({
         ...current(state),
         // note that get_incentive doesn't have this field.
-        combinedFlag: get(payload.body, 'api_combined_flag', 0) as number,
+        combinedFlag: payload?.body?.api_combined_flag ?? 0,
         sortieStatus: initState.sortieStatus,
         escapedPos: [],
         sortieMapId: 0,

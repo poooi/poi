@@ -74,7 +74,7 @@ export const toggleWelcomeDialog = () =>
   toggleModal(String(i18next.t('others:Welcome')), <Content />, footer)
 
 // using setTimeout to avoid disturbing the magic being cast in layout.ts
-if ((config.get('poi.update.lastversion', '0.0.0') as string) != window.POI_VERSION) {
+if (config.get('poi.update.lastversion', '0.0.0') != window.POI_VERSION) {
   setTimeout(toggleWelcomeDialog, 5000)
 }
 

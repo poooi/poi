@@ -5,12 +5,8 @@ import { isMain } from './const'
 
 if (isMain) {
   remote.getCurrentWebContents().addListener('devtools-opened', () => {
-    const PLUGINS = (getStore('plugins') || []) as Array<{
-      enabled: boolean
-      id: string
-      version: string
-    }>
-    const FCD = (getStore('fcd.version') || {}) as Record<string, string>
+    const PLUGINS = getStore('plugins') || []
+    const FCD = getStore('fcd.version') || {}
 
     const pluginMessage = PLUGINS.filter((plugin) => plugin.enabled)
       .map((plugin) => `${plugin.id}@${plugin.version}`)
