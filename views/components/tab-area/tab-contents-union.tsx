@@ -19,6 +19,7 @@ const PoiTabContents = styled.div`
   display: flex;
   height: 100%;
   width: 100%;
+  contain: layout;
 `
 
 const PoiTabChildPositioner = styled.div<{
@@ -37,7 +38,7 @@ const PoiTabChildPositioner = styled.div<{
   ${({ transition }) =>
     transition &&
     css`
-      transition: transform 0.3s 0.1s cubic-bezier(1, 0, 0, 1);
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       will-change: transform;
     `}
   ${({ left, right }) =>

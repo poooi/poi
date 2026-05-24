@@ -7,7 +7,7 @@ import { createLayoutWebviewUseFixedResolutionAction } from 'views/redux/actions
 import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
 
 // polyfill
-if ((config.get('poi.webview.width', 1200) as number) < 0) {
+if (config.get('poi.webview.width', 1200) < 0) {
   config.set('poi.webview.width', 1200)
 }
 
@@ -17,30 +17,11 @@ remote.getCurrentWindow().webContents.on('dom-ready', () => {
   document.head.appendChild(additionalStyle)
 })
 
-const setCSS = () => {
-  const tab =
-    document.querySelector<HTMLElement>('.poi-tab-container:last-child .poi-tab-contents') ||
-    document.querySelector<HTMLElement>('.poi-tab-container .poi-tab-contents')
-  const tabSize = tab ? tab.getBoundingClientRect() : { height: 0, width: 0 }
-  const panelRect = document.querySelector('poi-nav-tabs')!.getBoundingClientRect()
-  additionalStyle.innerHTML = `
-.plugin-dropdown {
-  max-height: ${tabSize.height}px;
-  max-width: ${Math.min(panelRect.width * 0.875 - 48, tabSize.width - 16)}px;
-}
-`
-}
-
-const setCSSDebounced = debounce(setCSS, 200)
-
 const setIsolatedMainWindowSize = (isolateWindow: boolean) => {
   remote.getCurrentWindow().setMinimumSize(1, 1)
   const layout = config.get('poi.layout.mode', 'horizontal')
   const reversed = config.get('poi.layout.reverse', false)
-  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview') as {
-    width: number
-    height: number
-  }
+  const { width: webviewWidth, height: webviewHeight } = getStore('layout.webview')
   const bounds = remote.getCurrentWindow().getContentBounds()
   if (isolateWindow) {
     if (layout === 'horizontal') {
@@ -110,14 +91,14 @@ const setOverlayPanelWindowSize = (overlayPanel: boolean) => {
   } else if (!isolateWindow) {
     remote.getCurrentWindow().setResizable(config.get('poi.content.resizable', true))
     if (layout === 'horizontal') {
-      bounds.width += config.get('poi.layout.overlaypanel.width', 500) as number
+      bounds.width += config.get('poi.layout.overlaypanel.width', 500)
       if (reversed) {
-        bounds.x -= config.get('poi.layout.overlaypanel.width', 500) as number
+        bounds.x -= config.get('poi.layout.overlaypanel.width', 500)
       }
     } else {
-      bounds.height += config.get('poi.layout.overlaypanel.width', 500) as number
+      bounds.height += config.get('poi.layout.overlaypanel.width', 500)
       if (reversed) {
-        bounds.y -= config.get('poi.layout.overlaypanel.width', 500) as number
+        bounds.y -= config.get('poi.layout.overlaypanel.width', 500)
       }
     }
     remote.getCurrentWindow().setAspectRatio(0)
@@ -128,7 +109,7 @@ const setOverlayPanelWindowSize = (overlayPanel: boolean) => {
 const handleOverlayPanelResize = () => {
   if (config.get('poi.layout.overlay', false)) {
     const width = config.get('poi.webview.useFixedResolution', true)
-      ? (config.get('poi.webview.width', 1200) as number)
+      ? config.get('poi.webview.width', 1200)
       : remote.getCurrentWindow().getContentSize()[0]
     remote
       .getCurrentWindow()
@@ -145,7 +126,6 @@ const handleOverlayPanelResizeDebounced = debounce(handleOverlayPanelResize, 200
 
 const adjustSize = () => {
   try {
-    setCSSDebounced()
     dispatch(
       createLayoutWebviewUseFixedResolutionAction(
         Boolean(getStore('config.poi.webview.useFixedResolution')),
@@ -160,7 +140,7 @@ const adjustSize = () => {
 adjustSize()
 
 const changeBounds = () => {
-  const webview = getStore('layout.webview') as { width: number; height: number }
+  const webview = getStore('layout.webview')
   let newWidth = webview.width
   let newHeight = webview.height
   newHeight += getYOffset()

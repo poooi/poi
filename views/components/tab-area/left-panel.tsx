@@ -1,8 +1,8 @@
 import type { Tabs } from '@blueprintjs/core'
 import type { Plugin } from 'views/services/plugin-manager'
 
-import { PopoverNext, Tab } from '@blueprintjs/core'
-import React from 'react'
+import { Tab } from '@blueprintjs/core'
+import React, { useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
 
@@ -12,12 +12,14 @@ import type { TabContentsUnionHandle } from './tab-contents-union'
 import * as MAIN_VIEW from '../main'
 import * as SETTINGS_VIEW from '../settings'
 import * as SHIP_VIEW from '../ship'
-import { PluginDropdownContent } from './plugin-dropdown-content'
+import { PluginDrawer } from './plugin-drawer'
 import { PluginWindowWrap } from './plugin-window-wrapper'
 import { PluginWrap } from './plugin-wrapper'
 import {
   NavTabs,
   PluginAppTabpane,
+  PluginContentArea,
+  PluginContentWrapper,
   PluginDropdownButton,
   PoiAppTabpane,
   PoiTabContainer,
@@ -26,6 +28,8 @@ import {
 import { TabContentsUnion } from './tab-contents-union'
 
 const isPluginTab = (key: string): boolean => !['main-view', 'ship-view', 'settings'].includes(key)
+
+type DrawerState = 'closed' | 'open' | 'closing'
 
 interface LeftPanelProps {
   doubleTabbed: boolean
@@ -57,7 +61,7 @@ export const LeftPanel = ({
   activePlugin,
   tabbedPlugins,
   listedPlugins,
-  useGridMenu,
+  useGridMenu: _useGridMenu,
   isWindowMode,
   onSelectTab,
   onOpenWindow,
@@ -76,21 +80,22 @@ export const LeftPanel = ({
   const defaultPluginIcon = <FontAwesome name="sitemap" />
   const defaultPluginTitle = t('others:Plugins')
 
+  const [drawerState, setDrawerState] = useState<DrawerState>('closed')
+
   const handleSelectTab = (key: string) => {
+    setDrawerState('closed')
     onSelectTab(key === 'plugin' ? activePluginName : key)
   }
 
-  const pluginDropdownContent = (
-    <PluginDropdownContent
-      plugins={listedPlugins}
-      useGridMenu={useGridMenu}
-      activeMainTab={activeMainTab}
-      isWindowMode={isWindowMode}
-      onOpenWindow={onOpenWindow}
-      onSelectTab={onSelectTab}
-      handlePluginPin={handlePluginPin}
-    />
-  )
+  const toggleDrawer = () => {
+    if (drawerState === 'closed') setDrawerState('open')
+    else if (drawerState === 'open') setDrawerState('closing')
+  }
+
+  const handleDrawerSelect = (plugin: Plugin) => {
+    setDrawerState('closing')
+    onSelectTab(plugin.id)
+  }
 
   const pluginContents = tabbedPlugins.map((plugin) => (
     <PluginWrap key={plugin.id} plugin={plugin} container={PluginAppTabpane} />
@@ -137,23 +142,16 @@ export const LeftPanel = ({
         </Tab>
       )}
       {!doubleTabbed && (
-        <PopoverNext
-          animation="minimal"
-          arrow={false}
-          hasBackdrop={false}
-          usePortal={false}
-          placement="bottom-end"
-          content={pluginDropdownContent}
-          popoverClassName="plugin-dropdown-container"
-        >
-          <PluginDropdownButton
-            icon="chevron-down"
-            variant="minimal"
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
-            ref={triggerRef}
-          />
-        </PopoverNext>
+        <PluginDropdownButton
+          $compact
+          icon={drawerState === 'open' ? 'cross' : 'chevron-down'}
+          variant="minimal"
+          active={drawerState === 'open'}
+          onClick={toggleDrawer}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
+          ref={triggerRef}
+        />
       )}
       {!doubleTabbed && (
         <Tab
@@ -168,34 +166,57 @@ export const LeftPanel = ({
     </NavTabs>
   )
 
-  const content = (
-    <TabContentsUnion
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
-      ref={doubleTabbed ? mainTabKeyUnionRef : tabKeyUnionRef}
-      activeTab={activeMainTab}
-    >
-      <PoiAppTabpane id={MAIN_VIEW.name} className="main-view poi-app-tabpane" key="main-view">
-        <MAIN_VIEW.reactClass />
-      </PoiAppTabpane>
-      <ShipViewTabpanel id={SHIP_VIEW.name} className="ship-view poi-app-tabpane" key="ship-view">
-        <SHIP_VIEW.reactClass />
-      </ShipViewTabpanel>
-      {!doubleTabbed && pluginContents}
-      <PoiAppTabpane
-        id={SETTINGS_VIEW.name}
-        className="settings-view poi-app-tabpane"
-        key="settings"
-      >
-        <SETTINGS_VIEW.reactClass />
-      </PoiAppTabpane>
-    </TabContentsUnion>
-  )
-
   return (
     <PoiTabContainer className="poi-tab-container">
       {nav}
-      {content}
+      <PluginContentArea>
+        {/* PluginContentWrapper is always rendered so TabContentsUnion ref never detaches */}
+        <PluginContentWrapper $dimmed={drawerState === 'open'}>
+          <TabContentsUnion
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
+            ref={doubleTabbed ? mainTabKeyUnionRef : tabKeyUnionRef}
+            activeTab={activeMainTab}
+          >
+            <PoiAppTabpane
+              id={MAIN_VIEW.name}
+              className="main-view poi-app-tabpane"
+              key="main-view"
+            >
+              <MAIN_VIEW.reactClass />
+            </PoiAppTabpane>
+            <ShipViewTabpanel
+              id={SHIP_VIEW.name}
+              className="ship-view poi-app-tabpane"
+              key="ship-view"
+            >
+              <SHIP_VIEW.reactClass />
+            </ShipViewTabpanel>
+            {!doubleTabbed && pluginContents}
+            <PoiAppTabpane
+              id={SETTINGS_VIEW.name}
+              className="settings-view poi-app-tabpane"
+              key="settings"
+            >
+              <SETTINGS_VIEW.reactClass />
+            </PoiAppTabpane>
+          </TabContentsUnion>
+        </PluginContentWrapper>
+        {!doubleTabbed && drawerState !== 'closed' && (
+          <PluginDrawer
+            plugins={listedPlugins}
+            activeMainTab={activeMainTab}
+            isWindowMode={isWindowMode}
+            onOpenWindow={onOpenWindow}
+            onSelectTab={onSelectTab}
+            handlePluginPin={handlePluginPin}
+            onSelect={handleDrawerSelect}
+            onClose={() => setDrawerState('closing')}
+            closing={drawerState === 'closing'}
+            onCloseAnimationEnd={() => setDrawerState('closed')}
+          />
+        )}
+      </PluginContentArea>
       {windowModePluginContents}
     </PoiTabContainer>
   )

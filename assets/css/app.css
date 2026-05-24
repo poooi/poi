@@ -49,10 +49,6 @@ poi-main {
   overflow: hidden;
 }
 
-.plugin-dropdown-container > .bp6-popover-content > .bp6-menu {
-  background: transparent;
-}
-
 .bp6-html-select select,
 .bp6-select select {
   background-image: none;

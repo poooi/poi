@@ -1,8 +1,8 @@
 import type React from 'react'
 
-import { Classes, Colors, Button, Menu, NonIdealState, Tabs } from '@blueprintjs/core'
+import { Classes, Colors, Button, Card, Menu, NonIdealState, Tabs } from '@blueprintjs/core'
 import { IconNames } from '@blueprintjs/icons'
-import { styled, css } from 'styled-components'
+import { styled, css, keyframes } from 'styled-components'
 
 export const PoiAppTabpane = styled.div`
   flex: 1;
@@ -49,7 +49,7 @@ export const PoiTabContainer = styled.div`
   overflow: hidden;
 `
 
-export const PluginDropdownButton = styled(Button)<{ double?: boolean }>`
+export const PluginDropdownButton = styled(Button)<{ double?: boolean; $compact?: boolean }>`
   width: 100%;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -90,6 +90,13 @@ export const PluginDropdownButton = styled(Button)<{ double?: boolean }>`
       margin-left: 6.5px;
       margin-right: 7px;
     `}
+
+  /* Inside the tab list the button must shrink to its icon, not fill 100% of the row */
+  ${({ $compact }) =>
+    $compact &&
+    css`
+      width: auto;
+    `}
 `
 
 export const PluginNonIdealState = styled(NonIdealState)`
@@ -103,11 +110,15 @@ export const PluginDropdownMenu = styled(Menu)<{ grid?: boolean }>`
   ${({ grid }) =>
     grid
       ? css`
-          > *:not(${PluginNonIdealState}) {
-            display: block;
-            float: left;
-            width: calc(100% / 3);
-            height: 72px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 72px;
+          align-content: start;
+          background: transparent !important;
+
+          > ${PluginNonIdealState} {
+            grid-column: 1 / -1;
+            height: auto;
           }
         `
       : ''}
@@ -157,4 +168,65 @@ export const PluginNameContainer = styled.div`
 export const PinButton = styled(Button)`
   align-self: center;
   -webkit-app-region: no-drag;
+`
+
+const drawerReveal = keyframes`
+  from { opacity: 0; transform: scale(1.12); }
+  to   { opacity: 1; transform: scale(1);    }
+`
+
+const drawerDismiss = keyframes`
+  from { opacity: 1; transform: scale(1);    }
+  to   { opacity: 0; transform: scale(1.12); }
+`
+
+export const PluginContentArea = styled.div`
+  flex: 1 0 0;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+`
+
+export const PluginDrawerCard = styled(Card)<{ $closing?: boolean }>`
+  position: absolute;
+  inset: 8px;
+  z-index: 10;
+  padding: 4px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  animation: ${({ $closing }) =>
+    $closing
+      ? css`
+          ${drawerDismiss} 0.15s cubic-bezier(0.4, 0, 1, 1) forwards
+        `
+      : css`
+          ${drawerReveal} 0.2s cubic-bezier(0, 0, 0.2, 1) forwards
+        `};
+`
+
+export const PluginDrawerOverlay = styled(PluginDropdownMenu)`
+  flex: 1;
+  overflow-y: auto;
+  background: transparent;
+  grid-auto-rows: 80px;
+`
+
+/* Permanent wrapper — never conditionally unmounted so TabContentsUnion ref stays stable. */
+export const PluginContentWrapper = styled.div<{ $dimmed?: boolean }>`
+  flex: 1 0 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s ease;
+  ${({ $dimmed }) =>
+    $dimmed &&
+    css`
+      opacity: 0;
+    `}
 `
