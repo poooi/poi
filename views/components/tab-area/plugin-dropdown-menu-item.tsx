@@ -5,14 +5,13 @@ import { ContextMenu, Icon, Menu, MenuDivider, MenuItem } from '@blueprintjs/cor
 import React, { type FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { css, styled } from 'styled-components'
+import { styled } from 'styled-components'
 import { config } from 'views/env'
 
 interface Props {
   plugin: Plugin
   onClick: () => void
   id?: string
-  grid?: boolean
   handlePluginPin: (plugin: Plugin) => void
 }
 
@@ -24,54 +23,42 @@ const StatusIndicator = styled.div`
   opacity: 0.6;
 `
 
-const PluginMenuItem = styled(MenuItem)<{ grid?: boolean }>`
+const PluginMenuItem = styled(MenuItem)`
   align-items: center;
   position: relative;
+  padding: 8px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-  ${({ grid }) =>
-    grid
-      ? css`
-          padding: 8px;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
+  ${StatusIndicator} {
+    position: absolute;
+    top: 7px;
+    right: 15px;
+  }
 
-          ${StatusIndicator} {
-            position: absolute;
-            top: 7px;
-            right: 15px;
-          }
+  .bp6-menu-item-icon {
+    margin-right: 0;
+    height: auto;
+  }
 
-          .bp6-menu-item-icon {
-            margin-right: 0;
-            height: auto;
-          }
+  .bp6-text-overflow-ellipsis {
+    margin-right: 0;
+    height: auto;
+    line-height: 1.4;
+    flex-grow: 0;
+    margin-top: 7px;
+  }
 
-          .bp6-text-overflow-ellipsis {
-            margin-right: 0;
-            height: auto;
-            line-height: 1.4;
-            flex-grow: 0;
-            margin-top: 7px;
-          }
-
-          /* stylelint-disable-next-line selector-class-pattern */
-          [class*='fa-'].svg-inline--fa {
-            font-size: 200%;
-            margin: 0;
-          }
-        `
-      : css`
-          /* stylelint-disable-next-line selector-class-pattern */
-          [class*='fa-'].svg-inline--fa {
-            width: 1em;
-          }
-        `}
+  /* stylelint-disable-next-line selector-class-pattern */
+  [class*='fa-'].svg-inline--fa {
+    font-size: 200%;
+    margin: 0;
+  }
 `
 
-const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid, handlePluginPin }) => {
+const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, handlePluginPin }) => {
   const { t } = useTranslation('setting')
   const pluginConfig = useSelector((state: RootState) => state.config?.poi?.plugin)
   const isFavorite = pluginConfig?.favorite?.[plugin.id]
@@ -129,7 +116,6 @@ const PluginDropdownMenuItem: FC<Props> = ({ plugin, onClick, id, grid, handlePl
         icon={plugin.displayIcon}
         text={plugin.name}
         key={plugin.id}
-        grid={grid}
         labelElement={
           <StatusIndicator>
             {isFavorite && <Icon icon="star" />}

@@ -50,7 +50,7 @@ export const PluginDrawer = ({
     return (
       <PluginDrawerCard {...cardProps}>
         <DrawerScrollShadow>
-          <PluginDrawerOverlay grid>
+          <PluginDrawerOverlay>
             <PluginNonIdealState
               icon="cloud-download"
               title={t('setting:No plugin found')}
@@ -65,7 +65,7 @@ export const PluginDrawer = ({
   return (
     <PluginDrawerCard {...cardProps}>
       <DrawerScrollShadow>
-        <PluginDrawerOverlay grid>
+        <PluginDrawerOverlay>
           {plugins.map((plugin) => {
             const isTab = !plugin.handleClick && !isWindowMode(plugin)
             const handleClick = () => {
@@ -86,7 +86,6 @@ export const PluginDrawer = ({
                 onClick={handleClick}
                 id={activeMainTab === plugin.id ? '' : plugin.id}
                 plugin={plugin}
-                grid
                 handlePluginPin={handlePluginPin}
               />
             )
