@@ -329,6 +329,16 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
       extWindow?.addEventListener('beforeunload', () => {
+        // Adopt containerEl into the main document before portal unmount —
+        // React cleaning up portal DOM nodes in a closing window throws
+        // "illegal access", which corrupts the fiber reconciler and breaks
+        // all Blueprint overlays (dialogs, tooltips, menus) in the main window.
+        try {
+          document.body.appendChild(document.adoptNode(containerEl))
+          containerEl.style.display = 'none'
+        } catch (_e) {
+          // ignore — proceed with cleanup regardless
+        }
         if (curWindow && !curWindow.isDestroyed()) {
           const bounds = curWindow.getBounds()
           config.set('poi.kangameWindow.bounds', bounds)
@@ -363,6 +373,10 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         windowRefsRef.current.externalWindow = null
         // eslint-disable-next-line react-hooks/exhaustive-deps -- same as above
         windowRefsRef.current.currentWindow = null
+      }
+      // Remove containerEl if it was relocated to the main document during window close
+      if (containerEl.ownerDocument === document) {
+        containerEl.remove()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

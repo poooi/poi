@@ -221,6 +221,16 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
             remote.require('./lib/webcontent-utils')
           stopFileNavigate(currentWindow?.webContents.id ?? -1)
           externalWindowRef.current.addEventListener('beforeunload', () => {
+            // Adopt containerEl into the main document before portal unmount —
+            // React cleaning up portal DOM nodes in a closing window throws
+            // "illegal access", which corrupts the fiber reconciler and breaks
+            // all Blueprint overlays (dialogs, tooltips, menus) in the main window.
+            try {
+              document.body.appendChild(document.adoptNode(containerEl))
+              containerEl.style.display = 'none'
+            } catch (_e) {
+              // ignore — proceed with cleanup regardless
+            }
             setLoaded(false)
             const win = currentWindowRef.current
             if (win && !win.isDestroyed()) {
@@ -252,17 +262,31 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
         try {
           if (externalWindowRef.current) {
             externalWindowRef.current.onbeforeunload = null
-            currentWindowRef.current?.setClosable(true)
+            const win = currentWindowRef.current
+            if (win && !win.isDestroyed()) {
+              win.setClosable(true)
+            }
             externalWindowRef.current.close()
           }
         } catch (e) {
           console.error(e)
         }
+        // If containerEl was relocated to the main document during window close,
+        // remove it now that React has finished unmounting the portal contents.
+        if (containerEl.ownerDocument === document) {
+          containerEl.remove()
+        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
+    if (
+      !loaded ||
+      !externalWindowRef.current ||
+      externalWindowRef.current.closed ||
+      !checkBrowserWindowExistence()
+    )
+      return null
 
     const mountPoint = externalWindowRef.current.document.querySelector('#plugin-mountpoint')
     if (!mountPoint) return null

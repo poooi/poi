@@ -39,7 +39,11 @@ export const PluginDrawer = ({
 
   const cardProps = {
     $closing: closing,
-    onAnimationEnd: closing ? onCloseAnimationEnd : undefined,
+    onAnimationEnd: closing
+      ? (e: React.AnimationEvent<HTMLDivElement>) => {
+          if (e.target === e.currentTarget) onCloseAnimationEnd()
+        }
+      : undefined,
   }
 
   if (plugins.length === 0) {

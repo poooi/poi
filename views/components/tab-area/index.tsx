@@ -398,6 +398,22 @@ const ControlledTabAreaFC = ({
     }
   }, [pinConfig, openWindow, plugins, openedWindow])
 
+  // When the active plugin moves to window mode, switch to the nearest available tabbed plugin
+  useEffect(() => {
+    if (!activePluginName) return
+    if (tabbedPlugins.some((p) => p.id === activePluginName)) return
+    if (tabbedPlugins.length === 0) return
+
+    const fallback = tabbedPlugins[0]
+    const tabInfo: { activeMainTab?: string; activePluginName?: string } = {
+      activePluginName: fallback.id,
+    }
+    if (activeMainTab === activePluginName) {
+      tabInfo.activeMainTab = fallback.id
+    }
+    dispatchTabChangeEvent(tabInfo, true)
+  }, [tabbedPlugins, activePluginName, activeMainTab, dispatchTabChangeEvent])
+
   const activePlugin: Partial<Plugin> =
     tabbedPlugins.find((p) => p.packageName === activePluginName) ?? tabbedPlugins[0] ?? {}
 
