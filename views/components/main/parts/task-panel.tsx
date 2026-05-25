@@ -8,6 +8,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
+import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import {
@@ -125,7 +126,15 @@ function getToolTip(record: QuestRecord): string[] {
 
 const CardWrapper = styled(CardWrapperL)`
   display: flex;
-  flex-flow: row wrap;
+  flex-direction: column;
+  overflow: hidden;
+`
+
+const ScollShadowWrapper = styled(ScrollShadow)`
+  margin: -5px -9px;
+  padding: 5px 9px;
+  flex: 1;
+  overflow: auto;
 `
 
 const TaskItem = styled.div<{ colwidth: number }>`
@@ -318,12 +327,14 @@ const TaskPanelInner = ({
   return (
     <ResizeSensor onResize={handleResize}>
       <CardWrapper className="task-card" elevation={editable ? 2 : 0} interactive={editable}>
-        <TaskPanelContent
-          activeQuests={activeQuests}
-          activeCapacity={activeCapacity}
-          activeNum={activeNum}
-          colwidth={colwidth}
-        />
+        <ScollShadowWrapper>
+          <TaskPanelContent
+            activeQuests={activeQuests}
+            activeCapacity={activeCapacity}
+            activeNum={activeNum}
+            colwidth={colwidth}
+          />
+        </ScollShadowWrapper>
       </CardWrapper>
     </ResizeSensor>
   )
