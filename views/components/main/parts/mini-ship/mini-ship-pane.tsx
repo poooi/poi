@@ -16,6 +16,8 @@ const miniShipRowWidthSelector = (state: RootState) => state.layout?.minishippan
 const ShipDetailsMini = styled(ScrollShadow)`
   flex: 1;
   overflow: scroll;
+  margin: 0 -8px -4px;
+  padding: 0 8px 4px;
 `
 
 export const PaneBodyMini = ({ fleetId }: { fleetId: number }) => {
