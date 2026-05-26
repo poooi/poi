@@ -13,7 +13,7 @@ import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-c
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { getSlotitemCount } from 'views/utils/game-utils'
-import { configSelector, basicSelector } from 'views/utils/selectors'
+import { configSelector, basicSelector, shipsSelector } from 'views/utils/selectors'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import { CardWrapper as CardWrapperL } from './styled-components'
@@ -260,12 +260,17 @@ const numCheckSelector = createSelector([configSelector], (cfg) => ({
   minSlotNum: cfg.poi?.mapStartCheck?.item?.minFreeSlots ?? 10,
 }))
 
+const shipCountSelector = createSelector(
+  [shipsSelector],
+  (ships) => Object.keys(ships as object).length,
+)
+
 export const AdmiralPanel = ({ editable }: { editable?: boolean }) => {
   const { t } = useTranslation(['main', 'resources'])
   const admiralInfo = useSelector((state: RootState) => admiralInfoSelector(state))
   const numCheck = useSelector((state: RootState) => numCheckSelector(state))
   const equipNum = useSelector((state: RootState) => getSlotitemCount(state.info.equips))
-  const shipNum = useSelector((state: RootState) => Object.keys(state.info.ships as object).length)
+  const shipNum = useSelector(shipCountSelector)
   const dropCount = useSelector(
     (state: RootState) => (state.sortie as { dropCount?: number }).dropCount ?? 0,
   )

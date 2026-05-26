@@ -3,6 +3,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import React, { Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
@@ -12,6 +13,11 @@ import { ShipRow } from '../../../ship/ship-item'
 import { MiniShipRow, MiniSquardRow } from './mini-ship-item'
 
 const miniShipRowWidthSelector = (state: RootState) => state.layout?.minishippane?.width ?? 250
+
+const areaIdsSelector = createSelector(
+  (state: RootState) => state.info?.airbase ?? [],
+  (airbase) => airbase.map((a) => a.api_area_id),
+)
 
 const ShipDetailsMini = styled(ScrollShadow)`
   flex: 1;
@@ -65,9 +71,7 @@ const AirbaseArea = styled.div`
 
 export const LBViewMini = () => {
   const { t } = useTranslation('resources')
-  const areaIds = useSelector((state: RootState) => state.info?.airbase ?? []).map(
-    (a) => a.api_area_id,
-  )
+  const areaIds = useSelector(areaIdsSelector)
   const mapareas = useSelector((state: RootState) => state.const?.$mapareas ?? {})
   const enableAvatar = useSelector(
     (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,

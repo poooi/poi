@@ -40,6 +40,8 @@ const CardWrapper = styled(CardWrapperL)`
   flex-direction: column;
 `
 
+const FLEET_INDICES = [0, 1, 2, 3] as const
+
 const shipViewSwitchButtonDataSelectorFactory = memoize((fleetId: number) =>
   createSelector([fleetStateSelectorFactory(fleetId)], (fleetState) => ({ fleetState })),
 )
@@ -139,7 +141,7 @@ const MiniShipInner = ({
     >
       <FleetNameButtonContainer className="miniship-switch">
         <FleetNameButton className="miniship-fleet-switch">
-          {[0, 1, 2, 3].map((i) => (
+          {FLEET_INDICES.map((i) => (
             <ShipViewSwitchButton
               key={i}
               fleetId={i}
@@ -160,7 +162,7 @@ const MiniShipInner = ({
       </FleetNameButtonContainer>
       <ResizeSensor onResize={handleResize}>
         <ShipTabContent className="miniship-fleet-content">
-          {[0, 1, 2, 3].map((i) => (
+          {FLEET_INDICES.map((i) => (
             <ShipDeck
               className="ship-deck"
               onTransitionEnd={() => handleTransitionEnd(i)}

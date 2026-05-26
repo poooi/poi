@@ -122,7 +122,7 @@ export const dispatch = store.dispatch
 const solveConfSet = <P extends ConfigStringPath>(path: P, value: ConfigValue<P>): void => {
   const details = {
     path,
-    value: typeof value === 'undefined' ? undefined : cloneDeep(value),
+    value: value != null && typeof value === 'object' ? cloneDeep(value) : value,
   }
   store.dispatch(onConfigChange(details))
 }

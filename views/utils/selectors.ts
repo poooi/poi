@@ -361,8 +361,8 @@ const modifiedEquipDataSelectorFactory = memoize((equipId: number) =>
 )
 
 function effectiveEquips<T>(equipArray: T[], slotnum: number): T[] {
-  equipArray.splice(slotnum, equipArray.length - slotnum - 1)
-  return equipArray
+  if (equipArray.length <= slotnum) return equipArray
+  return [...equipArray.slice(0, slotnum), equipArray[equipArray.length - 1]]
 }
 
 // Returns [[_equip, $equip, onslot] for each slot on the ship]
@@ -553,17 +553,20 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   const originMstIds = mstIds.filter((mstId) => !afterMstIdSet.has(mstId))
 
   // chase remodel chain until we either reach an end or hit a loop
-  const searchRemodels = (mstId: number, results: number[] = []): number[] => {
-    if (results.includes(mstId)) return results
-
+  const searchRemodels = (
+    mstId: number,
+    results: number[] = [],
+    visited = new Set<number>(),
+  ): number[] => {
+    if (visited.has(mstId)) return results
+    visited.add(mstId)
     const newResults = [...results, mstId]
     const $ship = $ships[mstId]
     const afterMstId = Number(get($ship, 'api_aftershipid', 0))
     if (afterMstId !== 0) {
-      return searchRemodels(afterMstId, newResults)
-    } else {
-      return newResults
+      return searchRemodels(afterMstId, newResults, visited)
     }
+    return newResults
   }
 
   /*
@@ -594,7 +597,8 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
     const originMstId = missingMstId[0]
     remodelChains[originMstId] = searchRemodels(originMstId)
     // Remove all master IDs along the newly found chain from missingMstId
-    missingMstId = missingMstId.filter((element) => !remodelChains[originMstId].includes(element))
+    const chainSet = new Set(remodelChains[originMstId])
+    missingMstId = missingMstId.filter((element) => !chainSet.has(element))
   }
 
   // originMstIdOf[<master id>] = <original master id>
