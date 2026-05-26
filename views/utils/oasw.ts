@@ -38,7 +38,7 @@ const isIsuzuK2 = shipIdIs(141)
 const isFubukiK3Go = shipIdIs(1040)
 const isJClassKai: OASWPredicate = (ship) =>
   ship.api_ship_id === 394 || ship.api_ship_id === 893 || ship.api_ship_id === 906
-const isTatsutaKai = shipIdIs(478)
+const isTatsutaKaiNi = shipIdIs(478)
 const isSamuelKai = shipIdIs(681)
 const isSamuelKaiNi = shipIdIs(920)
 const isFusoClassKaiNi: OASWPredicate = (ship) =>
@@ -100,7 +100,7 @@ export const isOASW: OASWPredicate = overSome(
   // 無条件に発動
   isIsuzuK2,
   isJClassKai,
-  isTatsutaKai,
+  isTatsutaKaiNi,
   isYuubariKaiNiTei,
   isSamuelKai,
   isFletcherClassOrKai,
