@@ -95,6 +95,8 @@ const isNotMidDmg = overShipState((ship) => (ship.api_nowhp ?? 0) * 2 > (ship.ap
 
 const isNotHeavyDmg = overShipState((ship) => (ship.api_nowhp ?? 0) * 4 > (ship.api_maxhp ?? 0))
 
+const isKai: ShipPred = overShipProp((ship) => ship.api_getmes === '<br>')
+
 const isLevelOver = (level: number): ShipPred =>
   overShipState((ship) => (ship.api_lv ?? 0) >= level)
 
@@ -120,6 +122,8 @@ const isNagatoKaiNi = shipIdIs(541)
 const isMutsuKaiNi = shipIdIs(573)
 
 const isNelsonClass = shipClassTypeIs(88)
+
+const isNelsonClassKai: ShipPred = (ship) => isNelsonClass(ship) && isKai(ship)
 
 const isColoradoClass = shipClassTypeIs(93)
 
@@ -173,6 +177,7 @@ const isSouthDakotaKai = shipIdIs(697)
 
 const isWashingtonKai = shipIdIs(659)
 
+// https://wikiwiki.jp/kancolle/Nelson#NelsonTouch
 const isNelsonSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Nelson_Touch])(1),
   isFullFleet,
@@ -184,6 +189,7 @@ const isNelsonSpAttack = overEvery([
   overShip(5)(isNotSub),
 ])
 
+// https://wikiwiki.jp/kancolle/%E9%95%B7%E9%96%80%E6%94%B9%E4%BA%8C#isseisya
 const isNagatoSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Nagato_Punch])(1),
   isFullFleet,
@@ -195,6 +201,7 @@ const isNagatoSpAttack = overEvery([
   overShip(5)(isNotSub),
 ])
 
+// https://wikiwiki.jp/kancolle/%E9%99%B8%E5%A5%A5%E6%94%B9%E4%BA%8C#isseisya
 const isMutsuSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Mutsu_Splash])(1),
   isFullFleet,
@@ -206,6 +213,7 @@ const isMutsuSpAttack = overEvery([
   overShip(5)(isNotSub),
 ])
 
+// https://wikiwiki.jp/kancolle/Colorado#ColoTouch
 const isColoradoSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Colorado_Fire])(1),
   isFullFleet,
@@ -217,8 +225,9 @@ const isColoradoSpAttack = overEvery([
   overShip(5)(isNotSub),
 ])
 
+// https://wikiwiki.jp/kancolle/%E9%87%91%E5%89%9B%E6%94%B9%E4%BA%8C%E4%B8%99#SpecialAttack
 const isKongoClassKaiNiCSpAttack = overEvery([
-  isSpAttackLessThan([SP_ATTACK_ID.Kongo_Class_Kaini_C_Charge])(2),
+  isSpAttackLessThan([SP_ATTACK_ID.Kongo_Class_Kaini_C_Charge])(3),
   isFleetWith5NonSubs,
   overSome([
     // Kongo Kai Ni C
@@ -231,7 +240,7 @@ const isKongoClassKaiNiCSpAttack = overEvery([
             isHarunaKaiNi,
             isHarunaKaiNiB,
             isHarunaKaiNiC,
-            isKirishimaKaiNi,
+            isKirishimaKaiNiC,
             isWarspite,
             isValiant,
           ]),
@@ -275,6 +284,7 @@ const isKongoClassKaiNiCSpAttack = overEvery([
   ]),
 ])
 
+// https://wikiwiki.jp/kancolle/%E5%A4%A7%E9%AF%A8#SpecialAttack
 const isSubmarineSpAttack = overEvery([
   hasShipMoreThan(3),
   hasSubmarineSupply,
@@ -289,6 +299,7 @@ const isSubmarineSpAttack = overEvery([
   ]),
 ])
 
+// https://wikiwiki.jp/kancolle/%E5%A4%A7%E5%92%8C%E6%94%B9%E4%BA%8C#SpecialAttack
 const isYamatoDoubleAttack = overEvery([
   isFullFleet,
   overSome([
@@ -296,6 +307,7 @@ const isYamatoDoubleAttack = overEvery([
     overEvery([overShip(0)(isYamatoKaiNi), overShip(1)(isBismarckDrei)]),
     overEvery([overShip(0)(isYamatoKaiNi), overShip(1)(isIowaKai)]),
     overEvery([overShip(0)(isYamatoKaiNi), overShip(1)(isRichelieuKaiOrDeux)]),
+    overEvery([overShip(0)(isYamatoKaiNi), overShip(1)(isJeanBartKai)]),
     overEvery([overShip(0)(isMusashiKaiNi), overShip(1)(isYamatoKaiNi)]),
   ]),
   overShip(0)(isNotMidDmg),
@@ -319,13 +331,26 @@ const isYamatoTripleAttack = overEvery([
     overEvery([overShip(1)(isYamashiroKaiNi), overShip(2)(isFusoKaiNi)]),
     overEvery([overShip(1)(isNelsonClass), overShip(2)(isWarspite)]),
     overEvery([overShip(1)(isWarspite), overShip(2)(isNelsonClass)]),
+    overEvery([overShip(1)(isValiant), overShip(2)(isWarspite)]),
+    overEvery([overShip(1)(isWarspite), overShip(2)(isValiant)]),
+    overEvery([overShip(1)(isNelsonClassKai), overShip(2)(isNelsonClassKai)]),
     overEvery([overShip(1)(isKongoKaiNiC), overShip(2)(isHieiKaiNiC)]),
     overEvery([overShip(1)(isHieiKaiNiC), overShip(2)(isKongoKaiNiC)]),
+    overEvery([overShip(1)(isKongoKaiNiC), overShip(2)(isHarunaKaiNiB)]),
+    overEvery([overShip(1)(isHarunaKaiNiB), overShip(2)(isKongoKaiNiC)]),
+    overEvery([overShip(1)(isKongoKaiNiC), overShip(2)(isHarunaKaiNiC)]),
+    overEvery([overShip(1)(isHarunaKaiNiC), overShip(2)(isKongoKaiNiC)]),
+    overEvery([overShip(1)(isKongoKaiNiC), overShip(2)(isKirishimaKaiNiC)]),
+    overEvery([overShip(1)(isKirishimaKaiNiC), overShip(2)(isKongoKaiNiC)]),
+    overEvery([overShip(1)(isHieiKaiNiC), overShip(2)(isKirishimaKaiNiC)]),
+    overEvery([overShip(1)(isKirishimaKaiNiC), overShip(2)(isHieiKaiNiC)]),
     overEvery([overShip(1)(isSouthDakotaKai), overShip(2)(isWashingtonKai)]),
     overEvery([overShip(1)(isWashingtonKai), overShip(2)(isSouthDakotaKai)]),
     overEvery([overShip(1)(isItalia), overShip(2)(isRomaKai)]),
     overEvery([overShip(1)(isRomaKai), overShip(2)(isItalia)]),
     overEvery([overShip(1)(isColoradoClass), overShip(2)(isColoradoClass)]),
+    overEvery([overShip(1)(isRichelieuKaiOrDeux), overShip(2)(isJeanBartKai)]),
+    overEvery([overShip(1)(isJeanBartKai), overShip(2)(isRichelieuKaiOrDeux)]),
   ]),
   overShip(0)(shipEvery([isNotMidDmg, isYamatoKaiNi])),
   overShip(1)(isNotMidDmg),
@@ -341,6 +366,7 @@ const isYamatoAttack = overEvery([
   overSome([isYamatoDoubleAttack, isYamatoTripleAttack]),
 ])
 
+// https://wikiwiki.jp/kancolle/Warspite%E6%94%B9#SpecialAttack
 const isQESpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.QE_Touch])(1),
   isFullFleet,
@@ -356,6 +382,7 @@ const isQESpAttack = overEvery([
   overShip(5)(isNotSub),
 ])
 
+// https://wikiwiki.jp/kancolle/Richelieu%E6%94%B9#SpecialAttack
 const isBaguetteSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Baguette_Charge])(1),
   isFullFleet,
