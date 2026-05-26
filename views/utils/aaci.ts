@@ -99,6 +99,11 @@ const isHighAngleMount = iconIs(16)
 // 13: 大型電探
 const isRadar = (equip: GameEquip) => itemTypeIs(12)(equip) || itemTypeIs(13)(equip)
 
+// shipId 426: Fubuki K2, 1035: Fubuki K3, 1040: Fubuki K3 Go
+const isFubukiK2 = shipIdIs(426)
+const isFubukiK3 = shipIdIs(1035)
+const isFubukiK3Go = shipIdIs(1040)
+
 // id 1~3: Akizuki-class
 declareAACI({
   name: ['Akizuki Class'],
@@ -110,11 +115,11 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Akizuki Class'],
+  name: ['Akizuki Class', '吹雪改三護(六式)'],
   id: 2,
   fixed: 6,
   modifier: 1.7,
-  shipValid: isAkizukiClass,
+  shipValid: (ship) => isAkizukiClass(ship) || isFubukiK3Go(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isRadar)),
 })
 
@@ -262,32 +267,34 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['五十鈴改二'],
+  name: ['五十鈴改二', '吹雪改三'],
   id: 15,
   fixed: 3,
   modifier: 1.3,
-  shipValid: isIsuzuK2,
+  shipValid: (ship) => isIsuzuK2(ship) || isFubukiK3(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
 const isKasumiK2B = shipIdIs(470)
+const isYuubariK2 = shipIdIs(622)
+const isInagiK2 = shipIdIs(979)
 
 // id 16~17 Kasumi K2B
 declareAACI({
-  name: ['霞改二乙'],
+  name: ['霞改二乙', '夕張改二', '吹雪改三'],
   id: 16,
   fixed: 4,
   modifier: 1.4,
-  shipValid: isKasumiK2B,
+  shipValid: (ship) => isKasumiK2B(ship) || isYuubariK2(ship) || isFubukiK3(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun), hasSome(isAARadar)),
 })
 
 declareAACI({
-  name: ['霞改二乙'],
+  name: ['霞改二乙', '稲木改二'],
   id: 17,
   fixed: 2,
   modifier: 1.25,
-  shipValid: isKasumiK2B,
+  shipValid: (ship) => isKasumiK2B(ship) || isInagiK2(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAAGun)),
 })
 
@@ -332,11 +339,11 @@ const isYuraK2 = shipIdIs(488)
 
 // id 21: Yura K2
 declareAACI({
-  name: ['由良改二'],
+  name: ['由良改二', '吹雪改三', '吹雪改三護(六式)'],
   id: 21,
   fixed: 5,
   modifier: 1.45,
-  shipValid: isYuraK2,
+  shipValid: (ship) => isYuraK2(ship) || isFubukiK3(ship) || isFubukiK3Go(ship),
   equipsValid: validAll(hasSome(isHighAngleMount), hasSome(isAARadar)),
 })
 
@@ -370,11 +377,11 @@ const isTatsutaK2 = shipIdIs(478)
 
 // id 24: Tenryuu K2 & Tatsuta K2
 declareAACI({
-  name: ['天龍改二', '龍田改二'],
+  name: ['天龍改二', '龍田改二', '吹雪改三'],
   id: 24,
   fixed: 3,
   modifier: 1.25,
-  shipValid: (ship) => isTenryuuK2(ship) || isTatsutaK2(ship),
+  shipValid: (ship) => isTenryuuK2(ship) || isTatsutaK2(ship) || isFubukiK3(ship),
   equipsValid: validAll(
     hasSome((e) => isAAGun(e) && !isCDMG(e)),
     hasSome(isHighAngleMount),
@@ -402,6 +409,9 @@ const isMusashiK2 = shipIdIs(546)
 const isYamatoK2 = (ship: GameShip) => shipIdIs(911)(ship) || shipIdIs(916)(ship)
 // 275: 10cm連装高角砲改+増設機銃
 const isHighAngleMountGun = equipIdIs(275)
+// 71: 10cm連装高角砲(砲架), 220: 8cm高角砲改+増設機銃
+const is10cmTwinHAGunMountBase = equipIdIs(71)
+const is8cmHAMountKaiExtra = equipIdIs(220)
 
 // id 26: Yamato K2 / Yamato K2 Heavy / Musashi K2
 declareAACI({
@@ -413,15 +423,22 @@ declareAACI({
   equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isAARadar)),
 })
 
-// id 27: Ooyodo Kai
+// id 27: Ooyodo Kai / Hiryuu K3
 const isOoyodoK = shipIdIs(321)
+const isHiryuuK3 = shipIdIs(1031)
 declareAACI({
-  name: ['大淀改'],
+  name: ['大淀改', '飛龍改三'],
   id: 27,
   fixed: 5,
   modifier: 1.55,
-  shipValid: isOoyodoK,
-  equipsValid: validAll(hasSome(isHighAngleMountGun), hasSome(isRocketK2), hasSome(isAARadar)),
+  shipValid: (ship) => isOoyodoK(ship) || isHiryuuK3(ship),
+  equipsValid: validAll(
+    hasSome(
+      (e) => isHighAngleMountGun(e) || is10cmTwinHAGunMountBase(e) || is8cmHAMountKaiExtra(e),
+    ),
+    hasSome(isRocketK2),
+    hasSome(isAARadar),
+  ),
 })
 
 const isMusashiK = shipIdIs(148)
@@ -467,13 +484,13 @@ declareAACI({
   equipsValid: hasAtLeast(isHighAngleMount, 3),
 })
 
-// id 31: Tenryuu K2
+// id 31: Tenryuu K2 / Inagi K2
 declareAACI({
-  name: ['天龍改二'],
+  name: ['天龍改二', '稲木改二'],
   id: 31,
   fixed: 2,
   modifier: 1.25,
-  shipValid: isTenryuuK2,
+  shipValid: (ship) => isTenryuuK2(ship) || isInagiK2(ship),
   equipsValid: hasAtLeast(isHighAngleMount, 2),
 })
 
@@ -535,11 +552,11 @@ const is5InchSingleGunMountMk30PlusGFCS = equipIdIs(308)
 
 // id 34~37: Johnston
 declareAACI({
-  name: ['Fletcher-class'],
+  name: ['Fletcher-class', '吹雪改三護(六式)'],
   id: 34,
   fixed: 7,
   modifier: 1.6,
-  shipValid: isFletcherClassOrKai,
+  shipValid: (ship) => isFletcherClassOrKai(ship) || isFubukiK3Go(ship),
   equipsValid: hasAtLeast(is5InchSingleGunMountMk30PlusGFCS, 2),
 })
 
@@ -548,11 +565,11 @@ const is5InchSingleGunMountMk30OrKai = (equip: GameEquip) =>
 const is5InckSingleGunMountMk30Kai = (equip: GameEquip) => equip.api_slotitem_id === 313
 
 declareAACI({
-  name: ['Fletcher-class'],
+  name: ['Fletcher-class', '吹雪改三護(六式)'],
   id: 35,
   fixed: 6,
   modifier: 1.55,
-  shipValid: isFletcherClassOrKai,
+  shipValid: (ship) => isFletcherClassOrKai(ship) || isFubukiK3Go(ship),
   equipsValid: validAll(
     hasSome(is5InchSingleGunMountMk30PlusGFCS),
     hasSome(is5InchSingleGunMountMk30OrKai),
@@ -562,11 +579,11 @@ declareAACI({
 const isGFCSMk37 = equipIdIs(307)
 
 declareAACI({
-  name: ['Fletcher-class'],
+  name: ['Fletcher-class', '吹雪改三護(六式)'],
   id: 36,
   fixed: 6,
   modifier: 1.55,
-  shipValid: isFletcherClassOrKai,
+  shipValid: (ship) => isFletcherClassOrKai(ship) || isFubukiK3Go(ship),
   equipsValid: validAll(hasAtLeast(is5InchSingleGunMountMk30OrKai, 2), hasSome(isGFCSMk37)),
 })
 
@@ -747,11 +764,11 @@ declareAACI({
 const is100mmTwinMountKaiAAFD = equipIdIs(533)
 
 declareAACI({
-  name: ['Akizuki Class Kai', 'Akizuki Class Kai 2'],
+  name: ['Akizuki Class Kai', 'Akizuki Class Kai 2', '吹雪改三護(六式)'],
   id: 48,
   fixed: 8,
   modifier: 1.75,
-  shipValid: (ship) => isAkizukiClass(ship) && isKai(ship),
+  shipValid: (ship) => (isAkizukiClass(ship) && isKai(ship)) || isFubukiK3Go(ship),
   equipsValid: validAny(
     validAll(hasAtLeast(is100mmTwinMountKaiAAFD, 2), hasSome(isAdvancedAARadar)),
   ),
@@ -764,9 +781,6 @@ const isHayanamiK2 = shipIdIs(982)
 const isHamanamiK2 = shipIdIs(983)
 const isTamananiK2 = shipIdIs(1033)
 
-const isFubukiK2 = shipIdIs(426)
-const isFubukiK3 = shipIdIs(1035)
-const isFubukiK3Go = shipIdIs(1040)
 const isShirayukiK2 = shipIdIs(986)
 const isHatsuyukiK2 = shipIdIs(987)
 
