@@ -263,7 +263,7 @@ const ShipName = styled.div<{ avatar?: boolean }>`
       padding-right: 6px;
       font-weight: 600;
       color: white;
-      text-shadow: #000 0 0 10px;
+      text-shadow: #000 0 0 3px;
     `}
 `
 
@@ -281,7 +281,7 @@ const ShipLvText = styled.div<{ avatar?: boolean }>`
       text-align: end;
       padding-right: 6px;
       color: white;
-      text-shadow: #000 0 0 10px;
+      text-shadow: #000 0 0 3px;
     `}
 `
 
@@ -551,7 +551,7 @@ const ShipFP = styled.div<{ avatar?: boolean }>`
       text-align: end;
       padding-right: 6px;
       color: white;
-      text-shadow: #000 0 0 10px;
+      text-shadow: #000 0 0 3px;
     `}
 `
 

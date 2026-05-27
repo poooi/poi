@@ -46,7 +46,7 @@ export const ShipDeck = styled.div<{
   ${({ transition }) =>
     transition &&
     css`
-      transition: all 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
+      transition: transform 0.3s 0.2s cubic-bezier(1, 0, 0, 1);
     `}
   ${({ left, right }) =>
     left
@@ -60,7 +60,7 @@ export const ShipDeck = styled.div<{
   ${({ active }) =>
     !active &&
     css`
-      & > * {
+      & > div {
         display: none;
       }
     `}

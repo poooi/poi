@@ -1,14 +1,7 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { isEqual, omit } from 'lodash'
-import React, {
-  Children,
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import React, { Children, forwardRef, memo, useImperativeHandle, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
 
@@ -55,7 +48,7 @@ const PoiTabChildPositioner = styled.div<{
   ${({ active }) =>
     !active &&
     css`
-      & > * {
+      & > div {
         display: none !important;
       }
     `}
@@ -99,12 +92,11 @@ const TabContentsUnionInner = forwardRef<TabContentsUnionHandle, Props>(
       setInternalActiveTab(activeTab)
     }
 
-    const handleTransitionEnd = useCallback(
-      (key: string) => {
+    const handleTransitionEnd = (key: string) => {
+      requestAnimationFrame(() => {
         if (prevTab === key) setPrevTab(null)
-      },
-      [prevTab],
-    )
+      })
+    }
 
     useImperativeHandle(
       ref,

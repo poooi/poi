@@ -1,5 +1,5 @@
-import { take } from 'lodash'
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import { take, debounce } from 'lodash'
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { styled, keyframes, css } from 'styled-components'
 import { CustomTag } from 'views/components/etc/custom-tag'
 import { ResizeSensor } from 'views/components/etc/resize-sensor'
@@ -55,7 +55,6 @@ const AlertMain = styled.div`
   height: 29px;
   pointer-events: none;
   position: relative;
-  transition: 0.3s;
   width: 100%;
   border-radius: 0;
   box-shadow: none !important;
@@ -67,13 +66,15 @@ const AlertContainer = styled(Alert)`
   overflow: hidden;
   pointer-events: auto;
   position: relative;
-  transition: 0.3s;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
   z-index: 2;
 `
 
 const AlertLog = styled.div<{ $toggle: boolean; $height: number; $containerHeight: number }>`
   overflow: hidden;
-  transition: 0.3s;
+  transition: transform 0.3s;
   z-index: 1;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
@@ -164,31 +165,51 @@ export const PoiAlert: React.FC = () => {
     })
   }, [])
 
-  const handleAlertMainResize = useCallback((entries: ResizeObserverEntry[]) => {
-    entries.forEach((entry) => {
-      if (entry.contentRect) {
-        const { width: containerWidth, height: containerHeight } = entry.contentRect
-        setContainerWidth(containerWidth)
-        setContainerHeight(containerHeight)
-      }
-    })
-  }, [])
+  const handleAlertMainResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.contentRect) {
+            const { width: containerWidth, height: containerHeight } = entry.contentRect
+            setContainerWidth(containerWidth)
+            setContainerHeight(containerHeight)
+          }
+        })
+      }, 50),
+    [],
+  )
 
-  const handleMsgCntResize = useCallback((entries: ResizeObserverEntry[]) => {
-    entries.forEach((entry) => {
-      if (entry.contentRect) {
-        setMsgWidth(entry.contentRect.width)
-      }
-    })
-  }, [])
+  const handleMsgCntResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.contentRect) {
+            setMsgWidth(entry.contentRect.width)
+          }
+        })
+      }, 50),
+    [],
+  )
 
-  const handleAlertLogResize = useCallback((entries: ResizeObserverEntry[]) => {
-    entries.forEach((entry) => {
-      if (entry.contentRect) {
-        setHistoryHeight(entry.contentRect.height)
-      }
-    })
-  }, [])
+  const handleAlertLogResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          if (entry.contentRect) {
+            setHistoryHeight(entry.contentRect.height)
+          }
+        })
+      }, 50),
+    [],
+  )
+
+  useEffect(() => {
+    return () => {
+      handleAlertMainResize.cancel()
+      handleMsgCntResize.cancel()
+      handleAlertLogResize.cancel()
+    }
+  }, [handleAlertMainResize, handleMsgCntResize, handleAlertLogResize])
 
   useEffect(() => {
     messageInstance.on(handleAddAlert)

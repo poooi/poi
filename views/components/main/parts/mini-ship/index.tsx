@@ -98,10 +98,12 @@ const MiniShipInner = ({
     setActiveFleetId(activeFleetIdProp)
   }
 
-  const handleTransitionEnd = useCallback(
-    (i: number) => setPrevFleetId((prev) => (i === prev ? null : prev)),
-    [],
-  )
+  const handleTransitionEnd = (i: number) =>
+    requestAnimationFrame(() => {
+      if (i === prevFleetId) {
+        setPrevFleetId(null)
+      }
+    })
 
   const handleClick = useCallback(
     (idx: number) => {

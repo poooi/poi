@@ -89,9 +89,9 @@ const MapRoutesSVG = styled.svg<{ theme?: { BLUE5?: string; vibrant?: string } }
 `
 
 const MaproutesBlink = keyframes`
-  from { fill: #d50000; }
-  50% { fill: #ff9800; }
-  to { fill: #d50000; }
+  from { opacity: 1; }
+  50% { opacity: 0.35; }
+  to { opacity: 1; }
 `
 
 const Point = styled.rect<{ active?: boolean; passed?: boolean; boss?: boolean }>`
@@ -99,6 +99,7 @@ const Point = styled.rect<{ active?: boolean; passed?: boolean; boss?: boolean }
   ${({ active }) =>
     active &&
     css`
+      fill: #d50000;
       animation: ${MaproutesBlink} 1s linear infinite;
     `}
   ${({ passed }) =>
