@@ -1,10 +1,7 @@
-import type { TFunction } from 'i18next'
-import type { APIShip } from 'kcsapi/api_port/port/response'
-import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, ProgressBar, Tag, Tooltip } from '@blueprintjs/core'
-import { isEqual, memoize, omit, pick } from 'lodash'
+import { memoize } from 'lodash'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -82,42 +79,15 @@ interface ShipRowProps {
   showSpAttackLabel?: boolean
 }
 
-const SHIP_PICK_PROPS = [
-  'api_lv',
-  'api_exp',
-  'api_id',
-  'api_nowhp',
-  'api_maxhp',
-  'api_cond',
-  'api_fuel',
-  'api_bull',
-  'api_soku',
-] as const
-
-type ShipRowInnerProps = ShipRowProps & {
-  ship?: APIShip
-  $ship?: APIMstShip
-  $shipTypes: Record<string, { api_name?: string }>
-  labelStatus: number
-  shipAvatarColor: string
-  t: TFunction
-}
-
-const ShipRowInner = memo(
-  ({
-    ship,
-    $ship,
-    $shipTypes,
-    labelStatus,
-    enableAvatar,
-    shipAvatarColor,
-    showSpAttackLabel,
-    compact,
-    t,
-  }: ShipRowInnerProps) => {
+export const ShipRow = memo(
+  ({ shipId, enableAvatar, compact, showSpAttackLabel }: ShipRowProps) => {
+    const { t } = useTranslation(['main', 'resources'])
+    const selector = React.useMemo(() => shipRowDataSelectorFactory(shipId), [shipId])
+    const { ship, $ship, $shipTypes, labelStatus, shipAvatarColor } = useSelector(
+      (state: RootState) => selector(state),
+    )
     const hideShipName = enableAvatar && compact
     const labelStatusStyle = getStatusStyle(labelStatus)
-    const shipId = ship?.api_id ?? -1
     const shipMstId = $ship?.api_id ?? -1
     const apiNowhp = ship?.api_nowhp ?? 0
     const apiMaxhp = ship?.api_maxhp ?? 1
@@ -291,25 +261,5 @@ const ShipRowInner = memo(
       </Tooltip>
     )
   },
-  (prev, next) =>
-    isEqual(omit(prev, ['ship']), omit(next, ['ship'])) &&
-    isEqual(pick(prev.ship, SHIP_PICK_PROPS), pick(next.ship, SHIP_PICK_PROPS)),
 )
-ShipRowInner.displayName = 'ShipRowInner'
-
-export const ShipRow = ({ shipId, enableAvatar, compact, showSpAttackLabel }: ShipRowProps) => {
-  const { t } = useTranslation(['main', 'resources'])
-  const selector = React.useMemo(() => shipRowDataSelectorFactory(shipId), [shipId])
-  const data = useSelector((state: RootState) => selector(state))
-
-  return (
-    <ShipRowInner
-      {...data}
-      shipId={shipId}
-      enableAvatar={enableAvatar}
-      compact={compact}
-      showSpAttackLabel={showSpAttackLabel}
-      t={t}
-    />
-  )
-}
+ShipRow.displayName = 'ShipRow'

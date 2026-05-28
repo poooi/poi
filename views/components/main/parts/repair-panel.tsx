@@ -98,15 +98,6 @@ interface RepairDock {
   api_state: number
 }
 
-interface RepairPanelInnerProps {
-  repairs: RepairDock[]
-  $ships: ConstState['$ships']
-  inRepairShips: Ship[]
-  canNotify: boolean
-  enableAvatar: boolean
-  editable?: boolean
-}
-
 const repairBasicNotifyConfig = {
   type: 'repair',
   title: '',
@@ -115,14 +106,10 @@ const repairBasicNotifyConfig = {
   preemptTime: 60,
 }
 
-const RepairPanelInner = ({
-  canNotify,
-  repairs,
-  $ships,
-  inRepairShips,
-  enableAvatar,
-  editable,
-}: RepairPanelInnerProps) => {
+export const RepairPanel = ({ editable }: { editable?: boolean }) => {
+  const { repairs, $ships, inRepairShips, canNotify, enableAvatar } = useSelector(
+    (state: RootState) => repairPanelSelector(state),
+  )
   const ships = indexify(inRepairShips)
   return (
     <DockPanelCardWrapper elevation={editable ? 2 : 0} interactive={editable}>
@@ -255,19 +242,5 @@ const RepairPanelRow = ({
         </Tooltip>
       </DockInnerWrapper>
     </PanelItemTooltip>
-  )
-}
-
-export const RepairPanel = ({ editable }: { editable?: boolean }) => {
-  const data = useSelector((state: RootState) => repairPanelSelector(state))
-  return (
-    <RepairPanelInner
-      repairs={data.repairs as RepairDock[]}
-      $ships={data.$ships}
-      inRepairShips={data.inRepairShips}
-      canNotify={data.canNotify}
-      enableAvatar={data.enableAvatar}
-      editable={editable}
-    />
   )
 }

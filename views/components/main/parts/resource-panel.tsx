@@ -95,13 +95,11 @@ const getPanelDimension = (width: number): number => {
   return 2
 }
 
-interface ResourcePanelInnerProps {
-  resources: number[]
-  admiralLv: number
-  editable?: boolean
-}
-
-const ResourcePanelInner = ({ resources, admiralLv, editable }: ResourcePanelInnerProps) => {
+export const ResourcePanel = ({ editable }: { editable?: boolean }) => {
+  const resources = useSelector(
+    (state: RootState) => state?.info?.resources ?? [0, 0, 0, 0, 0, 0, 0, 0],
+  )
+  const admiralLv = useSelector((state: RootState) => state?.info?.basic?.api_level ?? 0)
   const animTimeStamp = useRef([0, 0, 0, 0, 0, 0, 0, 0])
   const [resourceIncrement, setResourceIncrement] = useState([0, 0, 0, 0, 0, 0, 0, 0])
   const [dimension, setDimension] = useState(2)
@@ -184,12 +182,4 @@ const ResourcePanelInner = ({ resources, admiralLv, editable }: ResourcePanelInn
       </CardWrapper>
     </ResizeSensor>
   )
-}
-
-export const ResourcePanel = ({ editable }: { editable?: boolean }) => {
-  const resources = useSelector(
-    (state: RootState) => state?.info?.resources ?? [0, 0, 0, 0, 0, 0, 0, 0],
-  )
-  const admiralLv = useSelector((state: RootState) => state?.info?.basic?.api_level ?? 0)
-  return <ResourcePanelInner resources={resources} admiralLv={admiralLv} editable={editable} />
 }

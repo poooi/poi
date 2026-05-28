@@ -3,7 +3,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ResizeSensor } from '@blueprintjs/core'
 import { memoize, times } from 'lodash'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -149,34 +149,26 @@ const LBView = ({ enableAvatar, width }: { enableAvatar: boolean; width: number 
   )
 }
 
-interface ShipViewProps {
-  enableTransition: boolean
-  fleetCount: number
-  activeFleetId: number
-  airBaseCnt: number
-  enableAvatar: boolean
-  width: number
-  dispatch: ReturnType<typeof useDispatch>
-}
+const ShipView: FC = () => {
+  const dispatch = useDispatch()
+  const enableTransition = useSelector(
+    (state: RootState) => state.config?.poi?.transition?.enable ?? true,
+  )
+  const fleetCount = useSelector((state: RootState) => state.info?.fleets?.length ?? 4)
+  const activeFleetId = useSelector((state: RootState) => state.ui?.activeFleetId ?? 0)
+  const airBaseCnt = useSelector((state: RootState) => state.info?.airbase?.length ?? 0)
+  const enableAvatar = useSelector(
+    (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,
+  )
+  const width = useSelector(shipRowWidthSelector)
 
-const ShipViewInner = ({
-  enableTransition,
-  fleetCount,
-  activeFleetId: activeFleetIdProp,
-  airBaseCnt,
-  enableAvatar,
-  width,
-  dispatch,
-}: ShipViewProps) => {
-  const [prevPropFleetId, setPrevPropFleetId] = useState(activeFleetIdProp)
-  const [activeFleetId, setActiveFleetId] = useState(activeFleetIdProp)
   const [prevFleetId, setPrevFleetId] = useState<number | null>(null)
 
-  if (activeFleetIdProp !== prevPropFleetId) {
-    setPrevPropFleetId(activeFleetIdProp)
-    setPrevFleetId(activeFleetId)
-    setActiveFleetId(activeFleetIdProp)
-  }
+  useLayoutEffect(() => {
+    return () => {
+      setPrevFleetId(activeFleetId)
+    }
+  }, [activeFleetId])
 
   const handleTransitionEnd = (i: number) =>
     requestAnimationFrame(() => {
@@ -270,32 +262,6 @@ const ShipViewInner = ({
         </ResizeSensor>
       </ShipCard>
     </ShipWrapper>
-  )
-}
-
-const ShipView: FC = () => {
-  const dispatch = useDispatch()
-  const enableTransition = useSelector(
-    (state: RootState) => state.config?.poi?.transition?.enable ?? true,
-  )
-  const fleetCount = useSelector((state: RootState) => state.info?.fleets?.length ?? 4)
-  const activeFleetId = useSelector((state: RootState) => state.ui?.activeFleetId ?? 0)
-  const airBaseCnt = useSelector((state: RootState) => state.info?.airbase?.length ?? 0)
-  const enableAvatar = useSelector(
-    (state: RootState) => state.config?.poi?.appearance?.avatar ?? true,
-  )
-  const width = useSelector(shipRowWidthSelector)
-
-  return (
-    <ShipViewInner
-      enableTransition={enableTransition as boolean}
-      fleetCount={fleetCount as number}
-      activeFleetId={activeFleetId as number}
-      airBaseCnt={airBaseCnt as number}
-      enableAvatar={enableAvatar as boolean}
-      width={width}
-      dispatch={dispatch}
-    />
   )
 }
 

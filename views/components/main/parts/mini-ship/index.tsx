@@ -2,7 +2,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ResizeSensor } from '@blueprintjs/core'
 import { memoize } from 'lodash'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
@@ -71,32 +71,22 @@ const ShipViewSwitchButton = ({
   )
 }
 
-interface MiniShipProps {
-  airBaseCnt: number
-  enableTransition: boolean
-  fleetCount: number
-  activeFleetId: number
-  editable?: boolean
-  dispatch: ReturnType<typeof useDispatch>
-}
+export const MiniShip = ({ editable }: { editable?: boolean }) => {
+  const dispatch = useDispatch()
+  const airBaseCnt = useSelector((state: RootState) => state.info?.airbase?.length ?? 0)
+  const enableTransition = useSelector(
+    (state: RootState) => state.config?.poi?.transition?.enable ?? true,
+  )
+  const fleetCount = useSelector((state: RootState) => state.info?.fleets?.length ?? 4)
+  const activeFleetId = useSelector((state: RootState) => state.ui?.activeFleetId ?? 0)
 
-const MiniShipInner = ({
-  airBaseCnt,
-  enableTransition,
-  fleetCount,
-  activeFleetId: activeFleetIdProp,
-  editable,
-  dispatch,
-}: MiniShipProps) => {
-  const [prevPropFleetId, setPrevPropFleetId] = useState(activeFleetIdProp)
-  const [activeFleetId, setActiveFleetId] = useState(activeFleetIdProp)
   const [prevFleetId, setPrevFleetId] = useState<number | null>(null)
 
-  if (activeFleetIdProp !== prevPropFleetId) {
-    setPrevPropFleetId(activeFleetIdProp)
-    setPrevFleetId(activeFleetId)
-    setActiveFleetId(activeFleetIdProp)
-  }
+  useLayoutEffect(() => {
+    return () => {
+      setPrevFleetId(activeFleetId)
+    }
+  }, [activeFleetId])
 
   const handleTransitionEnd = (i: number) =>
     requestAnimationFrame(() => {
@@ -191,25 +181,5 @@ const MiniShipInner = ({
         </ShipTabContent>
       </ResizeSensor>
     </CardWrapper>
-  )
-}
-
-export const MiniShip = ({ editable }: { editable?: boolean }) => {
-  const dispatch = useDispatch()
-  const airBaseCnt = useSelector((state: RootState) => state.info?.airbase?.length ?? 0)
-  const enableTransition = useSelector(
-    (state: RootState) => state.config?.poi?.transition?.enable ?? true,
-  )
-  const fleetCount = useSelector((state: RootState) => state.info?.fleets?.length ?? 4)
-  const activeFleetId = useSelector((state: RootState) => state.ui?.activeFleetId ?? 0)
-  return (
-    <MiniShipInner
-      airBaseCnt={airBaseCnt}
-      enableTransition={enableTransition}
-      fleetCount={fleetCount}
-      activeFleetId={activeFleetId}
-      editable={editable}
-      dispatch={dispatch}
-    />
   )
 }

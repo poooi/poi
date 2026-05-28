@@ -1,9 +1,9 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, Intent, Tooltip } from '@blueprintjs/core'
-import { map, range, isEqual, compact } from 'lodash'
+import { map, range, compact } from 'lodash'
 import path from 'path'
-import React, { memo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
@@ -111,29 +111,16 @@ const basicNotifyConfig = {
   icon: path.join(ROOT, 'assets', 'img', 'operation', 'expedition.png'),
 }
 
-interface ExpeditionPanelProps {
-  fleetsExpedition: number[][]
-  fleetNames: string[]
-  $expeditions: Record<number, { api_disp_no?: string; api_name?: string }>
-  canNotify: boolean
-  notifyBefore: number
-  editable?: boolean
-}
-
-const ExpeditionPanelInner = memo(
-  (props: ExpeditionPanelProps) => <ExpeditionPanelContent {...props} />,
-  isEqual,
-)
-ExpeditionPanelInner.displayName = 'ExpeditionPanelInner'
-
-const ExpeditionPanelContent = ({
-  fleetsExpedition,
-  fleetNames,
-  $expeditions,
-  canNotify,
-  notifyBefore,
-  editable,
-}: ExpeditionPanelProps) => {
+export const ExpeditionPanel = ({ editable }: { editable?: boolean }) => {
+  const fleetsExpedition = useSelector((state: RootState) => fleetsExpeditionSelector(state))
+  const fleetNames = useSelector((state: RootState) => fleetsNamesSelector(state))
+  const $expeditions = useSelector((state: RootState) => state.const.$missions ?? {})
+  const notifyBefore = useSelector(
+    (state: RootState) => state.config?.poi.notify.expedition.value ?? 60,
+  )
+  const canNotify = useSelector(
+    (state: RootState) => (state.misc as { canNotify?: boolean }).canNotify ?? false,
+  )
   const { t } = useTranslation('main')
   return (
     <CardWrapper elevation={editable ? 2 : 0} interactive={editable}>
@@ -186,28 +173,5 @@ const ExpeditionPanelContent = ({
         )
       })}
     </CardWrapper>
-  )
-}
-
-export const ExpeditionPanel = ({ editable }: { editable?: boolean }) => {
-  const fleetsExpedition = useSelector((state: RootState) => fleetsExpeditionSelector(state))
-  const fleetNames = useSelector((state: RootState) => fleetsNamesSelector(state))
-  const $expeditions = useSelector((state: RootState) => state.const.$missions ?? [])
-  const notifyBefore = useSelector(
-    (state: RootState) => state.config?.poi.notify.expedition.value ?? 60,
-  )
-  const canNotify = useSelector(
-    (state: RootState) => (state.misc as { canNotify?: boolean }).canNotify ?? false,
-  )
-
-  return (
-    <ExpeditionPanelInner
-      fleetsExpedition={fleetsExpedition}
-      fleetNames={fleetNames}
-      $expeditions={$expeditions}
-      canNotify={canNotify}
-      notifyBefore={notifyBefore}
-      editable={editable}
-    />
   )
 }

@@ -94,14 +94,14 @@ function isLayoutsEqual(layouts1: Layouts, layouts2: Layouts): boolean {
     .reduce((a, b) => a && b, true)
 }
 
-interface MainViewInnerProps {
-  layouts: Layouts
-  editable: boolean
-  mainpanewidth: number
-  dispatch: ReturnType<typeof useDispatch>
-}
+const MainView = () => {
+  const dispatch = useDispatch()
+  const layouts = useSelector((state: RootState) =>
+    layoutConfigFix(state.config?.poi?.mainpanel?.layout ?? defaultLayout),
+  )
+  const editable = useSelector((state: RootState) => state.config?.poi?.layout?.editable ?? false)
+  const mainpanewidth = useSelector((state: RootState) => state.layout?.mainpane?.width ?? 450)
 
-const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewInnerProps) => {
   const onLayoutChange = useCallback((_layout: Layout, newLayouts: Layouts) => {
     const currentLayouts = config.get('poi.mainpanel.layout')
     if (!isLayoutsEqual(newLayouts, currentLayouts)) {
@@ -165,23 +165,6 @@ const MainViewInner = ({ layouts, editable, mainpanewidth, dispatch }: MainViewI
         </ResponsiveReactGridLayout>
       </MainPanelContent>
     </ResizeSensor>
-  )
-}
-
-const MainView = () => {
-  const dispatch = useDispatch()
-  const layouts = useSelector((state: RootState) =>
-    layoutConfigFix(state.config?.poi?.mainpanel?.layout ?? defaultLayout),
-  )
-  const editable = useSelector((state: RootState) => state.config?.poi?.layout?.editable ?? false)
-  const mainpanewidth = useSelector((state: RootState) => state.layout?.mainpane?.width ?? 450)
-  return (
-    <MainViewInner
-      layouts={layouts}
-      editable={editable}
-      mainpanewidth={mainpanewidth}
-      dispatch={dispatch}
-    />
   )
 }
 

@@ -300,9 +300,7 @@ const mapReminderSelector = createSelector(
   }),
 )
 
-export const PoiMapReminder = () => <PoiMapReminderInner />
-
-const PoiMapReminderInner = () => {
+export const PoiMapReminder = () => {
   const { t } = useTranslation()
   const { mapHp, mapData, nextEnemy, currentNode, mapId, maps, pinminimap } = useSelector(
     (state: RootState) => mapReminderSelector(state),
