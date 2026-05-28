@@ -273,6 +273,11 @@ app.on('ready', () => {
     backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
     vibrancy: 'under-window',
     roundedCorners: true,
+    show: false,
+  })
+
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show()
   })
 
   electronRemote.enable(mainWindow.webContents)

@@ -133,6 +133,7 @@ export function stopNavigateAndHandleNewWindow(id: number) {
         },
         transparent: isModernDarwin,
         backgroundMaterial: config.get('poi.appearance.vibrant', 0) ? 'acrylic' : 'none',
+        show: false,
       }
       const pinConfig = config.get(`poi.plugin.pin.${pluginId}`, undefined)
       if (pinConfig && parentWindow) {

@@ -194,6 +194,9 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
           const currentWindow = BrowserWindow.getAllWindows().find((a) =>
             a.webContents.getURL().endsWith(plugin.id),
           )
+          currentWindow?.once('ready-to-show', () => {
+            currentWindow.show()
+          })
           currentWindowRef.current = currentWindow
           externalWindowRef.current.document.head.innerHTML = `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">

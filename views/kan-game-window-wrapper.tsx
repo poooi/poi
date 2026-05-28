@@ -259,6 +259,9 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         BrowserWindow.getAllWindows().find((a) =>
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
+      curWindow?.once('ready-to-show', () => {
+        curWindow.show()
+      })
       currentWindowRef.current = curWindow
       windowRefsRef.current.currentWindow = curWindow
 
