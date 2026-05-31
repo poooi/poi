@@ -342,20 +342,23 @@ export const PoiMapReminder = () => {
         }}
         content={
           <PopoverContainer>
-            {(nextEnemy ?? []).reverse().map(({ api_ship_ids = [] }, index) => (
-              <EnemyContainer key={index}>
-                {api_ship_ids.map((id, idx) => (
-                  <Avatar
-                    key={`${id}-${idx}`}
-                    height={38}
-                    mstId={id}
-                    useFixedWidth={false}
-                    useDefaultBG={false}
-                    showFullImg
-                  />
-                ))}
-              </EnemyContainer>
-            ))}
+            {(nextEnemy ?? [])
+              .slice()
+              .reverse()
+              .map(({ api_ship_ids = [] }, index) => (
+                <EnemyContainer key={index}>
+                  {api_ship_ids.map((id, idx) => (
+                    <Avatar
+                      key={`${id}-${idx}`}
+                      height={38}
+                      mstId={id}
+                      useFixedWidth={false}
+                      useDefaultBG={false}
+                      showFullImg
+                    />
+                  ))}
+                </EnemyContainer>
+              ))}
             <MapContainer>
               <MapRoutes />
               <MapInfoMsg className="map-info-msg">
