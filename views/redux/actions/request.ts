@@ -1,4 +1,4 @@
-import type { APIStart2GetOptionSettingRequest } from 'kcsapi'
+import type { APIReqPracticeBattleRequest, APIStart2GetOptionSettingRequest } from 'kcsapi'
 
 import { createAction } from '@reduxjs/toolkit'
 
@@ -8,14 +8,6 @@ export const createAPIStart2GetOptionSettingRequestAction = createAction<
   GameRequestPayload<APIStart2GetOptionSettingRequest>
 >('@@Request/kcsapi/api_start2/get_option_setting')
 
-// FIXME: Not in kcsapi package - @@Request/kcsapi/api_req_practice/battle
-export interface APIReqPracticeBattlePostBody {
-  api_deck_id: string
-  api_enemy_id: string
-  api_formation: string
-  api_verno: string
-}
-
 export const createAPIReqPracticeBattleRequestAction = createAction<
-  GameRequestPayload<APIReqPracticeBattlePostBody>
+  GameRequestPayload<APIReqPracticeBattleRequest>
 >('@@Request/kcsapi/api_req_practice/battle')

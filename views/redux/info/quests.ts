@@ -3,7 +3,17 @@ import type { Dispatch } from 'redux'
 
 import { createSlice } from '@reduxjs/toolkit'
 import CSON from 'cson'
-import { map, sortBy, mapValues, forEach, values, fromPairs, isEqual, range } from 'lodash'
+import {
+  map,
+  sortBy,
+  mapValues,
+  forEach,
+  values,
+  fromPairs,
+  isEqual,
+  range,
+  includes,
+} from 'lodash'
 import moment from 'moment-timezone'
 import path from 'path'
 import Scheduler from 'views/services/scheduler'
@@ -326,8 +336,7 @@ function satisfyGoal(
 ): boolean {
   const goalReq = goal[req]
   const optionVal = options?.[req]
-  // @ts-expect-error FIXME: wating ts magic
-  const unsatisfy = goalReq && (!optionVal || !goalReq.includes(optionVal))
+  const unsatisfy = goalReq && (!optionVal || !includes(goalReq, optionVal))
   return !unsatisfy
 }
 
