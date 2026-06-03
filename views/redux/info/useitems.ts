@@ -1,3 +1,5 @@
+import type { APIUseitem } from 'kcsapi/api_get_member/require_info/response'
+
 import { createSlice } from '@reduxjs/toolkit'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
 
@@ -10,13 +12,8 @@ import {
   createAPIReqSortieBattleResultResponseAction,
 } from '../actions'
 
-export interface UseItem {
-  api_id?: number
-  api_count?: number
-}
-
 export interface UseItemsState {
-  [key: `${number}` | number]: UseItem
+  [key: `${number}` | number]: APIUseitem
 }
 
 /**
@@ -48,12 +45,12 @@ const useitemsSlice = createSlice({
     builder
       // info from login
       .addCase(createAPIGetMemberRequireInfoAction, (state, { payload }) => {
-        const newState = indexify((payload.body.api_useitem || []) as UseItem[])
+        const newState = indexify(payload.body.api_useitem || [])
         return compareUpdate(pickExisting(state, newState), newState)
       })
       // info from login
       .addCase(createAPIGetMemberUseitemResponseAction, (state, { payload }) => {
-        const newState = indexify<UseItem>(payload.body)
+        const newState = indexify<APIUseitem>(payload.body)
         return compareUpdate(pickExisting(state, newState), newState)
       })
       // item remodel consumption
@@ -78,16 +75,9 @@ const useitemsSlice = createSlice({
       })
       // mission award
       .addCase(createAPIReqMissionResultResponseAction, (state, { payload }) => {
-        const body = payload.body as {
-          api_get_item1?: { api_useitem_id?: number; api_useitem_count?: number }
-        }
-        const { api_get_item1 } = body
+        const { api_get_item1 } = payload.body
         if (api_get_item1?.api_useitem_id != null && api_get_item1.api_useitem_id > 0) {
-          return increment(
-            state,
-            api_get_item1.api_useitem_id,
-            api_get_item1.api_useitem_count || 0,
-          )
+          return increment(state, api_get_item1.api_useitem_id, api_get_item1.api_useitem_count)
         }
         return state
       })

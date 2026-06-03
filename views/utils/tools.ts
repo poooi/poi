@@ -144,7 +144,7 @@ export function buildArray<T = any>(
  * @param array array to build
  * @param key value to be key
  */
-export function indexify<T = any>(array: any[], key = 'api_id'): Dictionary<T> {
+export function indexify<T = any>(array: T[], key = 'api_id'): Dictionary<T> {
   return keyBy(array, key)
 }
 

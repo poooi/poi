@@ -9,12 +9,6 @@ import {
   createAPIReqMapStartResponseAction,
 } from '../actions'
 
-export type Action =
-  | ReturnType<typeof createAPIGetMemberMapinfoResponseAction>
-  | ReturnType<typeof createAPIReqMapSelectEventmapRankResponseAction>
-  | ReturnType<typeof createAPIReqMapStartResponseAction>
-  | { type: string; body?: unknown; postBody?: unknown }
-
 export interface MapEventInfo {
   api_selected_rank?: number
   api_gauge_num?: number

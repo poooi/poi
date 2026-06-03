@@ -21,23 +21,6 @@ import {
 } from '../actions'
 import { createBattleResultAction } from '../battle'
 
-type AnyAction = {
-  type: string
-  payload?: {
-    body?: Record<string, unknown>
-    postBody?: Record<string, unknown>
-  }
-  result?: {
-    rank?: string
-    boss?: boolean
-    map?: number
-    mapCell?: number
-    enemyHp?: number[]
-    enemyShipId?: number[]
-    deckShipId?: number[]
-  }
-}
-
 function getFleetInfo(
   deckShipId: number[],
   state: RootState,
@@ -58,16 +41,13 @@ function getFleetInfo(
 export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
-  const a = action as AnyAction
 
   // This middleware intentionally dispatches progress actions based on the pre-action state.
   // Some quest conditions (e.g. counting equips by type when destroying them) need access to
   // state that will be mutated by the original action's reducers.
 
-  if (a.type === createAPIReqPracticeResultResponseAction.type) {
-    const body = a.payload?.body || {}
-    const winRank = String(body.api_win_rank || '')
+  if (createAPIReqPracticeResultResponseAction.match(action)) {
+    const { api_win_rank: winRank } = action.payload.body
 
     const fleetId = state?.sortie?.sortieStatus?.findIndex((x) => x)
     const deckShipId = state.info?.fleets?.[fleetId ?? 0]?.api_ship || []
@@ -80,7 +60,6 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         delta: 1,
       }),
     )
-
     if (['S', 'A', 'B'].includes(winRank)) {
       store.dispatch(
         createInfoQuestsApplyProgressAction({
@@ -108,43 +87,40 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         }),
       )
     }
-  } else if (a.type === createAPIReqMissionResultResponseAction.type) {
-    const body = a.payload?.body || {}
-    if (Number(body.api_clear_result) > 0) {
+  } else if (createAPIReqMissionResultResponseAction.match(action)) {
+    const { api_clear_result, api_quest_name } = action.payload.body
+    if (api_clear_result > 0) {
       store.dispatch(
         createInfoQuestsApplyProgressAction({
           event: 'mission_success',
-          options: { mission: String(body.api_quest_name || '') },
+          options: { mission: api_quest_name },
           delta: 1,
         }),
       )
     }
-  } else if (a.type === createAPIReqNyukyoStartResponseAction.type) {
+  } else if (createAPIReqNyukyoStartResponseAction.match(action)) {
     store.dispatch(
       createInfoQuestsApplyProgressAction({ event: 'repair', options: null, delta: 1 }),
     )
-  } else if (a.type === createAPIReqHokyuChargeResponseAction.type) {
+  } else if (createAPIReqHokyuChargeResponseAction.match(action)) {
     store.dispatch(
       createInfoQuestsApplyProgressAction({ event: 'supply', options: null, delta: 1 }),
     )
-  } else if (a.type === createAPIReqKousyouCreateitemResponseAction.type) {
-    const body = a.payload?.body || {}
-    const items = body.api_get_items || []
+  } else if (createAPIReqKousyouCreateitemResponseAction.match(action)) {
+    const { api_get_items } = action.payload.body
     store.dispatch(
       createInfoQuestsApplyProgressAction({
         event: 'create_item',
         options: null,
-        delta: Array.isArray(items) ? items.length : 0,
+        delta: api_get_items.length,
       }),
     )
-  } else if (a.type === createAPIReqKousyouCreateshipResponseAction.type) {
+  } else if (createAPIReqKousyouCreateshipResponseAction.match(action)) {
     store.dispatch(
       createInfoQuestsApplyProgressAction({ event: 'create_ship', options: null, delta: 1 }),
     )
-  } else if (a.type === createAPIReqKousyouDestroyshipResponseAction.type) {
-    const shipIds = String(a.payload?.postBody?.api_ship_id || '')
-      .split(',')
-      .filter(Boolean)
+  } else if (createAPIReqKousyouDestroyshipResponseAction.match(action)) {
+    const shipIds = action.payload.postBody.api_ship_id.split(',').filter(Boolean)
     if (shipIds.length) {
       store.dispatch(
         createInfoQuestsApplyProgressAction({
@@ -154,20 +130,18 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         }),
       )
     }
-  } else if (a.type === createAPIReqKousyouRemodelSlotResponseAction.type) {
+  } else if (createAPIReqKousyouRemodelSlotResponseAction.match(action)) {
     store.dispatch(
       createInfoQuestsApplyProgressAction({ event: 'remodel_item', options: null, delta: 1 }),
     )
-  } else if (a.type === createAPIReqKaisouPowerupResponseAction.type) {
-    const body = a.payload?.body || {}
-    if (Number(body.api_powerup_flag) === 1) {
+  } else if (createAPIReqKaisouPowerupResponseAction.match(action)) {
+    if (action.payload.body.api_powerup_flag === 1) {
       store.dispatch(
         createInfoQuestsApplyProgressAction({ event: 'remodel_ship', options: null, delta: 1 }),
       )
     }
-  } else if (a.type === createAPIReqKousyouDestroyitem2ResponseAction.type) {
-    const slotitems = String(a.payload?.postBody?.api_slotitem_ids || '')
-    const ids = slotitems.split(',').filter(Boolean)
+  } else if (createAPIReqKousyouDestroyitem2ResponseAction.match(action)) {
+    const ids = action.payload.postBody.api_slotitem_ids.split(',').filter(Boolean)
     if (ids.length) {
       const typeCounts = countBy(ids, (id) => {
         const equipId = get(state, `info.equips.${id}.api_slotitem_id`)
@@ -194,12 +168,11 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         }),
       )
     }
-  } else if (a.type === createAPIReqMapStartResponseAction.type) {
+  } else if (createAPIReqMapStartResponseAction.match(action)) {
     store.dispatch(createInfoQuestsApplyProgressAction({ event: 'sally', options: null, delta: 1 }))
-  } else if (a.type === createAPIReqMapNextResponseAction.type) {
-    const body = a.payload?.body || {}
-    const mapcell = Number(body.api_no)
-    const maparea = Number(body.api_maparea_id) * 10 + Number(body.api_mapinfo_no)
+  } else if (createAPIReqMapNextResponseAction.match(action)) {
+    const { api_no: mapcell, api_maparea_id, api_mapinfo_no } = action.payload.body
+    const maparea = api_maparea_id * 10 + api_mapinfo_no
     const deckShipId = state.battle?.result?.deckShipId || []
     const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
     store.dispatch(
@@ -209,8 +182,8 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         delta: 1,
       }),
     )
-  } else if (createBattleResultAction.match(a)) {
-    const result = a.payload
+  } else if (createBattleResultAction.match(action)) {
+    const result = action.payload
     const rank = String(result.rank ?? '')
     const boss = Boolean(result.boss)
     const maparea = Number(result.map)

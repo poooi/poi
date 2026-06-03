@@ -23,25 +23,16 @@ import {
  *   look up ship slots and delete equips.
  */
 
-type Action = {
-  type: string
-  payload?: {
-    postBody?: Record<string, unknown>
-  }
-}
-
 export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
   const state = store.getState() as RootState
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- Action type narrowing
-  const a = action as Action
 
-  if (a.type === createAPIReqKaisouPowerupResponseAction.type) {
+  if (createAPIReqKaisouPowerupResponseAction.match(action)) {
     // api_req_kaisou/powerup
     // When api_slot_dest_flag != 0, the sacrificed ships' equips are destroyed.
-    const slotDestFlag = Number(a.payload?.postBody?.api_slot_dest_flag || 0)
+    const slotDestFlag = Number(action.payload.postBody.api_slot_dest_flag ?? 0)
     if (slotDestFlag !== 0) {
-      const ids = String(a.payload?.postBody?.api_id_items || '')
+      const ids = action.payload.postBody.api_id_items
         .split(',')
         .filter(Boolean)
         .flatMap((shipId) => state.info?.ships?.[Number(shipId)]?.api_slot || [])
@@ -50,17 +41,14 @@ export const equipsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         store.dispatch(createInfoEquipsRemoveByIdsAction({ ids }))
       }
     }
-  } else if (a.type === createAPIReqKousyouDestroyshipResponseAction.type) {
+  } else if (createAPIReqKousyouDestroyshipResponseAction.match(action)) {
     // api_req_kousyou/destroyship
     // When api_slot_dest_flag != 0, equips on the scrapped ships are destroyed.
-    const slotDestFlag = Number(a.payload?.postBody?.api_slot_dest_flag || 0)
+    const slotDestFlag = Number(action.payload.postBody.api_slot_dest_flag)
     if (slotDestFlag !== 0) {
-      const shipIds = String(a.payload?.postBody?.api_ship_id || '')
-        .split(',')
-        .filter(Boolean)
-
-      const ids = flatMap(shipIds, (shipId) =>
-        (state.info?.ships?.[Number(shipId)]?.api_slot || []).filter((x) => x != null),
+      const ids = flatMap(
+        action.payload.postBody.api_ship_id.split(',').filter(Boolean),
+        (shipId) => (state.info?.ships?.[Number(shipId)]?.api_slot || []).filter((x) => x != null),
       )
 
       if (ids.length) {

@@ -18,13 +18,6 @@ export interface PresetsState {
   api_deck: Record<`${number}` | number, PresetDeck>
 }
 
-export type Action =
-  | ReturnType<typeof createAPIGetMemberPresetDeckResponseAction>
-  | ReturnType<typeof createAPIReqHenseiPresetRegisterResponseAction>
-  | ReturnType<typeof createAPIReqHenseiPresetDeleteResponseAction>
-  | ReturnType<typeof createAPIReqHenseiPresetOrderChangeResponseAction>
-  | { type: string; body?: unknown; postBody?: unknown }
-
 const initState: PresetsState = {
   api_max_num: 0,
   api_deck: {},
