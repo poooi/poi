@@ -1,19 +1,19 @@
-import { indexify } from 'views/utils/tools'
+import type { ConstState } from 'views/redux/const'
 
-import type { EquipabilityConstSlice } from '../equipability'
+import { indexify } from 'views/utils/tools'
 
 import { canEquipType, canEquipShipItem, canEquipDaihatsu } from '../equipability'
 
 const spec = it
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const data = require('./fixtures/api_norm.json')
+const data = require('./fixtures/api_start2.json')
 
-const constState: EquipabilityConstSlice = {
+const constState = {
   $ships: indexify(data.api_mst_ship),
   $shipTypes: indexify(data.api_mst_stype),
   $equips: indexify(data.api_mst_slotitem),
   $equipShip: data.api_mst_equip_ship,
-}
+} satisfies ConstState
 
 describe('canEquipType', () => {
   spec('三隈改二特 副砲(4): stype and override agree', () => {

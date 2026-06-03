@@ -1,18 +1,29 @@
-import type {
-  APIMstEquipShip,
-  APIMstShip,
-  APIMstSlotitem,
-  APIMstStype,
-} from 'kcsapi/api_start2/getData/response'
-
-export interface EquipabilityConstSlice {
-  $equipShip?: Record<string, APIMstEquipShip>
-  $shipTypes?: Record<string, APIMstStype>
-  $ships?: Record<string, APIMstShip>
-  $equips?: Record<string, APIMstSlotitem>
-}
+import type { ConstState } from 'views/redux/const'
 
 const DAIHATSU_TYPE_ID = 24
+
+type ReadyConstSlice = ConstState & {
+  $ships: NonNullable<ConstState['$ships']>
+  $shipTypes: NonNullable<ConstState['$shipTypes']>
+  $equipShip: NonNullable<ConstState['$equipShip']>
+  $equips: NonNullable<ConstState['$equips']>
+}
+
+function isEquipabilityReady(c: ConstState): c is ReadyConstSlice {
+  return !!(c.$ships && c.$shipTypes && c.$equipShip && c.$equips)
+}
+
+function stypeCanEquip(
+  shipMstId: number,
+  equipTypeId: number,
+  constState: ReadyConstSlice,
+): boolean {
+  const ship = constState.$ships[shipMstId]
+  if (!ship) return false
+  const stypeData = constState.$shipTypes[ship.api_stype]
+  if (!stypeData) return false
+  return stypeData.api_equip_type[equipTypeId] === 1
+}
 
 /**
  * Can shipMstId equip any item of equipTypeId?
@@ -25,24 +36,17 @@ const DAIHATSU_TYPE_ID = 24
 export function canEquipType(
   shipMstId: number,
   equipTypeId: number,
-  constState: EquipabilityConstSlice,
+  constState: ConstState,
 ): boolean {
-  const { $equipShip, $shipTypes, $ships } = constState
-  if (!$equipShip || !$shipTypes || !$ships) return false
+  if (!isEquipabilityReady(constState)) return false
 
-  const typeKey = String(equipTypeId)
-  const shipKey = String(shipMstId)
-
-  if (shipKey in $equipShip) {
-    return $equipShip[shipKey].api_equip_type[typeKey] !== undefined
+  // Per-ship override: key exists => can equip at least some items of this type
+  if (shipMstId in constState.$equipShip) {
+    return constState.$equipShip[shipMstId].api_equip_type[equipTypeId] !== undefined
   }
 
-  const ship = $ships[shipKey]
-  if (!ship) return false
-  const stypeData = $shipTypes[String(ship.api_stype)]
-  if (!stypeData) return false
-
-  return stypeData.api_equip_type[typeKey] === 1
+  // Fall back to stype default
+  return stypeCanEquip(shipMstId, equipTypeId, constState)
 }
 
 /**
@@ -58,38 +62,32 @@ export function canEquipType(
 export function canEquipShipItem(
   shipMstId: number,
   equipMstId: number,
-  constState: EquipabilityConstSlice,
+  constState: ConstState,
 ): boolean {
-  const { $equipShip, $shipTypes, $ships, $equips } = constState
-  if (!$equipShip || !$shipTypes || !$ships || !$equips) return false
+  if (!isEquipabilityReady(constState)) return false
 
-  const equip = $equips[String(equipMstId)]
+  // Look up the master equip to get its equip type
+  const equip = constState.$equips[equipMstId]
   if (!equip) return false
 
   const equipTypeId = equip.api_type[2]
   if (equipTypeId == null) return false
 
-  const typeKey = String(equipTypeId)
-  const shipKey = String(shipMstId)
-
-  if (shipKey in $equipShip) {
-    const typeEntry = $equipShip[shipKey].api_equip_type[typeKey]
+  // Per-ship override: key absent => denied, null => any allowed, number[] => specific mstIDs
+  if (shipMstId in constState.$equipShip) {
+    const typeEntry = constState.$equipShip[shipMstId].api_equip_type[equipTypeId]
     if (typeEntry === undefined) return false
     if (typeEntry === null) return true
     return typeEntry.includes(equipMstId)
   }
 
-  const ship = $ships[shipKey]
-  if (!ship) return false
-  const stypeData = $shipTypes[String(ship.api_stype)]
-  if (!stypeData) return false
-
-  return stypeData.api_equip_type[typeKey] === 1
+  // Fall back to stype default
+  return stypeCanEquip(shipMstId, equipTypeId, constState)
 }
 
 /**
  * Can shipMstId equip daihatsu (equipment type 24)?
  */
-export function canEquipDaihatsu(shipMstId: number, constState: EquipabilityConstSlice): boolean {
+export function canEquipDaihatsu(shipMstId: number, constState: ConstState): boolean {
   return canEquipType(shipMstId, DAIHATSU_TYPE_ID, constState)
 }
