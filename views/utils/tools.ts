@@ -7,8 +7,7 @@
 */
 
 import type { PopoverProps } from '@blueprintjs/core'
-import type { Dictionary } from 'lodash'
-import type { DeepKeyOfArray, DeepValueOfArray } from 'shims/utils'
+import type { DeepKeyOfArray, DeepPartial, DeepValueOfArray, Indexify } from 'shims/utils'
 
 import { readJsonSync } from 'fs-extra'
 import _, {
@@ -144,7 +143,7 @@ export function buildArray<T = any>(
  * @param array array to build
  * @param key value to be key
  */
-export function indexify<T = any>(array: T[], key = 'api_id'): Dictionary<T> {
+export function indexify<T = any>(array: T[], key = 'api_id'): Indexify<T> {
   return keyBy(array, key)
 }
 
@@ -214,7 +213,7 @@ export function reduxSet<
  * @param depth
  * @returns updated result mixed of previous and new state
  */
-export function compareUpdate<T>(prevState: T, newState: T, depth = 1): T {
+export function compareUpdate<T>(prevState: T, newState: DeepPartial<T>, depth = 1): T {
   // Handle non-object cases
   if (
     depth === 0 ||
@@ -224,7 +223,8 @@ export function compareUpdate<T>(prevState: T, newState: T, depth = 1): T {
     typeof newState !== 'object' ||
     newState === null
   ) {
-    return isEqual(prevState, newState) ? prevState : newState
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    return isEqual(prevState, newState) ? prevState : (newState as T)
   }
   if (prevState === newState) {
     return prevState

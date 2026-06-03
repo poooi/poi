@@ -1,4 +1,5 @@
 import type { APIUseitem } from 'kcsapi/api_get_member/require_info/response'
+import type { Indexify } from 'shims/utils'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
@@ -12,9 +13,7 @@ import {
   createAPIReqSortieBattleResultResponseAction,
 } from '../actions'
 
-export interface UseItemsState {
-  [key: `${number}` | number]: APIUseitem
-}
+export type UseItemsState = Indexify<APIUseitem>
 
 /**
  * Helper function to update useitem count (api_count).

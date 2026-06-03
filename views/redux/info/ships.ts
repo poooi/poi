@@ -1,5 +1,6 @@
 import type { APIGetMemberNdockResponse } from 'kcsapi'
 import type { APIShip } from 'kcsapi/api_port/port/response'
+import type { Indexify } from 'shims/utils'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
@@ -26,11 +27,9 @@ import {
 
 // Ship roster state is built by merging multiple endpoints.
 // Real payloads can be partial, so keep this "compat" shape.
-export type Ship = APIShip & { api_id: number }
+export type Ship = APIShip
 
-export interface ShipsState {
-  [key: `${number}` | number]: Ship
-}
+export type ShipsState = Indexify<Ship>
 
 type DockInfo = Pick<APIGetMemberNdockResponse, 'api_id' | 'api_ship_id'>
 
@@ -125,7 +124,7 @@ const shipsSlice = createSlice({
       })
       .addCase(createAPIReqHokyuChargeResponseAction, (state, { payload }) => {
         const ships = payload.body?.api_ship
-        return compareUpdate(state, indexify<Ship>(Array.isArray(ships) ? ships : []), 2)
+        return compareUpdate(state, indexify<Partial<Ship>>(Array.isArray(ships) ? ships : []), 2)
       })
       .addCase(createAPIReqHenseiLockResponseAction, (state, { payload }) => {
         const api_ship_id = payload.postBody?.api_ship_id

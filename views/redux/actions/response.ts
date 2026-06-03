@@ -239,10 +239,7 @@ export const createAPIGetMemberQuestlistResponseAction = createAction<
 export const createAPIGetMemberShip2ResponseAction = createAction<
   // NOTE: kcsapi exports the element type; this endpoint's body is an array in practice.
   // NOTE: response-saver payloads may omit fields that kcsapi requires (e.g. api_sally_area).
-  GameResponsePayload<
-    Array<Partial<APIGetMemberShip2Response> & { api_id: number }>,
-    APIGetMemberShip2Request
-  >
+  GameResponsePayload<Array<APIGetMemberShip2Response>, APIGetMemberShip2Request>
 >('@@Response/kcsapi/api_get_member/ship2')
 
 export const createAPIGetMemberShip3ResponseAction = createAction<

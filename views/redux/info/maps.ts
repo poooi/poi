@@ -1,4 +1,5 @@
 import type { APIMaphp } from 'kcsapi/api_req_map/select_eventmap_rank/response'
+import type { Indexify } from 'shims/utils'
 
 import { createSlice } from '@reduxjs/toolkit'
 import { indexify, compareUpdate, pickExisting } from 'views/utils/tools'
@@ -22,9 +23,7 @@ export interface MapInfo {
   api_eventmap?: MapEventInfo
 }
 
-export interface MapsState {
-  [key: `${number}` | number]: MapInfo
-}
+export type MapsState = Indexify<MapInfo>
 
 function normalizeState(state: MapsState): MapsState
 function normalizeState(state: MapInfo[]): MapsState

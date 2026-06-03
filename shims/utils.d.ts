@@ -48,3 +48,13 @@ export type DeepValueOfArray<T, K extends DeepKeyOfArray<T>> = K extends readonl
   : never
 
 export type NoPeriod<S extends string> = S extends `${string}.${string}` ? never : S
+
+export type Indexify<T> = {
+  [key: `${number}` | number]: T
+}
+
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>
+    }
+  : T

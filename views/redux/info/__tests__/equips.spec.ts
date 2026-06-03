@@ -109,7 +109,12 @@ describe('equips reducer', () => {
   it('should handle api_req_kousyou/getship - adds api_slotitem', () => {
     const initialState: EquipsState = {}
     const result = reducer(initialState, createAPIReqKousyouGetShipResponseAction(getShipFixture))
-    expect(result['52721']).toEqual({ api_id: 52721, api_slotitem_id: 2 })
+    expect(result['52721']).toEqual({
+      api_id: 52721,
+      api_slotitem_id: 2,
+      api_locked: 0,
+      api_level: 0,
+    })
   })
 
   it('should handle api_req_kousyou/remodel_slot - removes and adds', () => {

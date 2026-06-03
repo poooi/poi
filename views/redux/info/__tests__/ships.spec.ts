@@ -204,7 +204,7 @@ describe('ships reducer', () => {
 
   it('should handle api_get_member/ship2', () => {
     const ship2Payload: GameResponsePayload<
-      Array<Partial<APIGetMemberShip2Response> & { api_id: number }>,
+      Array<APIGetMemberShip2Response>,
       APIGetMemberShip2Request
     > = ship2Fixture
 

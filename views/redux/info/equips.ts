@@ -1,4 +1,5 @@
 import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
+import type { Indexify } from 'shims/utils'
 
 import { createSlice, type UnknownAction } from '@reduxjs/toolkit'
 import { keyBy, filter } from 'lodash'
@@ -21,9 +22,7 @@ import {
 
 export type Equip = APISlotItem
 
-export interface EquipsState {
-  [key: `${number}` | number]: Equip
-}
+export type EquipsState = Indexify<Equip>
 
 // Returns a clone
 // Don't worry about -1 because it won't cause error
@@ -62,7 +61,11 @@ const equipsSlice = createSlice({
         }
       })
       .addCase(createAPIReqKousyouGetShipResponseAction, (state, { payload }) => {
-        const items = payload.body.api_slotitem
+        const items = payload.body.api_slotitem?.map((item) => ({
+          api_level: 0,
+          api_locked: 0,
+          ...item,
+        }))
         if (!items || items.length === 0) return state
         return {
           ...state,
