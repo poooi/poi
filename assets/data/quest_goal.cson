@@ -555,7 +555,7 @@ for more details see views/redux/quests.es
     maparea: [15]
     required: 3
     init: 0
-  "battle_boss_win_rank_s@62":
+  "battle_boss_win_rank_s@71":
     description: "7-1 S"
     maparea: [71]
     required: 3
@@ -730,7 +730,7 @@ for more details see views/redux/quests.es
 875: #精鋭「三一駆」、鉄底海域に突入せよ！
   type: 4
   fuzzy: true
-  "battle_boss_win_rank_s@5-4":
+  "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
     escortship: [
@@ -1408,7 +1408,7 @@ for more details see views/redux/quests.es
   type: 106
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [['大和', '武蔵'], 2]
+    escortship: [[['大和', '武蔵'], 2]]
     escortshiptype: [
       [[3], 1] #軽巡1隻
       [[2], 2] #駆逐2隻
