@@ -1,3 +1,4 @@
+import { createAction, isAnyOf, type UnknownAction } from '@reduxjs/toolkit'
 import { get } from 'lodash'
 import { Models, Simulator } from 'poi-lib-battle'
 
@@ -33,10 +34,6 @@ function isRecord(x: unknown): x is Record<string, unknown> {
 
 function asNumber(x: unknown, fallback = 0): number {
   return typeof x === 'number' ? x : fallback
-}
-
-function asString(x: unknown, fallback = ''): string {
-  return typeof x === 'string' ? x : fallback
 }
 
 function simulate(battle: InstanceType<typeof Battle>) {
@@ -145,6 +142,8 @@ export type BattleResult = {
   eventItem?: unknown
 } & Partial<ReturnType<typeof simulate>>
 
+export const createBattleResultAction = createAction<BattleResult>('@@BattleResult')
+
 export interface BattleState {
   _status: StatusState
   result: BattleResult
@@ -171,153 +170,158 @@ const initState: BattleState = {
   result: resultInitState,
 }
 
-interface BattleAction {
-  type: string
-  path?: string
-  body?: Record<string, unknown>
-  postBody?: Record<string, unknown>
-  time?: number
-}
+const isBattlePhaseAction = isAnyOf(
+  createAPIReqSortieBattleResponseAction,
+  createAPIReqSortieAirbattleResponseAction,
+  createAPIReqSortieLdAirbattleResponseAction,
+  createAPIReqCombinedBattleBattleResponseAction,
+  createAPIReqCombinedBattleBattleWaterResponseAction,
+  createAPIReqCombinedBattleAirbattleResponseAction,
+  createAPIReqCombinedBattleLdAirbattleResponseAction,
+  createAPIReqCombinedBattleEcBattleResponseAction,
+  createAPIReqCombinedBattleEachBattleResponseAction,
+  createAPIReqCombinedBattleEachBattleWaterResponseAction,
+  createAPIReqBattleMidnightBattleResponseAction,
+  createAPIReqBattleMidnightSPMidnightResponseAction,
+  createAPIReqCombinedBattleMidnightBattleResponseAction,
+  createAPIReqCombinedBattleSPMidnightResponseAction,
+  createAPIReqCombinedBattleEcMidnightBattleResponseAction,
+  createAPIReqCombinedBattleEcNightToDayResponseAction,
+)
 
 export function reducer(
   state = initState,
-  { type, path, body, postBody, time }: BattleAction,
+  action: UnknownAction,
   store?: Record<string, unknown>,
 ): BattleState {
   const { _status } = state
-  switch (type) {
-    case createAPIPortPortResponseAction.type:
-      return initState
-    case createAPIReqMapStartResponseAction.type:
-      return {
-        ...state,
-        _status: {
-          ..._status,
-          battle: null,
-          map: asNumber(body?.['api_maparea_id']) * 10 + asNumber(body?.['api_mapinfo_no']),
-          bossCell: asNumber(body?.['api_bosscell_no'], -1),
-          currentCell: asNumber(body?.['api_no'], -1),
-          deckId: parseInt(String(postBody?.['api_deck_id'] ?? 0)) - 1,
-          colorNo: asNumber(body?.['api_color_no'], -1),
-          enemyFormation: 0,
-        },
-      }
-    case createAPIReqMapNextResponseAction.type:
-      return {
-        ...state,
-        _status: {
-          ..._status,
-          currentCell: asNumber(body?.['api_no'], -1),
-          battle: null,
-          colorNo: asNumber(body?.['api_color_no'], -1),
-          enemyFormation: 0,
-        },
-      }
-    // Normal battle
-    case createAPIReqSortieBattleResponseAction.type:
-    case createAPIReqSortieAirbattleResponseAction.type:
-    case createAPIReqSortieLdAirbattleResponseAction.type:
-    case createAPIReqCombinedBattleBattleResponseAction.type:
-    case createAPIReqCombinedBattleBattleWaterResponseAction.type:
-    case createAPIReqCombinedBattleAirbattleResponseAction.type:
-    case createAPIReqCombinedBattleLdAirbattleResponseAction.type:
-    case createAPIReqCombinedBattleEcBattleResponseAction.type:
-    case createAPIReqCombinedBattleEachBattleResponseAction.type:
-    case createAPIReqCombinedBattleEachBattleWaterResponseAction.type:
-    case createAPIReqBattleMidnightBattleResponseAction.type:
-    case createAPIReqBattleMidnightSPMidnightResponseAction.type:
-    case createAPIReqCombinedBattleMidnightBattleResponseAction.type:
-    case createAPIReqCombinedBattleSPMidnightResponseAction.type:
-    case createAPIReqCombinedBattleEcMidnightBattleResponseAction.type:
-    case createAPIReqCombinedBattleEcNightToDayResponseAction.type: {
-      const sortieTypeFlag = store ? getSortieType(store) : 0
-      const formation = body?.['api_formation']
-      const enemyFormation = Array.isArray(formation)
-        ? asNumber(formation[1], _status.enemyFormation)
-        : _status.enemyFormation
-      const fleetId = [body?.['api_deck_id'], body?.['api_dock_id']].find((x) => x != null)
-      const escortId = sortieTypeFlag > 0 ? 2 : -1
-      const battle =
-        _status.battle ??
-        new Battle({
-          fleet: new Fleet({
-            type: sortieTypeFlag,
-            main: getFleet(asNumber(fleetId, 1), store ?? {}) ?? undefined,
-            escort: getFleet(escortId, store ?? {}) ?? undefined,
-          }),
-          packet: [],
-        })
-      const packetRaw: unknown = JSON.parse(JSON.stringify(body ?? {}))
-      const packet: Record<string, unknown> = isRecord(packetRaw) ? packetRaw : {}
-      packet['poi_path'] = path
-      battle.packet?.push(packet)
-      const result = simulate(battle)
 
+  if (createAPIPortPortResponseAction.match(action)) {
+    return initState
+  }
+
+  if (createAPIReqMapStartResponseAction.match(action)) {
+    const { body, postBody } = action.payload
+    return {
+      ...state,
+      _status: {
+        ..._status,
+        battle: null,
+        map: body.api_maparea_id * 10 + body.api_mapinfo_no,
+        bossCell: body.api_bosscell_no,
+        currentCell: body.api_no,
+        deckId: parseInt(postBody.api_deck_id) - 1,
+        colorNo: body.api_color_no,
+        enemyFormation: 0,
+      },
+    }
+  }
+
+  if (createAPIReqMapNextResponseAction.match(action)) {
+    const { body } = action.payload
+    return {
+      ...state,
+      _status: {
+        ..._status,
+        currentCell: body.api_no,
+        battle: null,
+        colorNo: body.api_color_no,
+        enemyFormation: 0,
+      },
+    }
+  }
+
+  if (isBattlePhaseAction(action)) {
+    const { body, path, time } = action.payload
+    const sortieTypeFlag = store ? getSortieType(store) : 0
+    const enemyFormation = body.api_formation[1] ?? _status.enemyFormation
+    const escortId = sortieTypeFlag > 0 ? 2 : -1
+    const battle =
+      _status.battle ??
+      new Battle({
+        fleet: new Fleet({
+          type: sortieTypeFlag,
+          main: getFleet(body.api_deck_id, store ?? {}) ?? undefined,
+          escort: getFleet(escortId, store ?? {}) ?? undefined,
+        }),
+        packet: [],
+      })
+    const packetRaw: unknown = JSON.parse(JSON.stringify(body))
+    const packet: Record<string, unknown> = isRecord(packetRaw) ? packetRaw : {}
+    packet['poi_path'] = path
+    battle.packet?.push(packet)
+    const result = simulate(battle)
+    return {
+      ...state,
+      _status: {
+        ..._status,
+        battle,
+        result,
+        enemyFormation,
+        time: _status.time ? _status.time : time,
+      },
+    }
+  }
+
+  if (
+    createAPIReqSortieBattleResultResponseAction.match(action) ||
+    createAPIReqCombinedBattleBattleresultResponseAction.match(action)
+  ) {
+    if (_status.result) {
+      const { body } = action.payload
+      const isCombined = store ? getSortieType(store) > 0 : false
+      const mvpCombined = createAPIReqCombinedBattleBattleresultResponseAction.match(action)
+        ? action.payload.body.api_mvp_combined
+        : null
+      const dropItem = createAPIReqSortieBattleResultResponseAction.match(action)
+        ? action.payload.body.api_get_useitem
+        : undefined
+      const escapeBody = body.api_escape
+      const result: BattleResult = {
+        ..._status.result,
+        valid: true,
+        time: _status.time,
+        rank: body.api_win_rank,
+        boss: _status.bossCell === _status.currentCell || _status.colorNo === 5,
+        map: _status.map,
+        mapCell: _status.currentCell,
+        quest: body.api_quest_name,
+        enemy: body.api_enemy_info.api_deck_name,
+        combined: isCombined,
+        mvp:
+          isCombined && mvpCombined != null
+            ? [body.api_mvp - 1, mvpCombined - 1]
+            : [body.api_mvp - 1, body.api_mvp - 1],
+        dropItem,
+        dropShipId: body.api_get_ship?.api_ship_id ?? -1,
+        enemyFormation: _status.enemyFormation,
+        eventItem: body.api_get_eventitem,
+      }
+      // for goback_port escape support — unused here but matches original shape
+      void escapeBody
       return {
         ...state,
+        result,
         _status: {
           ..._status,
-          battle,
-          result,
-          enemyFormation,
-          time: _status.time ? _status.time : (time ?? 0),
+          battle: null,
+          time: 0,
         },
       }
     }
-    case createAPIReqSortieBattleResultResponseAction.type:
-    case createAPIReqCombinedBattleBattleresultResponseAction.type:
-      if (_status.result) {
-        const isCombined = store ? getSortieType(store) > 0 : false
-        const enemyInfo = body?.['api_enemy_info']
-        const getShipBody = body?.['api_get_ship']
-        const escapeBody = body?.['api_escape']
-        const result: BattleResult = {
-          ..._status.result,
-          valid: true,
-          time: _status.time,
-          rank: asString(body?.['api_win_rank']),
-          boss: _status.bossCell === _status.currentCell || _status.colorNo === 5,
-          map: _status.map,
-          mapCell: _status.currentCell,
-          quest: asString(body?.['api_quest_name']),
-          enemy: isRecord(enemyInfo) ? asString(enemyInfo['api_deck_name']) : undefined,
-          combined: isCombined,
-          mvp: isCombined
-            ? [asNumber(body?.['api_mvp']) - 1, asNumber(body?.['api_mvp_combined']) - 1]
-            : [asNumber(body?.['api_mvp']) - 1, asNumber(body?.['api_mvp']) - 1],
-          dropItem: body?.['api_get_useitem'],
-          dropShipId: isRecord(getShipBody) ? asNumber(getShipBody['api_ship_id'], -1) : -1,
-          enemyFormation: _status.enemyFormation,
-          eventItem: body?.['api_get_eventitem'],
-        }
-        // for goback_port escape support — unused here but matches original shape
-        void escapeBody
-        return {
-          ...state,
-          result,
-          _status: {
-            ..._status,
-            battle: null,
-            time: 0,
-          },
-        }
-      }
-      break
   }
+
   return state
 }
 
 // Subscriber, used on battle completion.
 // Need to observe on state battle.result
 export function dispatchBattleResult(
-  dispatch: (action: { type: string; result: BattleResult }) => void,
+  dispatch: (action: ReturnType<typeof createBattleResultAction>) => void,
   battleResult: BattleResult,
 ): void {
   if (!battleResult.valid) return
-  dispatch({
-    type: '@@BattleResult',
-    result: battleResult,
-  })
+  dispatch(createBattleResultAction(battleResult))
   const e = new CustomEvent('battle.result', {
     bubbles: true,
     cancelable: true,

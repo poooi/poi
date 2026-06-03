@@ -19,6 +19,7 @@ import {
   createAPIReqMapNextResponseAction,
   createInfoQuestsApplyProgressAction,
 } from '../actions'
+import { createBattleResultAction } from '../battle'
 
 type AnyAction = {
   type: string
@@ -208,9 +209,9 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
         delta: 1,
       }),
     )
-  } else if (a.type === '@@BattleResult') {
-    const result = a.result || {}
-    const rank = String(result.rank || '')
+  } else if (createBattleResultAction.match(a)) {
+    const result = a.payload
+    const rank = String(result.rank ?? '')
     const boss = Boolean(result.boss)
     const maparea = Number(result.map)
     const mapcell = Number(result.mapCell)

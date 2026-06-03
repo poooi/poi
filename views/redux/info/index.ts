@@ -16,6 +16,7 @@ import type { ServerState } from './server'
 import type { ShipsState } from './ships'
 import type { UseItemsState } from './useitems'
 
+import { createAPIGetMemberRequireInfoAction } from '../actions'
 import { combineReducers } from '../combine-reducers'
 import { reducer as airbase } from './airbase'
 import { reducer as basic } from './basic'
@@ -47,29 +48,11 @@ export interface InfoState {
   useitems: UseItemsState
 }
 
-interface Action {
-  type: string
-  // Legacy reducers used `action.body`, RTK action creators use `action.payload.body`.
-  body?: {
-    api_basic?: {
-      api_member_id: string | number
-    }
-  }
-  payload?: {
-    body?: {
-      api_basic?: {
-        api_member_id: string | number
-      }
-    }
-  }
-}
-
 export const reducer = reduceReducers(
-  (state: InfoState | undefined, action: Action): InfoState => {
-    if (action.type === '@@Response/kcsapi/api_get_member/require_info') {
+  (state: InfoState | undefined, action: { type: string }): InfoState => {
+    if (createAPIGetMemberRequireInfoAction.match(action)) {
       const oldAdmiralId = get(state, 'basic.api_member_id')
-      const admiralId =
-        action.body?.api_basic?.api_member_id ?? action.payload?.body?.api_basic?.api_member_id
+      const admiralId: unknown = action.payload.body.api_basic?.api_member_id
       if (oldAdmiralId != admiralId) {
         return pick(state, ['basic']) as InfoState // eslint-disable-line @typescript-eslint/no-unsafe-type-assertion
       }

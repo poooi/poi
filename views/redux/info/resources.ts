@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type UnknownAction } from '@reduxjs/toolkit'
 import { map } from 'lodash'
 import { compareUpdate } from 'views/utils/tools'
 
@@ -101,28 +101,17 @@ const resourcesSlice = createSlice({
   },
 })
 
-export function reducer(
-  state: ResourcesState = [],
-  action: { type: string; payload?: unknown },
-): ResourcesState {
-  switch (action.type) {
-    // These cross-slice dependent cases are handled by resourcesCrossSliceMiddleware.
-    // Keep the type here so the old behavior isn't accidentally reintroduced.
-    case createAPIReqKousyouCreateShipSpeedChangeResponseAction.type:
-    case createAPIReqNyukyoStartResponseAction.type:
-      return state
-    case createInfoResourcesApplyDeltaAction.type: {
-      const isApplyDeltaAction = (
-        a: typeof action,
-      ): a is ReturnType<typeof createInfoResourcesApplyDeltaAction> =>
-        a.type === createInfoResourcesApplyDeltaAction.type
-      if (!isApplyDeltaAction(action)) {
-        return state
-      }
-      const delta = action.payload.delta
-      return addArrayResources(state, delta)
-    }
-    default:
-      return resourcesSlice.reducer(state, action)
+export function reducer(state: ResourcesState = [], action: UnknownAction): ResourcesState {
+  // These cross-slice dependent cases are handled by resourcesCrossSliceMiddleware.
+  // Keep the type here so the old behavior isn't accidentally reintroduced.
+  if (
+    createAPIReqKousyouCreateShipSpeedChangeResponseAction.match(action) ||
+    createAPIReqNyukyoStartResponseAction.match(action)
+  ) {
+    return state
   }
+  if (createInfoResourcesApplyDeltaAction.match(action)) {
+    return addArrayResources(state, action.payload.delta)
+  }
+  return resourcesSlice.reducer(state, action)
 }

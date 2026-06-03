@@ -1,19 +1,12 @@
+import { type UnknownAction } from '@reduxjs/toolkit'
+
+import { createServerReadyAction } from '../actions'
+
 export interface ServerState {
   ip: string | null
   id: number | null
   name: string | null
 }
-
-interface ServerReadyAction {
-  type: '@@ServerReady'
-  serverInfo: ServerState
-}
-
-interface UnknownAction {
-  type: string
-}
-
-type Action = ServerReadyAction | UnknownAction
 
 const initState: ServerState = {
   ip: null,
@@ -21,12 +14,9 @@ const initState: ServerState = {
   name: null,
 }
 
-export const reducer = (state: ServerState = initState, action: Action): ServerState => {
-  if (action.type === '@@ServerReady') {
-    const serverAction = action
-    if ('serverInfo' in serverAction) {
-      return serverAction.serverInfo
-    }
+export const reducer = (state: ServerState = initState, action: UnknownAction): ServerState => {
+  if (createServerReadyAction.match(action)) {
+    return action.payload
   }
   return state
 }

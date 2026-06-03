@@ -1,6 +1,6 @@
 import type { APISlotItem } from 'kcsapi/api_get_member/require_info/response'
 
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type UnknownAction } from '@reduxjs/toolkit'
 import { keyBy, filter } from 'lodash'
 import { compareUpdate, indexify, pickExisting } from 'views/utils/tools'
 
@@ -124,17 +124,14 @@ const equipsSlice = createSlice({
   },
 })
 
-export function reducer(
-  state: EquipsState = {},
-  action: { type: string; payload?: unknown },
-): EquipsState {
-  switch (action.type) {
-    // These cross-slice dependent cases are handled by equipsCrossSliceMiddleware.
-    // Keep the type here so the old behavior isn't accidentally reintroduced.
-    case createAPIReqKaisouPowerupResponseAction.type:
-    case createAPIReqKousyouDestroyshipResponseAction.type:
-      return state
-    default:
-      return equipsSlice.reducer(state, action)
+export function reducer(state: EquipsState = {}, action: UnknownAction): EquipsState {
+  // These cross-slice dependent cases are handled by equipsCrossSliceMiddleware.
+  // Keep the type here so the old behavior isn't accidentally reintroduced.
+  if (
+    createAPIReqKaisouPowerupResponseAction.match(action) ||
+    createAPIReqKousyouDestroyshipResponseAction.match(action)
+  ) {
+    return state
   }
+  return equipsSlice.reducer(state, action)
 }

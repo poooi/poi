@@ -129,4 +129,9 @@ export {
   createPluginRemoveAction,
 } from './plugins'
 
-export { createWctfDbUpdateAction, createUpdateFCDAction, createReplaceFCDAction } from './app'
+export {
+  createWctfDbUpdateAction,
+  createUpdateFCDAction,
+  createReplaceFCDAction,
+  createServerReadyAction,
+} from './app'

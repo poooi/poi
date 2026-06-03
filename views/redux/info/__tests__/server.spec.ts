@@ -1,3 +1,5 @@
+import { createServerReadyAction } from 'views/redux/actions'
+
 import type { ServerState } from '../server'
 
 import { reducer } from '../server'
@@ -19,10 +21,7 @@ describe('server reducer', () => {
       id: 1,
       name: 'Yokosuka Naval District',
     }
-    const result = reducer(initialState, {
-      type: '@@ServerReady',
-      serverInfo,
-    })
+    const result = reducer(initialState, createServerReadyAction(serverInfo))
     expect(result).toEqual(serverInfo)
   })
 

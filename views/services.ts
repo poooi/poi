@@ -29,6 +29,7 @@ import './services/window-pin'
 import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
 
 import { isEqual } from 'lodash'
+import { createServerReadyAction } from 'views/redux/actions'
 
 import { gameRefreshPage, gameRefreshPageIgnoringCache, gameReload } from './services/utils'
 
@@ -37,10 +38,7 @@ const setUpdateServer = (dispatch: Dispatch) => {
   gameAPIBroadcaster.addListener('kancolle.server.change', ({ ip, num: id, name }) => {
     if (!isEqual(getStore('info.server'), { ip, id, name })) {
       if (ip) {
-        dispatch({
-          type: '@@ServerReady',
-          serverInfo: { ip, id, name },
-        })
+        dispatch(createServerReadyAction({ ip: ip ?? null, id: id ?? null, name: name ?? null }))
       }
     }
   })

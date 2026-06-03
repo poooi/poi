@@ -8,3 +8,9 @@ export const createWctfDbUpdateAction = createAction<WctfState>('@@wctf-db-updat
 export const createUpdateFCDAction = createAction<FcdValue>('@@updateFCD')
 
 export const createReplaceFCDAction = createAction<FcdValue>('@@replaceFCD')
+
+export const createServerReadyAction = createAction<{
+  ip: string | null
+  id: number | null
+  name: string | null
+}>('@@ServerReady')
