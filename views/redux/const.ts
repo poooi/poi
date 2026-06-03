@@ -1,5 +1,6 @@
 import type {
   APIMstEquipExslotShip,
+  APIMstEquipShip,
   APIMstMaparea,
   APIMstMapinfo,
   APIMstMission,
@@ -32,6 +33,7 @@ export interface ConstState {
   $exslotEquips?: number[]
   $exslotEquipShips?: Record<string, APIMstEquipExslotShip>
   $exslotEquipLimits?: Record<string, number[]>
+  $equipShip?: Record<string, APIMstEquipShip>
 }
 
 const constSlice = createSlice({
@@ -61,6 +63,7 @@ const constSlice = createSlice({
         $exslotEquips: body.api_mst_equip_exslot,
         $exslotEquipShips: body.api_mst_equip_exslot_ship,
         $exslotEquipLimits: body.api_mst_equip_limit_exslot,
+        $equipShip: body.api_mst_equip_ship,
       }
     })
   },
