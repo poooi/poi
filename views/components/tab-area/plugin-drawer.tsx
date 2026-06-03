@@ -22,6 +22,7 @@ interface PluginDrawerProps {
   onClose: () => void
   closing?: boolean
   onCloseAnimationEnd: () => void
+  noAnimation?: boolean
 }
 
 export const PluginDrawer = ({
@@ -34,16 +35,19 @@ export const PluginDrawer = ({
   onClose,
   closing,
   onCloseAnimationEnd,
+  noAnimation = false,
 }: PluginDrawerProps): React.ReactElement => {
   const { t } = useTranslation(['setting'])
 
   const cardProps = {
     $closing: closing,
-    onAnimationEnd: closing
-      ? (e: React.AnimationEvent<HTMLDivElement>) => {
-          if (e.target === e.currentTarget) onCloseAnimationEnd()
-        }
-      : undefined,
+    $noAnimation: noAnimation,
+    onAnimationEnd:
+      !noAnimation && closing
+        ? (e: React.AnimationEvent<HTMLDivElement>) => {
+            if (e.target === e.currentTarget) onCloseAnimationEnd()
+          }
+        : undefined,
   }
 
   if (plugins.length === 0) {
