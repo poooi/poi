@@ -1,8 +1,10 @@
+import type { RootState } from 'views/redux/reducer-factory'
 import type { Plugin } from 'views/services/plugin-manager'
 
 import React, { useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 import type { TabContentsUnionHandle } from './tab-contents-union'
 
@@ -52,15 +54,20 @@ export const RightPanel = ({
   const defaultPluginIcon = <FontAwesome name="sitemap" />
   const defaultPluginTitle = t('others:Plugins')
 
+  const enableTransition = useSelector(
+    (state: RootState): boolean => state.config?.poi?.transition?.enable ?? true,
+  )
+  const noAnimation = !enableTransition
+
   const [drawerState, setDrawerState] = useState<DrawerState>('closed')
 
   const toggleDrawer = () => {
     if (drawerState === 'closed') setDrawerState('open')
-    else if (drawerState === 'open') setDrawerState('closing')
+    else if (drawerState === 'open') setDrawerState(noAnimation ? 'closed' : 'closing')
   }
 
   const handleDrawerSelect = (plugin: Plugin) => {
-    setDrawerState('closing')
+    setDrawerState(noAnimation ? 'closed' : 'closing')
     onSelectTab(plugin.id)
   }
 
@@ -87,7 +94,7 @@ export const RightPanel = ({
       />
       <PluginContentArea>
         {/* PluginContentWrapper is always rendered so TabContentsUnion ref never detaches */}
-        <PluginContentWrapper $dimmed={drawerState === 'open'}>
+        <PluginContentWrapper $dimmed={drawerState === 'open'} $noAnimation={noAnimation}>
           <TabContentsUnion
             ref={tabKeyUnionRef}
             activeTab={pluginContents.length ? activePluginName : 'no-plugin'}
@@ -105,15 +112,20 @@ export const RightPanel = ({
             handlePluginPin={handlePluginPin}
             onSelect={handleDrawerSelect}
             onClose={() => {
-              setDrawerState('closing')
-              setTimeout(() => {
-                setDrawerState((state) => (state === 'closing' ? 'closed' : state))
-              }, 200)
+              if (noAnimation) {
+                setDrawerState('closed')
+              } else {
+                setDrawerState('closing')
+                setTimeout(() => {
+                  setDrawerState((state) => (state === 'closing' ? 'closed' : state))
+                }, 200)
+              }
             }}
             closing={drawerState === 'closing'}
             onCloseAnimationEnd={() => {
               setDrawerState('closed')
             }}
+            noAnimation={noAnimation}
           />
         )}
       </PluginContentArea>

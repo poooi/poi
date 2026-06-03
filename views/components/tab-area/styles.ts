@@ -186,7 +186,7 @@ export const PluginContentArea = styled.div`
   flex-direction: column;
 `
 
-export const PluginDrawerCard = styled(Card)<{ $closing?: boolean }>`
+export const PluginDrawerCard = styled(Card)<{ $closing?: boolean; $noAnimation?: boolean }>`
   position: absolute;
   inset: 8px;
   z-index: 10;
@@ -196,14 +196,16 @@ export const PluginDrawerCard = styled(Card)<{ $closing?: boolean }>`
   display: flex;
   flex-direction: column;
   will-change: transform, opacity;
-  animation: ${({ $closing }) =>
-    $closing
-      ? css`
-          ${drawerDismiss} 0.15s cubic-bezier(0.4, 0, 1, 1) forwards
-        `
-      : css`
-          ${drawerReveal} 0.2s cubic-bezier(0, 0, 0.2, 1) forwards
-        `};
+  animation: ${({ $closing, $noAnimation }) =>
+    $noAnimation
+      ? 'none'
+      : $closing
+        ? css`
+            ${drawerDismiss} 0.15s cubic-bezier(0.4, 0, 1, 1) forwards
+          `
+        : css`
+            ${drawerReveal} 0.2s cubic-bezier(0, 0, 0.2, 1) forwards
+          `};
 `
 
 export const DrawerScrollShadow = styled(ScrollShadow)`
@@ -223,12 +225,12 @@ export const PluginDrawerOverlay = styled(PluginDropdownMenu)`
 `
 
 /* Permanent wrapper — never conditionally unmounted so TabContentsUnion ref stays stable. */
-export const PluginContentWrapper = styled.div<{ $dimmed?: boolean }>`
+export const PluginContentWrapper = styled.div<{ $dimmed?: boolean; $noAnimation?: boolean }>`
   flex: 1 0 0;
   height: 100%;
   display: flex;
   flex-direction: column;
-  transition: opacity 0.2s ease;
+  transition: ${({ $noAnimation }) => ($noAnimation ? 'none' : 'opacity 0.2s ease')};
   ${({ $dimmed }) =>
     $dimmed &&
     css`
