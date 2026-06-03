@@ -32,14 +32,14 @@ export const PanelItemTooltip = styled(Tooltip)`
   }
 `
 
-export const DockName = styled.div`
+export const DockName = styled.div<{ alwaysShow?: boolean }>`
   flex: 1;
   margin-right: auto;
   overflow: hidden;
   padding-right: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  opacity: 0;
+  opacity: ${(props) => (props.alwaysShow ? 1 : 0)};
 
   @container (min-width: 132px) {
     opacity: 1;

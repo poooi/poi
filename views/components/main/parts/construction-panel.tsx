@@ -133,7 +133,9 @@ export const ConstructionPanel = ({ editable }: { editable?: boolean }) => {
                     )}
                   </>
                 )}
-                <DockName className="kdock-name">{dockName}</DockName>
+                <DockName className="kdock-name" alwaysShow={!enableAvatar}>
+                  {dockName}
+                </DockName>
                 <CountdownNotifierLabel
                   timerKey={`kdock-${i + 1}`}
                   completeTime={completeTime}

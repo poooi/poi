@@ -211,7 +211,9 @@ const RepairPanelRow = ({
             )}
           </>
         )}
-        <DockName className="ndock-name">{dockName}</DockName>
+        <DockName className="ndock-name" alwaysShow={!enableAvatar}>
+          {dockName}
+        </DockName>
         <Tooltip
           position={Position.LEFT}
           disabled={dock.api_state < 0}
