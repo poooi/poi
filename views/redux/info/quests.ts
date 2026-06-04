@@ -340,7 +340,7 @@ function satisfyGoal(
   return !unsatisfy
 }
 
-function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): boolean {
+export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): boolean {
   if (
     goal.flagship &&
     ((options?.shipname?.length ?? 0) < 1 ||

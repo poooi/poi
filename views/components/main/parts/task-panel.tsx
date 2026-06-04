@@ -1,4 +1,3 @@
-import type { QuestRecord, SubgoalRecord } from 'views/redux/info/quests'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
@@ -12,9 +11,16 @@ import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import {
+  satisfyShip,
+  type QuestGoalSubgoal,
+  type QuestRecord,
+  type SubgoalRecord,
+} from 'views/redux/info/quests'
+import {
   configLayoutSelector,
   configReverseLayoutSelector,
   extensionSelectorFactory,
+  getFleetInfo,
 } from 'views/utils/selectors'
 import { escapeI18nKey } from 'views/utils/tools'
 
@@ -266,6 +272,55 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
     (state: RootState) => questPluginExtensionSelector(state)?.quests?.[quest.api_no]?.wiki_id,
   )
 
+  // selects 1-based fleet indices listing qualifiying fleets.
+  const qualifyingFleets = useSelector((state: RootState) => {
+    const questGoal = state.info?.quests?.questGoals?.[quest.api_no]
+    if (!questGoal || typeof questGoal !== 'object') return null
+
+    const subgoals: QuestGoalSubgoal[] = Object.entries(questGoal)
+      // only cares about non-metadata key stuff
+      .filter(([k]) => k !== 'type' && k !== 'fuzzy' && k !== 'resetInterval')
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- v is QuestGoalSubgoal after filtering metadata keys above
+      .map(([, v]) => v as QuestGoalSubgoal)
+    if (subgoals.length === 0) return null
+
+    /*
+      to reduce noise, checkmark is only shown when quest actually cares about the fleet in any way.
+
+      The field list below shall match satisfyShip() in views/redux/info/quests.ts.
+      falling out of sync may miss a qualifying fleet, but the actual quest
+      indicator counter is unaffected, as this only serves as a display hint.
+     */
+    const hasShipConstraints = subgoals.some(
+      (sg) =>
+        !!(
+          sg.flagship ||
+          sg.secondship ||
+          sg.escortship ||
+          sg.flagshiptype ||
+          sg.escortshiptype ||
+          sg.flagshipclass ||
+          sg.escortshipclass ||
+          sg.banshiptype ||
+          sg.fleetlimit
+        ),
+    )
+    if (!hasShipConstraints) return null
+
+    const qualifying: number[] = []
+    const maxFleets = state.info?.fleets?.length ?? 0
+    for (let fi = 0; fi < maxFleets; ++fi) {
+      const fleet = state.info?.fleets?.[fi]
+      if (!fleet) continue
+
+      const deckShipId = fleet.api_ship ?? []
+      const allPass = subgoals.every((sg) => satisfyShip(sg, getFleetInfo(deckShipId, state)))
+      if (allPass) qualifying.push(fi + 1)
+    }
+
+    return qualifying.length > 0 ? qualifying : null
+  })
+
   const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
   const questName = quest?.api_title
     ? t(`resources:${quest.api_title}`, { context: quest.api_no?.toString() })
@@ -279,6 +334,16 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
   const progressIntent = record ? getIntentByPercent(count / required) : getIntentByProgress(quest)
   const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
   const progressOverlay = record ? getToolTip(record) : []
+  /*
+    renders a line like "✔ 1, 2, 4" after the subgoal counters.
+
+    - numbers are qualifying fleets starting from 1.
+    - to avoid making UI busy, this only shows when:
+      + at least one fleet qualifies
+      + quest itself requires any non-trivial qualifications
+   */
+  const fleetOverlay =
+    qualifyingFleets && qualifyingFleets.length > 0 ? [`✔ ${qualifyingFleets.join(', ')}`] : []
 
   return (
     <TaskRowBase
@@ -297,7 +362,7 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
       }
       rightLabel={progressLabel}
       rightIntent={progressIntent}
-      rightOverlay={progressOverlay}
+      rightOverlay={[...progressOverlay, ...fleetOverlay]}
       colwidth={colwidth}
     />
   )
