@@ -11,6 +11,8 @@ import memoize from 'fast-memoize'
 import { get, map, zip, flatMap, values, fromPairs } from 'lodash'
 import { createSelector, createSelectorCreator, lruMemoize } from 'reselect'
 
+import { canEquipDaihatsu } from './equipability'
+
 //### Local Types ###
 
 type ExtendedMapInfo = MapInfo & { api_required_defeat_count?: number; api_defeat_count?: number }
@@ -610,3 +612,8 @@ export const shipRemodelInfoSelector = createSelector(constSelector, ({ $ships }
   })
   return { remodelChains, originMstIdOf }
 })
+
+export const canEquipDaihatsuSelector = createSelector(
+  constSelector,
+  (constState) => (shipMstId: number) => canEquipDaihatsu(shipMstId, constState),
+)
