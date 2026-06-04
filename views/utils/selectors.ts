@@ -112,6 +112,23 @@ function getMapHp(
   return [nowHp, maxCount, undefined]
 }
 
+export function getFleetInfo(
+  deckShipId: number[],
+  state: RootState,
+): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
+  const deckShipAPIShipId = deckShipId.map((id) => get(state, `info.ships.${id}.api_ship_id`, -1))
+  const shipname = deckShipAPIShipId
+    .map((id) => get(state, `const.$ships.${id}.api_name`, ''))
+    .filter((name: string) => name.length > 0)
+  const shiptype = deckShipAPIShipId
+    .map((id) => get(state, `const.$ships.${id}.api_stype`, -1))
+    .filter((id: number) => id > 0)
+  const shipclass = deckShipAPIShipId
+    .map((id) => get(state, `const.$ships.${id}.api_ctype`, -1))
+    .filter((id: number) => id > 0)
+  return { shipname, shiptype, shipclass }
+}
+
 //### Selectors ###
 // Use it sparingly
 export const stateSelector = (state: RootState): RootState => state

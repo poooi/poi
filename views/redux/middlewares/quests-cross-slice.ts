@@ -1,6 +1,7 @@
 import type { Middleware } from 'redux'
 
 import { countBy, get } from 'lodash'
+import { getFleetInfo } from 'views/utils/selectors'
 
 import type { RootState } from '../reducer-factory'
 
@@ -20,23 +21,6 @@ import {
   createInfoQuestsApplyProgressAction,
 } from '../actions'
 import { createBattleResultAction } from '../battle'
-
-function getFleetInfo(
-  deckShipId: number[],
-  state: RootState,
-): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
-  const deckShipAPIShipId = deckShipId.map((id) => get(state, `info.ships.${id}.api_ship_id`, -1))
-  const shipname = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_name`, ''))
-    .filter((name: string) => name.length > 0)
-  const shiptype = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_stype`, -1))
-    .filter((id: number) => id > 0)
-  const shipclass = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_ctype`, -1))
-    .filter((id: number) => id > 0)
-  return { shipname, shiptype, shipclass }
-}
 
 export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
