@@ -29,6 +29,7 @@ export const ShipTabContent = styled.div`
   flex: 1;
   position: relative;
   overflow: visible;
+  contain: layout;
 `
 
 export const ShipDeck = styled.div<{
