@@ -120,8 +120,16 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
     )
   } else if (createAPIReqKaisouPowerupResponseAction.match(action)) {
     if (action.payload.body.api_powerup_flag === 1) {
+      const materialIds = action.payload.postBody.api_id_items.split(',').filter(Boolean)
+      const materialShipTypes = materialIds
+        .map((id) => get(state, `info.ships.${id}.api_stype`) as number | undefined)
+        .filter((t): t is number => typeof t === 'number' && Number.isFinite(t))
       store.dispatch(
-        createInfoQuestsApplyProgressAction({ event: 'remodel_ship', options: null, delta: 1 }),
+        createInfoQuestsApplyProgressAction({
+          event: 'remodel_ship',
+          options: { times: 1, materialShipTypes },
+          delta: 1,
+        }),
       )
     }
   } else if (createAPIReqKousyouDestroyitem2ResponseAction.match(action)) {
@@ -140,6 +148,19 @@ export const questsCrossSliceMiddleware: Middleware = (store) => (next) => (acti
             event: 'destory_item',
             options: { slotitemType2: t },
             delta: typeCounts[slotitemType2] || 0,
+          }),
+        )
+      }
+
+      const idCounts = countBy(ids, (id) => get(state, `info.equips.${id}.api_slotitem_id`))
+      for (const slotitemId of Object.keys(idCounts)) {
+        const s = Number(slotitemId)
+        if (!Number.isFinite(s)) continue
+        store.dispatch(
+          createInfoQuestsApplyProgressAction({
+            event: 'destory_item',
+            options: { slotitemId: s },
+            delta: idCounts[slotitemId] || 0,
           }),
         )
       }

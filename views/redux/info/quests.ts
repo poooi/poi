@@ -91,6 +91,9 @@ export interface QuestGoalSubgoal {
   mission?: string[]
   // Equipment filter
   slotitemType2?: number[]
+  slotitemId?: number[]
+  materialShipType?: number[]
+  materialShipMinCount?: number
   // Internal tracking hint (used to disambiguate overlapping quests)
   times?: number[]
 }
@@ -441,6 +444,13 @@ function updateQuestRecordFactory(
         if (!satisfyGoal('mission', subgoal, options)) return
         if (!satisfyGoal('maparea', subgoal, options)) return
         if (!satisfyGoal('slotitemType2', subgoal, options)) return
+        if (!satisfyGoal('slotitemId', subgoal, options)) return
+        if (subgoal.materialShipType) {
+          const validCount =
+            options?.materialShipTypes?.filter((t) => subgoal.materialShipType!.includes(t))
+              .length ?? 0
+          if (validCount < (subgoal.materialShipMinCount ?? 3)) return
+        }
         if (!satisfyGoal('times', subgoal, options)) return
         if (!satisfyGoal('mapcell', subgoal, options)) return
         const shipOptions = {

@@ -4,6 +4,14 @@ for more details see views/redux/quests.es
 ###
 
 ###
+Quest info references:
+Quest type, detail: https://wikiwiki.jp/kancolle/%E4%BB%BB%E5%8B%99
+Quest ID: https://raw.githubusercontent.com/antest1/kcanotify-gamedata/refs/heads/master/files/quests-jp.json
+Quest guides (ぜかましねっと): https://zekamashi.net/kancolle-kouryaku/
+Quest guides (となはざな): https://tonahazana.com/
+###
+
+###
 # Daily
 ###
 201: # 敵艦隊を撃破せよ！ 获得胜利1次
@@ -400,6 +408,59 @@ for more details see views/redux/quests.es
     escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
     required: 1
     init: 0
+249: #「第五戦隊」出撃せよ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "2-5 S"
+    maparea: [25]
+    escortship: [[['妙高', '那智', '羽黒'], 3]]
+    required: 1
+    init: 0
+257: #「水雷戦隊」南西へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "1-4 S"
+    maparea: [14]
+    flagshiptype: [3] #軽巡旗艦
+    required: 1
+    init: 0
+259: #「水上打撃部隊」南方へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipclass: [
+      [[37, 19, 2, 26], 3] # 大和型・長門型・伊勢型・扶桑型3隻
+    ]
+    escortshiptype: [
+      [[3, 4, 21], 1] # 軽巡1
+    ]
+    required: 1
+    init: 0
+264: #「空母機動部隊」西へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "4-2 S"
+    maparea: [42]
+    escortshiptype: [
+      [[7, 11, 18], 2] # 空母2
+      [[2], 2] # 駆逐2
+    ]
+    required: 1
+    init: 0
+266: #「水上反撃部隊」突入せよ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "2-5 S"
+    maparea: [25]
+    flagshiptype: [2] #駆逐旗艦
+    escortshiptype: [
+      [[5], 1] # 重巡1
+      [[3, 4, 21], 1] # 軽巡1
+      [[2], 3, true] # 駆逐3 (旗艦除く)
+    ]
+    required: 1
+    init: 0
 ###
 # Quarterly
 ###
@@ -490,6 +551,72 @@ for more details see views/redux/quests.es
     required: 10
     init: 0
 
+675: #運用装備の統合整備
+  type: 4
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 6
+    init: 0
+  "destory_item@対空機銃":
+    description: "廃棄 - 対空機銃"
+    slotitemType2: [21] # 21=対空機銃
+    required: 4
+    init: 0
+
+678: #主力艦上戦闘機の更新
+  type: 4
+  fuzzy: true
+  "destory_item@九六式艦戦":
+    description: "廃棄 - 九六式艦戦"
+    slotitemId: [19]
+    required: 3
+    init: 0
+  "destory_item@零式艦戦21型":
+    description: "廃棄 - 零式艦戦21型"
+    slotitemId: [20]
+    required: 5
+    init: 0
+
+680: #対空兵装の整備拡充
+  type: 4
+  fuzzy: true
+  "destory_item@対空機銃":
+    description: "廃棄 - 対空機銃"
+    slotitemType2: [21] # 21=対空機銃
+    required: 4
+    init: 0
+  "destory_item@電探":
+    description: "廃棄 - 電探"
+    slotitemType2: [12, 13] # 12=小型電探 13=大型電探
+    required: 4
+    init: 0
+
+688: #航空戦力の強化
+  type: 4
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 3
+    init: 0
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 3
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 3
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 3
+    init: 0
+
 822: #沖ノ島海域迎撃戦
   type: 4
   "battle_boss_win_rank_s":
@@ -520,6 +647,18 @@ for more details see views/redux/quests.es
     description: "6-4 S"
     maparea: [64]
     required: 1
+    init: 0
+
+861: #強行輸送艦隊、抜錨！
+  type: 4
+  "reach_mapcell":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshiptype: [
+      [[10, 22], 2] # 航空戦艦 or 補給艦2
+    ]
+    required: 2
     init: 0
 
 872: #戦果拡張任務！「Z作戦」後段作戦
@@ -812,6 +951,19 @@ for more details see views/redux/quests.es
     ]
     required: 1
     init: 0
+681: #航空戦力の再編増強準備
+  type: 101
+  fuzzy: true
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 4
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 4
+    init: 0
 ###
 # Yearly (February)
 ###
@@ -959,6 +1111,22 @@ for more details see views/redux/quests.es
     description: "30"
     required: 1
     mission: ['潜水艦派遣作戦']
+    init: 0
+716: #「軽巡」級の改修工事を実施せよ！
+  type: 102
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [3, 4, 21] # 軽巡級
+    materialShipMinCount: 3
+    required: 2
+    init: 0
+717: #続：「軽巡」級の改修工事を実施せよ！
+  type: 102
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [5, 6] # 重巡級
+    materialShipMinCount: 3
+    required: 2
     init: 0
 ###
 # Yearly (March)
@@ -1426,6 +1594,20 @@ for more details see views/redux/quests.es
     ]
     required: 4
     init: 0
+1103: #潜水艦強化兵装の量産
+  type: 106
+  "destory_item":
+    description: "廃棄 - 魚雷"
+    slotitemType2: [5] # 5=魚雷
+    required: 3
+    init: 0
+1138: #【高射装置量産】94式高射装置の追加配備
+  type: 106
+  "destory_item":
+    description: "廃棄 - 高射装置"
+    slotitemType2: [17] # 17=高射装置
+    required: 4
+    init: 0
 ###
 # Yearly (July)
 ###
@@ -1447,6 +1629,14 @@ for more details see views/redux/quests.es
       [['天津風', '雪風', '丹陽', '時津風', '初風'], 2]
     ]
     required: 3
+    init: 0
+373: #「フランス艦隊」演習！
+  type: 107
+  "practice_win_a":
+    description: "演習勝利 A"
+    flagship: ['リシュリュー', 'ジャン・バール', 'グロワール', 'モガドール', 'コマンダン・テスト']
+    escortship: [[['リシュリュー', 'ジャン・バール', 'グロワール', 'モガドール', 'コマンダン・テスト'], 2]]
+    required: 4
     init: 0
 ###
 # Yearly (August)
@@ -1617,6 +1807,37 @@ for more details see views/redux/quests.es
     required: 1
     mission: ['強行鼠輸送作戦']
     init: 0
+657: #新型兵装開発整備の強化
+  type: 109
+  fuzzy: true
+  "destory_item@小口径主砲":
+    description: "廃棄 - 小口径主砲"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 6
+    init: 0
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 5
+    init: 0
+  "destory_item@魚雷":
+    description: "廃棄 - 魚雷"
+    slotitemType2: [5] # 5=魚雷
+    required: 4
+    init: 0
+1107: #【鋼材輸出】基地航空兵力を増備せよ！
+  type: 109
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 2
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 2
+    init: 0
 ###
 # Yearly (October)
 ###
@@ -1659,7 +1880,68 @@ for more details see views/redux/quests.es
 ###
 # Yearly (November)
 ###
-
+655: #工廠フル稼働！新兵装を開発せよ！
+  type: 111
+  fuzzy: true
+  "destory_item@小口径主砲":
+    description: "廃棄 - 小口径主砲"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 5
+    init: 0
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 5
+    init: 0
+  "destory_item@大口径主砲":
+    description: "廃棄 - 大口径主砲"
+    slotitemType2: [3] # 3=大口径主砲
+    required: 5
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 5
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 5
+    init: 0
+714: #「駆逐艦」の改修工事を実施せよ！
+  type: 111
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [2] # 駆逐艦
+    materialShipMinCount: 3
+    required: 2
+    init: 0
+715: #続：「駆逐艦」の改修工事を実施せよ！
+  type: 111
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [3] # 軽巡洋艦
+    materialShipMinCount: 3
+    required: 2
+    init: 0
 ###
 # Yearly (December)
 ###
+1120: #【機種整理統合】新型戦闘機の量産計画
+  type: 112
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 4
+    init: 0
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 4
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 4
+    init: 0

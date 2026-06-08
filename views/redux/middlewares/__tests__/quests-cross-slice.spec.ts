@@ -1,11 +1,13 @@
 import { applyMiddleware, createStore } from 'redux'
 import {
+  createAPIReqKaisouPowerupResponseAction,
   createAPIReqKousyouDestroyitem2ResponseAction,
   createAPIReqMapNextResponseAction,
   createAPIReqMissionResultResponseAction,
   createAPIReqPracticeResultResponseAction,
   createInfoQuestsApplyProgressAction,
 } from 'views/redux/actions'
+import powerupFixture from 'views/redux/info/__tests__/__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import destroyItemFixture from 'views/redux/info/__tests__/__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
 import mapNextFixture from 'views/redux/info/__tests__/__fixtures__/api_req_map_next_with_itemget.json'
 import missionResultFixture from 'views/redux/info/__tests__/__fixtures__/api_req_mission_result_success.json'
@@ -96,7 +98,7 @@ describe('questsCrossSliceMiddleware', () => {
     })
   })
 
-  it('dispatches destroy_item by type2 counts and times', () => {
+  it('dispatches destroy_item by type2 counts, slotitemId, and times', () => {
     const { store, seen } = createCaptureStore({
       info: {
         equips: {
@@ -124,7 +126,7 @@ describe('questsCrossSliceMiddleware', () => {
     )
 
     const dispatched = seen.filter(isApplyProgressAction)
-    expect(dispatched).toHaveLength(2)
+    expect(dispatched).toHaveLength(3)
 
     expect(dispatched[0].payload).toEqual({
       event: 'destory_item',
@@ -133,7 +135,37 @@ describe('questsCrossSliceMiddleware', () => {
     })
     expect(dispatched[1].payload).toEqual({
       event: 'destory_item',
+      options: { slotitemId: 10 },
+      delta: 6,
+    })
+    expect(dispatched[2].payload).toEqual({
+      event: 'destory_item',
       options: { times: 1 },
+      delta: 1,
+    })
+  })
+
+  it('dispatches remodel_ship with times and materialShipTypes built from material ships', () => {
+    const { store, seen } = createCaptureStore({
+      info: {
+        ships: {
+          28343: { api_stype: 3 }, // CL - material ship 1
+          28338: { api_stype: 3 }, // CL - material ship 2
+        },
+      },
+    })
+
+    store.dispatch(
+      createAPIReqKaisouPowerupResponseAction(
+        powerupFixture satisfies PayloadOf<typeof createAPIReqKaisouPowerupResponseAction>,
+      ),
+    )
+
+    const dispatched = seen.filter(isApplyProgressAction)
+    expect(dispatched).toHaveLength(1)
+    expect(dispatched[0].payload).toEqual({
+      event: 'remodel_ship',
+      options: { times: 1, materialShipTypes: [3, 3] },
       delta: 1,
     })
   })

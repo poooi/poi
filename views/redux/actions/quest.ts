@@ -51,6 +51,8 @@ export interface QuestOptions {
   maparea?: number
   mapcell?: number
   slotitemType2?: number
+  slotitemId?: number
+  materialShipTypes?: number[]
   times?: number
   shipType?: number
 }

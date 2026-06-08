@@ -2,6 +2,7 @@ import { padStart } from 'lodash'
 import moment from 'moment-timezone'
 import { applyMiddleware, combineReducers, createStore } from 'redux'
 import {
+  createAPIReqKaisouPowerupResponseAction,
   createAPIReqKousyouCreateitemResponseAction,
   createAPIReqKousyouDestroyitem2ResponseAction,
   createAPIReqKousyouRemodelSlotResponseAction,
@@ -9,6 +10,7 @@ import {
   createAPIReqMapStartResponseAction,
   createAPIReqMissionResultResponseAction,
   createAPIReqPracticeResultResponseAction,
+  createInfoQuestsApplyProgressAction,
 } from 'views/redux/actions'
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 import Scheduler from 'views/services/scheduler'
@@ -16,6 +18,7 @@ import Scheduler from 'views/services/scheduler'
 import type { ActiveQuest, GoalKey, SubgoalRecord, QuestsState } from '../quests'
 
 import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
+import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
 import remodelSlotFixture from './__fixtures__/api_req_kousyou_remodel_slot_success_consumes_slots.json'
@@ -164,7 +167,7 @@ describe('quests reducer - questTrackingReducer paths', () => {
 
   type RootStateShape = {
     info: {
-      ships: Record<string, { api_ship_id?: number }>
+      ships: Record<string, { api_ship_id?: number; api_stype?: number }>
       fleets: Record<string, { api_ship?: number[] }>
       equips: Record<string, { api_slotitem_id?: number }>
     }
@@ -412,5 +415,134 @@ describe('quests reducer - questTrackingReducer paths', () => {
 
     const after = store.getState().info.quests
     expect(getSubgoal(after, 8, 'reach_mapcell').count).toBe(1)
+  })
+
+  it('destory_item counts by slotitemId', () => {
+    const questState: QuestsState = {
+      ...baseState,
+      records: {
+        ...baseState.records,
+        9: { id: 9, destory_item: { count: 0, required: 3 } },
+      },
+      activeQuests: {
+        ...baseState.activeQuests,
+        // @ts-expect-error not important for this test
+        9: { detail: { api_no: 9 }, time: 0 },
+      },
+      questGoals: {
+        ...baseState.questGoals,
+        9: { destory_item: { required: 3, slotitemId: [10] } },
+      },
+    }
+    const store = createTestStore(questState, {
+      info: {
+        equips: {
+          46555: { api_slotitem_id: 10 },
+          46569: { api_slotitem_id: 10 },
+          46597: { api_slotitem_id: 10 },
+          46624: { api_slotitem_id: 10 },
+          46546: { api_slotitem_id: 10 },
+          46357: { api_slotitem_id: 10 },
+        },
+      },
+      const: {
+        $equips: { 10: { api_type: [0, 0, 2] } },
+      },
+    })
+
+    const payload = destroyItemFixture satisfies PayloadOf<
+      typeof createAPIReqKousyouDestroyitem2ResponseAction
+    >
+    store.dispatch(createAPIReqKousyouDestroyitem2ResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 9, 'destory_item').count).toBe(3)
+  })
+
+  it('remodel_ship counts unconstrained quest once per modernization', () => {
+    const questState: QuestsState = {
+      ...baseState,
+      records: {
+        ...baseState.records,
+        9: { id: 9, remodel_ship: { count: 0, required: 2 } },
+      },
+      activeQuests: {
+        ...baseState.activeQuests,
+        // @ts-expect-error not important for this test
+        9: { detail: { api_no: 9 }, time: 0 },
+      },
+      questGoals: {
+        ...baseState.questGoals,
+        9: { remodel_ship: { required: 2, times: [1] } },
+      },
+    }
+    const store = createTestStore(questState, {
+      info: {
+        ships: {
+          28343: { api_stype: 3 },
+          28338: { api_stype: 3 },
+        },
+      },
+    })
+
+    const payload = powerupFixture satisfies PayloadOf<
+      typeof createAPIReqKaisouPowerupResponseAction
+    >
+    store.dispatch(createAPIReqKaisouPowerupResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 9, 'remodel_ship').count).toBe(1)
+  })
+
+  it('remodel_ship materialShipType combined count — passes when ≥ materialShipMinCount match', () => {
+    const questState: QuestsState = {
+      ...baseState,
+      records: {
+        ...baseState.records,
+        9: { id: 9, remodel_ship: { count: 0, required: 2 } },
+      },
+      activeQuests: {
+        ...baseState.activeQuests,
+        // @ts-expect-error not important for this test
+        9: { detail: { api_no: 9 }, time: 0 },
+      },
+      questGoals: {
+        ...baseState.questGoals,
+        9: {
+          remodel_ship: { required: 2, materialShipType: [3, 4, 21], materialShipMinCount: 3 },
+        },
+      },
+    }
+    const store = createTestStore(questState)
+
+    // 3 CL-class ships as material — satisfies minCount=3
+    store.dispatch(
+      createInfoQuestsApplyProgressAction({
+        event: 'remodel_ship',
+        options: { times: 1, materialShipTypes: [3, 4, 21] },
+        delta: 1,
+      }),
+    )
+    expect(getSubgoal(store.getState().info.quests, 9, 'remodel_ship').count).toBe(1)
+
+    // only 2 matching — does not satisfy minCount=3
+    store.dispatch(
+      createInfoQuestsApplyProgressAction({
+        event: 'remodel_ship',
+        options: { times: 1, materialShipTypes: [3, 3] },
+        delta: 1,
+      }),
+    )
+    expect(getSubgoal(store.getState().info.quests, 9, 'remodel_ship').count).toBe(1)
+
+    // mixed class with 3 matching total (1 CL + 1 CLT + 1 練巡) — satisfies minCount=3
+    store.dispatch(
+      createInfoQuestsApplyProgressAction({
+        event: 'remodel_ship',
+        options: { times: 1, materialShipTypes: [3, 4, 21, 5] },
+        delta: 1,
+      }),
+    )
+    expect(getSubgoal(store.getState().info.quests, 9, 'remodel_ship').count).toBe(2)
   })
 })
