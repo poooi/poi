@@ -16,7 +16,6 @@ import {
   ShipCard,
   ShipDeck,
   ShipDetails,
-  ShipTabContainer,
   ShipTabContent,
   ShipWrapper,
 } from 'views/components/ship-parts/styled-components'
@@ -104,9 +103,7 @@ const FleetShipView = ({
   const { shipsId, isSpAttack } = useSelector((state: RootState) => selector(state))
   return (
     <>
-      <div className="fleet-name">
-        <FleetStat fleetId={fleetId} isMini={false} />
-      </div>
+      <FleetStat fleetId={fleetId} isMini={false} />
       <ShipDetails className="ship-details">
         {(shipsId ?? []).map((shipId, i) => (
           <ShipRow
@@ -231,34 +228,32 @@ const ShipView: FC = () => {
           />
         </FleetNameButtonContainer>
         <ResizeSensor onResize={handleResize}>
-          <ShipTabContainer className="ship-tab-container">
-            <ShipTabContent className="ship-tab-content">
-              {times(4).map((i) => (
-                <ShipDeck
-                  className="ship-deck"
-                  onTransitionEnd={() => handleTransitionEnd(i)}
-                  key={i}
-                  transition={enableTransition && (activeFleetId === i || prevFleetId === i)}
-                  active={activeFleetId === i || prevFleetId === i}
-                  left={activeFleetId > i}
-                  right={activeFleetId < i}
-                >
-                  <FleetShipView fleetId={i} enableAvatar={enableAvatar} width={width} />
-                </ShipDeck>
-              ))}
+          <ShipTabContent className="ship-tab-container ship-tab-content">
+            {times(4).map((i) => (
               <ShipDeck
-                className="ship-deck ship-lbac"
-                onTransitionEnd={() => handleTransitionEnd(4)}
-                key={4}
-                transition={enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
-                active={activeFleetId === 4 || prevFleetId === 4}
-                left={activeFleetId > 4}
-                right={activeFleetId < 4}
+                className="ship-deck"
+                onTransitionEnd={() => handleTransitionEnd(i)}
+                key={i}
+                transition={enableTransition && (activeFleetId === i || prevFleetId === i)}
+                active={activeFleetId === i || prevFleetId === i}
+                left={activeFleetId > i}
+                right={activeFleetId < i}
               >
-                <LBView enableAvatar={enableAvatar} width={width} />
+                <FleetShipView fleetId={i} enableAvatar={enableAvatar} width={width} />
               </ShipDeck>
-            </ShipTabContent>
-          </ShipTabContainer>
+            ))}
+            <ShipDeck
+              className="ship-deck ship-lbac"
+              onTransitionEnd={() => handleTransitionEnd(4)}
+              key={4}
+              transition={enableTransition && (activeFleetId === 4 || prevFleetId === 4)}
+              active={activeFleetId === 4 || prevFleetId === 4}
+              left={activeFleetId > 4}
+              right={activeFleetId < 4}
+            >
+              <LBView enableAvatar={enableAvatar} width={width} />
+            </ShipDeck>
+          </ShipTabContent>
         </ResizeSensor>
       </ShipCard>
     </ShipWrapper>

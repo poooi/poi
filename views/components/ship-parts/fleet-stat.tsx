@@ -310,16 +310,12 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
               position={Position.BOTTOM}
               content={
                 <InfoTooltip className="info-tooltip">
-                  <ReconTile className="recon-title">
-                    <span>{t('main:Total')}</span>
-                  </ReconTile>
+                  <ReconTile className="recon-title">{t('main:Total')}</ReconTile>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item" />
                     <span>{totalLoS}</span>
                   </InfoTooltipEntry>
-                  <ReconTile className="recon-title">
-                    <span>{t('main:Formula 33')}</span>
-                  </ReconTile>
+                  <ReconTile className="recon-title">{t('main:Formula 33')}</ReconTile>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item">× 1</InfoTooltipItem>
                     <span>{saku33.total}</span>

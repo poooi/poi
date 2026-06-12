@@ -56,6 +56,8 @@ const SlotItemContainerMini = styled.div`
 `
 
 const ItemName = styled.div<{ hide?: boolean }>`
+  display: flex;
+  flex-flow: column;
   margin-bottom: 5px;
   ${({ hide }) =>
     hide &&
@@ -109,49 +111,47 @@ const Slotitems = ({ shipId }: { shipId: number }) => {
   const { api_maxeq, equipsData } = useSelector((state: RootState) => selector(state))
 
   return (
-    <ItemName className="item-name" hide={!equipsData}>
-      <div className="slotitems-mini" style={{ display: 'flex', flexFlow: 'column' }}>
-        {(equipsData ?? []).filter(Boolean).map((equipData, equipIdx) => {
-          const [equip, $equip, onslot] = equipData!
-          const equipIconId = ($equip.api_type as number[])[3]
-          const level = equip.api_level as number
-          const proficiency = equip.api_alv as number | undefined
-          const isAircraft = equipIsAircraft($equip)
-          const maxOnslot = (api_maxeq ?? [])[equipIdx]
-          const onslotWarning = maxOnslot !== undefined && (onslot ?? 0) < maxOnslot
-          return (
-            <SlotItemContainerMini key={equipIdx} className="slotitem-container-mini">
-              <SlotitemIcon
-                key={equip.api_id as number}
-                className="slotitem-img"
-                slotitemId={equipIconId}
+    <ItemName className="item-name slotitems-mini" hide={!equipsData}>
+      {(equipsData ?? []).filter(Boolean).map((equipData, equipIdx) => {
+        const [equip, $equip, onslot] = equipData!
+        const equipIconId = ($equip.api_type as number[])[3]
+        const level = equip.api_level as number
+        const proficiency = equip.api_alv as number | undefined
+        const isAircraft = equipIsAircraft($equip)
+        const maxOnslot = (api_maxeq ?? [])[equipIdx]
+        const onslotWarning = maxOnslot !== undefined && (onslot ?? 0) < maxOnslot
+        return (
+          <SlotItemContainerMini key={equipIdx} className="slotitem-container-mini">
+            <SlotitemIcon
+              key={equip.api_id as number}
+              className="slotitem-img"
+              slotitemId={equipIconId}
+            />
+            <SlotItemName>
+              {$equip ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '???'}
+            </SlotItemName>
+            {Boolean(level) && (
+              <Level>
+                <FontAwesome name="star" />
+                {level}
+              </Level>
+            )}
+            {proficiency && (
+              <ALevel
+                className="alv-img"
+                src={path.join('assets', 'img', 'airplane', `alv${proficiency}.png`)}
               />
-              <SlotItemName>
-                {$equip ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '???'}
-              </SlotItemName>
-              {Boolean(level) && (
-                <Level>
-                  <FontAwesome name="star" />
-                  {level}
-                </Level>
-              )}
-              {proficiency && (
-                <ALevel
-                  className="alv-img"
-                  src={path.join('assets', 'img', 'airplane', `alv${proficiency}.png`)}
-                />
-              )}
-              <OnSlot
-                className="slotitems-onslot"
-                hide={!isAircraft}
-                intent={onslotWarning ? Intent.WARNING : Intent.SUCCESS}
-              >
-                {onslot}
-              </OnSlot>
-            </SlotItemContainerMini>
-          )
-        })}
-      </div>
+            )}
+            <OnSlot
+              className="slotitems-onslot"
+              hide={!isAircraft}
+              intent={onslotWarning ? Intent.WARNING : Intent.SUCCESS}
+            >
+              {onslot}
+            </OnSlot>
+          </SlotItemContainerMini>
+        )
+      })}
     </ItemName>
   )
 }

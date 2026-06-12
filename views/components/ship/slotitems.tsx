@@ -74,28 +74,24 @@ export const Slotitems = memo(({ shipId }: SlotitemsProps) => {
         const itemOverlay = equipData && $equip && equip && (
           <div>
             <div>
-              <div>
-                {$equip.api_name
-                  ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' })
-                  : '??'}
-                {equip.api_level == null || equip.api_level === 0 ? undefined : (
-                  <strong style={{ color: '#45A9A5' }}>
-                    {' '}
-                    <FontAwesome name="star" />
-                    {equip.api_level}
-                  </strong>
-                )}
-                {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
-                  <ALevel
-                    className="alv-img"
-                    src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
-                  />
-                )}
-              </div>
-              {getItemData($equip).map((data, propId) => (
-                <div key={propId}>{data}</div>
-              ))}
+              {$equip.api_name ? t(`resources:${$equip.api_name}`, { keySeparator: '%%%%' }) : '??'}
+              {equip.api_level == null || equip.api_level === 0 ? undefined : (
+                <strong style={{ color: '#45A9A5' }}>
+                  {' '}
+                  <FontAwesome name="star" />
+                  {equip.api_level}
+                </strong>
+              )}
+              {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
+                <ALevel
+                  className="alv-img"
+                  src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
+                />
+              )}
             </div>
+            {getItemData($equip).map((data, propId) => (
+              <div key={propId}>{data}</div>
+            ))}
           </div>
         )
 
@@ -163,40 +159,38 @@ export const LandbaseSlotitems = memo(
           }
           const itemOverlay = equipData && $equip && equip && (
             <div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  {$equip.api_name
-                    ? t(`resources:${$equip.api_name}`, { keySeparator: 'chiba' })
-                    : '??'}
-                  {(equip.api_level ?? 0) > 0 && (
-                    <strong style={{ color: '#45A9A5' }}>
-                      {' '}
-                      <FontAwesome name="star" />
-                      {equip.api_level}
-                    </strong>
-                  )}
-                  {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
-                    <ALevel
-                      className="alv-img"
-                      src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
-                    />
-                  )}
-                  {isMini && (
-                    <OnSlotMini
-                      className="slotitem-onslot-mini"
-                      intent={onslotWarning ? Intent.WARNING : Intent.NONE}
-                      minimal
-                      hide={!showOnslot || api_state[equipIdx] !== 1}
-                    >
-                      {onslotText}
-                    </OnSlotMini>
-                  )}
-                  <FontAwesome name="dot-circle-o" /> {$equip.api_distance}
-                </div>
-                {getItemData($equip).map((data, propId) => (
-                  <div key={propId}>{data}</div>
-                ))}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {$equip.api_name
+                  ? t(`resources:${$equip.api_name}`, { keySeparator: 'chiba' })
+                  : '??'}
+                {(equip.api_level ?? 0) > 0 && (
+                  <strong style={{ color: '#45A9A5' }}>
+                    {' '}
+                    <FontAwesome name="star" />
+                    {equip.api_level}
+                  </strong>
+                )}
+                {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
+                  <ALevel
+                    className="alv-img"
+                    src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
+                  />
+                )}
+                {isMini && (
+                  <OnSlotMini
+                    className="slotitem-onslot-mini"
+                    intent={onslotWarning ? Intent.WARNING : Intent.NONE}
+                    minimal
+                    hide={!showOnslot || api_state[equipIdx] !== 1}
+                  >
+                    {onslotText}
+                  </OnSlotMini>
+                )}
+                <FontAwesome name="dot-circle-o" /> {$equip.api_distance}
               </div>
+              {getItemData($equip).map((data, propId) => (
+                <div key={propId}>{data}</div>
+              ))}
             </div>
           )
 
