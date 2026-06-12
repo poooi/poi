@@ -142,10 +142,17 @@ import type {
   APIReqKousyouRemodelSlotRecoverResponse,
   APIReqKousyouRemodelSlotRecoverRequest,
 } from 'kcsapi'
+import type { APIGetUseitem } from 'kcsapi/api_req_sortie/battleresult/response'
 
 import { createAction } from '@reduxjs/toolkit'
 
 import type { GameResponsePayload } from './types'
+
+// FIXME: api_get_useitem is missing from kcsapi's combined battle battleresult response,
+// but the endpoint returns it in practice (sortie award useitem).
+type APIReqCombinedBattleBattleresultResponseCompat = APIReqCombinedBattleBattleresultResponse & {
+  api_get_useitem?: APIGetUseitem
+}
 
 export const createAPIGetMemberMapinfoResponseAction = createAction<
   GameResponsePayload<APIGetMemberMapinfoResponse, APIGetMemberMapinfoRequest>
@@ -261,7 +268,7 @@ export const createAPIGetMemberUseitemResponseAction = createAction<
 >('@@Response/kcsapi/api_get_member/useitem')
 
 export const createAPIReqCombinedBattleBattleresultResponseAction = createAction<
-  GameResponsePayload<APIReqCombinedBattleBattleresultResponse, undefined>
+  GameResponsePayload<APIReqCombinedBattleBattleresultResponseCompat, undefined>
 >('@@Response/kcsapi/api_req_combined_battle/battleresult')
 
 export const createAPIReqHenseiChangeResponseAction = createAction<

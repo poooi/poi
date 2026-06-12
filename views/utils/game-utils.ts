@@ -497,7 +497,6 @@ interface ElectronWebviewElement extends HTMLElement {
 
 export async function isInGame(): Promise<boolean> {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const webview = document.querySelector('webview') as ElectronWebviewElement | null
     if (webview?.getURL() === 'https://play.games.dmm.com/game/kancolle') {
       return true

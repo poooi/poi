@@ -4,7 +4,6 @@ import * as electronRemote from '@electron/remote/main'
 import { BrowserWindow, screen, webContents } from 'electron'
 import path from 'path'
 
-/* eslint-disable no-var */
 declare global {
   var mainWindow: BrowserWindow
   var windows: (BrowserWindow | null)[]
@@ -12,7 +11,6 @@ declare global {
     [key: string]: BrowserWindow | null
   }
 }
-/* eslint-enable no-var */
 
 const windows: typeof global.windows = (global.windows = [])
 const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
@@ -163,7 +161,6 @@ export default {
       win.unmaximize()
     }
     const b = win.getBounds()
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('./config').set('poi.window', {
       ...b,
       isFullScreen,

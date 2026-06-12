@@ -120,7 +120,6 @@ export const PluginDropdownMenu = styled(Menu)`
   }
 `
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 export const NavTabs = styled(Tabs as React.ComponentType<React.ComponentProps<typeof Tabs>>)`
   width: 100%;
 

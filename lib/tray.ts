@@ -1,11 +1,9 @@
 import { app, nativeImage, Tray } from 'electron'
 import path from 'path'
 
-/* eslint-disable no-var */
 declare global {
   var appTray: Tray
 }
-/* eslint-enable no-var */
 
 const getIcon = (platform: NodeJS.Platform) => {
   if (platform === 'linux') {

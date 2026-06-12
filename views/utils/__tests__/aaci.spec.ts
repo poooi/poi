@@ -3,7 +3,6 @@ import { every, isFinite, each, isArray, isString, isBoolean } from 'lodash'
 import type { GameEquip, GameShip } from '../aaci'
 
 import { AACITable, getShipAACIs } from '../aaci'
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const {
   ship,
   equips,

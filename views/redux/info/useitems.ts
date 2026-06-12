@@ -83,7 +83,6 @@ const useitemsSlice = createSlice({
       // sortie award
       .addCase(createAPIReqCombinedBattleBattleresultResponseAction, (state, { payload }) => {
         const body = payload.body
-        // @ts-expect-error FIXME: api_get_useitem is missing in type definition
         const { api_get_useitem, api_get_exmap_useitem_id } = body
         let nextState = { ...state }
         if (api_get_useitem?.api_useitem_id != null && api_get_useitem.api_useitem_id > 0) {

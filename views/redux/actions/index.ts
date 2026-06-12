@@ -113,7 +113,6 @@ export {
   createAPIStart2GetOptionSettingRequestAction,
   createAPIReqPracticeBattleRequestAction,
 } from './request'
-export type { APIReqPracticeBattlePostBody } from './request'
 
 export {
   createInitIPCAction,

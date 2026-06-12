@@ -107,7 +107,6 @@ export function combineReducers<S>(reducers: {
         throw new Error(errorMessage)
       }
       // reducer[K] returns S[K] by construction
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       nextState[key] = nextStateForKey as S[typeof key]
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
     }

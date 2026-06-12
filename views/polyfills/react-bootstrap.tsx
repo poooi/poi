@@ -1,7 +1,6 @@
 /**
  * FIXME: remove this polyfill when react-bootstrap is no longer used
  */
-/* eslint-disable import-x/namespace */
 
 import { PortalContext } from '@blueprintjs/core'
 import { contains } from 'dom-helpers'
@@ -15,11 +14,9 @@ import { isMain } from '../env-parts/const'
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
 const rb = ReactBootstrap as unknown as Record<string, React.ComponentType<Record<string, unknown>>>
 
-/* eslint-disable no-import-assign */
 ;(ReactBootstrap as Record<string, unknown>).OrigOverlayTrigger = rb.OverlayTrigger
 ;(ReactBootstrap as Record<string, unknown>).OriginModal = rb.Modal
 ;(ReactBootstrap as Record<string, unknown>).OriginDropdown = rb.Dropdown
-/* eslint-enable no-import-assign */
 
 type RBComponent = React.ComponentType<Record<string, unknown>>
 // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
@@ -366,9 +363,7 @@ Dropdown.Toggle = OriginDropdown.Toggle
 Dropdown.Menu = OriginDropdown.Menu
 
 if (isMain) {
-  /* eslint-disable no-import-assign */
   ;(ReactBootstrap as Record<string, unknown>).OverlayTrigger = OverlayTrigger
   ;(ReactBootstrap as Record<string, unknown>).Modal = Modal
   ;(ReactBootstrap as Record<string, unknown>).Dropdown = Dropdown
-  /* eslint-enable no-import-assign */
 }

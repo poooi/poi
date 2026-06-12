@@ -9,7 +9,6 @@ interface CustomTagProps {
 }
 
 export const CustomTag: FC = ({ tag = 'div', className, children, ...props }: CustomTagProps) => {
-  // @ts-expect-error wrong type definition
-  props.class = className
-  return React.createElement(tag, props, children)
+  // Custom elements take `class` instead of React's `className`
+  return React.createElement<Record<string, unknown>>(tag, { ...props, class: className }, children)
 }

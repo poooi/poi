@@ -8,7 +8,6 @@ import { Section, Wrapper } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { ROOT } from 'views/env'
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const MIRRORS: Record<string, { name: string }> = require(
   path.join(ROOT, 'assets', 'data', 'mirror.json'),
 )

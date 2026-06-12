@@ -119,7 +119,6 @@ export const LeftPanel = ({
       selectedTabId={isPluginTab(activeMainTab) ? 'plugin' : activeMainTab}
       className="top-nav"
       onChange={handleSelectTab}
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
       ref={tabsRef}
     >
@@ -146,7 +145,6 @@ export const LeftPanel = ({
           variant="minimal"
           active={drawerState === 'open'}
           onClick={toggleDrawer}
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
           ref={triggerRef}
         />
@@ -171,7 +169,6 @@ export const LeftPanel = ({
         {/* PluginContentWrapper is always rendered so TabContentsUnion ref never detaches */}
         <PluginContentWrapper $dimmed={drawerState === 'open'}>
           <TabContentsUnion
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error RefObject<T|null> vs RefObject<T> — React 19 useRef compat
             ref={doubleTabbed ? mainTabKeyUnionRef : tabKeyUnionRef}
             activeTab={activeMainTab}

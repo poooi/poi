@@ -52,7 +52,7 @@ export function arrayMultiply(arr: number[], n: number): number[] {
  */
 export function arrayAdd(arr: number[], n: number | number[]): number[] {
   if (Array.isArray(n)) {
-    return zip(arr, n).map(([a, b]) => a! + b!) // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    return zip(arr, n).map(([a, b]) => a! + b!)
   } else {
     return arr.map((i) => i + n)
   }
@@ -67,7 +67,7 @@ export function arraySubstract(arr: number[], n: number): number[]
 export function arraySubstract(arr: number[], n: number[]): number[]
 export function arraySubstract(arr: number[], n: number | number[]): number[] {
   if (Array.isArray(n)) {
-    return zip(arr, n).map(([a, b]) => a! - b!) // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    return zip(arr, n).map(([a, b]) => a! - b!)
   } else {
     return arr.map((i) => i - n)
   }
@@ -249,12 +249,11 @@ export function compareUpdate<T>(prevState: T, newState: DeepPartial<T>, depth =
     }
 
     if (newV != null && prevValue !== newV) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       prevState = copyIfSame(prevState as object, prevStateBackup) as T
       ;(prevState as Record<string, unknown>)[k] = newV
-      /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
     }
   })
+  /* eslint-enable @typescript-eslint/no-unsafe-type-assertion */
 
   return prevState
 }

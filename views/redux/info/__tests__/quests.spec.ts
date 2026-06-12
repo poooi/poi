@@ -90,8 +90,8 @@ describe('saveQuestTracking', () => {
   }
 
   const activeQuests: Record<string | number, ActiveQuest> = {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    1: { detail: { api_no: 1 } as unknown as ActiveQuest['detail'], time: 1 },
+    // @ts-expect-error minimal fixture: detail only carries api_no used by quest tracking
+    1: { detail: { api_no: 1 }, time: 1 },
   }
   const admiralId = '100'
 

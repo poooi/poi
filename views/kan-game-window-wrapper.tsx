@@ -366,7 +366,6 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       } catch (e) {
         console.error(e)
       } finally {
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- windowRefsRef.current is a stable object; clearing fields at unmount time is intentional
         windowRefsRef.current.externalWindow = null
         // eslint-disable-next-line react-hooks/exhaustive-deps -- same as above
         windowRefsRef.current.currentWindow = null
@@ -407,7 +406,6 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   // eslint-disable-next-line react-hooks/refs
   if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
 
-  // eslint-disable-next-line react-hooks/refs
   let mountPoint: Element | null
   try {
     // eslint-disable-next-line react-hooks/refs

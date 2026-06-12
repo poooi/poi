@@ -5,7 +5,7 @@ import { indexify } from 'views/utils/tools'
 import { canEquipType, canEquipShipItem, canEquipDaihatsu } from '../equipability'
 
 const spec = it
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+
 const data = require('./fixtures/api_start2.json')
 
 const constState = {

@@ -99,7 +99,7 @@ declare global {
     /** @deprecated Use `config.get('poi.misc.language')` instead */
     language?: string
   }
-  // eslint-disable-next-line no-var
+
   /** @deprecated Use `config.get('poi.misc.language')` instead */
   var language: string
 }
@@ -205,7 +205,6 @@ window.i18n.resources = {
 if (!isMain && config.get('plugin.poi-plugin-translator.enable', false)) {
   try {
     // TODO: handle type definition
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     require('poi-plugin-translator').pluginDidLoad()
   } catch (e) {
     console.warn('poi-plugin-translator', e)

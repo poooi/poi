@@ -115,7 +115,6 @@ export const PluginConfig = (): React.ReactElement => {
     }
   }, [])
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleGracefulRepair = useCallback(() => {
     toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
       { name: t('others:Confirm'), func: gracefulRepair, style: 'warning' },
@@ -133,7 +132,6 @@ export const PluginConfig = (): React.ReactElement => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCheckingUpdate(true)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setNpmWorking(true)
 
     const isNotif = config.get('packageManager.enablePluginCheck', true) && !autoUpdate

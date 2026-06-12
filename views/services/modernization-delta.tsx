@@ -68,7 +68,6 @@ const apiStatuses = [
 
 const calcRemainingStatuses = (ship: Ship & APIMstShip): number[] =>
   apiStatuses.map((apiStatus, i) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const statusPair = ship[apiStatus]
     if (!statusPair) {
       return REMAINING_UNKNOWN

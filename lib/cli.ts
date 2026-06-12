@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 // Process Command Line Arguments
 import chalk from 'chalk'
 import { app } from 'electron'
@@ -9,16 +8,13 @@ import { default as yargs } from 'yargs'
 import Debug from './debug'
 import { warn } from './utils'
 
-/* eslint-disable no-var */
 declare global {
   var LATEST_COMMIT: string
   var isSafeMode: boolean
   var isDevVersion: boolean
   var dbg: typeof Debug
 }
-/* eslint-enable no-var */
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageMeta = require('../package.json')
 global.LATEST_COMMIT = packageMeta.latestCommit
 
@@ -55,7 +51,6 @@ const printVersionAndExit = () => {
         `(electron@${process.versions.electron}`,
         `node@${process.versions.node}`,
         `chrome@${process.versions.chrome}`,
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         `react@${require('react').version})`,
       ].join(' '),
     ),

@@ -21,7 +21,6 @@ const configSlice = createSlice({
       })
       .addCase(createConfigDeleteAction, (state, { payload }) => {
         const { path } = payload
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         const next = reduxSet(
           state,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion

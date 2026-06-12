@@ -156,9 +156,7 @@ const airBaseSlice = createSlice({
             ]
           },
         )
-        const [idx, values] =
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          unzip(update) as [number[], Partial<APIAirBase>[]]
+        const [idx, values] = unzip(update) as [number[], Partial<APIAirBase>[]]
         return compareUpdate(state, constructArray(idx, values), 2)
       })
       .addCase(createAPIReqAirCorpsSupplyResponseAction, (state, { payload }) => {

@@ -10,7 +10,7 @@ declare global {
     /** @deprecated Use `import { config } from 'views/env'` instead */
     config: ConfigInstance
   }
-  // eslint-disable-next-line no-var
+
   /** @deprecated Use `import { config } from 'views/env'` instead */
   var config: ConfigInstance
 }
