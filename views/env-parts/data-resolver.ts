@@ -1,3 +1,13 @@
+import type {
+  APIReqKaisouMarriageRequest,
+  APIReqKaisouMarriageResponse,
+  APIReqKaisouPowerupRequest,
+  APIReqKaisouPowerupResponse,
+  APIReqKousyouCreateitemRequest,
+  APIReqKousyouCreateitemResponse,
+  APIReqKousyouRemodelSlotRequest,
+  APIReqKousyouRemodelSlotResponse,
+} from 'kcsapi'
 import type { GameAPIBroadcaster } from 'lib/game-api-broadcaster'
 
 import * as remote from '@electron/remote'
@@ -44,6 +54,53 @@ declare global {
     'network.invalid.result': CustomEvent<GameInvalidResultDetails>
   }
 }
+
+/**
+ * Known kcsapi payload types per request path, used by the `isGameRequest`
+ * type guard. Extend with new paths as listeners need typed payloads.
+ */
+interface GameRequestPayloadMap {
+  '/kcsapi/api_req_kaisou/marriage': { body: APIReqKaisouMarriageRequest }
+  '/kcsapi/api_req_kaisou/powerup': { body: APIReqKaisouPowerupRequest }
+}
+
+/**
+ * Known kcsapi payload types per response path, used by the `isGameResponse`
+ * type guard. Extend with new paths as listeners need typed payloads.
+ */
+interface GameResponsePayloadMap {
+  '/kcsapi/api_req_kaisou/marriage': {
+    body: APIReqKaisouMarriageResponse
+    postBody: APIReqKaisouMarriageRequest
+  }
+  '/kcsapi/api_req_kaisou/powerup': {
+    body: APIReqKaisouPowerupResponse
+    postBody: APIReqKaisouPowerupRequest
+  }
+  '/kcsapi/api_req_kousyou/createitem': {
+    body: APIReqKousyouCreateitemResponse
+    postBody: APIReqKousyouCreateitemRequest
+  }
+  '/kcsapi/api_req_kousyou/remodel_slot': {
+    body: APIReqKousyouRemodelSlotResponse
+    postBody: APIReqKousyouRemodelSlotRequest
+  }
+}
+
+// The intersection in the predicate keeps it assignable to the parameter type
+// (kcsapi interfaces lack index signatures, so they can't replace
+// RequestBody/ResponseBody outright) while still narrowing body/postBody.
+export const isGameRequest = <P extends keyof GameRequestPayloadMap>(
+  e: CustomEvent<GameRequestDetails>,
+  path: P,
+): e is CustomEvent<GameRequestDetails & { path: P } & GameRequestPayloadMap[P]> =>
+  e.detail.path === path
+
+export const isGameResponse = <P extends keyof GameResponsePayloadMap>(
+  e: CustomEvent<GameResponseDetails>,
+  path: P,
+): e is CustomEvent<GameResponseDetails & { path: P } & GameResponsePayloadMap[P]> =>
+  e.detail.path === path
 
 const handleProxyGameOnRequest = (
   method: string,

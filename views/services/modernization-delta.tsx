@@ -1,4 +1,3 @@
-import type { APIReqKaisouPowerupRequest, APIReqKaisouPowerupResponse } from 'kcsapi'
 import type { APIMstShip } from 'kcsapi/api_start2/getData/response'
 import type { GameRequestDetails, GameResponseDetails } from 'views/env-parts/data-resolver'
 import type { Ship } from 'views/redux/info/ships'
@@ -9,6 +8,7 @@ import FontAwesome from 'react-fontawesome'
 import { Trans } from 'react-i18next'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
+import { isGameRequest, isGameResponse } from 'views/env-parts/data-resolver'
 import i18next from 'views/env-parts/i18next'
 import { success, warn } from 'views/services/alert'
 import { shipDataSelectorFactory } from 'views/utils/selectors'
@@ -126,9 +126,8 @@ const calcDisplayText = (
 }
 
 const onRequest = (e: CustomEvent<GameRequestDetails>) => {
-  if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const { api_id, api_id_items } = e.detail.body as unknown as APIReqKaisouPowerupRequest
+  if (isGameRequest(e, '/kcsapi/api_req_kaisou/powerup')) {
+    const { api_id, api_id_items } = e.detail.body
     const sourceShips = api_id_items.split(',').map((id_item) => {
       return (getStore('info.ships')?.[Number(id_item)] || {}).api_ship_id
     })
@@ -140,9 +139,8 @@ const onRequest = (e: CustomEvent<GameRequestDetails>) => {
 }
 
 const onResponse = (e: CustomEvent<GameResponseDetails>) => {
-  if (e.detail.path === '/kcsapi/api_req_kaisou/powerup') {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const body = e.detail.body as unknown as APIReqKaisouPowerupResponse
+  if (isGameResponse(e, '/kcsapi/api_req_kaisou/powerup')) {
+    const { body } = e.detail
     if (body.api_powerup_flag) {
       const target = body.api_ship
       const $ship = getStore('const.$ships')?.[target.api_ship_id]

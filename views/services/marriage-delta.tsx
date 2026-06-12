@@ -1,10 +1,10 @@
-import type { APIReqKaisouMarriageRequest, APIReqKaisouMarriageResponse } from 'kcsapi'
 import type { GameRequestDetails, GameResponseDetails } from 'views/env-parts/data-resolver'
 
 import React from 'react'
 import FontAwesome from 'react-fontawesome'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
+import { isGameRequest, isGameResponse } from 'views/env-parts/data-resolver'
 import i18next from 'views/env-parts/i18next'
 import { success } from 'views/services/alert'
 
@@ -16,9 +16,8 @@ interface KyoukaState {
 let kyoukaState: KyoukaState | null = null
 
 const onRequest = (e: CustomEvent<GameRequestDetails>) => {
-  if (e.detail.path === '/kcsapi/api_req_kaisou/marriage') {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const { api_id } = e.detail.body as unknown as APIReqKaisouMarriageRequest
+  if (isGameRequest(e, '/kcsapi/api_req_kaisou/marriage')) {
+    const { api_id } = e.detail.body
     const kyouka = getStore(`info.ships`)[Number(api_id)]?.api_kyouka
     if (Array.isArray(kyouka)) {
       kyoukaState = { id: Number(api_id), kyouka }
@@ -27,13 +26,12 @@ const onRequest = (e: CustomEvent<GameRequestDetails>) => {
 }
 
 const onResponse = (e: CustomEvent<GameResponseDetails>) => {
-  if (e.detail.path === '/kcsapi/api_req_kaisou/marriage') {
+  if (isGameResponse(e, '/kcsapi/api_req_kaisou/marriage')) {
     const {
       api_kyouka: newKyouka,
       api_lucky: [curLuck, maxLuck],
       api_id,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    } = e.detail.body as unknown as APIReqKaisouMarriageResponse
+    } = e.detail.body
     if (kyoukaState !== null && kyoukaState.id === api_id) {
       const luckDiff = newKyouka[4] - kyoukaState.kyouka[4]
       const remaining = maxLuck - curLuck
