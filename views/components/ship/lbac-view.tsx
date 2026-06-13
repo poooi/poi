@@ -20,6 +20,7 @@ import {
   ShipStatusContainer,
 } from 'views/components/ship-parts/styled-components'
 import {
+  asIntent,
   getHpStyle,
   getTyku,
   LBAC_INTENTS,
@@ -118,9 +119,7 @@ export const SquardRow = memo(({ squardId, enableAvatar, compact }: SquardRowPro
         <ShipHPProgress className="hp-progress">
           <ProgressBar
             stripes={false}
-            // Custom Intent type is not assignable to Intent, but the value is guaranteed to be valid
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-            intent={getHpStyle(hpPercentage) as Intent}
+            intent={asIntent(getHpStyle(hpPercentage))}
             value={hpPercentage / 100}
           />
         </ShipHPProgress>

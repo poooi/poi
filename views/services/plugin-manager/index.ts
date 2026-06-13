@@ -193,13 +193,13 @@ class PluginManager extends EventEmitter {
   getPluginOutdateInfo = async (plugin: Plugin): Promise<Plugin | undefined> => {
     if (plugin.needRollback) return undefined
     const npmConfig = getNpmConfig(PLUGIN_PATH)
-    // @ts-expect-error type casting
-    const data: Record<string, unknown> | undefined = await fetch(
+    const rawData: unknown = await fetch(
       `${npmConfig.registry}${plugin.packageName}/latest`,
       defaultFetchOption,
     )
       .then((res) => (res.ok ? res.json() : undefined))
       .catch(() => undefined)
+    const data = isRecord(rawData) ? rawData : undefined
     if (!data?.['version']) {
       console.warn(`Can't find update info of plugin ${plugin.packageName}`)
       return undefined
@@ -210,13 +210,13 @@ class PluginManager extends EventEmitter {
     }
     if (npmConfig.enableBetaPluginCheck) {
       const innerNpmConfig = getNpmConfig(PLUGIN_PATH)
-      // @ts-expect-error type casting
-      const betaData: Record<string, unknown> | undefined = await fetch(
+      const rawBetaData: unknown = await fetch(
         `${innerNpmConfig.registry}${plugin.packageName}/beta`,
         defaultFetchOption,
       )
         .then((res) => (res.ok ? res.json() : undefined))
         .catch(() => undefined)
+      const betaData = isRecord(rawBetaData) ? rawBetaData : undefined
       if (betaData && typeof betaData['version'] === 'string') {
         distTag['beta'] = betaData['version']
       }

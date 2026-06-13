@@ -37,7 +37,23 @@ const speedStyles: Record<number, React.CSSProperties> = {
 
 const uncountedSlotitemId = [42, 43, 145, 146, 150, 241]
 
-export function getMaterialStyle(percent: number): string {
+/**
+ * poi extends Blueprint's `intent` CSS convention with custom color classes.
+ * Blueprint applies `intent` verbatim as a class suffix, so these render through
+ * poi's own stylesheet rather than Blueprint's named intents.
+ */
+export type MaterialIntent = 'red' | 'orange' | 'yellow' | 'green'
+
+/**
+ * Bridge a {@link MaterialIntent} to Blueprint's `Intent` prop type. The values are
+ * disjoint from Blueprint's `Intent`, so the assertion is confined to this one boundary
+ * instead of being repeated at every call site.
+ */
+export const asIntent = (intent: MaterialIntent): Intent =>
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  intent as unknown as Intent
+
+export function getMaterialStyle(percent: number): MaterialIntent {
   if (percent <= 50) return 'red'
   else if (percent <= 75) return 'orange'
   else if (percent < 100) return 'yellow'
@@ -179,7 +195,7 @@ export function getShipLabelStatus(
   return -1
 }
 
-export function getHpStyle(percent: number): string {
+export function getHpStyle(percent: number): MaterialIntent {
   if (percent <= 25) {
     return 'red'
   } else if (percent <= 50) {

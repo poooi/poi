@@ -27,6 +27,7 @@ import {
   ShipStatusContainer,
 } from 'views/components/ship-parts/styled-components'
 import {
+  asIntent,
   getCondStyle,
   getHpStyle,
   getMaterialStyle,
@@ -220,8 +221,7 @@ export const ShipRow = memo(
           <ShipHPProgress className="hp-progress" style={labelStatusStyle}>
             <ProgressBar
               stripes={false}
-              // @ts-expect-error Custom Intent type is not assignable to Intent, but the value is guaranteed to be valid
-              intent={getHpStyle(hpPercentage)}
+              intent={asIntent(getHpStyle(hpPercentage))}
               value={hpPercentage / 100}
             />
           </ShipHPProgress>
@@ -239,16 +239,14 @@ export const ShipRow = memo(
             <Tooltip className="ship-fb-item" position={Position.RIGHT} content={fuelTip}>
               <ProgressBar
                 stripes={false}
-                // @ts-expect-error Custom Intent type is not assignable to Intent, but the value is guaranteed to be valid
-                intent={getMaterialStyle(fuelPercentage)}
+                intent={asIntent(getMaterialStyle(fuelPercentage))}
                 value={fuelPercentage / 100}
               />
             </Tooltip>
             <Tooltip className="ship-fb-item" position={Position.RIGHT} content={ammoTip}>
               <ProgressBar
                 stripes={false}
-                // @ts-expect-error Custom Intent type is not assignable to Intent, but the value is guaranteed to be valid
-                intent={getMaterialStyle(ammoPercentage)}
+                intent={asIntent(getMaterialStyle(ammoPercentage))}
                 value={ammoPercentage / 100}
               />
             </Tooltip>

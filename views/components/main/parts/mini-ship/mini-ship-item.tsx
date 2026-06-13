@@ -19,6 +19,7 @@ import {
   getCondStyle,
   equipIsAircraft,
   getShipLabelStatus,
+  asIntent,
   getHpStyle,
   getStatusStyle,
   getTyku,
@@ -450,8 +451,7 @@ export const MiniShipRow = memo(
           <HPProgress className="hp-progress" style={labelStatusStyle}>
             <ProgressBar
               stripes={false}
-              // @ts-expect-error custom intent
-              intent={getHpStyle(hpPercentage)}
+              intent={asIntent(getHpStyle(hpPercentage))}
               value={hpPercentage / 100}
             />
           </HPProgress>
