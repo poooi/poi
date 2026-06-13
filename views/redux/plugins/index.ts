@@ -39,7 +39,8 @@ const pluginsSlice = createSlice({
         let pluginToUpdate = { ...arr[i] }
         for (const opt of option) {
           const { path, status } = opt
-          // @ts-expect-error force type assertion
+          // @ts-expect-error Plugin embeds recursive Electron types (WebContents/ReactPortal),
+          // so DeepKeyOfArray<Plugin> in reduxSet's strict overload hits a circular mapped type.
           pluginToUpdate = reduxSet(pluginToUpdate, path.split('.'), status)
         }
         return sortPlugins([...arr.slice(0, i), pluginToUpdate, ...arr.slice(i + 1)])

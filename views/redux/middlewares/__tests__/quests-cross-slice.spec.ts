@@ -15,21 +15,23 @@ import practiceResultFixture from 'views/redux/info/__tests__/__fixtures__/api_r
 
 import { questsCrossSliceMiddleware } from '../quests-cross-slice'
 
-type AnyAction = { type: string; payload?: unknown }
-
 type PayloadOf<AC> = AC extends (payload: infer P) => unknown ? P : never
 
 type ApplyProgressAction = ReturnType<typeof createInfoQuestsApplyProgressAction>
 
-function isApplyProgressAction(action: AnyAction): action is ApplyProgressAction {
-  return action.type === createInfoQuestsApplyProgressAction.type
+function isApplyProgressAction(action: unknown): action is ApplyProgressAction {
+  return (
+    typeof action === 'object' &&
+    action !== null &&
+    'type' in action &&
+    action.type === createInfoQuestsApplyProgressAction.type
+  )
 }
 
 function createCaptureStore(preloadedState: unknown) {
-  const seen: AnyAction[] = []
+  const seen: unknown[] = []
   const captureMiddleware = () => (next: (a: unknown) => unknown) => (action: unknown) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    seen.push(action as AnyAction)
+    seen.push(action)
     return next(action)
   }
 

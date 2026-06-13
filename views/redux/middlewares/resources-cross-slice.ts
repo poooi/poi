@@ -27,51 +27,51 @@ import {
  *   info.resources.
  */
 
-export const resourcesCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
-  // Compute deltas based on *current* store before reducers handle the action.
-  // This mirrors the previous behavior where reducers received the root state.
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
-  const state = store.getState() as RootState
+export const resourcesCrossSliceMiddleware: Middleware<unknown, RootState> =
+  (store) => (next) => (action) => {
+    // Compute deltas based on *current* store before reducers handle the action.
+    // This mirrors the previous behavior where reducers received the root state.
+    const state = store.getState()
 
-  if (createAPIReqKousyouCreateShipSpeedChangeResponseAction.match(action)) {
-    // api_req_kousyou/createship_speedchange
-    // This is "instant build" for an in-progress construction dock.
-    // The API response itself doesn't tell us if it was a Large Ship Construction (LSC).
-    // We infer it from the original recipe in kdock:
-    // - if api_item1 (fuel) > 1000 => LSC => consumes 10 instant construction materials
-    // - otherwise => consumes 1 instant construction material
-    const kdockId = Number(action.payload.postBody.api_kdock_id)
-    if (kdockId > 0) {
-      const item1 = state?.info?.constructions?.[kdockId - 1]?.api_item1
-      if (typeof item1 === 'number') {
-        const lsc = item1 > 1000
-        store.dispatch(
-          createInfoResourcesApplyDeltaAction({
-            delta: [0, 0, 0, 0, -(lsc ? 10 : 1), 0, 0, 0],
-          }),
-        )
+    if (createAPIReqKousyouCreateShipSpeedChangeResponseAction.match(action)) {
+      // api_req_kousyou/createship_speedchange
+      // This is "instant build" for an in-progress construction dock.
+      // The API response itself doesn't tell us if it was a Large Ship Construction (LSC).
+      // We infer it from the original recipe in kdock:
+      // - if api_item1 (fuel) > 1000 => LSC => consumes 10 instant construction materials
+      // - otherwise => consumes 1 instant construction material
+      const kdockId = Number(action.payload.postBody.api_kdock_id)
+      if (kdockId > 0) {
+        const item1 = state?.info?.constructions?.[kdockId - 1]?.api_item1
+        if (typeof item1 === 'number') {
+          const lsc = item1 > 1000
+          store.dispatch(
+            createInfoResourcesApplyDeltaAction({
+              delta: [0, 0, 0, 0, -(lsc ? 10 : 1), 0, 0, 0],
+            }),
+          )
+        }
+      }
+    } else if (createAPIReqNyukyoStartResponseAction.match(action)) {
+      // api_req_nyukyo/start
+      // Starting a repair consumes fuel/steel (and optionally a bucket if highspeed).
+      // These costs are stored on the ship object (api_ndock_item = [fuel, steel]),
+      // not in the API response.
+      const shipId = action.payload.postBody.api_ship_id
+      if (shipId) {
+        const ndockItem = state?.info?.ships?.[Number(shipId)]?.api_ndock_item
+        if (Array.isArray(ndockItem) && ndockItem.length >= 2) {
+          const fuel = Number(ndockItem[0]) || 0
+          const steel = Number(ndockItem[1]) || 0
+          const highspeed = Number(action.payload.postBody.api_highspeed) === 1
+          store.dispatch(
+            createInfoResourcesApplyDeltaAction({
+              delta: [-fuel, 0, -steel, 0, 0, highspeed ? -1 : 0, 0, 0],
+            }),
+          )
+        }
       }
     }
-  } else if (createAPIReqNyukyoStartResponseAction.match(action)) {
-    // api_req_nyukyo/start
-    // Starting a repair consumes fuel/steel (and optionally a bucket if highspeed).
-    // These costs are stored on the ship object (api_ndock_item = [fuel, steel]),
-    // not in the API response.
-    const shipId = action.payload.postBody.api_ship_id
-    if (shipId) {
-      const ndockItem = state?.info?.ships?.[Number(shipId)]?.api_ndock_item
-      if (Array.isArray(ndockItem) && ndockItem.length >= 2) {
-        const fuel = Number(ndockItem[0]) || 0
-        const steel = Number(ndockItem[1]) || 0
-        const highspeed = Number(action.payload.postBody.api_highspeed) === 1
-        store.dispatch(
-          createInfoResourcesApplyDeltaAction({
-            delta: [-fuel, 0, -steel, 0, 0, highspeed ? -1 : 0, 0, 0],
-          }),
-        )
-      }
-    }
+
+    return next(action)
   }
-
-  return next(action)
-}

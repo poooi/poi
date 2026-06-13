@@ -426,8 +426,7 @@ export class TitleBarWrapper extends PureComponent<Record<string, never>, TitleB
         if (get(newTemplate, `${themepos}.submenu.${i}.type`) === 'radio') {
           newTemplate = reduxSet(
             newTemplate,
-            // @ts-expect-error type is wrong
-            [themepos, 'submenu', i, 'checked'] as const,
+            [themepos, 'submenu', i, 'checked'],
             String(get(newTemplate, `${themepos}.submenu.${i}.label`) ?? '').toLowerCase() ===
               value,
           )

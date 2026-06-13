@@ -1,5 +1,3 @@
-import type { DeepKeyOfArray } from 'shims/utils'
-
 import { createSlice } from '@reduxjs/toolkit'
 import { cloneDeep, unset } from 'lodash'
 import { type Config, config } from 'views/env'
@@ -16,17 +14,11 @@ const configSlice = createSlice({
     builder
       .addCase(createConfigAction, (state, { payload }) => {
         const { path, value } = payload
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        return reduxSet(state, path.split('.') as unknown as DeepKeyOfArray<Config>, value)
+        return reduxSet(state, path.split('.'), value)
       })
       .addCase(createConfigDeleteAction, (state, { payload }) => {
         const { path } = payload
-        const next = reduxSet(
-          state,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          path.split('.') as unknown as DeepKeyOfArray<Config>,
-          undefined,
-        )
+        const next = reduxSet(state, path.split('.'), undefined)
         unset(next, path)
         return next
       })

@@ -22,7 +22,7 @@ import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-sli
 import { shipsCrossSliceMiddleware } from './middlewares/ships-cross-slice'
 import { reducerFactory, onConfigChange, type RootState, onConfigDelete } from './reducer-factory'
 
-function isRecord(x: unknown): x is Record<string, unknown> {
+function isRecord<T>(x: T): x is T & Record<string, unknown> {
   return typeof x === 'object' && x !== null
 }
 
@@ -107,7 +107,7 @@ export function getStore(path?: string): unknown {
     return path !== undefined ? get(storeContent, path) : storeContent
   }
   const storeStateRaw = store.getState()
-  const storeContent = isRecord(storeStateRaw) ? (storeStateRaw as RootState) : undefined
+  const storeContent = isRecord(storeStateRaw) ? storeStateRaw : undefined
   if (getStore.cache !== storeContent) {
     getStore.cache = storeContent
   }

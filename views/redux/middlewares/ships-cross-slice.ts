@@ -16,19 +16,19 @@ import {
  * - The ship roster id must be derived from info.repairs.
  */
 
-export const shipsCrossSliceMiddleware: Middleware = (store) => (next) => (action) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- RootState type from store
-  const state = store.getState() as RootState
+export const shipsCrossSliceMiddleware: Middleware<unknown, RootState> =
+  (store) => (next) => (action) => {
+    const state = store.getState()
 
-  if (createAPIReqNyukyoSpeedchangeResponseAction.match(action)) {
-    const dockId = Number(action.payload.postBody.api_ndock_id)
-    if (dockId > 0) {
-      const shipId = state?.info?.repairs?.[dockId - 1]?.api_ship_id
-      if (typeof shipId === 'number' && shipId > 0) {
-        store.dispatch(createInfoShipsRepairCompletedAction({ api_ship_id: shipId }))
+    if (createAPIReqNyukyoSpeedchangeResponseAction.match(action)) {
+      const dockId = Number(action.payload.postBody.api_ndock_id)
+      if (dockId > 0) {
+        const shipId = state?.info?.repairs?.[dockId - 1]?.api_ship_id
+        if (typeof shipId === 'number' && shipId > 0) {
+          store.dispatch(createInfoShipsRepairCompletedAction({ api_ship_id: shipId }))
+        }
       }
     }
-  }
 
-  return next(action)
-}
+    return next(action)
+  }

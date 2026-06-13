@@ -195,9 +195,15 @@ export function reduxSet<
   T extends object,
   const Path extends DeepKeyOfArray<T>,
   const Value extends DeepValueOfArray<T, Path>,
->(obj: T, path: Path, val: Value): T {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  return setWith(clone(obj), path as readonly PropertyKey[], val, clone)
+>(obj: T, path: Path, val: Value): T
+/**
+ * Runtime-path overload: when the path is computed at runtime (e.g. a dotted config key
+ * split into a `string[]`), it can't be matched against the static `DeepKeyOfArray<T>`
+ * tuple union. `obj` and the return value stay strongly typed as `T`.
+ */
+export function reduxSet<T extends object>(obj: T, path: readonly PropertyKey[], val: unknown): T
+export function reduxSet<T extends object>(obj: T, path: readonly PropertyKey[], val: unknown): T {
+  return setWith(clone(obj), path, val, clone)
 }
 
 /**
