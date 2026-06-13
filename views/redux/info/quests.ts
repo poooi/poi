@@ -13,6 +13,7 @@ import {
   isEqual,
   range,
   includes,
+  cloneDeep,
 } from 'lodash'
 import moment from 'moment-timezone'
 import path from 'path'
@@ -570,7 +571,7 @@ const questsSlice = createSlice({
         // Load static quest goal data
         let questGoals: Record<string | number, QuestGoal> = {}
         try {
-          questGoals = JSON.parse(JSON.stringify(CSON.parseCSONFile(questGoalsPath)))
+          questGoals = cloneDeep(CSON.parseCSONFile(questGoalsPath))
         } catch (_e) {
           console.warn('No quest goal data!')
         }

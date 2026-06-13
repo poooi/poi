@@ -66,7 +66,7 @@ window.$ = (param: string) => document.querySelector(param)
 window.$$ = (param: string) => document.querySelectorAll(param)
 
 // Polyfills
-Object.clone = (obj) => JSON.parse(JSON.stringify(obj))
+Object.clone = (obj) => lodash.cloneDeep(obj)
 Object.remoteClone = (obj) => {
   const { remoteStringify }: typeof RemoteUtils = remote.require('./lib/utils')
   return JSON.parse(remoteStringify(obj))

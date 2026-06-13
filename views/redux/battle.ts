@@ -1,5 +1,5 @@
 import { createAction, isAnyOf, type UnknownAction } from '@reduxjs/toolkit'
-import { get } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import { Models, Simulator } from 'poi-lib-battle'
 
 import {
@@ -246,7 +246,7 @@ export function reducer(
         }),
         packet: [],
       })
-    const packetRaw: unknown = JSON.parse(JSON.stringify(body))
+    const packetRaw: unknown = cloneDeep(body)
     const packet: Record<string, unknown> = isRecord(packetRaw) ? packetRaw : {}
     packet['poi_path'] = path
     battle.packet?.push(packet)
