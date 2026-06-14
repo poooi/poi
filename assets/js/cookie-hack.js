@@ -1,7 +1,12 @@
+// ISOLATED WORLD
+// Cookie/User-Agent/redirect handling needs `@electron/remote` + config, so it runs in
+// the preload's isolated world. `document.cookie`, `location` and cookies are shared
+// across worlds, so mutating them here still affects the page.
 const remote = require('@electron/remote')
+
 const config = remote.require('./lib/config')
 
-document.addEventListener('DOMContentLoaded', (e) => {
+document.addEventListener('DOMContentLoaded', () => {
   if (config.get('poi.misc.dmmcookie', false) && location.hostname.includes('dmm')) {
     const now = new Date()
     now.setFullYear(now.getFullYear() + 1)
@@ -32,25 +37,38 @@ document.addEventListener('DOMContentLoaded', (e) => {
       location.href = config.getDefault('poi.misc.homepage')
     }
   }
-  if (config.get('poi.misc.disablenetworkalert', false)) {
-    window.confirmBackup = window.confirm
-    window.confirm = () => {}
-    if (window.DMM?.netgame?.reloadDialog) {
-      window.DMM.netgame.reloadDialog = () => {}
-    }
-  }
 })
 
-if (window.location.toString().includes('https://play.games.dmm.com/game/kancolle')) {
-  const _documentWrite = document.write
-  document.write = function () {
-    if (document.readyState === 'interactive' || document.readyState === 'complete') {
-      console.warn(
-        `Block document.write since document is at state "${document.readyState}". Blocked call:`,
-        arguments,
-      )
-    } else {
-      _documentWrite.apply(this, arguments)
+// MAIN WORLD
+// Overriding the page's `confirm`/`document.write`/`DMM` globals must happen in the page's
+// own world. Serialized via `contextBridge.executeInMainWorld`; keep it self-contained and
+// only reference globals and `window.poiPreloadBridge`.
+function installPageHooks() {
+  const bridge = window.poiPreloadBridge
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (bridge.isNetworkAlertDisabled()) {
+      window.confirmBackup = window.confirm
+      window.confirm = () => {}
+      if (window.DMM?.netgame?.reloadDialog) {
+        window.DMM.netgame.reloadDialog = () => {}
+      }
+    }
+  })
+
+  if (window.location.toString().includes('https://play.games.dmm.com/game/kancolle')) {
+    const _documentWrite = document.write
+    document.write = function () {
+      if (document.readyState === 'interactive' || document.readyState === 'complete') {
+        console.warn(
+          `Block document.write since document is at state "${document.readyState}". Blocked call:`,
+          arguments,
+        )
+      } else {
+        _documentWrite.apply(this, arguments)
+      }
     }
   }
 }
+
+module.exports = { installPageHooks }

@@ -364,7 +364,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
         ref={this.webview}
         allowpopups
         nodeintegrationinsubframes
-        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no, nodeIntegrationInSubFrames=yes"
+        webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=yes, sandbox=no, nodeIntegrationInSubFrames=yes"
         preload={preloadUrl}
         audioMuted={muted}
         useragent={ua}

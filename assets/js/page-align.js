@@ -1,6 +1,11 @@
-// Faster align setting
-const alignCSS = document.createElement('style')
-alignCSS.innerHTML = `html {
+// MAIN WORLD
+// `window.align`/`window.unalign` are invoked from poi via `webview.executeJavaScript`,
+// which runs in the page's main world, so they must be defined there. Serialized via
+// `contextBridge.executeInMainWorld`; keep it self-contained (globals only).
+function installPageAlign() {
+  // Faster align setting
+  const alignCSS = document.createElement('style')
+  alignCSS.innerHTML = `html {
   overflow: hidden;
 }
 #w, #main-ntg {
@@ -39,36 +44,39 @@ ul:has([aria-label="close"]) {
 }
 `
 
-window.align = function () {
-  if (
-    location.href === 'https://games.dmm.com/detail/kancolle' ||
-    location.hostname === 'accounts.dmm.com'
-  ) {
-    return
+  window.align = function () {
+    if (
+      location.href === 'https://games.dmm.com/detail/kancolle' ||
+      location.hostname === 'accounts.dmm.com'
+    ) {
+      return
+    }
+    if (
+      location.pathname.includes('kancolle') ||
+      location.pathname.includes('854854') ||
+      location.hostname === 'osapi.dmm.com' ||
+      location.pathname.includes('kcs')
+    ) {
+      document.body.appendChild(alignCSS)
+      window.scrollTo(0, 0)
+    }
   }
-  if (
-    location.pathname.includes('kancolle') ||
-    location.pathname.includes('854854') ||
-    location.hostname === 'osapi.dmm.com' ||
-    location.pathname.includes('kcs')
-  ) {
-    document.body.appendChild(alignCSS)
-    window.scrollTo(0, 0)
+
+  window.unalign = () => {
+    if (document.body.contains(alignCSS)) {
+      document.body.removeChild(alignCSS)
+    }
   }
+
+  const handleDocumentReady = () => {
+    if (!document.body) {
+      setTimeout(handleDocumentReady, 1000)
+      return
+    }
+    window.align()
+  }
+
+  handleDocumentReady()
 }
 
-window.unalign = () => {
-  if (document.body.contains(alignCSS)) {
-    document.body.removeChild(alignCSS)
-  }
-}
-
-const handleDocumentReady = () => {
-  if (!document.body) {
-    setTimeout(handleDocumentReady, 1000)
-    return
-  }
-  window.align()
-}
-
-handleDocumentReady()
+module.exports = { installPageAlign }
