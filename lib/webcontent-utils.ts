@@ -151,7 +151,6 @@ export function stopNavigateAndHandleNewWindow(id: number) {
       }
       if (frameName.startsWith('plugin[kangame]')) {
         options.useContentSize = true
-        _.set(options, ['webPreferences', 'webSecurity'], false)
         _.set(options, ['webPreferences', 'backgroundThrottling '], false)
         _.set(options, ['webPreferences', 'nodeIntegration'], false)
         _.set(options, ['webPreferences', 'nodeIntegrationInSubFrames'], true)

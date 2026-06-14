@@ -248,8 +248,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     const extWindow = open(
       `${fileUrl(join(ROOT, 'index-plugin.html'))}?kangame`,
       'plugin[kangame]',
-      windowFeatures +
-        ',nodeIntegration=no,nodeIntegrationInSubFrames=yes,webSecurity=no,contextIsolation=no',
+      windowFeatures + ',nodeIntegration=no,nodeIntegrationInSubFrames=yes,contextIsolation=no',
     )
     externalWindowRef.current = extWindow
     windowRefsRef.current.externalWindow = extWindow

@@ -362,7 +362,6 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
         src={this.state.url}
         key={this.state.key}
         ref={this.webview}
-        disablewebsecurity
         allowpopups
         nodeintegrationinsubframes
         webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=no, sandbox=no, nodeIntegrationInSubFrames=yes"

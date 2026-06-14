@@ -528,7 +528,6 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
         nodeIntegrationInSubFrames: true,
         sandbox: false,
         contextIsolation: false,
-        webSecurity: false,
         ...(isRecord(plugin.windowOptions?.webPreferences)
           ? plugin.windowOptions?.webPreferences
           : {}),
