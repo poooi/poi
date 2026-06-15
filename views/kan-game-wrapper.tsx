@@ -356,6 +356,11 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
       .userAgent.replace(/Electron[^ ]* /, '')
       .replace(/poi[^ ]* /, '')
       .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', '')
+    // `contextIsolation` makes the page's main world enforce standard web security, which
+    // would block the `file://` cache-asset swap (resource-hack) and the cross-origin game
+    // iframe traversal (capture). The pre-isolation node-integrated world ran relaxed, so
+    // `disablewebsecurity` keeps that parity; `contextIsolation` still isolates the
+    // preload's Node/`@electron/remote` from the untrusted game page.
     const webview = (
       <KanGameWebview
         webviewTagClassName="kancolle-webview"
@@ -364,6 +369,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
         ref={this.webview}
         allowpopups
         nodeintegrationinsubframes
+        disablewebsecurity
         webpreferences="allowRunningInsecureContent=no, backgroundThrottling=no, contextIsolation=yes, sandbox=no, nodeIntegrationInSubFrames=yes"
         preload={preloadUrl}
         audioMuted={muted}
