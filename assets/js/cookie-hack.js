@@ -56,7 +56,10 @@ function installPageHooks() {
     }
   })
 
-  if (window.location.toString().includes('https://play.games.dmm.com/game/kancolle')) {
+  // Only guard document.write on the configured game host (derived from the homepage),
+  // rather than a single hardcoded URL that silently breaks when DMM changes the game URL.
+  const homepageHost = bridge.getHomepageHost()
+  if (homepageHost && location.host === homepageHost) {
     const _documentWrite = document.write
     document.write = function () {
       if (document.readyState === 'interactive' || document.readyState === 'complete') {

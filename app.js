@@ -40,6 +40,9 @@ require('./lib/tray')
 require('./lib/screenshot')
 require('./lib/native-theme-helper')
 
+// Register the poi-cache:// scheme before app `ready` (required for privileged schemes).
+require('./lib/kcs-resource').registerKcsResourceScheme()
+
 // macOS drag area fix
 if (process.platform === 'darwin') {
   const electronDragClick = require('electron-drag-click')
@@ -218,6 +221,7 @@ if (!getLock) {
 
 app.on('ready', () => {
   require('electron-react-titlebar/main').initialize()
+  require('./lib/kcs-resource').registerKcsResourceProtocol()
   const { screen } = require('electron')
   shortcut.register()
   const { workArea } = screen.getPrimaryDisplay()
