@@ -1,0 +1,59 @@
+name: OpenCode PR Review
+
+on:
+  pull_request:
+    branches: master
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: opencode-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    name: Review pull request
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write
+      # OpenCode posts its PR summary/session link via issues.createComment.
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run OpenCode review
+        uses: anomalyco/opencode/github@ed75ce9eccb6d97a4ee0f79d3db8cb33b47b0661
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        with:
+          model: opencode-go/deepseek-v4-pro
+          use_github_token: true
+          prompt: |
+            Review this pull request as a senior maintainer.
+
+            During analysis, be adversarial: try to find ways this change could break correctness,
+            security, permissions, reliability, CI behavior, performance, or create concrete long-term maintenance risk.
+
+            Be conservative in what you report. Before reporting a finding, double-check it:
+            - it is caused by this PR
+            - it is reachable or materially risky
+            - it would be worth requesting changes for
+            - it is not already covered by existing review comments, if available
+            - it is not speculative, low-impact, duplicative, or mainly subjective
+
+            Only report high-confidence findings. Prefer no findings over weak findings.
+            Report at most 5 findings, ordered by severity.
+
+            For each finding, include:
+            - the concrete risk
+            - the relevant changed line or behavior
+            - the smallest practical fix
+
+            Do not comment on style, formatting, naming, or preferences unless they create a concrete bug, security issue, or clearly explainable maintenance risk.
+            Do not modify files, commit changes, or push to the pull request branch.
