@@ -1634,8 +1634,8 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 107
   "practice_win_a":
     description: "演習勝利 A"
-    flagship: ['リシュリュー', 'ジャン・バール', 'グロワール', 'モガドール', 'コマンダン・テスト']
-    escortship: [[['リシュリュー', 'ジャン・バール', 'グロワール', 'モガドール', 'コマンダン・テスト'], 2]]
+    flagship: ['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste']
+    escortship: [[['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste'], 2]]
     required: 4
     init: 0
 ###
