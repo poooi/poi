@@ -27,7 +27,12 @@ import { TaskPanel } from './parts/task-panel'
 
 const MainPanelContent = styled.div`
   position: relative;
-  transition: all 0.3s ease-in-out;
+
+  /* narrowed from 'all': geometry here is layout-driven (never transitions),
+     so only theme-driven color changes ever animated */
+  transition:
+    color 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
   font-size: 12px;
 
   .react-grid-item {

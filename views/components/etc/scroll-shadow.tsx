@@ -13,7 +13,7 @@ interface ScrollShadowState {
 }
 
 const Container = styled.div<ScrollShadowState>`
-  transition: 0.3s 0.1s;
+  transition: box-shadow 0.3s 0.1s;
   position: relative;
   box-shadow: ${({ top, bottom }) =>
     compact([

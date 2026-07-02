@@ -136,14 +136,14 @@ export const ShipAvatar = styled(Avatar)`
   pointer-events: none;
 `
 
-export const Gradient = styled.div<{ color: string }>`
+// background is applied via inline style so per-ship colors don't each mint a class
+export const Gradient = styled.div.attrs<{ color: string }>(({ color }) => ({
+  style: { background: `linear-gradient(to right, transparent, ${color})` },
+}))`
   z-index: 1;
   grid-row: 1 / 5;
   grid-column: 2 / 3;
   height: 100%;
-  ${({ color }) => css`
-    background: linear-gradient(to right, transparent, ${color});
-  `}
 `
 
 export const ShipBasic = styled.div<{ avatar?: boolean }>`

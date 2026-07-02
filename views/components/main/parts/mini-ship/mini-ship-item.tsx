@@ -318,15 +318,14 @@ export const ShipAvatar = styled(Avatar)`
   grid-column: 1 / 3;
 `
 
-const Gradient = styled.div<{ color: string }>`
+// background is applied via inline style so per-ship colors don't each mint a class
+const Gradient = styled.div.attrs<{ color: string }>(({ color }) => ({
+  style: { background: `linear-gradient(to right, transparent, ${color})` },
+}))`
   z-index: 1;
   grid-row: 1 / 3;
   grid-column: 2 / 3;
   height: 100%;
-
-  ${({ color }) => css`
-    background: linear-gradient(to right, transparent, ${color});
-  `}
 `
 
 const ShipTile = styled.div`

@@ -16,13 +16,11 @@ interface AreaSize {
   percent: number
 }
 
+// top/bottom/width/transform are continuous values applied via the style prop
+// in overlay mode, so styled-components doesn't mint a class per pixel value
 const PoiAppE = styled.div<{
   isHorizontal?: boolean
   overlay?: boolean
-  overlayVisible?: boolean
-  top?: number
-  bottom?: number
-  overlayWidth?: number
 }>`
   position: relative;
   flex: 1 0 0;
@@ -44,7 +42,7 @@ const PoiAppE = styled.div<{
       width: 0;
     `}
 
-  ${({ overlay, top, bottom, overlayVisible, overlayWidth }) =>
+  ${({ overlay }) =>
     overlay &&
     css`
       position: fixed;
@@ -52,11 +50,7 @@ const PoiAppE = styled.div<{
       transition: transform 0.3s 0.2s ease-in;
       will-change: transform;
       max-width: calc(100vw - 50px);
-      transform: translate3d(${overlayVisible ? 0 : 100}%, 0, 0);
-      top: ${top}px;
-      bottom: ${bottom}px;
       height: inherit;
-      width: ${overlayWidth}px;
       z-index: 19;
     `}
 `
@@ -208,11 +202,17 @@ export const PoiApp = () => {
       )}
       <PoiAppE
         overlay={overlay}
-        overlayVisible={overlayVisible}
         isHorizontal={isHorizontal}
-        overlayWidth={overlayPanelWidth.px}
-        top={top}
-        bottom={bottom}
+        style={
+          overlay
+            ? {
+                transform: `translate3d(${overlayVisible ? 0 : 100}%, 0, 0)`,
+                top,
+                bottom,
+                width: overlayPanelWidth.px,
+              }
+            : undefined
+        }
       >
         {overlay && (
           <OverlayPanelTrigger

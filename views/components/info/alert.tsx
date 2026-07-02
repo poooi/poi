@@ -72,22 +72,14 @@ const AlertContainer = styled(Alert)`
   z-index: 2;
 `
 
-const AlertLog = styled.div<{ $toggle: boolean; $height: number; $containerHeight: number }>`
+// transform/pointer-events are set via the style prop: the offset is a
+// continuous pixel value and would mint a new styled-components class per value
+const AlertLog = styled.div`
   overflow: hidden;
   transition: transform 0.3s;
   z-index: 1;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  ${({ $toggle, $height, $containerHeight }) =>
-    $toggle
-      ? css`
-          transform: translate3d(0, ${-Math.round($containerHeight + $height)}px, 0);
-          pointer-events: auto;
-        `
-      : css`
-          transform: translate3d(0, 1px, 0);
-          pointer-events: none;
-        `}
 `
 
 const AlertPosition = styled.div`
@@ -251,9 +243,17 @@ export const PoiAlert: React.FC = () => {
             <AlertLog
               id="alert-log"
               className="alert-log bp6-popover-content"
-              $toggle={showHistory}
-              $height={historyHeight}
-              $containerHeight={containerHeight}
+              style={
+                showHistory
+                  ? {
+                      transform: `translate3d(0, ${-Math.round(containerHeight + historyHeight)}px, 0)`,
+                      pointerEvents: 'auto',
+                    }
+                  : {
+                      transform: 'translate3d(0, 1px, 0)',
+                      pointerEvents: 'none',
+                    }
+              }
               onClick={toggleHistory}
               key={history[0]?.ts || 0}
             >
