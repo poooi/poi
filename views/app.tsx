@@ -3,7 +3,8 @@ import type { ConfigInstance } from 'lib/config'
 import { ResizeSensor, Popover, BlueprintProvider, Button } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { webFrame } from 'electron'
-import React, { useCallback } from 'react'
+import { debounce } from 'lodash'
+import React, { useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { I18nextProvider, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector, Provider } from 'react-redux'
@@ -57,21 +58,27 @@ const Poi = () => {
   )
   const theme = useSelector((state: RootState) => state.config?.poi?.appearance?.theme ?? 'dark')
 
-  const handleResize = useCallback(
-    (entries: ResizeObserverEntry[]) => {
-      entries.forEach((entry) => {
-        const { width, height } = entry.contentRect
-        if (
-          width !== 0 &&
-          height !== 0 &&
-          (width !== getStore('layout.window.width') || height !== getStore('layout.window.height'))
-        ) {
-          dispatch(createLayoutUpdateAction({ window: { width, height } }))
-        }
-      })
-    },
+  const handleResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          const { width, height } = entry.contentRect
+          if (
+            width !== 0 &&
+            height !== 0 &&
+            (width !== getStore('layout.window.width') ||
+              height !== getStore('layout.window.height'))
+          ) {
+            dispatch(createLayoutUpdateAction({ window: { width, height } }))
+          }
+        })
+      }, 50),
     [dispatch],
   )
+
+  useEffect(() => {
+    return () => handleResize.cancel()
+  }, [handleResize])
 
   const handlePin = () => {
     if (pinConfig) {

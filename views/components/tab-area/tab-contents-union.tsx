@@ -81,9 +81,10 @@ const PoiTabChildPositioner = styled.div<{
   ${({ active }) =>
     !active &&
     css`
-      & > div {
-        display: none !important;
-      }
+      /* keep inactive tabs mounted (plugins hold in-component state) but skip
+         their rendering work; unlike display: none this preserves layout state
+         so switching back is cheap */
+      content-visibility: hidden;
     `}
 `
 

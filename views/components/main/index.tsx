@@ -2,8 +2,8 @@ import type { Layout, LayoutItem, ResponsiveLayouts as Layouts } from 'react-gri
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { ResizeSensor } from '@blueprintjs/core'
-import { get, pick, isEqual, entries, fromPairs, map } from 'lodash'
-import React, { useCallback } from 'react'
+import { get, pick, isEqual, entries, fromPairs, map, debounce } from 'lodash'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Responsive as ResponsiveReactGridLayout, verticalCompactor } from 'react-grid-layout'
 import { Trans } from 'react-i18next'
@@ -109,22 +109,27 @@ const MainView = () => {
     }
   }, [])
 
-  const handleResize = useCallback(
-    (resizeEntries: ResizeObserverEntry[]) => {
-      resizeEntries.forEach((entry) => {
-        const { width, height } = entry.contentRect
-        if (
-          width !== 0 &&
-          height !== 0 &&
-          (width !== getStore('layout.mainpane.width') ||
-            height !== getStore('layout.mainpane.height'))
-        ) {
-          dispatch(createLayoutUpdateAction({ mainpane: { width, height } }))
-        }
-      })
-    },
+  const handleResize = useMemo(
+    () =>
+      debounce((resizeEntries: ResizeObserverEntry[]) => {
+        resizeEntries.forEach((entry) => {
+          const { width, height } = entry.contentRect
+          if (
+            width !== 0 &&
+            height !== 0 &&
+            (width !== getStore('layout.mainpane.width') ||
+              height !== getStore('layout.mainpane.height'))
+          ) {
+            dispatch(createLayoutUpdateAction({ mainpane: { width, height } }))
+          }
+        })
+      }, 50),
     [dispatch],
   )
+
+  useEffect(() => {
+    return () => handleResize.cancel()
+  }, [handleResize])
 
   return (
     <ResizeSensor onResize={handleResize}>

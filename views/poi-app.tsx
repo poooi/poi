@@ -156,15 +156,19 @@ export const PoiApp = () => {
   }, [])
 
   const isHorizontal = layout === 'horizontal'
-  const titleBar = document.querySelector('title-bar')
-  const top = titleBar ? titleBar.clientHeight : 0
-  const poiInfo = document.querySelector('poi-info')
-  const bottom = poiInfo
-    ? (() => {
-        const rect = poiInfo.getBoundingClientRect()
-        return rect.height - rect.bottom + innerHeight
-      })()
-    : 29
+  // these force a synchronous layout, and are only consumed by the overlay
+  // panel, so skip the reads entirely in non-overlay layouts
+  let top = 0
+  let bottom = 29
+  if (overlay) {
+    const titleBar = document.querySelector('title-bar')
+    top = titleBar ? titleBar.clientHeight : 0
+    const poiInfo = document.querySelector('poi-info')
+    if (poiInfo) {
+      const rect = poiInfo.getBoundingClientRect()
+      bottom = rect.height - rect.bottom + innerHeight
+    }
+  }
 
   return (
     <>

@@ -5,6 +5,7 @@ import { remove } from 'fs-extra'
 import path from 'path'
 import React, { memo } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
+import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
 import {
   getShipBackgroundPath,
@@ -12,6 +13,7 @@ import {
   getSlotItemBackgroundPath,
   getSlotItemImgPath,
 } from 'views/utils/ship-img'
+import { indexify } from 'views/utils/tools'
 
 declare const APPDATA_PATH: string
 
@@ -72,6 +74,13 @@ const EquipAvatarBG = styled.img`
 // Remove old folder
 remove(path.join(APPDATA_PATH, 'avatar')).catch(() => null)
 
+// $shipgraph is an array; every mounted Avatar's selector runs on every store
+// dispatch, so index it once per const-data update instead of a linear find
+const shipgraphIndexSelector = createSelector(
+  [(state: RootState) => state.const.$shipgraph],
+  ($shipgraph) => indexify($shipgraph ?? []),
+)
+
 export interface AvatarProps {
   mstId?: number
   height?: number
@@ -120,7 +129,7 @@ export const Avatar = memo(
           (isEnemy
             ? 1.5
             : state.fcd.shipavatar?.marginMagics?.[mstId]?.[isDamaged ? 'damaged' : 'normal'])
-        const version = state.const.$shipgraph?.find((a) => a.api_id === mstId)?.api_version[0]
+        const version = shipgraphIndexSelector(state)[mstId]?.api_version[0]
         const rank =
           rankProp ??
           state.fcd.shipavatar?.backs?.[mstId] ??

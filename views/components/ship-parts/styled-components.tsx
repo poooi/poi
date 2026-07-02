@@ -61,9 +61,7 @@ export const ShipDeck = styled.div<{
   ${({ active }) =>
     !active &&
     css`
-      & > div {
-        display: none;
-      }
+      content-visibility: hidden;
     `}
 `
 

@@ -2,7 +2,7 @@ import type { DidFailLoadEvent, WebviewTag, WebContents } from 'electron'
 import type { CSSProperties } from 'react'
 
 import { webContents } from '@electron/remote'
-import React, { useEffect, useMemo, useState, forwardRef, useImperativeHandle } from 'react'
+import React, { useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
 
 import type { HandlerFields } from './webview-util'
 
@@ -72,7 +72,6 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
   ) => {
     const [view, setView] = useState<WebviewTag>()
     const [isReady, setIsReady] = useState(false)
-    const [entries, setEntries] = useState<ResizeObserverEntry[]>([])
 
     // Sync zoomFactor state
     useEffect(() => {
@@ -98,7 +97,20 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       }
     }, [isReady, view, view?.isAudioMuted, audioMuted])
 
-    const observer = useMemo(() => new ResizeObserver(setEntries), [])
+    // call the latest onResize straight from the observer callback instead of
+    // storing entries in state, which re-rendered this component every frame
+    // during a resize
+    const onResizeRef = useRef(onResize)
+    // eslint-disable-next-line react-hooks/refs
+    onResizeRef.current = onResize
+
+    const observer = useMemo(
+      () =>
+        new ResizeObserver((entries) => {
+          onResizeRef.current?.(entries)
+        }),
+      [],
+    )
 
     // Enable Observer
     useEffect(() => {
@@ -112,13 +124,6 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
         }
       }
     }, [view, observer])
-
-    // onResize event handler
-    useEffect(() => {
-      if (onResize) {
-        onResize(entries)
-      }
-    }, [onResize, entries])
 
     // Error handling
     useEffect(() => {

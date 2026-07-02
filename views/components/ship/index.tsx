@@ -2,8 +2,8 @@ import type { FC } from 'react'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ResizeSensor } from '@blueprintjs/core'
-import { memoize, times } from 'lodash'
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import { debounce, memoize, times } from 'lodash'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import FontAwesome from 'react-fontawesome'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -187,21 +187,26 @@ const ShipView: FC = () => {
     dispatch(createTabSwitchAction({ tabInfo: { activeMainTab: 'main-view' } }))
   }, [dispatch])
 
-  const handleResize = useCallback(
-    (entries: ResizeObserverEntry[]) => {
-      entries.forEach((entry) => {
-        const { width: w, height: h } = entry.contentRect
-        if (
-          w !== 0 &&
-          h !== 0 &&
-          (w !== getStore('layout.shippane.width') || h !== getStore('layout.shippane.height'))
-        ) {
-          dispatch(createLayoutUpdateAction({ shippane: { width: w, height: h } }))
-        }
-      })
-    },
+  const handleResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          const { width: w, height: h } = entry.contentRect
+          if (
+            w !== 0 &&
+            h !== 0 &&
+            (w !== getStore('layout.shippane.width') || h !== getStore('layout.shippane.height'))
+          ) {
+            dispatch(createLayoutUpdateAction({ shippane: { width: w, height: h } }))
+          }
+        })
+      }, 50),
     [dispatch],
   )
+
+  useEffect(() => {
+    return () => handleResize.cancel()
+  }, [handleResize])
 
   return (
     <ShipWrapper className="ship-wrapper">

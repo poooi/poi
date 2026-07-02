@@ -1,8 +1,8 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, ResizeSensor } from '@blueprintjs/core'
-import { memoize } from 'lodash'
-import React, { useCallback, useLayoutEffect, useState } from 'react'
+import { debounce, memoize } from 'lodash'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
@@ -108,22 +108,27 @@ export const MiniShip = ({ editable }: { editable?: boolean }) => {
     dispatch(createTabSwitchAction({ tabInfo: { activeMainTab: 'ship-view' } }))
   }, [dispatch])
 
-  const handleResize = useCallback(
-    (entries: ResizeObserverEntry[]) => {
-      entries.forEach((entry) => {
-        const { width, height } = entry.contentRect
-        if (
-          width !== 0 &&
-          height !== 0 &&
-          (width !== getStore('layout.minishippane.width') ||
-            height !== getStore('layout.minishippane.height'))
-        ) {
-          dispatch(createLayoutUpdateAction({ minishippane: { width, height } }))
-        }
-      })
-    },
+  const handleResize = useMemo(
+    () =>
+      debounce((entries: ResizeObserverEntry[]) => {
+        entries.forEach((entry) => {
+          const { width, height } = entry.contentRect
+          if (
+            width !== 0 &&
+            height !== 0 &&
+            (width !== getStore('layout.minishippane.width') ||
+              height !== getStore('layout.minishippane.height'))
+          ) {
+            dispatch(createLayoutUpdateAction({ minishippane: { width, height } }))
+          }
+        })
+      }, 50),
     [dispatch],
   )
+
+  useEffect(() => {
+    return () => handleResize.cancel()
+  }, [handleResize])
 
   return (
     <CardWrapper
