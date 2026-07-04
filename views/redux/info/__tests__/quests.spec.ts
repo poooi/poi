@@ -494,6 +494,66 @@ describe('quests reducer - questTrackingReducer paths', () => {
     expect(getSubgoal(after, 9, 'remodel_ship').count).toBe(1)
   })
 
+  it('battle_boss_win secondshipclass — gates on second ship ctype', () => {
+    const questState: QuestsState = {
+      ...baseState,
+      records: {
+        ...baseState.records,
+        9: { id: 9, battle_boss_win_rank_s: { count: 0, required: 1 } },
+      },
+      activeQuests: {
+        ...baseState.activeQuests,
+        // @ts-expect-error not important for this test
+        9: { detail: { api_no: 9 }, time: 0 },
+      },
+      questGoals: {
+        ...baseState.questGoals,
+        9: {
+          battle_boss_win_rank_s: {
+            required: 1,
+            maparea: [75],
+            mapcell: [24, 25],
+            flagship: ['吹雪改三'],
+            secondshipclass: [12], // 特I型
+          },
+        },
+      },
+    }
+    const store = createTestStore(questState)
+
+    // second ship is not 特I型 (ctype 1 = 綾波型) — no progress
+    store.dispatch(
+      createInfoQuestsApplyProgressAction({
+        event: 'battle_boss_win_rank_s',
+        options: {
+          maparea: 75,
+          mapcell: 24,
+          shipname: ['吹雪改三', '綾波改二'],
+          shiptype: [2, 2],
+          shipclass: [12, 1],
+        },
+        delta: 1,
+      }),
+    )
+    expect(getSubgoal(store.getState().info.quests, 9, 'battle_boss_win_rank_s').count).toBe(0)
+
+    // 吹雪改三護(六式) flagship matches by substring; second ship 特I型 (ctype 12) counts
+    store.dispatch(
+      createInfoQuestsApplyProgressAction({
+        event: 'battle_boss_win_rank_s',
+        options: {
+          maparea: 75,
+          mapcell: 25,
+          shipname: ['吹雪改三護(六式)', '白雪改'],
+          shiptype: [2, 2],
+          shipclass: [12, 12],
+        },
+        delta: 1,
+      }),
+    )
+    expect(getSubgoal(store.getState().info.quests, 9, 'battle_boss_win_rank_s').count).toBe(1)
+  })
+
   it('remodel_ship materialShipType combined count — passes when ≥ materialShipMinCount match', () => {
     const questState: QuestsState = {
       ...baseState,

@@ -81,6 +81,7 @@ export interface QuestGoalSubgoal {
   flagshipclass?: number[]
   // Escort ship constraints
   secondship?: string[]
+  secondshipclass?: number[]
   escortship?: EscortShipConstraint[]
   escortshiptype?: EscortShipTypeConstraint[]
   escortshipclass?: EscortShipClassConstraint[]
@@ -388,6 +389,9 @@ export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): bool
   }
 
   if (goal.flagshipclass && !goal.flagshipclass.includes(options.shipclass?.[0] ?? -1)) {
+    return false
+  }
+  if (goal.secondshipclass && !goal.secondshipclass.includes(options.shipclass?.[1] ?? -1)) {
     return false
   }
   if (goal.escortshipclass && goal.escortshipclass.length > 0) {

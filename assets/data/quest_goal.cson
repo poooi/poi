@@ -1285,6 +1285,45 @@ Quest guides (となはざな): https://tonahazana.com/
 ###
 # Yearly (April)
 ###
+1045: #「吹雪改三」抜錨します！見てくださいっ！
+  type: 104
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    secondshipclass: [12] #特I型
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    secondshipclass: [12] #特I型
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    secondshipclass: [12] #特I型
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    secondshipclass: [12] #特I型
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@753":
+    description: "7-5-3 S"
+    maparea: [75]
+    mapcell: [24, 25] #第三ゲージボス Tマス
+    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    secondshipclass: [12] #特I型
+    required: 1
+    init: 0
 362: #特型初代「第十一駆逐隊」演習スペシャル！
   type: 104
   "practice_win_a":
@@ -1338,7 +1377,48 @@ Quest guides (となはざな): https://tonahazana.com/
     ]
     required: 1
     init: 0
-# TODO: Add 日英米合同水上艦隊、抜錨せよ！ when there is a way to find out ship's origin nation
+973: #日英米合同水上艦隊、抜錨せよ！
+  # NOTE: 米英艦艇 = all US/UK ship classes (ctype), from kcanotify ships_nationality_data.json
+  # (nat2 = US, nat4 = UK); needs updating when new US/UK ship classes are implemented
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_a@31":
+    description: "3-1 A"
+    maparea: [31]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@33":
+    description: "3-3 A"
+    maparea: [33]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@43":
+    description: "4-3 A"
+    maparea: [43]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@732":
+    description: "7-3-2 A"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25] #第二ゲージボス Pマス
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
 1012: #鵜来型海防艦、静かな海を防衛せよ！
   type: 105
   fuzzy: true
@@ -1631,6 +1711,8 @@ Quest guides (となはざな): https://tonahazana.com/
     required: 3
     init: 0
 373: #「フランス艦隊」演習！
+  # NOTE: nationality-based (フランス艦); list covers all French ships implemented so far
+  # (Richelieu Deux matches 'Richelieu' by substring) — extend when new French ships are added
   type: 107
   "practice_win_a":
     description: "演習勝利 A"
