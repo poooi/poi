@@ -21,12 +21,38 @@ jobs:
       # OpenCode posts its PR summary/session link via issues.createComment.
       issues: write
     steps:
+      - name: Check trigger user permissions
+        id: trigger-permission
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TRIGGER_USER: ${{ github.actor }}
+        run: |
+          encoded_user=$(jq -nr --arg value "$TRIGGER_USER" '$value|@uri')
+          permission_error=$(mktemp)
+          if ! permission=$(gh api "repos/${GITHUB_REPOSITORY}/collaborators/${encoded_user}/permission" --jq '.permission' 2>"$permission_error"); then
+            echo "OpenCode permission lookup failed; treating ${TRIGGER_USER} as having no repository permission."
+            sed 's/^/gh api: /' "$permission_error"
+            permission="none"
+          fi
+          rm -f "$permission_error"
+          permission=${permission:-none}
+          echo "permission=${permission}" >> "$GITHUB_OUTPUT"
+
+          if [[ "$permission" == "admin" || "$permission" == "write" ]]; then
+            echo "can_review=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "can_review=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping OpenCode review because ${TRIGGER_USER} has ${permission} repository permission, not write/admin."
+          fi
+
       - name: Checkout repository
+        if: ${{ steps['trigger-permission'].outputs.can_review == 'true' }}
         uses: actions/checkout@v7
         with:
           persist-credentials: false
 
       - name: Run OpenCode review
+        if: ${{ steps['trigger-permission'].outputs.can_review == 'true' }}
         uses: anomalyco/opencode/github@ed75ce9eccb6d97a4ee0f79d3db8cb33b47b0661
         env:
           GITHUB_TOKEN: ${{ github.token }}
