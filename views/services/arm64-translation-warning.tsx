@@ -38,12 +38,12 @@ export const showArchitectureMismatchDialog = () => {
 
   const footer: ButtonData[] = [
     {
-      name: String(i18next.t('OK')),
+      name: String(i18next.t('Download ARM64 build')),
       func: openDownloadPage,
       style: 'primary',
     },
     {
-      name: String(i18next.t("Don't show again")),
+      name: String(i18next.t("Don't show again for this version")),
       func: dismissCurrentVersion,
       style: 'success',
     },
