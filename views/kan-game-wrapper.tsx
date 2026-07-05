@@ -69,6 +69,16 @@ const verifyCACert = memoize((data: string | Buffer) => {
   return cert.verify(caPublicKey)
 })
 
+// the user agent is static per session; reading it via @electron/remote is a
+// synchronous IPC round-trip, so do it once instead of on every render
+const getUserAgent = memoize((bypassGoogleRestriction: boolean) =>
+  remote
+    .getCurrentWebContents()
+    .userAgent.replace(/Electron[^ ]* /, '')
+    .replace(/poi[^ ]* /, '')
+    .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', ''),
+)
+
 const PoiInfo = styled(CustomTag)`
   flex: 0 0 ${poiControlHeight}px;
   transform-origin: 0 0;
@@ -153,6 +163,18 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
   resizableAreaWidth: AreaSize = { px: 0, percent: 0 }
   resizableAreaHeight: AreaSize = { px: 0, percent: 0 }
   enableAudioMutePolyfill = false
+  poiMain: Element | null = null
+
+  setResizableAreaRef = (r: ResizableAreaHandle | null) => {
+    this.resizableArea = r
+  }
+
+  // <poi-main> is a static mount point; cache it (retrying while unresolved)
+  // instead of querying the DOM on every render
+  getPoiMain = () => {
+    this.poiMain ??= document.querySelector('poi-main')
+    return this.poiMain ?? undefined
+  }
 
   alignWebview = () => {
     try {
@@ -339,11 +361,7 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
     } = this.props
     const getZoomedSize = (value: number) => Math.round(value / zoomLevel)
     const webviewZoomFactor = Math.round((actualWindowWidth * zoomLevel) / 0.012) / 100000
-    const ua = remote
-      .getCurrentWebContents()
-      .userAgent.replace(/Electron[^ ]* /, '')
-      .replace(/poi[^ ]* /, '')
-      .replace(bypassGoogleRestriction ? /Chrome[^ ]* / : '', '')
+    const ua = getUserAgent(bypassGoogleRestriction)
     // `contextIsolation` makes the page's main world enforce standard web security, which
     // would block the `file://` cache-asset swap (resource-hack) and the cross-origin game
     // iframe traversal (capture). The pre-isolation node-integrated world ran relaxed, so
@@ -492,15 +510,13 @@ class KanGameWrapperInner extends Component<KanGameWrapperProps, KanGameWrapperS
           }
           defaultHeight={defaultHeight}
           initHeight={this.resizableAreaHeight}
-          parentContainer={document.querySelector('poi-main') ?? undefined}
+          parentContainer={this.getPoiMain()}
           disable={{
             width: disableWidth,
             height: disableHeight,
           }}
           onResized={this.setRatio}
-          ref={(r: ResizableAreaHandle | null) => {
-            this.resizableArea = r
-          }}
+          ref={this.setResizableAreaRef}
         >
           <KanGame tag="kan-game">
             <div

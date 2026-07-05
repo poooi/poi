@@ -141,7 +141,13 @@ function CountdownNotifierLabelInner({
   isActive,
   minimal,
 }: CountdownNotifierLabelProps) {
-  const notifier = useRef(new CountdownNotifier())
+  // lazy init: a `new CountdownNotifier()` useRef argument would construct
+  // and discard an instance on every render
+  const notifier = useRef<CountdownNotifier | null>(null)
+  if (notifier.current === null) {
+    // eslint-disable-next-line react-hooks/refs
+    notifier.current = new CountdownNotifier()
+  }
 
   const propsRef = useRef<CountdownNotifierLabelProps>({
     timerKey,
@@ -181,7 +187,7 @@ function CountdownNotifierLabelInner({
     (_timeRemaining: number) => {
       const props = propsRef.current
       const notifyOptions = props.getNotifyOptions?.(props)
-      if (notifyOptions) notifier.current.tryNotify(notifyOptions)
+      if (notifyOptions) notifier.current?.tryNotify(notifyOptions)
       setStyle(computeStyle())
     },
     [computeStyle],

@@ -13,7 +13,7 @@ import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-c
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
 import { getSlotitemCount } from 'views/utils/game-utils'
-import { configSelector, basicSelector, shipsSelector } from 'views/utils/selectors'
+import { configSelector, basicSelector, equipsSelector, shipsSelector } from 'views/utils/selectors'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import { CardWrapper as CardWrapperL } from './styled-components'
@@ -190,23 +190,34 @@ const CountdownContent = ({ moments }: { moments: Record<MomentKey, moment.Momen
   </div>
 )
 
+const getInitialMoments = (): Record<MomentKey, moment.Moment> => ({
+  Practice: getNextPractice(),
+  Quest: getNextQuest(),
+  QuarterlyQuest: getNextQuarterlyQuest(),
+  Senka: getNextSenka(),
+  EO: getNextEO(),
+})
+
 const CountDownControl = () => {
-  const momentsRef = useRef<Record<MomentKey, moment.Moment>>({
-    Practice: getNextPractice(),
-    Quest: getNextQuest(),
-    QuarterlyQuest: getNextQuarterlyQuest(),
-    Senka: getNextSenka(),
-    EO: getNextEO(),
-  })
+  // moments live in state so an open tooltip refreshes when one rolls over;
+  // rollovers are rare, so this re-renders at most a few times a day. The ref
+  // mirror lets the stable tick callback read the latest value.
+  const [moments, setMoments] = useState(getInitialMoments)
+  const momentsRef = useRef(moments)
   const [intent, setIntent] = useState<Intent>(Intent.NONE)
 
   const tick = useCallback((currentTime: number) => {
+    let next = momentsRef.current
     MOMENT_KEYS.forEach((key) => {
-      if (+momentsRef.current[key] - currentTime < 0) {
-        momentsRef.current[key] = getNewMomentMap[key]()
+      if (+next[key] - currentTime < 0) {
+        next = { ...next, [key]: getNewMomentMap[key]() }
       }
     })
-    const minRemaining = Math.min(...map(momentsRef.current, (m) => +m - currentTime))
+    if (next !== momentsRef.current) {
+      momentsRef.current = next
+      setMoments(next)
+    }
+    const minRemaining = Math.min(...map(next, (m) => +m - currentTime))
     const newIntent = getTagIntent(null, minRemaining / 1000)
     setIntent((prev) => (prev !== newIntent ? newIntent : prev))
   }, [])
@@ -232,11 +243,7 @@ const CountDownControl = () => {
 
   return (
     <TeitokuTimer className="teitoku-timer">
-      <Tooltip
-        position={Position.LEFT_BOTTOM}
-        // eslint-disable-next-line react-hooks/refs
-        content={<CountdownContent moments={momentsRef.current} />}
-      >
+      <Tooltip position={Position.LEFT_BOTTOM} content={<CountdownContent moments={moments} />}>
         <Tag intent={intent} minimal>
           <FontAwesome name="calendar" />
         </Tag>
@@ -265,11 +272,15 @@ const shipCountSelector = createSelector(
   (ships) => Object.keys(ships as object).length,
 )
 
+// memoized so the O(#equips) filter only reruns when the equips slice changes,
+// not on every dispatched action
+const equipCountSelector = createSelector([equipsSelector], getSlotitemCount)
+
 export const AdmiralPanel = ({ editable }: { editable?: boolean }) => {
   const { t } = useTranslation(['main', 'resources'])
   const admiralInfo = useSelector((state: RootState) => admiralInfoSelector(state))
   const numCheck = useSelector((state: RootState) => numCheckSelector(state))
-  const equipNum = useSelector((state: RootState) => getSlotitemCount(state.info.equips))
+  const equipNum = useSelector(equipCountSelector)
   const shipNum = useSelector(shipCountSelector)
   const dropCount = useSelector(
     (state: RootState) => (state.sortie as { dropCount?: number }).dropCount ?? 0,

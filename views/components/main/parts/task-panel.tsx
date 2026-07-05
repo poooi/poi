@@ -2,7 +2,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Intent, ResizeSensor, Tooltip } from '@blueprintjs/core'
 import { map, range, forEach, values, sortBy } from 'lodash'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
@@ -20,7 +20,9 @@ import {
   configLayoutSelector,
   configReverseLayoutSelector,
   extensionSelectorFactory,
-  getFleetInfo,
+  fleetsSelector,
+  getFleetInfoFromSlices,
+  shipsSelector,
 } from 'views/utils/selectors'
 import { escapeI18nKey } from 'views/utils/tools'
 
@@ -262,6 +264,67 @@ const questPluginExtensionSelector = extensionSelectorFactory('poi-plugin-quest-
   state: RootState,
 ) => { quests?: Record<number, { condition?: string; wiki_id?: string }> } | undefined
 
+/*
+  selects a "1, 2, 4" style string listing 1-based qualifying fleet indices,
+  or null when no checkmark should be shown.
+
+  memoized per quest (recomputes only when the quest goal, fleets, ships or
+  master data change) and returns a primitive so useSelector can bail out of
+  re-rendering the row on unrelated store updates.
+*/
+const makeQualifyingFleetsSelector = (questNo: number) =>
+  createSelector(
+    [
+      (state: RootState) => state.info?.quests?.questGoals?.[questNo],
+      fleetsSelector,
+      shipsSelector,
+      (state: RootState) => state.const?.$ships,
+    ],
+    (questGoal, fleets, ships, $ships): string | null => {
+      if (!questGoal || typeof questGoal !== 'object') return null
+
+      // only cares about non-metadata stuff; metadata values (type/fuzzy/resetInterval) are primitives
+      const subgoals: QuestGoalSubgoal[] = Object.values(questGoal).filter(
+        (v): v is QuestGoalSubgoal => typeof v === 'object' && v !== null,
+      )
+      if (subgoals.length === 0) return null
+
+      /*
+        to reduce noise, checkmark is only shown when quest actually cares about the fleet in any way.
+
+        The field list below shall match satisfyShip() in views/redux/info/quests.ts.
+        falling out of sync may miss a qualifying fleet, but the actual quest
+        indicator counter is unaffected, as this only serves as a display hint.
+       */
+      const hasShipConstraints = subgoals.some(
+        (sg) =>
+          !!(
+            sg.flagship ||
+            sg.secondship ||
+            sg.escortship ||
+            sg.flagshiptype ||
+            sg.escortshiptype ||
+            sg.flagshipclass ||
+            sg.escortshipclass ||
+            sg.banshiptype ||
+            sg.fleetlimit
+          ),
+      )
+      if (!hasShipConstraints) return null
+
+      const qualifying: number[] = []
+      ;(fleets ?? []).forEach((fleet, fi) => {
+        if (!fleet) return
+
+        const fleetInfo = getFleetInfoFromSlices(fleet.api_ship ?? [], ships, $ships)
+        const allPass = subgoals.every((sg) => satisfyShip(sg, fleetInfo))
+        if (allPass) qualifying.push(fi + 1)
+      })
+
+      return qualifying.length > 0 ? qualifying.join(', ') : null
+    },
+  )
+
 const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth: number }) => {
   const { t } = useTranslation('resources')
   const record = useSelector((state: RootState) => state?.info?.quests?.records?.[quest.api_no])
@@ -273,52 +336,11 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
   )
 
   // selects 1-based fleet indices listing qualifiying fleets.
-  const qualifyingFleets = useSelector((state: RootState) => {
-    const questGoal = state.info?.quests?.questGoals?.[quest.api_no]
-    if (!questGoal || typeof questGoal !== 'object') return null
-
-    // only cares about non-metadata stuff; metadata values (type/fuzzy/resetInterval) are primitives
-    const subgoals: QuestGoalSubgoal[] = Object.values(questGoal).filter(
-      (v): v is QuestGoalSubgoal => typeof v === 'object' && v !== null,
-    )
-    if (subgoals.length === 0) return null
-
-    /*
-      to reduce noise, checkmark is only shown when quest actually cares about the fleet in any way.
-
-      The field list below shall match satisfyShip() in views/redux/info/quests.ts.
-      falling out of sync may miss a qualifying fleet, but the actual quest
-      indicator counter is unaffected, as this only serves as a display hint.
-     */
-    const hasShipConstraints = subgoals.some(
-      (sg) =>
-        !!(
-          sg.flagship ||
-          sg.secondship ||
-          sg.escortship ||
-          sg.flagshiptype ||
-          sg.escortshiptype ||
-          sg.flagshipclass ||
-          sg.escortshipclass ||
-          sg.banshiptype ||
-          sg.fleetlimit
-        ),
-    )
-    if (!hasShipConstraints) return null
-
-    const qualifying: number[] = []
-    const maxFleets = state.info?.fleets?.length ?? 0
-    for (let fi = 0; fi < maxFleets; ++fi) {
-      const fleet = state.info?.fleets?.[fi]
-      if (!fleet) continue
-
-      const deckShipId = fleet.api_ship ?? []
-      const allPass = subgoals.every((sg) => satisfyShip(sg, getFleetInfo(deckShipId, state)))
-      if (allPass) qualifying.push(fi + 1)
-    }
-
-    return qualifying.length > 0 ? qualifying : null
-  })
+  const qualifyingFleetsSelector = useMemo(
+    () => makeQualifyingFleetsSelector(quest.api_no),
+    [quest.api_no],
+  )
+  const qualifyingFleets = useSelector(qualifyingFleetsSelector)
 
   const wikiIdPrefix = wikiId ? `${wikiId} - ` : ''
   const questName = quest?.api_title
@@ -341,8 +363,7 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
       + at least one fleet qualifies
       + quest itself requires any non-trivial qualifications
    */
-  const fleetOverlay =
-    qualifyingFleets && qualifyingFleets.length > 0 ? [`✔ ${qualifyingFleets.join(', ')}`] : []
+  const fleetOverlay = qualifyingFleets ? [`✔ ${qualifyingFleets}`] : []
 
   return (
     <TaskRowBase

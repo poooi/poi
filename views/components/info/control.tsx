@@ -7,7 +7,7 @@ import { shell, clipboard, nativeImage, ipcRenderer, type IpcRendererEvent } fro
 import fs from 'fs-extra'
 import { padStart } from 'lodash'
 import path from 'path'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
@@ -404,68 +404,88 @@ export const PoiControl = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // mount-once; handleConfigChange and touchbarListener are stable
 
-  if (process.platform === 'darwin') {
-    const { updateTouchbarInfoIcons }: typeof TouchBarUtil = remote.require('./lib/touchbar')
-    updateTouchbarInfoIcons()
-  }
+  // keep the touchbar icons in sync with the states they reflect; this is a
+  // synchronous remote IPC call, so run it as an effect instead of in render
+  useEffect(() => {
+    if (process.platform === 'darwin') {
+      const { updateTouchbarInfoIcons }: typeof TouchBarUtil = remote.require('./lib/touchbar')
+      updateTouchbarInfoIcons()
+    }
+  }, [muted, editable])
 
-  const list = [
-    {
-      onClick: handleOpenDevTools,
-      onContextMenu: handleOpenWebviewDevTools,
-      label: t('Developer Tools'),
-      icon: 'console',
-    },
-    {
-      onClick: () => handleCapturePage(false),
-      onContextMenu: () => handleCapturePage(true),
-      label: t('Take a screenshot'),
-      icon: 'camera',
-    },
-    {
-      onClick: handleSetMuted,
-      onContextMenu: null,
-      label: muted ? t('Volume on') : t('Volume off'),
-      icon: muted ? 'volume-off' : 'volume-up',
-    },
-    {
-      onClick: handleOpenCacheFolder,
-      onContextMenu: null,
-      label: t('Open cache dir'),
-      icon: 'social-media',
-    },
-    {
-      onClick: handleOpenScreenshotFolder,
-      onContextMenu: null,
-      label: t('Open screenshot dir'),
-      icon: 'media',
-    },
-    {
-      onClick: handleJustifyLayout,
-      onContextMenu: handleUnlockWebview,
-      label: t('Auto adjust'),
-      icon: 'fullscreen',
-    },
-    {
-      onClick: handleSetEditable,
-      onContextMenu: null,
-      label: editable ? t('Lock panel') : t('Unlock panel'),
-      icon: editable ? 'unlock' : 'lock',
-    },
-    {
-      onClick: handleRefreshGameDialog,
-      onContextMenu: gameReload,
-      label: t('Refresh game'),
-      icon: 'refresh',
-    },
-  ]
-
-  // eslint-disable-next-line react-hooks/refs
-  const listItems = list.map(({ label, ...props }) => (
-    <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={transition}>
-      <Button {...(props as object)} minimal />
-    </Tooltip>
-  ))
+  const listItems = useMemo(() => {
+    const list = [
+      {
+        onClick: handleOpenDevTools,
+        onContextMenu: handleOpenWebviewDevTools,
+        label: t('Developer Tools'),
+        icon: 'console',
+      },
+      {
+        onClick: () => handleCapturePage(false),
+        onContextMenu: () => handleCapturePage(true),
+        label: t('Take a screenshot'),
+        icon: 'camera',
+      },
+      {
+        onClick: handleSetMuted,
+        onContextMenu: null,
+        label: muted ? t('Volume on') : t('Volume off'),
+        icon: muted ? 'volume-off' : 'volume-up',
+      },
+      {
+        onClick: handleOpenCacheFolder,
+        onContextMenu: null,
+        label: t('Open cache dir'),
+        icon: 'social-media',
+      },
+      {
+        onClick: handleOpenScreenshotFolder,
+        onContextMenu: null,
+        label: t('Open screenshot dir'),
+        icon: 'media',
+      },
+      {
+        onClick: handleJustifyLayout,
+        onContextMenu: handleUnlockWebview,
+        label: t('Auto adjust'),
+        icon: 'fullscreen',
+      },
+      {
+        onClick: handleSetEditable,
+        onContextMenu: null,
+        label: editable ? t('Lock panel') : t('Unlock panel'),
+        icon: editable ? 'unlock' : 'lock',
+      },
+      {
+        onClick: handleRefreshGameDialog,
+        onContextMenu: gameReload,
+        label: t('Refresh game'),
+        icon: 'refresh',
+      },
+    ]
+    // eslint-disable-next-line react-hooks/refs -- handlers read propsRef in events only, not during render
+    return list.map(({ label, ...props }) => (
+      <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={transition}>
+        <Button {...(props as object)} minimal />
+      </Tooltip>
+    ))
+  }, [
+    t,
+    muted,
+    editable,
+    transition,
+    handleOpenDevTools,
+    handleOpenWebviewDevTools,
+    handleCapturePage,
+    handleSetMuted,
+    handleOpenCacheFolder,
+    handleOpenScreenshotFolder,
+    handleJustifyLayout,
+    handleUnlockWebview,
+    handleSetEditable,
+    handleRefreshGameDialog,
+  ])
 
   return (
     <PoiControlTag tag="poi-control" extend={extend} onTransitionEnd={() => setTransition(false)}>

@@ -2,7 +2,15 @@ import type { DidFailLoadEvent, WebviewTag, WebContents } from 'electron'
 import type { CSSProperties } from 'react'
 
 import { webContents } from '@electron/remote'
-import React, { useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from 'react'
 
 import type { HandlerFields } from './webview-util'
 
@@ -73,6 +81,12 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     const [view, setView] = useState<WebviewTag>()
     const [isReady, setIsReady] = useState(false)
 
+    // stable callback ref: an inline closure would get a new identity every
+    // render, making React detach (null) and re-attach the ref each time
+    const handleViewRef = useCallback((v: WebviewTag | null) => {
+      setView(v ?? undefined)
+    }, [])
+
     // Sync zoomFactor state
     useEffect(() => {
       if (
@@ -141,7 +155,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
       return () => {
         view.removeEventListener('did-fail-load', callback)
       }
-    })
+    }, [view])
 
     // Set isReady state
     useEffect(() => {
@@ -242,9 +256,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
           webpreferences={webpreferences}
           enableblinkfeatures={enableblinkfeatures}
           disableblinkfeatures={disableblinkfeatures}
-          ref={(view: WebviewTag) => {
-            setView(view)
-          }}
+          ref={handleViewRef}
         />
       </div>
     )

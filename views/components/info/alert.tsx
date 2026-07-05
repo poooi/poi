@@ -128,7 +128,7 @@ export const PoiAlert: React.FC = () => {
   // eslint-disable-next-line react-hooks/purity
   const stickyEnd = useRef(Date.now())
 
-  const toggleHistory = useCallback(() => setShowHistory(!showHistory), [showHistory])
+  const toggleHistory = useCallback(() => setShowHistory((v) => !v), [])
 
   const handleAddAlert = useCallback((e: Message) => {
     const nowTS = Date.now()

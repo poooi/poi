@@ -3,7 +3,7 @@ import type { AirBase } from 'views/redux/info/airbase'
 import type { Equip } from 'views/redux/info/equips'
 import type { MapInfo, MapsState } from 'views/redux/info/maps'
 import type { RepairData } from 'views/redux/info/repairs'
-import type { Ship } from 'views/redux/info/ships'
+import type { Ship, ShipsState } from 'views/redux/info/ships'
 import type { RootState } from 'views/redux/reducer-factory'
 import type { SortieState } from 'views/redux/sortie'
 
@@ -106,21 +106,29 @@ function getMapHp(
   return [nowHp, maxCount, undefined]
 }
 
+export function getFleetInfoFromSlices(
+  deckShipId: number[],
+  ships: ShipsState | undefined,
+  $ships: Record<string, APIMstShip> | undefined,
+): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
+  const shipname: string[] = []
+  const shiptype: number[] = []
+  const shipclass: number[] = []
+  deckShipId.forEach((id) => {
+    const $ship = $ships?.[ships?.[id]?.api_ship_id ?? -1]
+    if (!$ship) return
+    if (($ship.api_name ?? '').length > 0) shipname.push($ship.api_name)
+    if (($ship.api_stype ?? -1) > 0) shiptype.push($ship.api_stype)
+    if (($ship.api_ctype ?? -1) > 0) shipclass.push($ship.api_ctype)
+  })
+  return { shipname, shiptype, shipclass }
+}
+
 export function getFleetInfo(
   deckShipId: number[],
   state: RootState,
 ): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
-  const deckShipAPIShipId = deckShipId.map((id) => get(state, `info.ships.${id}.api_ship_id`, -1))
-  const shipname = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_name`, ''))
-    .filter((name: string) => name.length > 0)
-  const shiptype = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_stype`, -1))
-    .filter((id: number) => id > 0)
-  const shipclass = deckShipAPIShipId
-    .map((id) => get(state, `const.$ships.${id}.api_ctype`, -1))
-    .filter((id: number) => id > 0)
-  return { shipname, shiptype, shipclass }
+  return getFleetInfoFromSlices(deckShipId, state.info?.ships, state.const?.$ships)
 }
 
 //### Selectors ###
