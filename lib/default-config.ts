@@ -36,6 +36,7 @@ interface PoiMisc {
   trustedCerts: string[]
   untrustedCerts?: string[]
   pinminimap: boolean
+  arm64TranslationWarningDismissedVersion: string
   language?: string
 }
 
@@ -311,6 +312,7 @@ const defaultConfig: Config = {
       },
       trustedCerts: [],
       pinminimap: false,
+      arm64TranslationWarningDismissedVersion: '',
     },
     content: {
       resizable: true,
