@@ -28,9 +28,7 @@ const openItemAsync = (dir: string, source?: string | null) => {
 }
 
 const PoiControlTag = styled(CustomTag)<{
-  tag?: string
   extend?: boolean
-  children?: React.ReactNode
   onTransitionEnd?: () => void
 }>`
   width: 0;
@@ -127,7 +125,7 @@ export const PoiControl = () => {
     [disableEditableMsg],
   )
 
-  const handleScreenshotFailure = useCallback((err?: Error) => {
+  const handleScreenshotFailure = useCallback((err?: unknown) => {
     if (err) console.error(err)
     error(propsRef.current.t('Failed to save the screenshot'))
   }, [])
@@ -152,8 +150,7 @@ export const PoiControl = () => {
           await fs.writeFile(filename, buf)
           success(`${propsRef.current.t('screenshot saved to')} ${filename}`)
         } catch (error) {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-          handleScreenshotFailure(error as Error)
+          handleScreenshotFailure(error)
         }
       }
     },
@@ -183,8 +180,7 @@ export const PoiControl = () => {
             ?.toDataURL()
         handleScreenshotCaptured(dataURL, toClipboard)
       } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        handleScreenshotFailure(error as Error)
+        handleScreenshotFailure(error)
       }
     },
     [handleScreenshotCaptured, handleScreenshotFailure],

@@ -34,8 +34,7 @@ export const StatusLabel = memo(({ label: i }: StatusLabelProps) => {
         position={Position.TOP}
         content={
           i > 2
-            ? // @ts-expect-error type is ensured by the selector
-              `${(fleetname[language] ?? [])[i - 3] ?? t('main:Ship tag')} - ${mapname[i - 3] || i - 2}`
+            ? `${(fleetname[language] ?? [])[i - 3] ?? t('main:Ship tag')} - ${mapname[i - 3] || i - 2}`
             : t(`main:${TEXTS[i]}`)
         }
       >

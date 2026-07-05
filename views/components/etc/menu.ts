@@ -131,8 +131,12 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Ctrl+Shift+I',
           click: (_item, focusedWindow) => {
-            // @ts-expect-error type is wrong
-            focusedWindow?.openDevTools({ mode: 'detach' })
+            // the titlebar menu invokes click without a window; fall back to the poi window
+            const win =
+              focusedWindow instanceof remote.BrowserWindow
+                ? focusedWindow
+                : remote.getCurrentWindow()
+            win.webContents.openDevTools({ mode: 'detach' })
           },
         },
         {
@@ -304,8 +308,12 @@ if (process.platform !== 'darwin') {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Alt+CmdOrCtrl+I',
           click: (_item, focusedWindow) => {
-            // @ts-expect-error type is wrong
-            focusedWindow?.openDevTools({ mode: 'detach' })
+            // the titlebar menu invokes click without a window; fall back to the poi window
+            const win =
+              focusedWindow instanceof remote.BrowserWindow
+                ? focusedWindow
+                : remote.getCurrentWindow()
+            win.webContents.openDevTools({ mode: 'detach' })
           },
         },
         {

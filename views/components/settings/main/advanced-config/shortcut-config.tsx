@@ -1,4 +1,4 @@
-import type { ConfigPath, ConfigValue } from 'lib/config'
+import type { ConfigValue } from 'lib/config'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Tag, Button, Intent, Dialog, Callout } from '@blueprintjs/core'
@@ -25,22 +25,25 @@ config.on('config.set', (path: string) => {
   }
 })
 
-interface Props<P extends ConfigPath> {
-  configName: P
-  defaultValue?: ConfigValue<P>
+// the component records a key string, so it only accepts config paths whose value is a shortcut string
+type ShortcutConfigName = 'poi.shortcut.bosskey' | 'poi.shortcut.bosskey.macos'
+
+interface Props {
+  configName: ShortcutConfigName
+  defaultValue?: ConfigValue<ShortcutConfigName>
   disabled?: boolean
   label?: React.ReactNode
   className?: string
 }
 
-export const ShortcutConfig = <P extends ConfigPath>({
+export const ShortcutConfig = ({
   configName,
   defaultValue,
   disabled,
   label,
   className,
   ...props
-}: Props<P>) => {
+}: Props) => {
   const { t } = useTranslation('setting')
   const value = String(
     useSelector((state: RootState) => get(state.config, configName, defaultValue ?? '')),
@@ -75,8 +78,7 @@ export const ShortcutConfig = <P extends ConfigPath>({
   const setKey = (character: string, modifiers: string[]) => {
     const key = transformKeyStr(character, modifiers)
     setRecording(false)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set(configName, key as ConfigValue<P>)
+    config.set(configName, key)
   }
 
   const handleClickRecord = () => {
@@ -94,8 +96,7 @@ export const ShortcutConfig = <P extends ConfigPath>({
 
   const handleDisable = () => {
     setRecording(false)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    config.set(configName, '' as ConfigValue<P>)
+    config.set(configName, '')
   }
 
   return (

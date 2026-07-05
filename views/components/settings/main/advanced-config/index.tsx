@@ -64,7 +64,6 @@ export const AdvancedConfig = () => {
             {isMacOS ? (
               <ShortcutConfig
                 configName="poi.shortcut.bosskey.macos"
-                // @ts-expect-error wait some typescript magic to fix it
                 defaultValue="Cmd+H"
                 disabled
               />

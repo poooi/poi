@@ -8,7 +8,7 @@ interface CustomTagProps {
   className?: string
 }
 
-export const CustomTag: FC = ({ tag = 'div', className, children, ...props }: CustomTagProps) => {
+export const CustomTag: FC<CustomTagProps> = ({ tag = 'div', className, children, ...props }) => {
   // Custom elements take `class` instead of React's `className`
   return React.createElement<Record<string, unknown>>(tag, { ...props, class: className }, children)
 }

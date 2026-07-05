@@ -21,6 +21,9 @@ export interface FcdShipAvatarState {
 export interface FcdShipTagState {
   color: string[]
   fleetname: {
+    // the UI looks up fleetname by the current i18n language, which can be any
+    // locale string; only the four locales below are guaranteed to exist
+    [language: string]: string[] | undefined
     'zh-CN': string[]
     'zh-TW': string[]
     'en-US': string[]

@@ -127,28 +127,19 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
 
     // Error handling
     useEffect(() => {
+      if (!view) {
+        return
+      }
+      // the listener is attached to `view`, so it is the webview that failed to load
       const callback = (e: DidFailLoadEvent) => {
         if (e.errorCode !== -3 && e.isMainFrame) {
           const errorScript = `document.write('<br>Webview load error<br>Error Code: ${e.errorCode}<br>Description: ${e.errorDescription}<br>URL: ${e.validatedURL}')\ndocument.body.style.backgroundColor = "white"`
-          const target = e.target
-          if (
-            target &&
-            'executeJavaScript' in target &&
-            typeof target.executeJavaScript === 'function'
-          ) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-            const webviewTarget = target as WebviewTag
-            webviewTarget.executeJavaScript(errorScript)
-          }
+          view.executeJavaScript(errorScript)
         }
       }
-      if (view) {
-        view.addEventListener('did-fail-load', callback)
-      }
+      view.addEventListener('did-fail-load', callback)
       return () => {
-        if (view) {
-          view.removeEventListener('did-fail-load', callback)
-        }
+        view.removeEventListener('did-fail-load', callback)
       }
     })
 

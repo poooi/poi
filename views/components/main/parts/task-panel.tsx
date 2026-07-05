@@ -277,11 +277,10 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
     const questGoal = state.info?.quests?.questGoals?.[quest.api_no]
     if (!questGoal || typeof questGoal !== 'object') return null
 
-    const subgoals: QuestGoalSubgoal[] = Object.entries(questGoal)
-      // only cares about non-metadata key stuff
-      .filter(([k]) => k !== 'type' && k !== 'fuzzy' && k !== 'resetInterval')
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- v is QuestGoalSubgoal after filtering metadata keys above
-      .map(([, v]) => v as QuestGoalSubgoal)
+    // only cares about non-metadata stuff; metadata values (type/fuzzy/resetInterval) are primitives
+    const subgoals: QuestGoalSubgoal[] = Object.values(questGoal).filter(
+      (v): v is QuestGoalSubgoal => typeof v === 'object' && v !== null,
+    )
     if (subgoals.length === 0) return null
 
     /*

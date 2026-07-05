@@ -8,6 +8,9 @@ declare module 'react' {
       'poi-nav': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
       'poi-nav-tabs': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
       'poi-info': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-alert': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-map-reminder': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+      'poi-control': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
       'kan-game': DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
     }
   }

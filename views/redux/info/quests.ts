@@ -437,8 +437,9 @@ function updateQuestRecordFactory(
       if (goal.fuzzy) {
         // 'fuzzy' will also appears in Object.keys(goal)
         // use @ as separator because we could have battle_boss_win and battle_boss_win_s
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        match = Object.keys(goal).filter((x) => x.startsWith(`${event}@`)) as GoalKey[]
+        match = Object.keys(goal).filter((x): x is `${QuestEvent}@${string}` =>
+          x.startsWith(`${event}@`),
+        )
       }
       forEach([...match, event], (_event) => {
         const subgoal = goal[_event]
@@ -519,21 +520,12 @@ function limitProgress(
 // Returns a new copy of record if it needs updating, or undefined o/w
 function updateRecordProgress(record: QuestRecord, bodyQuest: APIList): QuestRecord {
   const { api_progress_flag, api_state } = bodyQuest
-  let subgoalKey: string | null = null
-  forEach(record, (v, k) => {
-    if (typeof v === 'object') {
-      if (subgoalKey == null) {
-        subgoalKey = k
-      } else {
-        // Only update if this quest has only 1 subgoal
-        subgoalKey = null
-        return false // break
-      }
-    }
-  })
-  if (subgoalKey !== null) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- subgoalKey corresponds to SubgoalRecord type
-    const subgoal = record[subgoalKey] as SubgoalRecord
+  // Only update if this quest has only 1 subgoal
+  const subgoalEntries = Object.entries(record).filter(
+    (entry): entry is [string, SubgoalRecord] => typeof entry[1] === 'object',
+  )
+  if (subgoalEntries.length === 1) {
+    const [subgoalKey, subgoal] = subgoalEntries[0]
     const count = limitProgress(
       subgoal.count,
       subgoal.required,

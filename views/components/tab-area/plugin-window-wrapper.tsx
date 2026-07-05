@@ -28,6 +28,13 @@ import { PluginWrap } from './plugin-wrapper'
 const { BrowserWindow, screen } = remote
 const { workArea } = screen.getPrimaryDisplay()
 
+declare global {
+  interface Window {
+    /** set on detached plugin windows so plugins can detect window mode */
+    isWindowMode?: boolean
+  }
+}
+
 interface WindowRect {
   x?: number
   y?: number
@@ -217,8 +224,7 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           }
           externalWindowRef.current.document.body.appendChild(containerEl)
           externalWindowRef.current.document.title = plugin.name
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion, @typescript-eslint/no-explicit-any
-          ;(externalWindowRef.current as any).isWindowMode = true
+          externalWindowRef.current.isWindowMode = true
           loadStyle(externalWindowRef.current.document, currentWindow, false)
           const { stopFileNavigate }: typeof WebContentUtils =
             remote.require('./lib/webcontent-utils')

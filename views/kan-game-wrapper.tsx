@@ -69,26 +69,14 @@ const verifyCACert = memoize((data: string | Buffer) => {
   return cert.verify(caPublicKey)
 })
 
-const PoiInfo = styled(
-  CustomTag as React.ComponentType<{
-    tag?: string
-    className?: string
-    children?: React.ReactNode
-  }>,
-)`
+const PoiInfo = styled(CustomTag)`
   flex: 0 0 ${poiControlHeight}px;
   transform-origin: 0 0;
   align-items: stretch;
   display: flex;
 `
 
-const KanGame = styled(
-  CustomTag as React.ComponentType<{
-    tag?: string
-    className?: string
-    children?: React.ReactNode
-  }>,
-)`
+const KanGame = styled(CustomTag)`
   display: flex;
   flex-direction: column;
   margin-left: auto;

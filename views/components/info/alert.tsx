@@ -214,7 +214,6 @@ export const PoiAlert: React.FC = () => {
   const [current, ...history] = list
 
   return (
-    // @ts-expect-error wrong type definition
     <PoiAlertTag tag="poi-alert">
       <ResizeSensor onResize={handleAlertMainResize}>
         <AlertMain id="alert-main" className="alert-main bp6-popover">

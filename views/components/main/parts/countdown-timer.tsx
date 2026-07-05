@@ -103,8 +103,7 @@ function CountdownTimerInner({
         tcb?.(remaining)
         if (remaining < 1) ccb?.()
       } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        console.error((error as Error).stack)
+        console.error(error instanceof Error ? error.stack : error)
       }
     }
   }, [])

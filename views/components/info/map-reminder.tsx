@@ -23,7 +23,7 @@ import {
   currentNodeSelector,
 } from 'views/utils/selectors'
 
-const PoiMapReminderTag = styled(CustomTag)<{ tag?: string; children?: React.ReactNode }>`
+const PoiMapReminderTag = styled(CustomTag)`
   width: 0;
   flex: 0 0 135px;
 `

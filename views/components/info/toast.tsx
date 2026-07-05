@@ -1,3 +1,5 @@
+import type { ToastProps } from '@blueprintjs/core'
+
 import { Intent, OverlayToaster, Position } from '@blueprintjs/core'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
@@ -10,10 +12,10 @@ const intentMap: Partial<Record<string, Intent>> = {
   error: Intent.DANGER,
 }
 
-interface ToastConfig {
+// every Blueprint toast prop except `message` is forwarded to `Toaster.show` as-is
+interface ToastConfig extends Omit<ToastProps, 'message'> {
   type?: string
   title?: string
-  timeout?: number
 }
 
 type ToastArgs = [string, Partial<ToastConfig>?]

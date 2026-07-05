@@ -123,7 +123,6 @@ export const PluginConfig = (): React.ReactElement => {
 
   const showGracefulRepairToast = useCallback(() => {
     window.toast(t('plugin-install-failed-message'), {
-      // @ts-expect-error toast options type mismatch with action
       action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
       intent: 'danger',
     })

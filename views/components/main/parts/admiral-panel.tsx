@@ -138,7 +138,9 @@ const getNextSenka = () => {
 
 const getNextEO = () => moment.tz('Asia/Tokyo').endOf('month')
 
-type MomentKey = 'Practice' | 'Quest' | 'QuarterlyQuest' | 'Senka' | 'EO'
+const MOMENT_KEYS = ['Practice', 'Quest', 'QuarterlyQuest', 'Senka', 'EO'] as const
+
+type MomentKey = (typeof MOMENT_KEYS)[number]
 
 const getNewMomentMap: Record<MomentKey, () => moment.Moment> = {
   Practice: getNextPractice,
@@ -168,7 +170,7 @@ const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const CountdownContent = ({ moments }: { moments: Record<MomentKey, moment.Moment> }) => (
   <div>
-    {(['Practice', 'Quest', 'QuarterlyQuest', 'Senka', 'EO'] as MomentKey[]).map((name) => (
+    {MOMENT_KEYS.map((name) => (
       <CountdownItem className="info-tooltip-entry countdown-item" key={name}>
         <CountdownRow className="info-tooltip-item">
           <Trans>main:Next {name}</Trans>
@@ -199,9 +201,7 @@ const CountDownControl = () => {
   const [intent, setIntent] = useState<Intent>(Intent.NONE)
 
   const tick = useCallback((currentTime: number) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    const keys = Object.keys(momentsRef.current) as MomentKey[]
-    keys.forEach((key) => {
+    MOMENT_KEYS.forEach((key) => {
       if (+momentsRef.current[key] - currentTime < 0) {
         momentsRef.current[key] = getNewMomentMap[key]()
       }

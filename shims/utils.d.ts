@@ -26,15 +26,19 @@ export type DeepKeyOfArray<T> = T extends readonly unknown[]
             }[keyof T]
           : never
 
-export type DeepValueOf<T, K extends DeepKeyOf<T>> = K extends `${infer Key}.${infer Rest}`
-  ? Key extends keyof T
-    ? Rest extends DeepKeyOf<NonNullable<T[Key]>>
-      ? DeepValueOf<NonNullable<T[Key]>, Rest>
+// distributes over unions in T so paths into a union member resolve
+// (e.g. `poi.shortcut.bosskey.macos` where bosskey is `string | { macos: string }`)
+export type DeepValueOf<T, K extends DeepKeyOf<T>> = T extends unknown
+  ? K extends `${infer Key}.${infer Rest}`
+    ? Key extends keyof T
+      ? Rest extends DeepKeyOf<NonNullable<T[Key]>>
+        ? DeepValueOf<NonNullable<T[Key]>, Rest>
+        : never
       : never
-    : never
-  : K extends keyof T
-    ? T[K]
-    : never
+    : K extends keyof T
+      ? T[K]
+      : never
+  : never
 
 export type DeepValueOfArray<T, K extends DeepKeyOfArray<T>> = K extends readonly [
   infer Key,

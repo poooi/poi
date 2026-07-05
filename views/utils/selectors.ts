@@ -43,13 +43,7 @@ export const createDeepCompareArraySelector = createSelectorCreator(lruMemoize, 
 // This wrapper prevents different array (in terms of ===) being returned
 // despite having the same elements
 function arrayResultWrapper<S, T>(selector: (state: S) => T): (state: S) => T {
-  // createDeepCompareArraySelector has the same call semantics as createSelector but
-  // with a custom equality check. We assert the state type to satisfy reselect's
-  // overloads; the actual type parameter S is preserved via the outer cast.
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const typedSelector = selector as (state: RootState) => T
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  return createDeepCompareArraySelector(typedSelector, (result: T) => result) as (state: S) => T
+  return createDeepCompareArraySelector([selector], (result: T) => result)
 }
 
 function getDeckState(

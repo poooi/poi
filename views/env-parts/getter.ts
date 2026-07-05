@@ -194,9 +194,7 @@ const initShips = () => {
         const shipRecord = ship
         return new Proxy(shipRecord, {
           get: (_innerTarget, innerProperty) => {
-            // @ts-expect-error force type assertion
-            const key: keyof APIShip = innerProperty
-            if (key in shipRecord) return shipRecord[key]
+            if (innerProperty in shipRecord) return Reflect.get(shipRecord, innerProperty)
             return getStore(`const.$ships.${shipRecord.api_ship_id}.${String(innerProperty)}`)
           },
         })
@@ -217,9 +215,7 @@ const initEquips = () => {
         const equipRecord = equip
         return new Proxy(equipRecord, {
           get: (_innerTarget, innerProperty) => {
-            // @ts-expect-error force type assertion
-            const key: keyof APISlotItem = innerProperty
-            if (key in equipRecord) return equipRecord[key]
+            if (innerProperty in equipRecord) return Reflect.get(equipRecord, innerProperty)
             return getStore(`const.$equips.${equipRecord.api_slotitem_id}.${String(innerProperty)}`)
           },
         })

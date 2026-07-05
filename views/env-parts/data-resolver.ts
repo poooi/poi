@@ -122,8 +122,7 @@ const handleProxyGameOnRequest = (
     try {
       dispatch(onGameRequest(details))
     } catch (e) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      console.error(details, (e as Error).stack)
+      console.error(details, e instanceof Error ? e.stack : e)
     }
     const event = new CustomEvent<GameRequestDetails>('game.request', {
       bubbles: true,
@@ -132,8 +131,7 @@ const handleProxyGameOnRequest = (
     })
     window.dispatchEvent(event)
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    console.error((e as Error).stack)
+    console.error(e instanceof Error ? e.stack : e)
   }
 }
 
@@ -187,8 +185,7 @@ const parseResponses = () => {
   try {
     dispatch(onGameResponse(details))
   } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    console.error(domain, url, details, (e as Error).stack)
+    console.error(domain, url, details, e instanceof Error ? e.stack : e)
   }
 
   // DEBUG use
@@ -211,8 +208,7 @@ const resolveResponses = () => {
     try {
       parseResponses()
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      console.error((err as Error).stack)
+      console.error(err instanceof Error ? err.stack : err)
     }
   }
   locked = false

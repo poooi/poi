@@ -66,14 +66,7 @@ declare global {
     /** @deprecated Use `import i18next from 'views/env-parts/i18next'` instead */
     i18next?: ReturnType<typeof createInstance>
     /** @deprecated Use `import { addGlobalI18n } from 'views/env-parts/i18next'` instead */
-    i18n: Record<
-      string,
-      {
-        __: (key: string, ...args: unknown[]) => string
-        translate: (locale: string, str: string) => string
-        fixedT: TFunction
-      }
-    >
+    i18n: Record<string, FallbackInstance | ResourcesFallback>
   }
 }
 window.LOCALES = LOCALES
@@ -160,10 +153,17 @@ export interface FallbackInstance {
   setLocale: (locale: string) => void
 }
 
+// shape of the special `window.i18n.resources` entry
+export interface ResourcesFallback {
+  fixedT: TFunction
+  __: (str: string) => string
+  translate: (locale: string, str: string) => string
+}
+
 // FIXME: simulating window.i18n with i18next
 // to be removed in next major release
-// @ts-expect-error backward compatibility
-const i18nHack = (window.i18n = {} as Record<string, FallbackInstance>)
+window.i18n = {}
+const i18nHack = window.i18n
 
 // export addGlobalI18n for plugin manager usage
 export const addGlobalI18n = (namespace: string) => {

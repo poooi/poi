@@ -118,6 +118,9 @@ export interface Plugin {
 }
 
 interface BundlePluginI18n {
+  // looked up by the current i18n language, which can be any locale string;
+  // only the five locales below are guaranteed to exist
+  [language: string]: string | undefined
   'zh-CN': string
   'zh-TW': string
   'ja-JP': string
@@ -277,7 +280,6 @@ const BundlePluginDisplayName: FC<BundlePluginMeta> = (meta) => {
   return (
     <>
       <FontAwesome name={meta.icon.split('/')[1] || meta.icon} />{' '}
-      {/* @ts-expect-error the language is guaranteed to be a key of meta.name */}
       {meta.name[i18n.language] ?? meta.name['en-US']}
     </>
   )
@@ -288,7 +290,6 @@ const BundlePluginDescription: FC<BundlePluginMeta> = (meta) => {
   return (
     <ReactMarkdown
       options={{ linkTarget: '_blank' }}
-      /* @ts-expect-error the language is guaranteed to be a key of meta.description */
       source={meta.description[i18n.language] ?? meta.description['en-US']}
     />
   )
