@@ -38,7 +38,7 @@ export const showArchitectureMismatchDialog = () => {
 
   const footer: ButtonData[] = [
     {
-      name: String(i18next.t('Download ARM64 build')),
+      name: String(i18next.t('Download ARM64 version')),
       func: openDownloadPage,
       style: 'primary',
     },
