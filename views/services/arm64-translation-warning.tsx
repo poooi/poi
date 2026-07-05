@@ -28,7 +28,7 @@ export const showArchitectureMismatchDialog = () => {
   if (
     !shouldShowArchitectureMismatchDialog(
       process.arch,
-      remote.app.runningUnderARM64Translation,
+      Boolean(remote.app.runningUnderARM64Translation),
       dismissedVersion,
       POI_VERSION,
     )
