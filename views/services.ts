@@ -15,6 +15,7 @@ const gameAPIBroadcaster: GameAPIBroadcaster = remote.require('./lib/game-api-br
 import './services/update'
 import './services/layout'
 import './services/welcome'
+import './services/arm64-translation-warning'
 import './services/modernization-delta'
 import './services/marriage-delta'
 import './services/development-prophecy'

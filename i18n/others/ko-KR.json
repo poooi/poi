@@ -79,6 +79,11 @@
   "Trust": "신용",
   "Battle is over": "전투 종료",
   "Welcome": "Welcome",
+  "Architecture mismatch detected": "아키텍처 불일치 감지",
+  "Running under ARM64 translation": "poi가 ARM64 변환 환경에서 실행 중입니다.",
+  "ARM64TranslationWarningDetail": "ARM64 하드웨어에서 {{arch}} 버전을 사용 중이므로 성능이 저하될 수 있습니다. 최상의 경험을 위해 poi의 네이티브 ARM64 버전을 설치해주세요.",
+  "Download ARM64 version": "ARM64 버전 다운로드",
+  "Don't show again for this version": "이 버전에서 다시 표시하지 않음",
   "welcome_markdown": "poi {{version}} 에 오신 것을 환영합니다! 사용하기 전에 아래 글을 읽어주세요.\n\n__poi 는 당신의 게임 데이터를 절대로 변경하지 않습니다. 신뢰할 수 있는 릴리즈와 플러그인을 사용해주세요__\n\n성능이 떨어졌을 때는 일부 플러그인을 비활성화하면 해결될 수도 있습니다.\n\n-----\n\n건의 또는 개발에 참가하고 싶으시다면 [여기를 클릭 해주세요](https://github.com/poooi/poi)\n",
   "cert_error_markdown": "\n인증서 에러가 발생했습니다. 자체 인증서를 가진 프록시를 사용하고 있거나, 중간자 공격을 받고 있을 수도 있습니다.\n\n해당 인증서는 **{{name}}** 에 의해 할당되었으며, sha256 해시값은 **{{value}}** 입니다.\n\n'신뢰'를 누르면 이 인증서를 사용하는 모든 연결이 허용됩니다. 그렇지 않을 경우 연결이 차단된 상태로 유지됩니다. \n\n신뢰할 수 있는 공급자 (프록시 공급자 등)에 의해 할당 된 경우에만 신뢰하십시오.\n\n자체 할당 인증서가 있는 프록시를 사용하는 경우 프록시 공급자의 자체 할당 루트CA를 가져오는 것이 좋습니다.\n"
 }
