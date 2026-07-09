@@ -277,7 +277,8 @@ const questPluginExtensionSelector = extensionSelectorFactory('poi-plugin-quest-
 
 /*
   selects a "1, 2, 4" style string listing 1-based qualifying fleet indices,
-  or null when no checkmark should be shown.
+  "" when the quest has ship constraints but no fleet currently qualifies,
+  or null when the quest has no ship constraints (no fleet line is shown).
 
   memoized per quest (recomputes only when the quest goal, fleets, ships or
   master data change) and returns a primitive so useSelector can bail out of
@@ -332,7 +333,7 @@ const makeQualifyingFleetsSelector = (questNo: number) =>
         if (allPass) qualifying.push(fi + 1)
       })
 
-      return qualifying.length > 0 ? qualifying.join(', ') : null
+      return qualifying.join(', ')
     },
   )
 
@@ -368,23 +369,26 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
   const progressOverlay = record ? getToolTip(record) : []
   /*
     renders a line like "Fleets meeting composition requirements /1 /2 /4"
-    after the subgoal counters, using the in-game fleet number marks.
+    after the subgoal counters, using the in-game fleet number marks, or a
+    "no fleet meets the requirements" note when none qualifies.
 
     - marks are qualifying fleets starting from 1.
-    - to avoid making UI busy, this only shows when:
-      + at least one fleet qualifies
-      + quest itself requires any non-trivial qualifications
+    - to avoid making UI busy, nothing is shown when the quest itself
+      has no non-trivial composition requirements.
    */
-  const fleetOverlay = qualifyingFleets
-    ? [
-        <QualifyingFleets key="qualifying-fleets">
-          {t('main:Fleets meeting composition requirements')}
-          {qualifyingFleets.split(', ').map((fleetId) => (
-            <FleetMark key={fleetId} fleetId={Number(fleetId)} />
-          ))}
-        </QualifyingFleets>,
-      ]
-    : []
+  const fleetOverlay =
+    qualifyingFleets === null
+      ? []
+      : qualifyingFleets === ''
+        ? [t('main:No fleet meets composition requirements')]
+        : [
+            <QualifyingFleets key="qualifying-fleets">
+              {t('main:Fleets meeting composition requirements')}
+              {qualifyingFleets.split(', ').map((fleetId) => (
+                <FleetMark key={fleetId} fleetId={Number(fleetId)} />
+              ))}
+            </QualifyingFleets>,
+          ]
 
   return (
     <TaskRowBase

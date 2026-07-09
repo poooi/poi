@@ -22,6 +22,7 @@
   "To be refreshed": "情報の更新が必要",
   "Browse your quest list to let poi know your active quests": "任務画面を開くと、任務リストが更新されます",
   "Fleets meeting composition requirements": "編成条件を満たしている艦隊",
+  "No fleet meets composition requirements": "編成条件を満たしている艦隊はありません",
   "QuestLimitMsg": "「司令部要員」を使用すると、同時受託可能任務数を1枠拡張できます。",
   "Quest": "任務(クエスト)",
   "Ships": "艦娘",
