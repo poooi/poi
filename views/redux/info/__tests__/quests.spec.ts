@@ -2,6 +2,7 @@ import { padStart } from 'lodash'
 import moment from 'moment-timezone'
 import { applyMiddleware, combineReducers, createStore } from 'redux'
 import {
+  createAPIGetMemberQuestlistResponseAction,
   createAPIReqKaisouPowerupResponseAction,
   createAPIReqKousyouCreateitemResponseAction,
   createAPIReqKousyouDestroyitem2ResponseAction,
@@ -153,6 +154,20 @@ describe('saveQuestTracking', () => {
 
 describe('quests reducer - questTrackingReducer paths', () => {
   type PayloadOf<AC> = AC extends (payload: infer P) => unknown ? P : never
+  type ConstructorWithPrototype = { readonly prototype: object }
+
+  function createPrototypeInvariantConstructor(): ConstructorWithPrototype {
+    function Constructor() {}
+    Object.defineProperty(Constructor, 'prototype', { writable: false })
+    return new Proxy(Constructor, {
+      get(target, property, receiver) {
+        if (property === 'prototype') {
+          return {}
+        }
+        return Reflect.get(target, property, receiver)
+      },
+    })
+  }
 
   function getSubgoal(state: QuestsState, questId: number, subgoalId: GoalKey): SubgoalRecord {
     const record = state.records[questId]
@@ -306,6 +321,58 @@ describe('quests reducer - questTrackingReducer paths', () => {
     activeCapacity: 5,
     activeNum: 0,
   }
+
+  it('creates quest records from quest goals without reading constructor.prototype', () => {
+    const questGoal: QuestsState['questGoals'][number] = {
+      practice: { required: 1 },
+    }
+    Object.defineProperty(questGoal, 'constructor', {
+      value: createPrototypeInvariantConstructor(),
+    })
+    const questState: QuestsState = {
+      ...baseState,
+      records: {},
+      activeQuests: {},
+      questGoals: {
+        9: questGoal,
+      },
+    }
+    const store = createTestStore(questState)
+    const payload = {
+      method: 'GET',
+      path: '/kcsapi/api_get_member/questlist',
+      body: {
+        api_completed_kind: 0,
+        api_count: 1,
+        api_exec_count: 1,
+        api_exec_type: 0,
+        api_list: [
+          {
+            api_bonus_flag: 0,
+            api_category: 1,
+            api_detail: '',
+            api_get_material: [0, 0, 0, 0],
+            api_invalid_flag: 0,
+            api_no: 9,
+            api_progress_flag: 0,
+            api_state: 2,
+            api_title: 'test quest',
+            api_type: 1,
+            api_voice_id: 0,
+          },
+        ],
+      },
+      postBody: { api_tab_id: '0', api_verno: '1' },
+      time: 0,
+    } satisfies PayloadOf<typeof createAPIGetMemberQuestlistResponseAction>
+
+    store.dispatch(createAPIGetMemberQuestlistResponseAction(payload))
+
+    const after = store.getState().info.quests
+    expect(getSubgoal(after, 9, 'practice').count).toBe(0)
+    expect(getSubgoal(after, 9, 'practice').required).toBe(1)
+    expect(after.activeQuests[9]?.detail.api_no).toBe(9)
+  })
 
   it('practice + practice_win', () => {
     const store = createTestStore(baseState, {

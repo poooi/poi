@@ -225,9 +225,9 @@ function newQuestRecord(
   const record: QuestRecord = {
     id,
   }
-  forEach(questGoal, (v, k) => {
-    if (typeof v !== 'object') {
-      return
+  for (const [k, v] of Object.entries(questGoal)) {
+    if (!v || typeof v !== 'object') {
+      continue
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     record[k as GoalKey] = {
@@ -235,7 +235,7 @@ function newQuestRecord(
       required: v.required || 0,
       description: v.description,
     }
-  })
+  }
   return record
 }
 
