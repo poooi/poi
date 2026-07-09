@@ -7,6 +7,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
+import { FleetMark } from 'views/components/etc/fleet-mark'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
@@ -185,6 +186,16 @@ const QuestDescription = styled.div`
   max-width: 25em;
 `
 
+const QualifyingFleets = styled.div`
+  align-items: center;
+  display: flex;
+  gap: 0.35em;
+
+  svg {
+    height: 1.3em;
+  }
+`
+
 const taskRowLayoutSelector = createSelector(
   [
     configLayoutSelector,
@@ -223,7 +234,7 @@ const TaskRowBase = ({
   leftLabel?: string
   leftOverlay?: React.JSX.Element | string
   rightLabel?: React.ReactNode
-  rightOverlay?: string[]
+  rightOverlay?: React.ReactNode[]
   rightIntent?: Intent
   leftOverlayPlacement?: string
   colwidth: number
@@ -231,8 +242,8 @@ const TaskRowBase = ({
   const { leftOverlayPlacement } = useSelector((state: RootState) => taskRowLayoutSelector(state))
   const rightOverlayCnt = (
     <div>
-      {rightOverlay.map((msg) => (
-        <div key={msg}>{msg}</div>
+      {rightOverlay.map((msg, i) => (
+        <div key={i}>{msg}</div>
       ))}
     </div>
   )
@@ -356,14 +367,24 @@ const TaskRow = ({ idx, quest, colwidth }: { idx: number; quest: Quest; colwidth
   const progressLabel = record ? `${count} / ${required}` : progressLabelText(quest)
   const progressOverlay = record ? getToolTip(record) : []
   /*
-    renders a line like "✔ 1, 2, 4" after the subgoal counters.
+    renders a line like "Fleets meeting composition requirements /1 /2 /4"
+    after the subgoal counters, using the in-game fleet number marks.
 
-    - numbers are qualifying fleets starting from 1.
+    - marks are qualifying fleets starting from 1.
     - to avoid making UI busy, this only shows when:
       + at least one fleet qualifies
       + quest itself requires any non-trivial qualifications
    */
-  const fleetOverlay = qualifyingFleets ? [`✔ ${qualifyingFleets}`] : []
+  const fleetOverlay = qualifyingFleets
+    ? [
+        <QualifyingFleets key="qualifying-fleets">
+          {t('main:Fleets meeting composition requirements')}
+          {qualifyingFleets.split(', ').map((fleetId) => (
+            <FleetMark key={fleetId} fleetId={Number(fleetId)} />
+          ))}
+        </QualifyingFleets>,
+      ]
+    : []
 
   return (
     <TaskRowBase
