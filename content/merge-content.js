@@ -3,7 +3,7 @@
  * usage: node merge-content.js
  */
 
-require('@babel/register')(require('../babel-register.config'))
+require('../babel-hook')(require('../babel-register.config'))
 const Promise = require('bluebird')
 const fs = require('fs-extra')
 const glob = require('glob')

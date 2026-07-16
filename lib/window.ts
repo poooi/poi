@@ -4,14 +4,6 @@ import * as electronRemote from '@electron/remote/main'
 import { BrowserWindow, screen, webContents } from 'electron'
 import path from 'path'
 
-declare global {
-  var mainWindow: BrowserWindow
-  var windows: (BrowserWindow | null)[]
-  var windowsIndex: {
-    [key: string]: BrowserWindow | null
-  }
-}
-
 const windows: typeof global.windows = (global.windows = [])
 const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
 

@@ -1,4 +1,4 @@
-require('@babel/register')(require('./babel-register.config'))
+require('./babel-hook')(require('./babel-register.config'))
 const childProcess = require('child_process')
 const gulp = require('gulp')
 const { trim } = require('lodash')
