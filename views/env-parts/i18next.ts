@@ -87,16 +87,6 @@ const normalizeLanguage = (language: string) => {
   return language
 }
 
-declare global {
-  interface Window {
-    /** @deprecated Use `config.get('poi.misc.language')` instead */
-    language?: string
-  }
-
-  /** @deprecated Use `config.get('poi.misc.language')` instead */
-  var language: string
-}
-
 const language = (window.language = normalizeLanguage(
   config.get('poi.misc.language', navigator.language) ?? 'en-US',
 ))

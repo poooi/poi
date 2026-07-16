@@ -2,7 +2,7 @@ const remote = require('@electron/remote')
 const ROOT = remote.getGlobal('ROOT')
 const MODULE_PATH = remote.getGlobal('MODULE_PATH')
 const config = remote.require('./lib/config')
-require('@babel/register')(require(`${ROOT}/babel-register.config`))
+require(`${ROOT}/babel-hook`)(require(`${ROOT}/babel-register.config`))
 const { setAllowedPath } = require(`${ROOT}/lib/module-path`)
 
 setAllowedPath(MODULE_PATH, ROOT)

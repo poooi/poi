@@ -1,4 +1,4 @@
-require('@babel/register')(require('../babel-register.config'))
+require('../babel-hook')(require('../babel-register.config'))
 
 import type * as RemoteUtils from 'lib/utils'
 import type * as WebContentUtils from 'lib/webcontent-utils'

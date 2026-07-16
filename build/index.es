@@ -24,6 +24,7 @@ const TARGET_LIST = [
   'package.json',
   'babel.config.js',
   'babel-register.config.js',
+  'babel-hook.js',
   'package-lock.json',
   '.npmrc',
   // Folders

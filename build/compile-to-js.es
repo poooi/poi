@@ -22,7 +22,10 @@ const compileToJs = (appDir, dontRemove) => {
     filters: ['node_modules', 'assets', '__tests__', '__mocks__'],
   }
 
-  const { presets, plugins } = BabelConfig
+  // `overrides` carries the preset-react config (scoped away from plain .ts files).
+  // Its external-plugin-files entry never matches here: staged files live under
+  // the repo root, which that entry's `test` excludes.
+  const { presets, plugins, assumptions, overrides } = BabelConfig
 
   return new Promise((resolve) => {
     const tasks = []
@@ -40,6 +43,8 @@ const compileToJs = (appDir, dontRemove) => {
               const result = await promisify(transformFile)(srcPath, {
                 presets,
                 plugins,
+                assumptions,
+                overrides,
               })
               tgt = result.code
             } catch (e) {
