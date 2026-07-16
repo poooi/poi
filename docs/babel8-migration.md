@@ -1,6 +1,7 @@
-# Draft: Migrating poi to Babel 8
+# Migrating poi to Babel 8
 
-Status: Phase 0 and Phase 1 complete (2026-07-16) — poi now runs on Babel 8
+Status: complete (2026-07-16) — poi runs on Babel 8. Remaining follow-ups are
+listed under "Phase 2".
 Last updated: 2026-07-16
 
 ## Background
