@@ -214,7 +214,16 @@ Notes:
    `overrides` (carrying preset-react) had to be threaded through.
 6. **`require('@babel/register')` returns a namespace object** under
    `require(esm)` — call sites need `.default`. (Moot after item 7.)
-7. **`@babel/register@8` is unusable in Electron renderers.** It compiles in a
+7. **Type-only import elision changed** (found post-merge to the branch, via a
+   real plugin): Babel 8's preset-typescript keeps a side-effect
+   `require("x")` for imports whose bindings are all elided as types. Plugins
+   commonly import types from specifiers that only resolve for tsc (e.g.
+   `import { PluginState } from 'reducers'` via the plugin's own tsconfig), so
+   the kept require crashes at runtime with "Cannot find module". Fixed by
+   setting `onlyRemoveTypeImports: false` on preset-typescript, which restores
+   Babel 7's full elision (verified against the failing plugin file and the
+   output diff).
+8. **`@babel/register@8` is unusable in Electron renderers.** It compiles in a
    `node:worker_threads` worker unconditionally; (a) the options are
    structured-cloned, so function values in the config (shim, overrides `test`)
    throw `DataCloneError` — fixable by passing `configFile` as a path — but
@@ -232,10 +241,12 @@ Notes:
 ### Phase 1 verification
 
 - Compiled-output diff vs the Phase 0 (Babel 7) baseline: only 22 of 239 files
-  differ, all benign — `_extends` helper → native object spread, uninitialized
-  annotated class fields now emitted as native `field;` declarations (matches
-  tsc's ESNext define semantics), and type-only imports keeping a side-effect
-  `require()`. styled-components outputs identical.
+  differ, all benign — `_extends` helper → native object spread, and
+  uninitialized annotated class fields now emitted as native `field;`
+  declarations (matches tsc's ESNext define semantics). styled-components
+  outputs identical. (A third category — type-only imports keeping a
+  side-effect `require()` — initially looked benign but broke plugins; reverted
+  via `onlyRemoveTypeImports: false`, see item 7 above.)
 - `npm test` (25 suites / 189 tests / 26 snapshots), `npm run typecheck`, full
   `npm run lint:js`: all pass.
 - Electron harness (Electron 43): babel-hook compiles in-repo `.ts` and

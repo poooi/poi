@@ -29,7 +29,17 @@ module.exports = {
         exclude: ['transform-dynamic-import'],
       },
     ],
-    require.resolve('@babel/preset-typescript'),
+    [
+      require.resolve('@babel/preset-typescript'),
+      {
+        // Restore Babel 7's import elision: Babel 8 keeps a side-effect
+        // require() for imports that are only used as types, which breaks
+        // third-party plugins importing types from specifiers that only
+        // resolve for tsc (e.g. `import { PluginState } from 'reducers'`
+        // resolved via the plugin's own tsconfig paths).
+        onlyRemoveTypeImports: false,
+      },
+    ],
   ],
   // Equivalent of preset-env's `loose: true`, which is removed in Babel 8.
   // https://babeljs.io/docs/assumptions#migrating-from-babelpreset-envs-loose-and-spec-modes
