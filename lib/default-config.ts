@@ -234,6 +234,8 @@ interface Poi {
   plugin: PoiPluginConfig
   network: PoiNetwork
   kangameWindow?: PoiKangameWindow
+  // No default value: enabled manually by developers (see lib/devtool.ts).
+  devtool?: { enable: boolean }
 }
 
 interface Socks5Proxy {
