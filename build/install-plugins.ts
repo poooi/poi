@@ -1,16 +1,16 @@
 import fs from 'fs-extra'
-import path from 'path-extra'
+import path from 'path'
 
 import { compress7z, npmInstall, runScript, PLUGIN_JSON_PATH, NPM_EXEC_PATH, log } from './utils'
 
 const { ROOT } = global
 
-const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
+const installPluginsTo = async (pluginNames: string[], installRoot: string, tarRoot: string) => {
   try {
     await fs.remove(installRoot)
     await fs.remove(tarRoot)
   } catch (e) {
-    console.error(e.stack)
+    console.error(e instanceof Error ? e.stack : e)
   }
   await fs.ensureDir(installRoot)
   await fs.ensureDir(tarRoot)
@@ -54,7 +54,7 @@ const installPluginsTo = async (pluginNames, installRoot, tarRoot) => {
   })
 }
 
-const installPlugins = async (poiVersion) => {
+const installPlugins = async (poiVersion: string) => {
   const BUILD_ROOT = path.join(ROOT, 'dist')
   const BUILDING_ROOT = path.join(BUILD_ROOT, 'plugins')
   const RELEASE_DIR = BUILD_ROOT

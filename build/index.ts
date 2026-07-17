@@ -1,7 +1,7 @@
 import Promise, { promisify } from 'bluebird'
 import fs from 'fs-extra'
 import gitArchive from 'git-archive'
-import path from 'path-extra'
+import path from 'path'
 import tar from 'tar-fs'
 
 import compileToJs from './compile-to-js'
@@ -9,10 +9,10 @@ import { log, npmInstall } from './utils'
 
 const { ROOT } = global
 
-export cleanFiles from './clean-files'
-export packWinRelease from './pack-win-release'
-export installPlugins from './install-plugins'
-export deployNightlies from './deploy-nightlies'
+export { default as cleanFiles } from './clean-files'
+export { default as packWinRelease } from './pack-win-release'
+export { default as installPlugins } from './install-plugins'
+export { default as deployNightlies } from './deploy-nightlies'
 
 const TARGET_LIST = [
   // Files
@@ -35,12 +35,12 @@ const TARGET_LIST = [
   'i18n',
 ]
 
-const gitArchiveAndClone = async (tarPath, tgtDir) => {
+const gitArchiveAndClone = async (tarPath: string, tgtDir: string) => {
   log('Archive file from git..')
   try {
     await fs.remove(tarPath)
   } catch (e) {
-    console.error(e.stack)
+    console.error(e instanceof Error ? e.stack : e)
   }
   try {
     await promisify(gitArchive)({
@@ -56,12 +56,12 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
     process.exit(1)
   }
   log('Archive complete! Extracting...')
-  await new Promise((resolve) => {
+  await new Promise<void>((resolve) => {
     fs.createReadStream(tarPath)
       .pipe(tar.extract(tgtDir))
-      .on('finish', (e) => {
+      .on('finish', () => {
         log('Extract complete!')
-        resolve(e)
+        resolve()
       })
       .on('error', (err) => {
         log(err)
@@ -71,7 +71,7 @@ const gitArchiveAndClone = async (tarPath, tgtDir) => {
 }
 
 // *** METHODS ***
-const filterCopyApp = async (stage1App, stage2App) =>
+const filterCopyApp = async (stage1App: string, stage2App: string) =>
   Promise.map(TARGET_LIST, (target) =>
     fs.copy(path.join(stage1App, target), path.join(stage2App, target), {
       overwrite: true,
@@ -80,7 +80,7 @@ const filterCopyApp = async (stage1App, stage2App) =>
   )
 
 // Build poi for use
-export const build = async (poiVersion, dontRemove) => {
+export const build = async (poiVersion: string, dontRemove?: boolean) => {
   // const BUILD_ROOT = path.join(ROOT, BUILD_DIR_NAME)
   // const downloadDir = path.join(BUILD_ROOT, DOWNLOADDIR_NAME)
   const BUILDING_ROOT = path.join(ROOT, 'app_compiled')
@@ -94,12 +94,12 @@ export const build = async (poiVersion, dontRemove) => {
       await fs.remove(BUILDING_ROOT)
     }
   } catch (e) {
-    console.error(e.stack)
+    console.error(e instanceof Error ? e.stack : e)
   }
   try {
     await fs.remove(stage1App)
   } catch (e) {
-    console.error(e.stack)
+    console.error(e instanceof Error ? e.stack : e)
   }
   await fs.ensureDir(stage1App)
   await fs.ensureDir(stage2App)

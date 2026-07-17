@@ -16,7 +16,7 @@ export default {
   },
   overrides: [
     {
-      files: ['**/*.es', '**/*.tsx'],
+      files: ['**/*.tsx'],
       customSyntax: 'postcss-styled-syntax',
     },
   ],
