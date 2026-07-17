@@ -1,23 +1,30 @@
-const electronRemote = require('@electron/remote/main')
-const { X509Certificate, createHash } = require('crypto')
-const { app, BrowserWindow, ipcMain, nativeImage, shell } = require('electron')
-const fs = require('fs-extra')
-const path = require('path-extra')
+import type * as electronType from 'electron'
 
-// Environment
-global.POI_VERSION = app.getVersion()
-global.ROOT = __dirname
-global.EXECROOT = path.join(process.execPath, '..')
-global.APPDATA_PATH = path.join(app.getPath('appData'), 'poi')
-global.EXROOT = global.APPDATA_PATH
-global.DEFAULT_CACHE_PATH = path.join(global.EXROOT, 'MyCache')
-global.DEFAULT_SCREENSHOT_PATH =
-  process.platform === 'darwin'
-    ? path.join(app.getPath('home'), 'Pictures', 'Poi')
-    : path.join(global.APPDATA_PATH, 'screenshots')
-global.MODULE_PATH = path.join(global.ROOT, 'node_modules')
+import * as electronRemote from '@electron/remote/main'
+import { X509Certificate, createHash } from 'crypto'
+import { app, BrowserWindow, ipcMain, nativeImage, shell } from 'electron'
+import fs from 'fs-extra'
+import { memoize } from 'lodash'
+import path from 'path'
 
-const { ROOT } = global
+// eslint-disable-next-line import-x/no-rename-default
+import type configType from './lib/config'
+import type * as kcsResourceType from './lib/kcs-resource'
+import type * as sentryType from './lib/sentry'
+import type shortcutType from './lib/shortcut'
+import type * as touchbarType from './lib/touchbar'
+import type windowManagerType from './lib/window'
+
+import dbg from './lib/debug'
+import { APPDATA_PATH, ROOT } from './lib/env'
+import { setAllowedPath } from './lib/module-path'
+import { warn, error } from './lib/utils'
+
+// NOTE on module loading order: the './lib/env' import above must finish
+// before any module that reads the environment globals at import time
+// (config, default-config, ...). Imports execute before all statements, so
+// those modules are loaded via require() below, in the original order.
+
 const poiIconPath = path.join(
   ROOT,
   'assets',
@@ -28,20 +35,21 @@ const poiIconPath = path.join(
 electronRemote.initialize()
 
 require('./lib/proxy')
-require('./lib/module-path').setAllowedPath(global.ROOT)
-const { memoize } = require('lodash')
+setAllowedPath(ROOT)
 
-const config = require('./lib/config')
-const dbg = require('./lib/debug')
-const shortcut = require('./lib/shortcut')
-const { warn, error } = require('./lib/utils')
+const config: typeof configType = require('./lib/config')
+const shortcut: typeof shortcutType = require('./lib/shortcut')
 require('./lib/updater')
 require('./lib/tray')
 require('./lib/screenshot')
 require('./lib/native-theme-helper')
 
 // Register the poi-cache:// scheme before app `ready` (required for privileged schemes).
-require('./lib/kcs-resource').registerKcsResourceScheme()
+const {
+  registerKcsResourceScheme,
+  registerKcsResourceProtocol,
+}: typeof kcsResourceType = require('./lib/kcs-resource')
+registerKcsResourceScheme()
 
 // macOS drag area fix
 if (process.platform === 'darwin') {
@@ -74,7 +82,7 @@ if (process.platform === 'win32' && config.get('poi.misc.shortcut', true)) {
       ? path.dirname(targetPath)
       : ROOT
     : process.cwd()
-  const option = {
+  const option: Electron.ShortcutDetails = {
     target: targetPath,
     args: argPath,
     cwd: cwdPath,
@@ -105,16 +113,15 @@ if (dbg.isEnabled()) {
   global.SERVER_HOSTNAME = 'api.poi.moe'
   process.env.NODE_ENV = 'production'
   if (config.get('poi.misc.exceptionReporting')) {
-    const { init } = require('./lib/sentry')
+    const { init }: typeof sentryType = require('./lib/sentry')
     init({
       build: global.LATEST_COMMIT,
-      paths: [global.ROOT, global.APPDATA_PATH],
+      paths: [ROOT, APPDATA_PATH],
     })
   }
 }
 
-let mainWindow
-global.mainWindow = mainWindow = null
+let mainWindow: BrowserWindow | null = null
 
 // enable audio autoplay
 // https://github.com/electron/electron/issues/13525#issuecomment-410923391
@@ -160,7 +167,7 @@ app.commandLine.appendSwitch('experimental-require-module')
     should any of the command flags misconfigured.
 
    */
-  const argvPath = path.join(global.APPDATA_PATH, 'hack', 'argv.json')
+  const argvPath = path.join(APPDATA_PATH, 'hack', 'argv.json')
   try {
     const cfg = fs.readJsonSync(argvPath)
     if (cfg.mode !== 'append') {
@@ -169,7 +176,7 @@ app.commandLine.appendSwitch('experimental-require-module')
     if (!Array.isArray(cfg.flags)) {
       throw new Error('No flags specified')
     }
-    cfg.flags.forEach((flag) => {
+    cfg.flags.forEach((flag: unknown) => {
       if (typeof flag === 'string') {
         app.commandLine.appendSwitch(flag)
       } else if (
@@ -185,14 +192,14 @@ app.commandLine.appendSwitch('experimental-require-module')
     })
     console.info(`Config ${argvPath} loaded successfully.`)
   } catch (e) {
-    if (e.code !== 'ENOENT') {
+    if (!(e instanceof Error && 'code' in e && e.code === 'ENOENT')) {
       error(`Error while attempting to load ${argvPath}`, e)
     }
   }
 })()
 
 // Cache size
-const cacheSize = parseInt(config.get('poi.misc.cache.size'))
+const cacheSize = Math.trunc(config.get('poi.misc.cache.size'))
 if (Number.isInteger(cacheSize)) {
   app.commandLine.appendSwitch('disk-cache-size', `${1048576 * cacheSize}`)
 }
@@ -221,13 +228,18 @@ if (!getLock) {
 
 app.on('ready', () => {
   require('electron-react-titlebar/main').initialize()
-  require('./lib/kcs-resource').registerKcsResourceProtocol()
-  const { screen } = require('electron')
+  registerKcsResourceProtocol()
+  const { screen }: typeof electronType = require('electron')
   shortcut.register()
   const { workArea } = screen.getPrimaryDisplay()
-  let { x, y, width, height } = config.get('poi.window', workArea)
-  const validate = (n, min, range) => n != null && n >= min && n < min + range
-  const withinDisplay = (d) => {
+  let { x, y, width, height } = config.get('poi.window', {
+    ...workArea,
+    isMaximized: false,
+    isFullScreen: false,
+  })
+  const validate = (n: number | undefined, min: number, range: number) =>
+    n != null && n >= min && n < min + range
+  const withinDisplay = (d: Electron.Display) => {
     const wa = d.workArea
     return validate(x, wa.x, wa.width) && validate(y, wa.y, wa.height)
   }
@@ -245,7 +257,7 @@ app.on('ready', () => {
     'poi.appearance.customtitlebar',
     process.platform === 'win32' || process.platform === 'linux',
   )
-  global.mainWindow = mainWindow = new BrowserWindow({
+  const win = new BrowserWindow({
     x: x,
     y: y,
     width: width,
@@ -254,8 +266,9 @@ app.on('ready', () => {
     icon: poiIconPath,
     resizable: config.get('poi.content.resizable', true),
     alwaysOnTop: config.get('poi.content.alwaysOnTop', false),
-    // FIXME: titlebarStyle and transparent: https://github.com/electron/electron/issues/14129
-    titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : hideTitlebar ? 'hidden' : null,
+    // FIXME: titleBarStyle and transparent: https://github.com/electron/electron/issues/14129
+    titleBarStyle:
+      process.platform === 'darwin' ? 'hiddenInset' : hideTitlebar ? 'hidden' : undefined,
     transparent: process.platform === 'darwin',
     frame: !hideTitlebar,
     enableLargerThanScreen: true,
@@ -268,7 +281,6 @@ app.on('ready', () => {
       nodeIntegrationInWorker: true,
       nodeIntegrationInSubFrames: true,
       zoomFactor: config.get('poi.appearance.zoom', 1),
-      enableRemoteModule: true,
       contextIsolation: false,
       spellcheck: false,
       backgroundThrottling: false,
@@ -279,52 +291,56 @@ app.on('ready', () => {
     roundedCorners: true,
     show: false,
   })
+  global.mainWindow = mainWindow = win
 
-  mainWindow.once('ready-to-show', () => {
-    mainWindow.show()
+  win.once('ready-to-show', () => {
+    win.show()
   })
 
-  electronRemote.enable(mainWindow.webContents)
-  mainWindow.webContents.addListener('did-attach-webview', (e, webContent) => {
+  electronRemote.enable(win.webContents)
+  win.webContents.addListener('did-attach-webview', (e, webContent) => {
     electronRemote.enable(webContent)
   })
 
   // Default menu
   if (process.platform === 'darwin') {
-    const { renderMainTouchbar } = require('./lib/touchbar')
+    const { renderMainTouchbar }: typeof touchbarType = require('./lib/touchbar')
     renderMainTouchbar()
     if (/electron$/i.test(process.argv[0])) {
       const icon = nativeImage.createFromPath(`${ROOT}/assets/icons/poi.png`)
-      app.dock.setIcon(icon)
+      app.dock?.setIcon(icon)
     }
   } else {
-    mainWindow.setMenu(null)
+    win.setMenu(null)
   }
-  mainWindow.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
+  win.loadURL(`file://${__dirname}/index.html${dbg.isEnabled() ? '?react_perf' : ''}`)
   if (config.get('poi.window.isMaximized', false)) {
-    mainWindow.maximize()
+    win.maximize()
   }
   if (config.get('poi.window.isFullScreen', false)) {
-    mainWindow.setFullScreen(true)
+    win.setFullScreen(true)
   }
   if (dbg.isEnabled()) {
-    mainWindow.openDevTools({
+    win.webContents.openDevTools({
       mode: 'detach',
     })
   }
   // Never wants navigate
-  mainWindow.webContents.on('will-navigate', (e) => {
+  win.webContents.on('will-navigate', (e) => {
     e.preventDefault()
   })
-  mainWindow.on('closed', () => {
+  win.on('closed', () => {
     // Close all sub window
-    require('./lib/window').closeWindows()
+    const { closeWindows }: typeof windowManagerType = require('./lib/window')
+    closeWindows()
     mainWindow = null
   })
 
   // display config
   const handleScreenStatusChange = () => {
-    mainWindow.webContents.send('screen-status-changed', screen.getAllDisplays())
+    if (!win.isDestroyed()) {
+      win.webContents.send('screen-status-changed', screen.getAllDisplays())
+    }
   }
   ipcMain.on('displays::get-all', (e) => {
     e.returnValue = screen.getAllDisplays()
@@ -351,7 +367,7 @@ app.on('ready', () => {
 // http basic auth
 app.on('login', (event, webContents, request, authInfo, callback) => {
   event.preventDefault()
-  mainWindow.webContents.send('http-basic-auth', 'login')
+  mainWindow?.webContents.send('http-basic-auth', 'login')
   ipcMain.once('basic-auth-info', (event, usr, pwd) => {
     callback(usr, pwd)
   })
@@ -362,7 +378,7 @@ ipcMain.on('refresh-shortcut', () => {
   shortcut.register()
 })
 
-let caCert
+let caCert: X509Certificate | undefined
 let caCertError = false
 
 const ensureCACert = () => {
@@ -381,7 +397,7 @@ const ensureCACert = () => {
   }
 }
 
-const verifyCACert = memoize((data) => {
+const verifyCACert = memoize((data: string) => {
   ensureCACert()
   if (!caCert) {
     return false

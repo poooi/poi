@@ -98,7 +98,6 @@ describe('saveQuestTracking', () => {
 
   beforeEach(() => {
     writeMock.mockReset()
-    // @ts-expect-error APPDATA_PATH is injected by poi runtime
     globalThis.APPDATA_PATH = 'C:\\tmp'
   })
 
