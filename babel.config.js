@@ -24,7 +24,7 @@ module.exports = {
         // poi loads everything through CommonJS (@babel/register hooks require,
         // the release build ships CJS). Babel 8 stopped defaulting to the
         // CommonJS transform when the caller doesn't declare ESM support
-        // (e.g. build/compile-to-js.es), so request it explicitly.
+        // (e.g. build/compile-to-js.ts), so request it explicitly.
         modules: 'commonjs',
         exclude: ['transform-dynamic-import'],
       },
@@ -101,6 +101,8 @@ module.exports = {
     },
   ],
   ignore: [],
-  only: process.env.JEST_WORKER_ID ? [/\.(js|es|ts|tsx)$/] : [/\.(es|ts|tsx)$/],
+  // .es stays in the non-Jest matcher: poi's own sources are all .ts/.tsx now,
+  // but third-party plugins loaded through babel-hook may still ship .es files.
+  only: process.env.JEST_WORKER_ID ? [/\.(js|ts|tsx)$/] : [/\.(es|ts|tsx)$/],
   babelrc: false,
 }

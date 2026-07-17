@@ -91,12 +91,12 @@ const config: Linter.Config[] = [
       },
       'import-x/resolver': {
         node: {
-          extensions: ['', '.js', '.jsx', '.es', '.ts', '.tsx'],
+          extensions: ['', '.js', '.jsx', '.ts', '.tsx'],
           paths: [__dirname],
         },
         typescript: {
           project: join(__dirname, 'tsconfig.json'),
-          extensions: ['.ts', '.tsx', '.js', '.jsx', '.es', '.json'],
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
         },
       },
       // Not standard npm packages; resolved via tsconfig paths / bundler.
@@ -158,17 +158,9 @@ const config: Linter.Config[] = [
   },
 
   {
-    files: ['views/components/etc/webview.tsx', 'views/components/settings/about/gpu-status.es'],
+    files: ['views/components/etc/webview.tsx'],
     rules: {
       'react/no-unknown-property': 'off',
-    },
-  },
-
-  {
-    files: ['views/polyfills/react-bootstrap.es', 'views/polyfills/react-i18next.es'],
-    rules: {
-      'import-x/namespace': 'off',
-      'no-import-assign': 'off',
     },
   },
   {

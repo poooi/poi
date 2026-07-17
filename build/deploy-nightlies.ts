@@ -5,19 +5,19 @@ import path from 'path'
 
 import { log } from './utils'
 
-const runShell = (scriptPath, args, options) =>
-  new Promise((resolve, reject) => {
-    const proc = child_process.spawn(scriptPath, args, options)
+const runShell = (scriptPath: string, args: string[], options?: child_process.SpawnOptions) =>
+  new Promise<void>((resolve, reject) => {
+    const proc = child_process.spawn(scriptPath, args, options ?? {})
 
-    proc.stdout.on('data', (data) => {
+    proc.stdout?.on('data', (data) => {
       log(`stdout: ${data}`)
     })
 
-    proc.stderr.on('data', (data) => {
+    proc.stderr?.on('data', (data) => {
       log(`stderr: ${data}`)
     })
     proc.on('exit', (code) => {
-      if (code > 0) {
+      if ((code ?? 0) > 0) {
         reject(new Error('deploy fails'))
       } else {
         resolve()

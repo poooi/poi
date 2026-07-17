@@ -1,10 +1,10 @@
-import path from 'path-extra'
+import path from 'path'
 
 import { compress7z, log } from './utils'
 
 const { ROOT } = global
 
-const packWinRelease = async (poiVersion) => {
+const packWinRelease = async (poiVersion: string) => {
   let target = path.join(ROOT, 'dist', 'win-unpacked')
   let dest = path.join(ROOT, 'dist', 'win', `poi-${poiVersion}-win-x64.7z`)
   await compress7z(target, dest)
