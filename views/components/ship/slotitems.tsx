@@ -26,7 +26,8 @@ import {
 
 import { getItemData } from './slotitems-data'
 
-const slotitemsDataSelectorFactory = memoize((shipId: number) =>
+// also consumed by the mini ship panel (mini-slotitems), which ignores exslotUnlocked
+export const slotitemsDataSelectorFactory = memoize((shipId: number) =>
   createSelector(
     [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
     (shipPair, equipsData) => {

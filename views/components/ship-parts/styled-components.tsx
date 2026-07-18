@@ -3,6 +3,22 @@ import { css, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 
+// White right-aligned text rendered over a ship/equip avatar. The main ship
+// panel uses the default soft 10px shadow; the mini panel uses a tight 3px one.
+export const overAvatarText = ({
+  fontWeight,
+  shadowBlur = '10px',
+}: { fontWeight?: number; shadowBlur?: string } = {}) => css`
+  text-align: end;
+  padding-right: 6px;
+  color: white;
+  ${fontWeight != null &&
+  css`
+    font-weight: ${fontWeight};
+  `}
+  text-shadow: #000 0 0 ${shadowBlur};
+`
+
 export const ShipCard = styled(Card)`
   display: flex;
   flex-direction: column;
