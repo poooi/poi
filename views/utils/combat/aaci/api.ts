@@ -1,6 +1,7 @@
 import { maxBy } from 'lodash'
 
-import type { AACIEntry, GameEquip, GameShip } from './types'
+import type { GameEquip, GameShip } from '../types'
+import type { AACIEntry } from './types'
 
 import { AACITable } from './table'
 
