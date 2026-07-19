@@ -1,19 +1,20 @@
 # OASW Conditions Context
 
-**File**: `views/utils/oasw.ts`
+**File**: `views/utils/combat/oasw.ts` (shared predicates live in
+`views/utils/combat/combinators.ts`, `ship-predicates.ts` and `equip-predicates.ts`)
 
 **Wiki reference**: https://wikiwiki.jp/kancolle/%E5%AF%BE%E6%BD%9C%E6%94%BB%E6%92%83#oasw (発動条件 section)
 
 ## Validated Conditions (as of 2026-05-27)
 
-All logic matches the wiki. One naming fix was applied: `isTatsutaKai` → `isTatsutaKaiNi` (ship ID 478 = 龍田改二, confirmed via aaci.ts comment).
+All logic matches the wiki. 龍田改二 (ship ID 478) is now the shared `isTatsutaK2` predicate; 日向改二 (554) the shared `isHyuuGaK2`.
 
 ### Unconditional (無条件) ships
 
 | Variable               | Ship ID(s)             | Ship                          |
 | ---------------------- | ---------------------- | ----------------------------- |
 | `isIsuzuK2`            | 141                    | 五十鈴改二                    |
-| `isTatsutaKaiNi`       | 478                    | 龍田改二                      |
+| `isTatsutaK2`          | 478                    | 龍田改二                      |
 | `isYuubariKaiNiTei`    | 624                    | 夕張改二丁                    |
 | `isFubukiK3Go`         | 1040                   | 吹雪改三護                    |
 | `isJClassKai`          | 394, 893, 906          | J級改                         |

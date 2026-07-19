@@ -6,13 +6,5 @@ export type GameShip = APIShip & APIMstShip
 export type GameEquip = APISlotItem & APIMstSlotitem
 
 export type ShipPredicate = (ship: GameShip) => boolean
+export type EquipPredicate = (equip: GameEquip) => boolean
 export type EquipsPredicate = (equips: GameEquip[]) => boolean
-
-export interface AACIEntry {
-  name?: string[]
-  id: number
-  fixed: number
-  modifier: number
-  shipValid: ShipPredicate
-  equipsValid: EquipsPredicate
-}

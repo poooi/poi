@@ -7,7 +7,8 @@
 // Populate AACITable (side effect) before exposing the query API.
 import './entries'
 
-export type { GameShip, GameEquip } from './types'
+export type { GameShip, GameEquip } from '../types'
+export type { AACIEntry } from './types'
 export { AACITable } from './table'
 export {
   sortFleetPossibleAaciList,

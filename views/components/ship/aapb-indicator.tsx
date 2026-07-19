@@ -1,13 +1,13 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Intent, Position, Tag, Tooltip } from '@blueprintjs/core'
-import { compact, isFinite } from 'lodash'
+import { isFinite } from 'lodash'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
-import { getShipAAPB } from 'views/utils/aapb'
+import { getShipAAPB } from 'views/utils/combat/aapb'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 interface AAPBIndicatorProps {
@@ -20,9 +20,17 @@ export const AAPBIndicator = memo(({ shipId }: AAPBIndicatorProps) => {
     () =>
       createSelector(
         [shipDataSelectorFactory(shipId), shipEquipDataSelectorFactory(shipId)],
-        (shipInfo, equipsInfo) => {
-          if (!shipInfo || !equipsInfo) return 0
-          return getShipAAPB(shipInfo, compact(equipsInfo))
+        (shipPair, _equips = []) => {
+          if (!shipPair) return 0
+          const [_ship, $ship] = shipPair
+          const ship = { ...$ship, ..._ship }
+          const equips = _equips
+            .filter((e): e is NonNullable<typeof e> => !!(e && e[0] && e[1]))
+            .map((e) => {
+              const [_e, $e] = e
+              return { ...$e, ..._e }
+            })
+          return getShipAAPB(ship, equips)
         },
       ),
     [shipId],

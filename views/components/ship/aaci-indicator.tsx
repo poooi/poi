@@ -12,7 +12,7 @@ import {
 } from 'views/components/etc/styled-components'
 import { AACITypeName, ShipLabel } from 'views/components/ship-parts/styled-components'
 import i18next from 'views/env-parts/i18next'
-import { AACITable, getShipAACIs, getShipAllAACIs } from 'views/utils/aaci'
+import { AACITable, getShipAACIs, getShipAllAACIs } from 'views/utils/combat/aaci'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 const getAvailableTranslation = (str: string) =>

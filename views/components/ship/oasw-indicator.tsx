@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { ShipLabel } from 'views/components/ship-parts/styled-components'
-import { isOASW } from 'views/utils/oasw'
+import { isOASW } from 'views/utils/combat/oasw'
 import { shipDataSelectorFactory, shipEquipDataSelectorFactory } from 'views/utils/selectors'
 
 interface OASWIndicatorProps {

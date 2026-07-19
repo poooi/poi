@@ -22,6 +22,7 @@ import {
 import { getStore } from 'views/create-store'
 import { createLayoutUpdateAction } from 'views/redux/actions/layout'
 import { createTabSwitchAction } from 'views/redux/actions/ui'
+import { isSpAttackAvailable } from 'views/utils/combat/sp-attack'
 import { DEFAULT_FLEET_NAMES, getFleetIntent } from 'views/utils/game-utils'
 import {
   fleetNameSelectorFactory,
@@ -29,7 +30,6 @@ import {
   fleetShipsIdSelectorFactory,
   fleetStateSelectorFactory,
 } from 'views/utils/selectors'
-import { isSpAttackAvailable } from 'views/utils/sp_attack'
 
 import { LandbaseButton } from '../ship-parts/landbase-button'
 import { SquardRow } from './lbac-view'
@@ -80,12 +80,15 @@ const fleetShipViewDataSelectorFactory = memoize((fleetId: number) =>
     ],
     (shipsId, shipsData, spAttackCount, submarineSupplyCount, combinedFlag) => ({
       shipsId,
-      isSpAttack: isSpAttackAvailable(shipsData ?? [], {
-        spAttackCount: spAttackCount ?? {},
-        submarineSupplyCount: submarineSupplyCount ?? 0,
-        combinedFlag: combinedFlag != null ? Boolean(combinedFlag) : undefined,
-        fleetId,
-      }),
+      isSpAttack: isSpAttackAvailable(
+        (shipsData ?? []).map(([ship, $ship]) => ({ ...$ship, ...ship })),
+        {
+          spAttackCount: spAttackCount ?? {},
+          submarineSupplyCount: submarineSupplyCount ?? 0,
+          combinedFlag: combinedFlag != null ? Boolean(combinedFlag) : undefined,
+          fleetId,
+        },
+      ),
     }),
   ),
 )

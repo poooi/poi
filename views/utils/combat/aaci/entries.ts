@@ -96,7 +96,7 @@ import {
   validAll,
   validAny,
   validNot,
-} from './predicates'
+} from '../predicates'
 import { declareAACI } from './table'
 
 // id 1~3: Akizuki-class
