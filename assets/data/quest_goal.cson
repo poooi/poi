@@ -1713,11 +1713,12 @@ Quest guides (となはざな): https://tonahazana.com/
 373: #「フランス艦隊」演習！
   # NOTE: nationality-based (フランス艦); list covers all French ships implemented so far
   # (Richelieu Deux matches 'Richelieu' by substring) — extend when new French ships are added
+  # 2026-07-19: added Algérie (CA), Vautour (DD), Béarn (CV) from 2026 summer event backend ops
   type: 107
   "practice_win_a":
     description: "演習勝利 A"
-    flagship: ['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste']
-    escortship: [[['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste'], 2]]
+    flagship: ['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste', 'Algérie', 'Vautour', 'Béarn']
+    escortship: [[['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste', 'Algérie', 'Vautour', 'Béarn'], 2]]
     required: 4
     init: 0
 ###
