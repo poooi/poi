@@ -4,6 +4,7 @@ import { padStart } from 'lodash'
 import path from 'path'
 import url from 'url'
 import { config } from 'views/env'
+import { createCipher } from 'views/utils/ship-img-cipher'
 
 const getCachePath = (pathname = '') => {
   const dir = config.get('poi.misc.cache.path', remote.getGlobal('DEFAULT_CACHE_PATH'))
@@ -63,38 +64,8 @@ export const slotItemImgType = [
 const map = new Map<string, string>()
 const slotmap = new Map<string, string>()
 
-// Magic of tanaka
-const resource = [
-  6657, 5699, 3371, 8909, 7719, 6229, 5449, 8561, 2987, 5501, 3127, 9319, 4365, 9811, 9927, 2423,
-  3439, 1865, 5925, 4409, 5509, 1517, 9695, 9255, 5325, 3691, 5519, 6949, 5607, 9539, 4133, 7795,
-  5465, 2659, 6381, 6875, 4019, 9195, 5645, 2887, 1213, 1815, 8671, 3015, 3147, 2991, 7977, 7045,
-  1619, 7909, 4451, 6573, 4545, 8251, 5983, 2849, 7249, 7449, 9477, 5963, 2711, 9019, 7375, 2201,
-  5631, 4893, 7653, 3719, 8819, 5839, 1853, 9843, 9119, 7023, 5681, 2345, 9873, 6349, 9315, 3795,
-  9737, 4633, 4173, 7549, 7171, 6147, 4723, 5039, 2723, 7815, 6201, 5999, 5339, 4431, 2911, 4435,
-  3611, 4423, 9517, 3243,
-]
-
 const rank = ['', 'c1', 'c2', 'c3', 'r1', 'r2', 'sr1', 'sr2', 'sr3']
 const itemrank = ['item_c1', 'item_r1', 'sr1', 'sr1', 'sr1', 'sr2']
-
-function createKey(t: string): number {
-  let e = 0
-  if (null != t && '' != t) {
-    for (let i = 0; i < t.length; i++) {
-      e += t.charCodeAt(i)
-    }
-  }
-  return e
-}
-
-function create(id: number | string, seed: string): string {
-  const o = id.toString().match(/\d+/)
-  if (null == o || 0 == o.length) return ''
-  const r = parseInt(o[0])
-  const s = createKey(seed)
-  const a = null == seed || 0 == seed.length ? 1 : seed.length
-  return (((17 * (r + 7) * resource[(s + r * a) % 100]) % 8973) + 1e3).toString()
-}
 
 function join(ip: string | undefined, base: string, version?: string | number): string {
   const hackedPath = findHackFilePath(base)
@@ -142,7 +113,7 @@ export function getShipImgPath(
   }
   const ntype = type + (damaged ? '_dmg' : '')
   const seed = 'ship_' + ntype
-  const cipherNum = create(id, seed)
+  const cipherNum = createCipher(id, seed)
   const padId = padStart(String(id), 4, '0')
   const ret = `/kcs2/resources/ship/${ntype}/${padId}_${cipherNum}.png`
   map.set(mapkey, ret)
@@ -171,7 +142,7 @@ export function getSlotItemImgPath(
     throw new Error('Wrong type!')
   }
   const seed = 'slot_' + type
-  const cipherNum = create(id, seed)
+  const cipherNum = createCipher(id, seed)
   const padId = padStart(String(id), 4, '0')
   const ret = `/kcs2/resources/slot/${type}/${padId}_${cipherNum}.png`
   slotmap.set(mapkey, ret)
