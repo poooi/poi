@@ -139,25 +139,27 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 
 // The real per-rank backgrounds (kcs2/img/common/ship_bg/{card,screen}/*.png) are a
 // hex-tile texture behind a metal card frame; sr1+ swap the hex tile for white-heavy
-// pastel gear graphics. These gradients mock the dominant color of each without a
-// network round-trip: a diagonal tint for c1-r2, and for sr1+ a multi-hue diagonal
-// sweep (yellow -> pink -> purple -> blue -> green, as in the pastel gear art).
-// A radial corner-blob version was tried first, but in the row overlay's short,
-// wide strip the four corners sit at nearly the same vertical position and blend
-// into a single muddy (usually teal/green) wash instead of reading as a rainbow —
-// a linear sweep keeps the hues visually separated regardless of aspect ratio.
+// pastel gear graphics, with big circular gear shapes radiating from a point — a
+// conic hue sweep mimics that pinwheel-of-gears look better than a flat diagonal
+// band. (A first attempt used four separate corner-blob radials, which in the row
+// overlay's short, wide strip sit at nearly the same vertical position and blend
+// into a single muddy teal/green wash instead of reading as a rainbow; a single
+// conic sweep avoids that since it's one continuous gradient, not four overlapping
+// ones — a plain radial sweep was also tried and works, but the conic's hue wheel
+// reads more like the source art's radiating gear shapes.)
 // Every layer is semi-transparent so the theme background bleeds through — the
 // tint darkens on dark themes and stays light on light themes, keeping text on
 // top readable either way.
 const softRainbow = `
-  linear-gradient(
-    135deg,
-    rgb(245 210 120 / 0.5) 0%,
-    rgb(240 150 170 / 0.5) 20%,
-    rgb(200 150 230 / 0.5) 40%,
-    rgb(140 190 230 / 0.5) 60%,
-    rgb(140 220 180 / 0.5) 80%,
-    rgb(230 220 130 / 0.5) 100%
+  conic-gradient(
+    from 200deg at 30% 40%,
+    rgb(245 210 120 / 0.5),
+    rgb(240 150 170 / 0.5),
+    rgb(200 150 230 / 0.5),
+    rgb(140 190 230 / 0.5),
+    rgb(140 220 180 / 0.5),
+    rgb(230 220 130 / 0.5),
+    rgb(245 210 120 / 0.5)
   ),
   rgb(252 252 250 / 0.4)
 `
@@ -165,14 +167,15 @@ const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  linear-gradient(
-    135deg,
-    rgb(235 190 80 / 0.65) 0%,
-    rgb(235 120 150 / 0.65) 20%,
-    rgb(190 120 220 / 0.65) 40%,
-    rgb(110 165 220 / 0.65) 60%,
-    rgb(100 205 165 / 0.65) 80%,
-    rgb(220 205 90 / 0.65) 100%
+  conic-gradient(
+    from 200deg at 30% 40%,
+    rgb(235 190 80 / 0.65),
+    rgb(235 120 150 / 0.65),
+    rgb(190 120 220 / 0.65),
+    rgb(110 165 220 / 0.65),
+    rgb(100 205 165 / 0.65),
+    rgb(220 205 90 / 0.65),
+    rgb(235 190 80 / 0.65)
   ),
   rgb(251 250 246 / 0.35)
 `
