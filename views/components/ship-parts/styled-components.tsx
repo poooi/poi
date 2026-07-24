@@ -152,14 +152,17 @@ export const ShipAvatar = styled(Avatar)`
   pointer-events: none;
 `
 
-// background is applied via inline style so per-ship colors don't each mint a class
+// background is applied via inline style so per-ship colors don't each mint a
+// class; the left-to-right fade-in comes from the mask so `color` can be any
+// CSS background — a solid color or the rarity mock gradient
 export const Gradient = styled.div.attrs<{ color: string }>(({ color }) => ({
-  style: { background: `linear-gradient(to right, transparent, ${color})` },
+  style: { background: color },
 }))`
   z-index: 1;
   grid-row: 1 / 5;
   grid-column: 2 / 3;
   height: 100%;
+  mask-image: linear-gradient(to right, transparent, rgb(0 0 0 / 1));
 `
 
 export const ShipBasic = styled.div<{ avatar?: boolean }>`
