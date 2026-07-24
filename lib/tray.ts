@@ -1,6 +1,8 @@
 import { app, nativeImage, Tray } from 'electron'
 import path from 'path'
 
+import windowManager from './window'
+
 declare global {
   var appTray: Tray
 }
@@ -29,11 +31,7 @@ app.on('ready', () => {
   }
   global.appTray = tray
   tray.on('click', () => {
-    if (global.mainWindow?.isMinimized()) {
-      global.mainWindow.restore()
-    } else {
-      global.mainWindow?.show()
-    }
+    windowManager.restoreAllWindowsFromTray()
   })
   tray.setToolTip(app.getName())
 })

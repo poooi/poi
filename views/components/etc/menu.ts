@@ -10,8 +10,10 @@ import path from 'path'
 import React, { PureComponent } from 'react'
 import i18next from 'views/env-parts/i18next'
 import { getStore } from 'views/redux/create-store'
-import 'electron-react-titlebar/assets/style.css'
 import { reduxSet } from 'views/utils/tools'
+import 'electron-react-titlebar/assets/style.css'
+
+import type windowManagerType from '../../../lib/window'
 
 declare global {
   interface Window {
@@ -25,6 +27,7 @@ declare global {
 
 const Menu = remote.Menu
 const { openExternal } = shell
+const windowManager: typeof windowManagerType = remote.require('./lib/window')
 
 const resetViews = () => {
   const { availWidth, availHeight, availTop, availLeft } = window.screen
@@ -64,13 +67,13 @@ if (process.platform !== 'darwin') {
         {
           label: i18next.t('menu:Hide poi'),
           click: () => {
-            remote.getGlobal('mainWindow').hide()
+            windowManager.hideAllWindowsToTray()
           },
         },
         {
           label: i18next.t('menu:Show poi'),
           click: () => {
-            remote.getGlobal('mainWindow').show()
+            windowManager.restoreAllWindowsFromTray()
           },
         },
         { type: 'separator' },
