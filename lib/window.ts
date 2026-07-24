@@ -1,7 +1,7 @@
-import type { Display, BrowserWindowConstructorOptions, Menu } from 'electron'
+import type { Display, BrowserWindowConstructorOptions, Menu, WebContents } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
-import { BrowserWindow, screen, webContents } from 'electron'
+import { app, BrowserWindow, screen, webContents } from 'electron'
 import path from 'path'
 
 const windows: typeof global.windows = (global.windows = [])
@@ -9,8 +9,103 @@ const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
 
 let forceClose = false
 let pluginUnload = false
-const state: boolean[] = [] // Window state before hide
+const windowVisibilityState = new Map<number, boolean>()
+const backgroundThrottlingState = new Map<
+  number,
+  { webContents: WebContents; backgroundThrottling: boolean }
+>()
+const throttleHiddenWindows = process.platform === 'win32'
 let hidden = false
+
+function throttleWebContentsWhileHidden(contents: WebContents): void {
+  if (
+    !throttleHiddenWindows ||
+    contents.isDestroyed() ||
+    backgroundThrottlingState.has(contents.id)
+  ) {
+    return
+  }
+
+  // On Windows, tray hiding must opt back into Electron's background throttling
+  // so hidden windows stop submitting compositor frames. Normal minimization
+  // deliberately keeps each WebContents' configured behavior unchanged.
+  backgroundThrottlingState.set(contents.id, {
+    webContents: contents,
+    backgroundThrottling: contents.getBackgroundThrottling(),
+  })
+  contents.setBackgroundThrottling(true)
+}
+
+app.on('web-contents-created', (_event, contents) => {
+  if (hidden) {
+    throttleWebContentsWhileHidden(contents)
+  }
+})
+
+app.on('browser-window-created', (_event, window) => {
+  window.on('show', () => {
+    if (hidden) {
+      window.hide()
+    }
+  })
+
+  if (hidden) {
+    windowVisibilityState.set(window.id, false)
+    window.hide()
+  }
+})
+
+function hideAllWindowsToTray(): void {
+  if (hidden) {
+    return
+  }
+
+  windowVisibilityState.clear()
+  backgroundThrottlingState.clear()
+  hidden = true
+
+  for (const contents of webContents.getAllWebContents()) {
+    throttleWebContentsWhileHidden(contents)
+  }
+
+  for (const window of BrowserWindow.getAllWindows()) {
+    windowVisibilityState.set(window.id, window.isVisible())
+    window.hide()
+  }
+}
+
+function restoreAllWindowsFromTray(): void {
+  if (!hidden) {
+    if (global.mainWindow?.isMinimized()) {
+      global.mainWindow.restore()
+    } else {
+      global.mainWindow?.show()
+    }
+    return
+  }
+
+  hidden = false
+
+  for (const window of BrowserWindow.getAllWindows()) {
+    if (windowVisibilityState.get(window.id)) {
+      window.show()
+    }
+  }
+
+  for (const {
+    webContents: contents,
+    backgroundThrottling,
+  } of backgroundThrottlingState.values()) {
+    if (!contents.isDestroyed()) {
+      // Different WebContents may have different foreground policies, so restore
+      // the captured value instead of assuming every one was unthrottled.
+      contents.setBackgroundThrottling(backgroundThrottling)
+    }
+  }
+
+  windowVisibilityState.clear()
+  backgroundThrottlingState.clear()
+}
 
 export interface PoiWindowOptions extends BrowserWindowConstructorOptions {
   indexName?: string
@@ -159,18 +254,14 @@ export default {
       isMaximized,
     })
   },
+  hideAllWindowsToTray,
+  restoreAllWindowsFromTray,
   toggleAllWindowsVisibility: () => {
-    for (const w of BrowserWindow.getAllWindows())
-      if (!hidden) {
-        state[w.id] = w.isVisible()
-
-        w.hide()
-      } else {
-        if (state[w.id]) {
-          w.show()
-        }
-      }
-    hidden = !hidden
+    if (hidden) {
+      restoreAllWindowsFromTray()
+    } else {
+      hideAllWindowsToTray()
+    }
   },
   openFocusedWindowDevTools: () => {
     webContents.getFocusedWebContents()?.openDevTools?.({
