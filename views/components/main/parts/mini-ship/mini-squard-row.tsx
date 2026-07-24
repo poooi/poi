@@ -10,10 +10,10 @@ import { styled } from 'styled-components'
 import { SlotItemContainer } from 'views/components/ship-parts/styled-components'
 import { LandbaseSlotitems } from 'views/components/ship/slotitems'
 import {
+  getEquipAvatarBGByRarity,
   getTyku,
   LBAC_INTENTS,
   LBAC_STATUS_NAMES,
-  LBAC_STATUS_AVATAR_COLOR,
 } from 'views/utils/game-utils'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 
@@ -83,7 +83,7 @@ export const MiniSquardRow = ({
               useDefaultBG={false}
               useFixedWidth={false}
             />
-            <MiniGradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind]} />
+            <MiniGradient color={getEquipAvatarBGByRarity(equipsData?.[0]?.[1]?.api_rare ?? 5)} />
           </>
         )}
         {hideShipName && (

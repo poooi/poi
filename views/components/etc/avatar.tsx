@@ -7,12 +7,8 @@ import React, { memo } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
-import {
-  getShipBackgroundPath,
-  getShipImgPath,
-  getSlotItemBackgroundPath,
-  getSlotItemImgPath,
-} from 'views/utils/ship-img'
+import { equipRankBackgrounds, shipRankBackgrounds } from 'views/utils/game-utils'
+import { getShipImgPath, getSlotItemImgPath } from 'views/utils/ship-img'
 import { indexify } from 'views/utils/tools'
 
 declare const APPDATA_PATH: string
@@ -48,27 +44,32 @@ const EquipAvatar = styled.img`
   position: absolute;
 `
 
-const ShipAvatarBG = styled.img<{ rank: number }>`
+// The old <img> got its height from the image's intrinsic aspect ratio and used
+// offsets to frame the interesting part; a gradient has no intrinsic size, so
+// just fill the container. The container's mask only fades content past 65%,
+// which leaves the gradient as a hard-edged block on the panel — so fade the
+// BG itself the same way the ship art fades, but earlier and never fully
+// opaque, letting the panel background mix through.
+const avatarBGFade = css`
   position: absolute;
-  width: 200%;
+  inset: 0;
   z-index: -1;
-  ${({ rank }) =>
-    rank >= 6
-      ? css`
-          height: 220%;
-          left: -60%;
-        `
-      : css`
-          left: -30%;
-          top: -28%;
-        `}
+  mask-image: linear-gradient(
+    to right,
+    rgb(0 0 0 / 0.85) 0%,
+    rgb(0 0 0 / 0.5) 55%,
+    rgb(0 0 0 / 0) 95%
+  );
 `
 
-const EquipAvatarBG = styled.img`
-  position: absolute;
-  left: -160%;
-  width: 400%;
-  z-index: -1;
+const ShipAvatarBG = styled.div<{ rank: number }>`
+  ${avatarBGFade}
+  background: ${({ rank }) => shipRankBackgrounds[rank] ?? shipRankBackgrounds[0]};
+`
+
+const EquipAvatarBG = styled.div<{ rank: number }>`
+  ${avatarBGFade}
+  background: ${({ rank }) => equipRankBackgrounds[rank] ?? equipRankBackgrounds[0]};
 `
 
 // Remove old folder
@@ -109,8 +110,8 @@ export const Avatar = memo(
     useDefaultBG = true,
     showFullImg = false,
   }: AvatarProps) => {
-    const { url, bgurl, marginMagic, rank } = useSelector((state: RootState) => {
-      if (!mstId) return { url: '', bgurl: '', marginMagic: 0.555, rank: 7 }
+    const { url, marginMagic, rank } = useSelector((state: RootState) => {
+      if (!mstId) return { url: '', marginMagic: 0.555, rank: 7 }
       const ip = state.info.server.ip ?? '203.104.209.71'
       if (type === 'equip') {
         const $equip = state.const.$equips?.[mstId]
@@ -118,7 +119,6 @@ export const Avatar = memo(
         const rank = rankProp ?? $equip?.api_rare ?? 5
         return {
           url: getSlotItemImgPath(mstId, 'item_up', ip, version),
-          bgurl: getSlotItemBackgroundPath(rank, ip),
           marginMagic: 0.555,
           rank,
         }
@@ -137,7 +137,6 @@ export const Avatar = memo(
           7
         return {
           url: getShipImgPath(mstId, isEnemy ? 'banner' : 'remodel', isDamaged, ip, version),
-          bgurl: !isEnemy ? getShipBackgroundPath(rank, ip) : '',
           marginMagic: marginMagic ?? 0.555,
           rank,
         }
@@ -164,7 +163,7 @@ export const Avatar = memo(
           {type === 'equip' ? (
             <>
               <EquipAvatar className="equip-avatar" src={url} />
-              {useDefaultBG && <EquipAvatarBG className="equip-avatar-bg" src={bgurl} />}
+              {useDefaultBG && <EquipAvatarBG className="equip-avatar-bg" rank={rank} />}
             </>
           ) : (
             <>
@@ -184,7 +183,6 @@ export const Avatar = memo(
                     'ship-avatar-bg-nr': rank < 6,
                     'ship-avatar-bg-sr': rank >= 6,
                   })}
-                  src={bgurl}
                 />
               )}
             </>

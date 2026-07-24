@@ -53,6 +53,7 @@ const avatarType = [
   { name: 'data:Range', value: 'range' },
   { name: 'main:Ship tag', value: 'tag' },
   { name: 'data:Speed', value: 'speed' },
+  { name: 'setting:Rarity', value: 'rarity' },
 ]
 
 type ConfigState = { config: Record<string, unknown> }

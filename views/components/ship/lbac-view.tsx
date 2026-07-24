@@ -21,10 +21,10 @@ import {
 } from 'views/components/ship-parts/styled-components'
 import {
   asIntent,
+  getEquipAvatarBGByRarity,
   getHpStyle,
   getTyku,
   LBAC_INTENTS,
-  LBAC_STATUS_AVATAR_COLOR,
   LBAC_STATUS_NAMES,
 } from 'views/utils/game-utils'
 import { landbaseEquipDataSelectorFactory, landbaseSelectorFactory } from 'views/utils/selectors'
@@ -90,7 +90,7 @@ export const SquardRow = memo(({ squardId, enableAvatar, compact }: SquardRowPro
               useDefaultBG={false}
               useFixedWidth={false}
             />
-            <Gradient color={LBAC_STATUS_AVATAR_COLOR[api_action_kind] ?? ''} />
+            <Gradient color={getEquipAvatarBGByRarity(equipsData?.[0]?.[1]?.api_rare ?? 5)} />
           </>
         )}
         {!hideLBACName && (

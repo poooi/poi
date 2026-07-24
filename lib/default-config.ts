@@ -323,7 +323,7 @@ const defaultConfig: Config = {
     },
     appearance: {
       avatar: true,
-      avatarType: 'none',
+      avatarType: 'rarity',
       zoom: 1,
       theme: 'dark',
       colorblindFilter: 'null',

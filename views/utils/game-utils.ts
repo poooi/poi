@@ -137,6 +137,77 @@ export function getShipAvatarColorBySpeed(speed: number): string {
   }
 }
 
+// The real per-rank backgrounds (kcs2/img/common/ship_bg/{card,screen}/*.png) are a
+// hex-tile texture behind a metal card frame; sr1+ swap the hex tile for white-heavy
+// pastel gear graphics. These gradients mock the dominant color of each without a
+// network round-trip: a diagonal tint for c1-r2, and for sr1+ a multi-hue diagonal
+// sweep (yellow -> pink -> purple -> blue -> green, as in the pastel gear art).
+// A radial corner-blob version was tried first, but in the row overlay's short,
+// wide strip the four corners sit at nearly the same vertical position and blend
+// into a single muddy (usually teal/green) wash instead of reading as a rainbow —
+// a linear sweep keeps the hues visually separated regardless of aspect ratio.
+// Every layer is semi-transparent so the theme background bleeds through — the
+// tint darkens on dark themes and stays light on light themes, keeping text on
+// top readable either way.
+const softRainbow = `
+  linear-gradient(
+    135deg,
+    rgb(245 210 120 / 0.5) 0%,
+    rgb(240 150 170 / 0.5) 20%,
+    rgb(200 150 230 / 0.5) 40%,
+    rgb(140 190 230 / 0.5) 60%,
+    rgb(140 220 180 / 0.5) 80%,
+    rgb(230 220 130 / 0.5) 100%
+  ),
+  rgb(252 252 250 / 0.4)
+`
+const vividRainbow = `
+  radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
+  radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
+  radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
+  linear-gradient(
+    135deg,
+    rgb(235 190 80 / 0.65) 0%,
+    rgb(235 120 150 / 0.65) 20%,
+    rgb(190 120 220 / 0.65) 40%,
+    rgb(110 165 220 / 0.65) 60%,
+    rgb(100 205 165 / 0.65) 80%,
+    rgb(220 205 90 / 0.65) 100%
+  ),
+  rgb(251 250 246 / 0.35)
+`
+
+// Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3]
+export const shipRankBackgrounds = [
+  'linear-gradient(135deg, #eef4ff99 0%, #bcdcfa99 45%, #6fa8e099 100%)',
+  'linear-gradient(135deg, #eef4ff99 0%, #bcdcfa99 45%, #6fa8e099 100%)',
+  'linear-gradient(135deg, #dceaff99 0%, #a8cdf799 45%, #4f8fdb99 100%)',
+  'linear-gradient(135deg, #e8fdfc99 0%, #b7f0ef99 45%, #5fcbd099 100%)',
+  'linear-gradient(135deg, #f4f4f499 0%, #bdbdbd99 45%, #6e6e6e99 100%)',
+  'linear-gradient(135deg, #6b541499 0%, #b8922e99 45%, #f4dd8299 100%)',
+  softRainbow,
+  vividRainbow,
+  vividRainbow,
+]
+
+// Indexed by the `itemrank` lookup in ship-img.ts: [item_c1, item_r1, sr1, sr1, sr1, sr2]
+export const equipRankBackgrounds = [
+  'linear-gradient(135deg, #ffffff99 0%, #e7e3da99 45%, #c7c0b099 100%)',
+  'linear-gradient(135deg, #f4f9f899 0%, #d3e3e299 45%, #a9c5c399 100%)',
+  softRainbow,
+  softRainbow,
+  softRainbow,
+  vividRainbow,
+]
+
+export function getShipAvatarBGByRarity(rank: number): string {
+  return shipRankBackgrounds[rank] ?? shipRankBackgrounds[0]
+}
+
+export function getEquipAvatarBGByRarity(rank: number): string {
+  return equipRankBackgrounds[rank] ?? equipRankBackgrounds[0]
+}
+
 export function selectShipAvatarColor(
   ship: APIShip | undefined,
   $ship: APIMstShip | undefined,
@@ -152,6 +223,8 @@ export function selectShipAvatarColor(
       return getShipAvatarColorByTag(ship?.api_sally_area ?? 0, color)
     case 'speed':
       return getShipAvatarColorBySpeed(ship?.api_soku ?? 0)
+    case 'rarity':
+      return getShipAvatarBGByRarity($ship?.api_backs ?? 7)
     default:
       return '#00000000'
   }
