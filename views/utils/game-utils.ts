@@ -152,7 +152,7 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 // top readable either way.
 const softRainbow = `
   conic-gradient(
-    from 200deg at 30% 40%,
+    from 200deg at 45% 43%,
     rgb(245 210 120 / 0.5),
     rgb(240 150 170 / 0.5),
     rgb(200 150 230 / 0.5),
@@ -168,7 +168,7 @@ const vividRainbow = `
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   conic-gradient(
-    from 200deg at 30% 40%,
+    from 200deg at 45% 43%,
     rgb(235 190 80 / 0.65),
     rgb(235 120 150 / 0.65),
     rgb(190 120 220 / 0.65),
