@@ -57,3 +57,4 @@ dist/
 
 # Local files
 *.local.*
+/fcd/.cache
