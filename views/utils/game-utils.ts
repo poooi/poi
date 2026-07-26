@@ -139,45 +139,110 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 
 // The real per-rank backgrounds (kcs2/img/common/ship_bg/{card,screen}/*.png) are a
 // hex-tile texture behind a metal card frame; sr1+ swap the hex tile for white-heavy
-// pastel gear graphics, with big circular gear shapes radiating from a point — a
-// conic hue sweep mimics that pinwheel-of-gears look better than a flat diagonal
-// band. (A first attempt used four separate corner-blob radials, which in the row
-// overlay's short, wide strip sit at nearly the same vertical position and blend
-// into a single muddy teal/green wash instead of reading as a rainbow; a single
-// conic sweep avoids that since it's one continuous gradient, not four overlapping
-// ones — a plain radial sweep was also tried and works, but the conic's hue wheel
-// reads more like the source art's radiating gear shapes.)
+// pastel gear graphics whose colours wheel around a central burst — hence a conic
+// sweep rather than a linear band.
+//
+// The stop angles are *measured* from the source art, not eyeballed: sampling
+// screen/sr1 and screen/sr2+sr3 in polar coordinates and taking the
+// saturation-weighted circular mean hue per angular bucket. That fit also picks the
+// centre — scoring candidate centres by hue error against every pixel lands on
+// 50% 50% for all three, and it says the sweep runs green -> blue -> magenta -> red
+// -> yellow clockwise (an earlier hand-tuned version had the wheel backwards).
+// Stops are then reduced to the fewest that stay within ~7 degrees of hue error.
+//
+// How colourful a layer ends up is chroma x its own alpha — the white base under
+// it only moves lightness, so lowering that base cannot rescue a washed-out sweep.
+// sr1 is meant to read gentler than sr2/sr3, so it is budgeted rather than merely
+// faded: mean effective chroma ~64 against vivid's ~71. Around ~42 it stopped
+// looking soft and just looked grey. Its lightness stays above vivid's (0.70 vs
+// 0.66) so the tier still reads as the pastel one rather than a dimmer copy.
+//
+// Saturation is uniform per gradient except through the purple band, which is
+// pulled down by up to a third (gaussian on hue distance from ~270deg, so the blue
+// and magenta either side taper rather than step). Violet at equal HSL saturation
+// carries far more visual weight than the yellows and greens, and read as a stripe
+// across the sweep rather than part of it.
+//
 // Every layer is semi-transparent so the theme background bleeds through — the
 // tint darkens on dark themes and stays light on light themes, keeping text on
 // top readable either way.
 const softRainbow = `
   conic-gradient(
-    from 200deg at 45% 43%,
-    rgb(245 210 120 / 0.5),
-    rgb(240 150 170 / 0.5),
-    rgb(200 150 230 / 0.5),
-    rgb(140 190 230 / 0.5),
-    rgb(140 220 180 / 0.5),
-    rgb(230 220 130 / 0.5),
-    rgb(245 210 120 / 0.5)
+    at 60% 60%,
+    rgb(122 235 134 / 0.6) 0deg,
+    rgb(133 139 224 / 0.6) 113deg,
+    rgb(226 131 211 / 0.6) 158deg,
+    rgb(227 130 205 / 0.6) 188deg,
+    rgb(235 123 122 / 0.6) 218deg,
+    rgb(235 126 122 / 0.6) 248deg,
+    rgb(180 235 122 / 0.6) 338deg,
+    rgb(122 235 134 / 0.6) 360deg
   ),
-  rgb(252 252 250 / 0.4)
+  rgb(252 252 250 / 0.32)
 `
 const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   conic-gradient(
-    from 200deg at 45% 43%,
-    rgb(235 190 80 / 0.65),
-    rgb(235 120 150 / 0.65),
-    rgb(190 120 220 / 0.65),
-    rgb(110 165 220 / 0.65),
-    rgb(100 205 165 / 0.65),
-    rgb(220 205 90 / 0.65),
-    rgb(235 190 80 / 0.65)
+    at 60% 60%,
+    rgb(109 227 180 / 0.65) 0deg,
+    rgb(117 142 219 / 0.65) 83deg,
+    rgb(163 128 208 / 0.65) 98deg,
+    rgb(216 120 206 / 0.65) 128deg,
+    rgb(221 115 182 / 0.65) 173deg,
+    rgb(226 114 110 / 0.65) 188deg,
+    rgb(227 124 109 / 0.65) 233deg,
+    rgb(227 205 109 / 0.65) 263deg,
+    rgb(172 227 109 / 0.65) 323deg,
+    rgb(109 227 158 / 0.65) 338deg,
+    rgb(109 227 180 / 0.65) 360deg
   ),
   rgb(251 250 246 / 0.35)
+`
+
+// sr3 is sr2 plus scattered sakura petals. A petal is a shape rather than a colour
+// ramp, so it comes in as inline SVG — two tiles at sizes that share no small common
+// factor (68 and 95), so their repeats drift against each other and the scatter
+// never resolves into a visible grid. Data URIs keep the whole thing one CSS
+// background string: no network fetch, no extra DOM, nothing for the avatar to load.
+//
+// Tile size is set by the *smallest* surface, not the largest: in a mini fleet row
+// the gradient box is ~91x38 and its mask hides everything left of ~27px, leaving a
+// 64x38 window. Tiles have to be dense enough that a couple of petals land inside
+// that, or sr3 looks identical to sr2 where it is seen most often.
+//
+// Transform order is translate -> scale -> rotate, so a petal's box stays at
+// (x, y)..(x + 24s, y + 24s) and placements remain predictable; rotating last around
+// the petal's own centre only spills a few px past that.
+const PETAL = 'M12 1C5 7 3 15 7 22L12 18L17 22C21 15 19 7 12 1Z'
+
+const petalTile = (size: number, fill: string, petals: [transform: string, opacity: string][]) =>
+  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}' viewBox='0 0 ${size} ${size}'%3E%3Cg fill='%23${fill}'%3E${petals
+    .map(
+      ([transform, opacity]) =>
+        `%3Cpath d='${PETAL}' transform='${transform}' opacity='${opacity}'/%3E`,
+    )
+    .join('')}%3C/g%3E%3C/svg%3E")`
+
+const sakuraNear = petalTile(68, 'ffdde8', [
+  ['translate(3 5) scale(.62) rotate(22 12 12)', '.92'],
+  ['translate(41 3) scale(.5) rotate(-38 12 12)', '.8'],
+  ['translate(20 38) scale(.58) rotate(124 12 12)', '.86'],
+])
+const sakuraFar = petalTile(95, 'fff0f4', [
+  ['translate(58 18) scale(.45) rotate(-52 12 12)', '.8'],
+  ['translate(10 50) scale(.52) rotate(28 12 12)', '.85'],
+  ['translate(72 66) scale(.4) rotate(98 12 12)', '.68'],
+])
+
+// Petal layers need a per-layer size, which the `background` shorthand only accepts
+// as `<image> <position> / <size>` — so they are written that way rather than as a
+// separate background-size, keeping the single-string contract these constants have.
+const vividRainbowSakura = `
+  ${sakuraNear} 0 0 / 68px 68px,
+  ${sakuraFar} 21px 13px / 95px 95px,
+  ${vividRainbow.trim()}
 `
 
 // Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3]
@@ -190,10 +255,11 @@ export const shipRankBackgrounds = [
   'linear-gradient(135deg, #6b541499 0%, #b8922e99 45%, #f4dd8299 100%)',
   softRainbow,
   vividRainbow,
-  vividRainbow,
+  vividRainbowSakura,
 ]
 
 // Indexed by the `itemrank` lookup in ship-img.ts: [item_c1, item_r1, sr1, sr1, sr1, sr2]
+// Note `itemrank` tops out at sr2, so equipment never gets the sr3 petals.
 export const equipRankBackgrounds = [
   'linear-gradient(135deg, #ffffff99 0%, #e7e3da99 45%, #c7c0b099 100%)',
   'linear-gradient(135deg, #f4f9f899 0%, #d3e3e299 45%, #a9c5c399 100%)',

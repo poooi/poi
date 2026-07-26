@@ -182,8 +182,16 @@ export const MiniShipAvatar = styled(Avatar)`
 `
 
 // Same per-ship gradient as the main panel, spanning the mini grid's 2 rows.
+//
+// The main panel fades the gradient in across the name column alone, which works
+// there because that column is 95-150px. Here it collapses to ~35px in a narrow
+// panel, so the same fade never reaches full colour before the HP figures start
+// and the rarity tint is effectively invisible. Span the avatar column as well and
+// hold the ramp off until past the art, so the fade has room to arrive.
 export const MiniGradient = styled(Gradient)`
   grid-row: 1 / 3;
+  grid-column: 1 / 3;
+  mask-image: linear-gradient(to right, transparent 30%, rgb(0 0 0 / 1) 85%);
 `
 
 export const ShipTile = styled.div`
