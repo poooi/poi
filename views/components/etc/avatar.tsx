@@ -7,7 +7,11 @@ import React, { memo } from 'react'
 import { shallowEqual, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { css, styled } from 'styled-components'
-import { equipRankBackgrounds, shipRankBackgrounds } from 'views/utils/game-utils'
+import {
+  equipRankBackgrounds,
+  getShipAvatarBGByRarity,
+  isForeignShip,
+} from 'views/utils/game-utils'
 import { getShipImgPath, getSlotItemImgPath } from 'views/utils/ship-img'
 import { indexify } from 'views/utils/tools'
 
@@ -62,9 +66,9 @@ const avatarBGFade = css`
   );
 `
 
-const ShipAvatarBG = styled.div<{ rank: number }>`
+const ShipAvatarBG = styled.div<{ rank: number; foreign: boolean }>`
   ${avatarBGFade}
-  background: ${({ rank }) => shipRankBackgrounds[rank] ?? shipRankBackgrounds[0]};
+  background: ${({ rank, foreign }) => getShipAvatarBGByRarity(rank, foreign)};
 `
 
 const EquipAvatarBG = styled.div<{ rank: number }>`
@@ -110,8 +114,8 @@ export const Avatar = memo(
     useDefaultBG = true,
     showFullImg = false,
   }: AvatarProps) => {
-    const { url, marginMagic, rank } = useSelector((state: RootState) => {
-      if (!mstId) return { url: '', marginMagic: 0.555, rank: 7 }
+    const { url, marginMagic, rank, foreign } = useSelector((state: RootState) => {
+      if (!mstId) return { url: '', marginMagic: 0.555, rank: 7, foreign: false }
       const ip = state.info.server.ip ?? '203.104.209.71'
       if (type === 'equip') {
         const $equip = state.const.$equips?.[mstId]
@@ -121,6 +125,7 @@ export const Avatar = memo(
           url: getSlotItemImgPath(mstId, 'item_up', ip, version),
           marginMagic: 0.555,
           rank,
+          foreign: false,
         }
       } else {
         const isEnemy = mstId >= 1500
@@ -139,6 +144,7 @@ export const Avatar = memo(
           url: getShipImgPath(mstId, isEnemy ? 'banner' : 'remodel', isDamaged, ip, version),
           marginMagic: marginMagic ?? 0.555,
           rank,
+          foreign: isForeignShip(state.const.$ships?.[mstId]),
         }
       }
     }, shallowEqual)
@@ -179,6 +185,7 @@ export const Avatar = memo(
               {mstId < 1500 && useDefaultBG && (
                 <ShipAvatarBG
                   rank={rank}
+                  foreign={foreign}
                   className={classnames('ship-avatar-bg', {
                     'ship-avatar-bg-nr': rank < 6,
                     'ship-avatar-bg-sr': rank >= 6,

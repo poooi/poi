@@ -212,38 +212,57 @@ const vividRainbow = `
 // 64x38 window. Tiles have to be dense enough that a couple of petals land inside
 // that, or sr3 looks identical to sr2 where it is seen most often.
 //
-// Transform order is translate -> scale -> rotate, so a petal's box stays at
+// Transform order is translate -> scale -> rotate, so a motif's box stays at
 // (x, y)..(x + 24s, y + 24s) and placements remain predictable; rotating last around
-// the petal's own centre only spills a few px past that.
+// the motif's own centre only spills a few px past that.
+//
+// Two motifs: a sakura petal, and a five-pointed star for non-Japanese ships.
+// Both are drawn in the same 24x24 box so the tile layouts are interchangeable.
 const PETAL = 'M12 1C5 7 3 15 7 22L12 18L17 22C21 15 19 7 12 1Z'
+const STAR =
+  'M12 1L14.7 8.3L22.5 8.6L16.4 13.4L18.5 20.9L12 16.6L5.5 20.9L7.6 13.4L1.5 8.6L9.3 8.3Z'
 
-const petalTile = (size: number, fill: string, petals: [transform: string, opacity: string][]) =>
-  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}' viewBox='0 0 ${size} ${size}'%3E%3Cg fill='%23${fill}'%3E${petals
+const motifTile = (
+  motif: string,
+  size: number,
+  fill: string,
+  items: [transform: string, opacity: string][],
+) =>
+  `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${size}' height='${size}' viewBox='0 0 ${size} ${size}'%3E%3Cg fill='%23${fill}'%3E${items
     .map(
       ([transform, opacity]) =>
-        `%3Cpath d='${PETAL}' transform='${transform}' opacity='${opacity}'/%3E`,
+        `%3Cpath d='${motif}' transform='${transform}' opacity='${opacity}'/%3E`,
     )
     .join('')}%3C/g%3E%3C/svg%3E")`
 
-const sakuraNear = petalTile(68, 'ffdde8', [
+// Same placements for both motifs, so density and scatter stay identical.
+const NEAR_LAYOUT: [string, string][] = [
   ['translate(3 5) scale(.62) rotate(22 12 12)', '.92'],
   ['translate(41 3) scale(.5) rotate(-38 12 12)', '.8'],
   ['translate(20 38) scale(.58) rotate(124 12 12)', '.86'],
-])
-const sakuraFar = petalTile(95, 'fff0f4', [
+]
+const FAR_LAYOUT: [string, string][] = [
   ['translate(58 18) scale(.45) rotate(-52 12 12)', '.8'],
   ['translate(10 50) scale(.52) rotate(28 12 12)', '.85'],
   ['translate(72 66) scale(.4) rotate(98 12 12)', '.68'],
-])
+]
 
-// Petal layers need a per-layer size, which the `background` shorthand only accepts
+const sakuraNear = motifTile(PETAL, 68, 'ffdde8', NEAR_LAYOUT)
+const sakuraFar = motifTile(PETAL, 95, 'fff0f4', FAR_LAYOUT)
+// Stars read as metallic rather than blossom-pink, so they take a cooler cream.
+const starNear = motifTile(STAR, 68, 'fff3d6', NEAR_LAYOUT)
+const starFar = motifTile(STAR, 95, 'fffaf0', FAR_LAYOUT)
+
+// Motif layers need a per-layer size, which the `background` shorthand only accepts
 // as `<image> <position> / <size>` — so they are written that way rather than as a
 // separate background-size, keeping the single-string contract these constants have.
-const vividRainbowSakura = `
-  ${sakuraNear} 0 0 / 68px 68px,
-  ${sakuraFar} 21px 13px / 95px 95px,
+const withMotif = (near: string, far: string) => `
+  ${near} 0 0 / 68px 68px,
+  ${far} 21px 13px / 95px 95px,
   ${vividRainbow.trim()}
 `
+const vividRainbowSakura = withMotif(sakuraNear, sakuraFar)
+const vividRainbowStars = withMotif(starNear, starFar)
 
 // Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3]
 export const shipRankBackgrounds = [
@@ -269,7 +288,20 @@ export const equipRankBackgrounds = [
   vividRainbow,
 ]
 
-export function getShipAvatarBGByRarity(rank: number): string {
+/**
+ * Non-Japanese ships get the star motif rather than sakura.
+ *
+ * Detected from the name rather than a ship-class table: foreign ships are named in
+ * Latin or Cyrillic script (Гангут, Верный) and Japanese ones never are, so this
+ * needs no list kept up to date as ships are added. The ships it does call Japanese
+ * despite foreign origin — 呂500 (ex U-511), 伊504 (ex Luigi Torelli) — were renamed
+ * because they served in the IJN, so sakura is arguably right for them anyway.
+ */
+export const isForeignShip = ($ship: APIMstShip | undefined): boolean =>
+  /[A-Za-zЀ-ӿ]/.test($ship?.api_name ?? '')
+
+export function getShipAvatarBGByRarity(rank: number, foreign = false): string {
+  if (foreign && rank === 8) return vividRainbowStars
   return shipRankBackgrounds[rank] ?? shipRankBackgrounds[0]
 }
 
@@ -293,7 +325,7 @@ export function selectShipAvatarColor(
     case 'speed':
       return getShipAvatarColorBySpeed(ship?.api_soku ?? 0)
     case 'rarity':
-      return getShipAvatarBGByRarity($ship?.api_backs ?? 7)
+      return getShipAvatarBGByRarity($ship?.api_backs ?? 7, isForeignShip($ship))
     default:
       return '#00000000'
   }
