@@ -101,7 +101,7 @@
   "Unused equipment slot appears in your fleet": "少なくとも1つの艦隊に空き装備スロットがあります",
   "Lv": "Lv. {{level}}",
   "RemodelLv": "次の改造：Lv. {{remodelLevel}}",
-  "RemodelReady": "改造ができる",
+  "RemodelReady": "改造可能",
   "TotalExp": "総経験値：{{exp}}",
   "NextExp": "次のレベルまで：{{nextExp}}",
   "Total": "合計"
