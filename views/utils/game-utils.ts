@@ -137,56 +137,54 @@ export function getShipAvatarColorBySpeed(speed: number): string {
   }
 }
 
-// These mock the rarity background the game bakes into a ship's banner
-// (kcs2/resources/ship/banner/*.png), which is the same wide strip an avatar is —
-// a better reference than the full card/screen artwork, since a banner shows only
-// a crop of it. In that crop the colour varies almost entirely top to bottom, so
-// these are vertical gradients; an earlier conic version put a hue wheel and a
-// visible convergence point in a place the game never has one, and changed
-// appearance with the element's aspect ratio.
+// These mock the rarity background the game bakes into a ship's art. The
+// reference is kcs2/resources/ship/supply_character/*.png — a 711x71 strip, the
+// widest surface the game paints this artwork on and so the closest analogue to an
+// avatar. A ship banner also bakes it in, but its crop is too small to show what
+// the artwork is doing: read on its own it looks like vertical bands, which are
+// really just one slice of a much larger shape.
 //
-// Measured, not eyeballed. For each api_backs tier, ~20 banners were sampled and
-// reduced to a per-pixel median, which keeps the shared background and rejects the
-// ship art. Background pixels are then separated from the banner's chrome (type
-// badge, grille, slot emblem) automatically: chrome is drawn identically on every
-// banner so it is bright in *every* tier, while a real background is dark in at
-// least one, making the per-pixel minimum lightness across tiers a clean
-// discriminator. The vertical profile is the median of what survives, per row.
+// The commons are a near-flat colour with a slight ramp. The pastel tiers are a
+// conic burst — colour radiates from a point, warm through one half and cool
+// through the other, fanning through the whole hue circle where the two meet.
 //
-// Kept from the measurement: hue at each height and the shape of the lightness
-// ramp. Rescaled: lightness, because the real banner runs up to pure white which
-// carries no colour at all; and saturation, held constant per tier and solved for
-// a chroma budget, because measured per-row saturation is numerically unstable at
-// near-white and spikes to neon when scaled up.
+// Measured, not eyeballed. Per api_backs tier, ~20 strips reduce to a per-pixel
+// median, which keeps the shared background and rejects ship art. Art columns are
+// then dropped by variance (the art carries fine vertical detail, the background is
+// smooth top to bottom), and near-neutral pixels — the white gear overlays — are
+// skipped since they carry no hue. The conic centre is fitted by scoring candidates
+// on hue error against every remaining pixel. Angles are measured in normalised
+// coordinates so the strip's 10:1 aspect isn't baked in, leaving CSS to re-apply
+// whatever stretch the real element has.
 //
-// How colourful a layer ends up is chroma x its own alpha — the white base under
-// it only moves lightness, so lowering that base cannot rescue a washed-out sweep.
-// sr1 is meant to read gentler than sr2/sr3, so it is budgeted rather than merely
-// faded: mean effective chroma ~64 against vivid's ~71. Around ~42 it stopped
-// looking soft and just looked grey.
+// Colours are the median per angular bucket, rescaled by separating luma from
+// chroma: luma remapped into a renderable band, chroma scaled to hit a budget. Hue
+// is never interpolated, which matters — where the sweep crosses its pale
+// near-neutral zone, interpolating hue invents a saturated green band that simply
+// is not in the artwork.
 //
-// Saturation is uniform per gradient except through the purple band on the pastel
-// tiers, which is pulled down by up to a third (gaussian on hue distance, so the
-// blue and magenta either side taper rather than step) — violet at equal HSL
-// saturation carries far more visual weight than the greens and cyans and reads as
-// a stripe across the sweep rather than part of it. The commons sit at a single
-// blue hue and are left alone.
+// How colourful a layer ends up is chroma x its own alpha; the white base under it
+// only moves lightness, so lowering that base cannot rescue a washed-out sweep. The
+// commons take their budget straight from the source (its own chroma x our alpha)
+// so each reads as saturated in-app as in game. The pastels are deliberately held
+// above that: the real artwork is far paler than works behind a ship name.
 //
 // Every layer is semi-transparent so the theme background bleeds through — the
 // tint darkens on dark themes and stays light on light themes, keeping text on
 // top readable either way.
 const softRainbow = `
-  linear-gradient(
-    rgb(114 192 237 / 0.6) 0%,
-    rgb(120 145 233 / 0.6) 9%,
-    rgb(169 133 222 / 0.6) 17%,
-    rgb(172 129 220 / 0.6) 23%,
-    rgb(156 123 221 / 0.6) 28%,
-    rgb(118 116 227 / 0.6) 32%,
-    rgb(104 204 236 / 0.6) 47%,
-    rgb(102 236 237 / 0.6) 57%,
-    rgb(181 247 217 / 0.6) 94%,
-    rgb(181 247 233 / 0.6) 100%
+  conic-gradient(
+    at 50% 50%,
+    rgb(208 140 180 / 0.6) 0deg,
+    rgb(165 143 225 / 0.6) 8deg,
+    rgb(130 159 228 / 0.6) 23deg,
+    rgb(93 218 216 / 0.6) 173deg,
+    rgb(218 211 77 / 0.6) 188deg,
+    rgb(225 201 174 / 0.6) 293deg,
+    rgb(228 195 124 / 0.6) 308deg,
+    rgb(247 148 101 / 0.6) 338deg,
+    rgb(251 136 134 / 0.6) 353deg,
+    rgb(208 140 180 / 0.6) 360deg
   ),
   rgb(252 252 250 / 0.32)
 `
@@ -194,37 +192,39 @@ const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  linear-gradient(
-    rgb(112 245 232 / 0.65) 0%,
-    rgb(107 207 243 / 0.65) 9%,
-    rgb(118 117 233 / 0.65) 13%,
-    rgb(194 131 223 / 0.65) 17%,
-    rgb(210 156 230 / 0.65) 28%,
-    rgb(154 216 247 / 0.65) 36%,
-    rgb(84 241 242 / 0.65) 57%,
-    rgb(93 243 211 / 0.65) 66%,
-    rgb(149 247 232 / 0.65) 79%,
-    rgb(178 249 249 / 0.65) 100%
+  conic-gradient(
+    at 50% 50%,
+    rgb(200 146 179 / 0.65) 0deg,
+    rgb(154 143 218 / 0.65) 8deg,
+    rgb(134 231 244 / 0.65) 98deg,
+    rgb(74 218 220 / 0.65) 173deg,
+    rgb(226 221 66 / 0.65) 188deg,
+    rgb(227 199 158 / 0.65) 233deg,
+    rgb(240 199 112 / 0.65) 308deg,
+    rgb(245 152 90 / 0.65) 338deg,
+    rgb(246 148 140 / 0.65) 353deg,
+    rgb(200 146 179 / 0.65) 360deg
   ),
   rgb(251 250 246 / 0.35)
 `
-// sr3's artwork is measurably its own, not a reskin of sr2 — it carries a stronger
-// magenta band through the upper third.
+// sr3 measures as its own artwork rather than a reskin of sr2, with the burst
+// sitting slightly lower.
 const radiantRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  linear-gradient(
-    rgb(113 232 242 / 0.65) 0%,
-    rgb(103 130 233 / 0.65) 11%,
-    rgb(216 112 218 / 0.65) 17%,
-    rgb(216 141 224 / 0.65) 30%,
-    rgb(141 146 236 / 0.65) 34%,
-    rgb(134 180 241 / 0.65) 36%,
-    rgb(92 240 240 / 0.65) 57%,
-    rgb(102 241 197 / 0.65) 66%,
-    rgb(167 247 243 / 0.65) 85%,
-    rgb(180 248 248 / 0.65) 100%
+  conic-gradient(
+    at 50% 55%,
+    rgb(197 146 172 / 0.65) 0deg,
+    rgb(149 146 218 / 0.65) 8deg,
+    rgb(137 221 237 / 0.65) 98deg,
+    rgb(67 216 201 / 0.65) 173deg,
+    rgb(216 216 62 / 0.65) 188deg,
+    rgb(221 195 152 / 0.65) 233deg,
+    rgb(235 207 119 / 0.65) 308deg,
+    rgb(240 153 89 / 0.65) 338deg,
+    rgb(244 147 126 / 0.65) 353deg,
+    rgb(197 146 172 / 0.65) 360deg
   ),
   rgb(251 250 246 / 0.35)
 `
@@ -274,14 +274,13 @@ const vividRainbowSakura = `
 `
 
 const commonBlue = `linear-gradient(
-    rgb(184 195 224 / 0.6) 0%,
-    rgb(168 182 217 / 0.6) 15%,
-    rgb(158 174 213 / 0.6) 17%,
-    rgb(140 159 205 / 0.6) 43%,
-    rgb(127 146 199 / 0.6) 74%,
-    rgb(122 141 197 / 0.6) 77%,
-    rgb(121 137 196 / 0.6) 89%,
-    rgb(127 145 199 / 0.6) 100%
+    to right,
+    rgb(171 191 235 / 0.6) 0%,
+    rgb(167 187 232 / 0.6) 8%,
+    rgb(127 153 207 / 0.6) 41%,
+    rgb(126 152 207 / 0.6) 69%,
+    rgb(129 155 209 / 0.6) 83%,
+    rgb(126 152 207 / 0.6) 100%
   )`
 
 // Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3].
@@ -290,47 +289,45 @@ export const shipRankBackgrounds = [
   commonBlue,
   commonBlue,
   `linear-gradient(
-    rgb(178 208 230 / 0.6) 0%,
-    rgb(161 198 224 / 0.6) 15%,
-    rgb(150 191 221 / 0.6) 17%,
-    rgb(114 168 209 / 0.6) 66%,
-    rgb(102 155 205 / 0.6) 77%,
-    rgb(101 150 205 / 0.6) 85%,
-    rgb(108 160 207 / 0.6) 100%
+    to right,
+    rgb(155 200 227 / 0.6) 0%,
+    rgb(156 200 227 / 0.6) 7%,
+    rgb(146 192 220 / 0.6) 15%,
+    rgb(112 167 199 / 0.6) 36%,
+    rgb(105 162 195 / 0.6) 42%,
+    rgb(106 163 196 / 0.6) 69%,
+    rgb(110 166 199 / 0.6) 83%,
+    rgb(106 163 196 / 0.6) 100%
   )`,
   `linear-gradient(
-    rgb(188 226 230 / 0.6) 0%,
-    rgb(178 222 226 / 0.6) 15%,
-    rgb(171 219 223 / 0.6) 17%,
-    rgb(153 210 216 / 0.6) 43%,
-    rgb(147 207 214 / 0.6) 62%,
-    rgb(122 195 205 / 0.6) 77%,
-    rgb(131 199 208 / 0.6) 89%,
-    rgb(139 203 211 / 0.6) 91%,
-    rgb(150 208 215 / 0.6) 100%
+    to right,
+    rgb(137 205 213 / 0.6) 0%,
+    rgb(134 199 207 / 0.6) 7%,
+    rgb(127 192 200 / 0.6) 12%,
+    rgb(92 172 183 / 0.6) 36%,
+    rgb(86 169 180 / 0.6) 47%,
+    rgb(86 169 180 / 0.6) 100%
   )`,
   `linear-gradient(
-    rgb(138 149 169 / 0.6) 0%,
-    rgb(135 148 167 / 0.6) 9%,
-    rgb(142 155 172 / 0.6) 11%,
-    rgb(141 154 171 / 0.6) 15%,
-    rgb(132 146 164 / 0.6) 17%,
-    rgb(148 160 176 / 0.6) 34%,
-    rgb(160 170 185 / 0.6) 40%,
-    rgb(202 207 216 / 0.6) 85%,
-    rgb(194 202 210 / 0.6) 100%
+    to right,
+    rgb(161 166 170 / 0.6) 0%,
+    rgb(155 168 176 / 0.6) 36%,
+    rgb(160 175 182 / 0.6) 41%,
+    rgb(188 204 210 / 0.6) 53%,
+    rgb(187 202 209 / 0.6) 58%,
+    rgb(145 158 165 / 0.6) 75%,
+    rgb(134 146 152 / 0.6) 100%
   )`,
   `linear-gradient(
-    rgb(224 202 108 / 0.6) 0%,
-    rgb(220 196 91 / 0.6) 4%,
-    rgb(218 195 82 / 0.6) 11%,
-    rgb(212 190 53 / 0.6) 19%,
-    rgb(216 196 70 / 0.6) 40%,
-    rgb(218 197 79 / 0.6) 43%,
-    rgb(222 198 98 / 0.6) 53%,
-    rgb(232 215 149 / 0.6) 72%,
-    rgb(241 227 187 / 0.6) 94%,
-    rgb(241 227 187 / 0.6) 100%
+    to right,
+    rgb(194 166 111 / 0.6) 0%,
+    rgb(191 164 107 / 0.6) 10%,
+    rgb(194 166 71 / 0.6) 37%,
+    rgb(212 197 61 / 0.6) 54%,
+    rgb(205 188 60 / 0.6) 61%,
+    rgb(183 152 55 / 0.6) 71%,
+    rgb(173 137 53 / 0.6) 80%,
+    rgb(167 127 51 / 0.6) 100%
   )`,
   softRainbow,
   vividRainbow,
