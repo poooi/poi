@@ -168,30 +168,30 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 // top readable either way.
 const softRainbow = `
   conic-gradient(
-    at 60% 60%,
-    rgb(122 235 134 / 0.6) 0deg,
-    rgb(133 139 224 / 0.6) 113deg,
-    rgb(226 131 211 / 0.6) 158deg,
-    rgb(227 130 205 / 0.6) 188deg,
-    rgb(235 123 122 / 0.6) 218deg,
-    rgb(235 126 122 / 0.6) 248deg,
-    rgb(180 235 122 / 0.6) 338deg,
-    rgb(122 235 134 / 0.6) 360deg
+    at 50% 110%,
+    rgb(139 228 149 / 0.5) 0deg,
+    rgb(139 146 228 / 0.5) 113deg,
+    rgb(228 139 214 / 0.5) 150deg,
+    rgb(228 139 207 / 0.5) 180deg,
+    rgb(228 140 139 / 0.5) 218deg,
+    rgb(228 142 139 / 0.5) 248deg,
+    rgb(185 228 139 / 0.5) 338deg,
+    rgb(139 228 149 / 0.5) 360deg
   ),
-  rgb(252 252 250 / 0.32)
+  rgb(252 252 250 / 0.4)
 `
 const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   conic-gradient(
-    at 60% 60%,
+    at 50% 110%,
     rgb(109 227 180 / 0.65) 0deg,
-    rgb(117 142 219 / 0.65) 83deg,
-    rgb(163 128 208 / 0.65) 98deg,
-    rgb(216 120 206 / 0.65) 128deg,
-    rgb(221 115 182 / 0.65) 173deg,
-    rgb(226 114 110 / 0.65) 188deg,
+    rgb(109 138 227 / 0.65) 83deg,
+    rgb(161 109 227 / 0.65) 98deg,
+    rgb(227 109 215 / 0.65) 128deg,
+    rgb(227 109 184 / 0.65) 165deg,
+    rgb(227 113 109 / 0.65) 180deg,
     rgb(227 124 109 / 0.65) 233deg,
     rgb(227 205 109 / 0.65) 263deg,
     rgb(172 227 109 / 0.65) 323deg,
