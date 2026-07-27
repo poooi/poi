@@ -137,46 +137,56 @@ export function getShipAvatarColorBySpeed(speed: number): string {
   }
 }
 
-// The real per-rank backgrounds (kcs2/img/common/ship_bg/{card,screen}/*.png) are a
-// hex-tile texture behind a metal card frame; sr1+ swap the hex tile for white-heavy
-// pastel gear graphics whose colours wheel around a central burst — hence a conic
-// sweep rather than a linear band.
+// These mock the rarity background the game bakes into a ship's banner
+// (kcs2/resources/ship/banner/*.png), which is the same wide strip an avatar is —
+// a better reference than the full card/screen artwork, since a banner shows only
+// a crop of it. In that crop the colour varies almost entirely top to bottom, so
+// these are vertical gradients; an earlier conic version put a hue wheel and a
+// visible convergence point in a place the game never has one, and changed
+// appearance with the element's aspect ratio.
 //
-// The stop angles are *measured* from the source art, not eyeballed: sampling
-// screen/sr1 and screen/sr2+sr3 in polar coordinates and taking the
-// saturation-weighted circular mean hue per angular bucket. That fit also picks the
-// centre — scoring candidate centres by hue error against every pixel lands on
-// 50% 50% for all three, and it says the sweep runs green -> blue -> magenta -> red
-// -> yellow clockwise (an earlier hand-tuned version had the wheel backwards).
-// Stops are then reduced to the fewest that stay within ~7 degrees of hue error.
+// Measured, not eyeballed. For each api_backs tier, ~20 banners were sampled and
+// reduced to a per-pixel median, which keeps the shared background and rejects the
+// ship art. Background pixels are then separated from the banner's chrome (type
+// badge, grille, slot emblem) automatically: chrome is drawn identically on every
+// banner so it is bright in *every* tier, while a real background is dark in at
+// least one, making the per-pixel minimum lightness across tiers a clean
+// discriminator. The vertical profile is the median of what survives, per row.
+//
+// Kept from the measurement: hue at each height and the shape of the lightness
+// ramp. Rescaled: lightness, because the real banner runs up to pure white which
+// carries no colour at all; and saturation, held constant per tier and solved for
+// a chroma budget, because measured per-row saturation is numerically unstable at
+// near-white and spikes to neon when scaled up.
 //
 // How colourful a layer ends up is chroma x its own alpha — the white base under
 // it only moves lightness, so lowering that base cannot rescue a washed-out sweep.
 // sr1 is meant to read gentler than sr2/sr3, so it is budgeted rather than merely
 // faded: mean effective chroma ~64 against vivid's ~71. Around ~42 it stopped
-// looking soft and just looked grey. Its lightness stays above vivid's (0.70 vs
-// 0.66) so the tier still reads as the pastel one rather than a dimmer copy.
+// looking soft and just looked grey.
 //
-// Saturation is uniform per gradient except through the purple band, which is
-// pulled down by up to a third (gaussian on hue distance from ~270deg, so the blue
-// and magenta either side taper rather than step). Violet at equal HSL saturation
-// carries far more visual weight than the yellows and greens, and read as a stripe
-// across the sweep rather than part of it.
+// Saturation is uniform per gradient except through the purple band on the pastel
+// tiers, which is pulled down by up to a third (gaussian on hue distance, so the
+// blue and magenta either side taper rather than step) — violet at equal HSL
+// saturation carries far more visual weight than the greens and cyans and reads as
+// a stripe across the sweep rather than part of it. The commons sit at a single
+// blue hue and are left alone.
 //
 // Every layer is semi-transparent so the theme background bleeds through — the
 // tint darkens on dark themes and stays light on light themes, keeping text on
 // top readable either way.
 const softRainbow = `
-  conic-gradient(
-    at 60% 60%,
-    rgb(122 235 134 / 0.6) 0deg,
-    rgb(133 139 224 / 0.6) 113deg,
-    rgb(226 131 211 / 0.6) 158deg,
-    rgb(227 130 205 / 0.6) 188deg,
-    rgb(235 123 122 / 0.6) 218deg,
-    rgb(235 126 122 / 0.6) 248deg,
-    rgb(180 235 122 / 0.6) 338deg,
-    rgb(122 235 134 / 0.6) 360deg
+  linear-gradient(
+    rgb(114 192 237 / 0.6) 0%,
+    rgb(120 145 233 / 0.6) 9%,
+    rgb(169 133 222 / 0.6) 17%,
+    rgb(172 129 220 / 0.6) 23%,
+    rgb(156 123 221 / 0.6) 28%,
+    rgb(118 116 227 / 0.6) 32%,
+    rgb(104 204 236 / 0.6) 47%,
+    rgb(102 236 237 / 0.6) 57%,
+    rgb(181 247 217 / 0.6) 94%,
+    rgb(181 247 233 / 0.6) 100%
   ),
   rgb(252 252 250 / 0.32)
 `
@@ -184,19 +194,37 @@ const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  conic-gradient(
-    at 60% 60%,
-    rgb(109 227 180 / 0.65) 0deg,
-    rgb(117 142 219 / 0.65) 83deg,
-    rgb(163 128 208 / 0.65) 98deg,
-    rgb(216 120 206 / 0.65) 128deg,
-    rgb(221 115 182 / 0.65) 173deg,
-    rgb(226 114 110 / 0.65) 188deg,
-    rgb(227 124 109 / 0.65) 233deg,
-    rgb(227 205 109 / 0.65) 263deg,
-    rgb(172 227 109 / 0.65) 323deg,
-    rgb(109 227 158 / 0.65) 338deg,
-    rgb(109 227 180 / 0.65) 360deg
+  linear-gradient(
+    rgb(112 245 232 / 0.65) 0%,
+    rgb(107 207 243 / 0.65) 9%,
+    rgb(118 117 233 / 0.65) 13%,
+    rgb(194 131 223 / 0.65) 17%,
+    rgb(210 156 230 / 0.65) 28%,
+    rgb(154 216 247 / 0.65) 36%,
+    rgb(84 241 242 / 0.65) 57%,
+    rgb(93 243 211 / 0.65) 66%,
+    rgb(149 247 232 / 0.65) 79%,
+    rgb(178 249 249 / 0.65) 100%
+  ),
+  rgb(251 250 246 / 0.35)
+`
+// sr3's artwork is measurably its own, not a reskin of sr2 — it carries a stronger
+// magenta band through the upper third.
+const radiantRainbow = `
+  radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
+  radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
+  radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
+  linear-gradient(
+    rgb(113 232 242 / 0.65) 0%,
+    rgb(103 130 233 / 0.65) 11%,
+    rgb(216 112 218 / 0.65) 17%,
+    rgb(216 141 224 / 0.65) 30%,
+    rgb(141 146 236 / 0.65) 34%,
+    rgb(134 180 241 / 0.65) 36%,
+    rgb(92 240 240 / 0.65) 57%,
+    rgb(102 241 197 / 0.65) 66%,
+    rgb(167 247 243 / 0.65) 85%,
+    rgb(180 248 248 / 0.65) 100%
   ),
   rgb(251 250 246 / 0.35)
 `
@@ -242,17 +270,68 @@ const sakuraFar = petalTile(95, 'fff0f4', [
 const vividRainbowSakura = `
   ${sakuraNear} 0 0 / 68px 68px,
   ${sakuraFar} 21px 13px / 95px 95px,
-  ${vividRainbow.trim()}
+  ${radiantRainbow.trim()}
 `
 
-// Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3]
+const commonBlue = `linear-gradient(
+    rgb(184 195 224 / 0.6) 0%,
+    rgb(168 182 217 / 0.6) 15%,
+    rgb(158 174 213 / 0.6) 17%,
+    rgb(140 159 205 / 0.6) 43%,
+    rgb(127 146 199 / 0.6) 74%,
+    rgb(122 141 197 / 0.6) 77%,
+    rgb(121 137 196 / 0.6) 89%,
+    rgb(127 145 199 / 0.6) 100%
+  )`
+
+// Indexed by the `rank` lookup in ship-img.ts: ['', c1, c2, c3, r1, r2, sr1, sr2, sr3].
+// Index 0 never occurs in practice; it mirrors c1 so a bad lookup still renders.
 export const shipRankBackgrounds = [
-  'linear-gradient(135deg, #eef4ff99 0%, #bcdcfa99 45%, #6fa8e099 100%)',
-  'linear-gradient(135deg, #eef4ff99 0%, #bcdcfa99 45%, #6fa8e099 100%)',
-  'linear-gradient(135deg, #dceaff99 0%, #a8cdf799 45%, #4f8fdb99 100%)',
-  'linear-gradient(135deg, #e8fdfc99 0%, #b7f0ef99 45%, #5fcbd099 100%)',
-  'linear-gradient(135deg, #f4f4f499 0%, #bdbdbd99 45%, #6e6e6e99 100%)',
-  'linear-gradient(135deg, #6b541499 0%, #b8922e99 45%, #f4dd8299 100%)',
+  commonBlue,
+  commonBlue,
+  `linear-gradient(
+    rgb(178 208 230 / 0.6) 0%,
+    rgb(161 198 224 / 0.6) 15%,
+    rgb(150 191 221 / 0.6) 17%,
+    rgb(114 168 209 / 0.6) 66%,
+    rgb(102 155 205 / 0.6) 77%,
+    rgb(101 150 205 / 0.6) 85%,
+    rgb(108 160 207 / 0.6) 100%
+  )`,
+  `linear-gradient(
+    rgb(188 226 230 / 0.6) 0%,
+    rgb(178 222 226 / 0.6) 15%,
+    rgb(171 219 223 / 0.6) 17%,
+    rgb(153 210 216 / 0.6) 43%,
+    rgb(147 207 214 / 0.6) 62%,
+    rgb(122 195 205 / 0.6) 77%,
+    rgb(131 199 208 / 0.6) 89%,
+    rgb(139 203 211 / 0.6) 91%,
+    rgb(150 208 215 / 0.6) 100%
+  )`,
+  `linear-gradient(
+    rgb(138 149 169 / 0.6) 0%,
+    rgb(135 148 167 / 0.6) 9%,
+    rgb(142 155 172 / 0.6) 11%,
+    rgb(141 154 171 / 0.6) 15%,
+    rgb(132 146 164 / 0.6) 17%,
+    rgb(148 160 176 / 0.6) 34%,
+    rgb(160 170 185 / 0.6) 40%,
+    rgb(202 207 216 / 0.6) 85%,
+    rgb(194 202 210 / 0.6) 100%
+  )`,
+  `linear-gradient(
+    rgb(224 202 108 / 0.6) 0%,
+    rgb(220 196 91 / 0.6) 4%,
+    rgb(218 195 82 / 0.6) 11%,
+    rgb(212 190 53 / 0.6) 19%,
+    rgb(216 196 70 / 0.6) 40%,
+    rgb(218 197 79 / 0.6) 43%,
+    rgb(222 198 98 / 0.6) 53%,
+    rgb(232 215 149 / 0.6) 72%,
+    rgb(241 227 187 / 0.6) 94%,
+    rgb(241 227 187 / 0.6) 100%
+  )`,
   softRainbow,
   vividRainbow,
   vividRainbowSakura,
