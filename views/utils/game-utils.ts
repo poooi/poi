@@ -148,6 +148,15 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 // conic burst — colour radiates from a point, warm through one half and cool
 // through the other, fanning through the whole hue circle where the two meet.
 //
+// They are drawn as a linear sweep rather than as that burst, though. An avatar is
+// small and its overlay is masked in from the left, so only a wedge of a conic ever
+// survives: at the centre the game puts, the visible wedge is the cool half alone,
+// which reads as a flat blue-white, and the burst's one hard edge — where its warm
+// and cool halves meet — lands in view. Walking the same measured ring left to
+// right instead keeps every hue and puts that hard edge at the two ends, where it
+// cannot be seen. The palette and its order are the artwork's; only the geometry is
+// adapted to the space available.
+//
 // Measured, not eyeballed. Per api_backs tier, ~20 strips reduce to a per-pixel
 // median, which keeps the shared background and rejects ship art. Art columns are
 // then dropped by variance (the art carries fine vertical detail, the background is
@@ -173,18 +182,17 @@ export function getShipAvatarColorBySpeed(speed: number): string {
 // tint darkens on dark themes and stays light on light themes, keeping text on
 // top readable either way.
 const softRainbow = `
-  conic-gradient(
-    at 50% 50%,
-    rgb(208 140 180 / 0.6) 0deg,
-    rgb(165 143 225 / 0.6) 8deg,
-    rgb(130 159 228 / 0.6) 23deg,
-    rgb(93 218 216 / 0.6) 173deg,
-    rgb(218 211 77 / 0.6) 188deg,
-    rgb(225 201 174 / 0.6) 293deg,
-    rgb(228 195 124 / 0.6) 308deg,
-    rgb(247 148 101 / 0.6) 338deg,
-    rgb(251 136 134 / 0.6) 353deg,
-    rgb(208 140 180 / 0.6) 360deg
+  linear-gradient(
+    to right,
+    rgb(218 211 77 / 0.6) 0%,
+    rgb(225 201 174 / 0.6) 13%,
+    rgb(228 195 124 / 0.6) 25%,
+    rgb(247 148 101 / 0.6) 38%,
+    rgb(251 136 134 / 0.6) 50%,
+    rgb(208 140 180 / 0.6) 63%,
+    rgb(165 143 225 / 0.6) 75%,
+    rgb(130 159 228 / 0.6) 88%,
+    rgb(93 218 216 / 0.6) 100%
   ),
   rgb(252 252 250 / 0.32)
 `
@@ -192,39 +200,36 @@ const vividRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  conic-gradient(
-    at 50% 50%,
-    rgb(200 146 179 / 0.65) 0deg,
-    rgb(154 143 218 / 0.65) 8deg,
-    rgb(134 231 244 / 0.65) 98deg,
-    rgb(74 218 220 / 0.65) 173deg,
-    rgb(226 221 66 / 0.65) 188deg,
-    rgb(227 199 158 / 0.65) 233deg,
-    rgb(240 199 112 / 0.65) 308deg,
-    rgb(245 152 90 / 0.65) 338deg,
-    rgb(246 148 140 / 0.65) 353deg,
-    rgb(200 146 179 / 0.65) 360deg
+  linear-gradient(
+    to right,
+    rgb(226 221 66 / 0.65) 0%,
+    rgb(227 199 158 / 0.65) 13%,
+    rgb(240 199 112 / 0.65) 25%,
+    rgb(245 152 90 / 0.65) 38%,
+    rgb(246 148 140 / 0.65) 50%,
+    rgb(200 146 179 / 0.65) 63%,
+    rgb(154 143 218 / 0.65) 75%,
+    rgb(134 231 244 / 0.65) 88%,
+    rgb(74 218 220 / 0.65) 100%
   ),
   rgb(251 250 246 / 0.35)
 `
-// sr3 measures as its own artwork rather than a reskin of sr2, with the burst
-// sitting slightly lower.
+// sr3 measures as its own artwork rather than a reskin of sr2.
 const radiantRainbow = `
   radial-gradient(circle at 25% 20%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 8%),
   radial-gradient(circle at 75% 15%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
   radial-gradient(circle at 60% 70%, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0) 6%),
-  conic-gradient(
-    at 50% 55%,
-    rgb(197 146 172 / 0.65) 0deg,
-    rgb(149 146 218 / 0.65) 8deg,
-    rgb(137 221 237 / 0.65) 98deg,
-    rgb(67 216 201 / 0.65) 173deg,
-    rgb(216 216 62 / 0.65) 188deg,
-    rgb(221 195 152 / 0.65) 233deg,
-    rgb(235 207 119 / 0.65) 308deg,
-    rgb(240 153 89 / 0.65) 338deg,
-    rgb(244 147 126 / 0.65) 353deg,
-    rgb(197 146 172 / 0.65) 360deg
+  linear-gradient(
+    to right,
+    rgb(216 216 62 / 0.65) 0%,
+    rgb(221 195 152 / 0.65) 13%,
+    rgb(235 207 119 / 0.65) 25%,
+    rgb(240 153 89 / 0.65) 38%,
+    rgb(244 147 126 / 0.65) 50%,
+    rgb(197 146 172 / 0.65) 63%,
+    rgb(149 146 218 / 0.65) 75%,
+    rgb(137 221 237 / 0.65) 88%,
+    rgb(67 216 201 / 0.65) 100%
   ),
   rgb(251 250 246 / 0.35)
 `
