@@ -190,8 +190,8 @@ export const MiniShipAvatar = styled(Avatar)`
 // hold the ramp off until past the art, so the fade has room to arrive.
 export const MiniGradient = styled(Gradient)`
   grid-row: 1 / 3;
-  grid-column: 1 / 3;
-  mask-image: linear-gradient(to right, transparent 30%, rgb(0 0 0 / 1) 85%);
+  grid-column: 2 / 3;
+  mask-image: linear-gradient(to right, transparent, rgb(0 0 0 / 1));
 `
 
 export const ShipTile = styled.div`
