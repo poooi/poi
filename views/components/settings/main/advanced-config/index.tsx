@@ -46,7 +46,6 @@ const SWITCHES = [
     configName: 'poi.misc.safemode',
     defaultValue: false,
   },
-  { label: 'Send data to Google Analytics', configName: 'poi.misc.analytics', defaultValue: true },
   {
     label: 'Send program exceptions to poi team',
     configName: 'poi.misc.exceptionReporting',

@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next'
 
 import { readJSONSync, writeFileSync } from 'fs-extra'
-import glob from 'glob'
+import { globSync } from 'glob'
 import { createInstance } from 'i18next'
 import { toString, each, debounce } from 'lodash'
 import path from 'path'
@@ -42,7 +42,7 @@ const textSpacingCJK = config.get('poi.appearance.textspacingcjk', true)
 
 const spacing = textSpacingCJK ? cjkSpacing : toString
 
-const i18nFiles = glob.sync(path.join(ROOT, 'i18n', '*'))
+const i18nFiles = globSync(path.join(ROOT, 'i18n', '*'), { windowsPathsNoEscape: true })
 
 const mainPoiNs = i18nFiles.map((i) => path.basename(i))
 const mainPoiRes: I18nResources = {}

@@ -2,7 +2,7 @@ import type { FcdValue } from 'views/redux/fcd'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Intent, Tooltip } from '@blueprintjs/core'
-import { sync as globSync } from 'glob'
+import { globSync } from 'glob'
 import { get, entries, map, max, values } from 'lodash'
 import fetch from 'node-fetch'
 import React, { useState, useEffect, useCallback } from 'react'
@@ -42,7 +42,7 @@ export const FCD = () => {
       async () => {
         setUpdating(true)
 
-        const localFileList = globSync(`${ROOT}/assets/data/fcd/*`)
+        const localFileList = globSync(`${ROOT}/assets/data/fcd/*`, { windowsPathsNoEscape: true })
         for (const file of localFileList) {
           if (!file.includes('meta.json')) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion

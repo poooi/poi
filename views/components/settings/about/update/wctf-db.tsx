@@ -1,7 +1,7 @@
 import { Button, Intent } from '@blueprintjs/core'
 import Promise from 'bluebird'
 import fs from 'fs-extra'
-import glob from 'glob'
+import { globSync } from 'glob'
 import _, { get } from 'lodash'
 import path from 'path'
 import React, { useState, useEffect, useCallback } from 'react'
@@ -47,7 +47,8 @@ export const WctfDB = () => {
   const parseData = useCallback(async () => {
     const data: Record<string, unknown> = {}
     try {
-      await Promise.map(glob.sync(`${DB_FILE_PATH}/*.nedb`), async (dbPath) => {
+      const dbPaths = globSync(`${DB_FILE_PATH}/*.nedb`, { windowsPathsNoEscape: true })
+      await Promise.map(dbPaths, async (dbPath) => {
         const dbName = path.basename(dbPath, '.nedb')
         if (!(dbName in DB_KEY)) return
         const buf = await fs.readFile(dbPath)

@@ -1,9 +1,8 @@
 import child_process from 'child_process'
 import crypto from 'crypto'
 import { createReadStream, readJson, lstat, unlink, remove } from 'fs-extra'
-import glob from 'glob'
+import { glob } from 'glob'
 import { join, basename } from 'path'
-import { promisify } from 'util'
 import { config, ROOT } from 'views/env'
 
 import type { NpmConfig } from './types'
@@ -14,7 +13,8 @@ export const NPM_EXEC_PATH = join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.j
 const MIRROR_JSON_PATH = join(ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS: Record<string, { server: string }> = require(MIRROR_JSON_PATH)
 
-const globAsync = promisify(glob)
+// glob v9+ treats `\` as an escape character; ROOT/join produce backslash paths on Windows.
+const GLOB_OPTIONS = { windowsPathsNoEscape: true } as const
 
 function calculateShasum(filePath: string): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -35,7 +35,7 @@ export const findInstalledTarball = async (
   tarballPath: string,
 ): Promise<string> => {
   const filename = basename(tarballPath)
-  const pluginPaths = await globAsync(join(pluginRoot, 'poi-plugin-*'))
+  const pluginPaths = await glob(join(pluginRoot, 'poi-plugin-*'), GLOB_OPTIONS)
   const packageDatas: Array<Record<string, unknown>> = await Promise.all(
     pluginPaths.map((p: string) => readJson(join(p, 'package.json'))),
   )
@@ -104,10 +104,9 @@ export async function removePackage(target: string, npmConfig: NpmConfig): Promi
 }
 
 export async function repairDep(brokenList: string[], npmConfig: NpmConfig): Promise<void> {
+  // matches the previous callback form, which swallowed glob errors and yielded an empty list
   const depList = (
-    await new Promise<string[]>((res) => {
-      glob(join(npmConfig.prefix, 'node_modules', '*'), (err, matches) => res(matches ?? []))
-    })
+    await glob(join(npmConfig.prefix, 'node_modules', '*'), GLOB_OPTIONS).catch(() => [])
   ).filter((p) => !p.includes('poi-plugin'))
   depList.forEach((p) => {
     try {

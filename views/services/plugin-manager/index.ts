@@ -2,7 +2,7 @@ import * as remote from '@electron/remote'
 import EventEmitter from 'events'
 import { access } from 'fs'
 import { readJsonSync, accessSync, ensureDir, writeJSON } from 'fs-extra'
-import glob from 'glob'
+import { glob } from 'glob'
 import { fromPairs, map } from 'lodash'
 import fetch from 'node-fetch'
 import { join } from 'path'
@@ -64,9 +64,8 @@ class PluginManager extends EventEmitter {
   }
 
   private async readFromWildcardPath(wildcardPath: string, isExtra = false): Promise<Plugin[]> {
-    const pluginPaths = await new Promise<string[]>((res) =>
-      glob(wildcardPath, (err, files) => res(files ?? [])),
-    )
+    // matches the previous callback form, which swallowed glob errors and yielded an empty list
+    const pluginPaths = await glob(wildcardPath, { windowsPathsNoEscape: true }).catch(() => [])
     return sortPlugins(await Promise.all(pluginPaths.map((p) => readPlugin(p, isExtra))))
   }
 
