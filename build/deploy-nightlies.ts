@@ -1,6 +1,6 @@
 import Promise from 'bluebird'
 import child_process from 'child_process'
-import glob from 'glob'
+import { globSync } from 'glob'
 import path from 'path'
 
 import { log } from './utils'
@@ -29,7 +29,9 @@ const deployNightlies = async () => {
   const { ROOT } = global
   const { TRAVIS_BUILD_NUMBER } = process.env
 
-  const files = glob.sync(path.join(ROOT, 'dist', '*.{dmg,7z,yml}'))
+  const files = globSync(path.join(ROOT, 'dist', '*.{dmg,7z,yml}'), {
+    windowsPathsNoEscape: true,
+  })
   if (!TRAVIS_BUILD_NUMBER) {
     return Promise.reject(new Error('nightly deployment only runs on ci mode'))
   }

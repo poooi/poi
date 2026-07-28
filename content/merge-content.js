@@ -6,7 +6,7 @@
 require('../babel-hook')(require('../babel-register.config'))
 const Promise = require('bluebird')
 const fs = require('fs-extra')
-const glob = require('glob')
+const { globSync } = require('glob')
 const matter = require('gray-matter')
 const _ = require('lodash')
 const path = require('path')
@@ -16,7 +16,8 @@ const { compareUpdate } = require('../views/utils/tools')
 const main = async () => {
   const data = {}
 
-  await Promise.map(glob.sync(path.resolve(__dirname, '**/*.md')), async (file) => {
+  const mdFiles = globSync(path.resolve(__dirname, '**/*.md'), { windowsPathsNoEscape: true })
+  await Promise.map(mdFiles, async (file) => {
     const text = await fs.readFile(file, 'utf8')
 
     const {
