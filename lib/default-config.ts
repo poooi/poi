@@ -29,6 +29,8 @@ interface PoiMisc {
   homepage: string
   networklog: boolean
   analytics: boolean
+  /** Locally generated GA4 client id. Identifies an install, not a person. */
+  analyticsClientId?: string
   exceptionReporting: boolean
   async: boolean
   screenshot: Screenshot

@@ -12,6 +12,7 @@ import { log, error } from 'views/services/alert'
 import { isInGame } from 'views/utils/game-utils'
 
 const gameAPIBroadcaster: GameAPIBroadcaster = remote.require('./lib/game-api-broadcaster')
+import './services/google-analytics'
 import './services/update'
 import './services/layout'
 import './services/welcome'
