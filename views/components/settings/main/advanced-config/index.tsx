@@ -47,6 +47,11 @@ const SWITCHES = [
     defaultValue: false,
   },
   {
+    label: 'Send data to Google Analytics',
+    configName: 'poi.misc.analytics',
+    defaultValue: true,
+  },
+  {
     label: 'Send program exceptions to poi team',
     configName: 'poi.misc.exceptionReporting',
     defaultValue: true,

@@ -7,6 +7,7 @@ import fs from 'fs-extra'
 import { memoize } from 'lodash'
 import path from 'path'
 
+import type * as analyticsType from './lib/analytics'
 // eslint-disable-next-line import-x/no-rename-default
 import type configType from './lib/config'
 import type * as kcsResourceType from './lib/kcs-resource'
@@ -119,6 +120,10 @@ if (dbg.isEnabled()) {
       paths: [ROOT, APPDATA_PATH],
     })
   }
+  // Not gated on poi.misc.analytics here: lib/analytics checks the config on every
+  // send, so toggling the setting off takes effect without a restart.
+  const analytics: typeof analyticsType = require('./lib/analytics')
+  analytics.init()
 }
 
 let mainWindow: BrowserWindow | null = null
