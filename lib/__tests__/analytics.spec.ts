@@ -53,13 +53,23 @@ describe('analytics (GA4 measurement protocol)', () => {
     delete process.env.POI_GA_API_SECRET
   })
 
-  it('sends nothing when credentials are absent', () => {
-    delete process.env.POI_GA_MEASUREMENT_ID
-    delete process.env.POI_GA_API_SECRET
+  it('sends nothing when credentials are blanked out', () => {
+    // A set-but-empty env var blanks the built-in credential; this is the escape
+    // hatch a fork or a local build uses to stay off poi's GA property.
+    process.env.POI_GA_MEASUREMENT_ID = ''
+    process.env.POI_GA_API_SECRET = ''
     const analytics = loadAnalytics()
     analytics.init()
     analytics.sendEvent('heartbeat')
     expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it('falls back to the built-in credentials when no env override is set', () => {
+    delete process.env.POI_GA_MEASUREMENT_ID
+    delete process.env.POI_GA_API_SECRET
+    const analytics = loadAnalytics()
+    analytics.init()
+    expect(urlOf(0)).toMatch(/measurement_id=G-[A-Z0-9]+&api_secret=.+$/)
   })
 
   it('sends nothing when the user opted out', () => {
@@ -141,6 +151,19 @@ describe('analytics (GA4 measurement protocol)', () => {
     expect(names).toEqual(['heartbeat', 'heartbeat'])
 
     analytics.stopHeartbeat()
+    jest.useRealTimers()
+  })
+
+  it('stops the heartbeat when the member id is cleared', () => {
+    jest.useFakeTimers()
+    const analytics = loadAnalytics()
+    analytics.setUserId('12345')
+    analytics.setUserId(undefined)
+    jest.mocked(global.fetch).mockClear()
+
+    // Otherwise the heartbeat keeps firing with no user_id attached.
+    jest.advanceTimersByTime(240000 * 2)
+    expect(global.fetch).not.toHaveBeenCalled()
     jest.useRealTimers()
   })
 

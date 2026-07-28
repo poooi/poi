@@ -16,10 +16,9 @@ import config from './config'
 import dbg from './debug'
 import { POI_VERSION } from './env'
 
-// FIXME: fill in the credentials of the poi GA4 property.
-// Create them at GA4 Admin -> Data Streams -> (stream) -> Measurement Protocol API secrets.
+// Credentials of the poi GA4 property, from
+// GA4 Admin -> Data Streams -> (stream) -> Measurement Protocol API secrets.
 // Both may be overridden at runtime by POI_GA_MEASUREMENT_ID / POI_GA_API_SECRET.
-// Analytics stays inert while either is blank.
 const MEASUREMENT_ID = 'G-9HGBLSG9YF'
 const API_SECRET = 'Ccwwv21XRT-iwjC6hdFLlQ'
 
@@ -32,8 +31,14 @@ const SYNTHETIC_ORIGIN = 'https://analytics.poooi.app'
 
 const HEARTBEAT_INTERVAL = 240000
 
-const measurementId = process.env.POI_GA_MEASUREMENT_ID || MEASUREMENT_ID
-const apiSecret = process.env.POI_GA_API_SECRET || API_SECRET
+// An env var that is set but empty blanks the built-in credential rather than
+// falling back to it, which is how a fork or a local build opts out of reporting
+// to poi's property. Analytics stays inert while either credential is blank.
+const resolveCredential = (override: string | undefined, fallback: string): string =>
+  override === undefined ? fallback : override
+
+const measurementId = resolveCredential(process.env.POI_GA_MEASUREMENT_ID, MEASUREMENT_ID)
+const apiSecret = resolveCredential(process.env.POI_GA_API_SECRET, API_SECRET)
 
 // GA4 groups events into a session by `session_id`; one poi launch is one session.
 const sessionId = String(Date.now())
@@ -117,6 +122,13 @@ export const sendEvent = (name: string, params: EventParams = {}): void => {
     })
 }
 
+export const stopHeartbeat = (): void => {
+  if (heartbeat) {
+    clearInterval(heartbeat)
+    heartbeat = undefined
+  }
+}
+
 /**
  * Associate subsequent events with the admiral's member id, mirroring the old
  * `ga('set', 'userId', ...)` call. Sending a page view here is what marks the
@@ -129,6 +141,9 @@ export const setUserId = (id: string | number | undefined): void => {
   }
   userId = next
   if (!userId) {
+    // Otherwise the heartbeat keeps firing without a user_id attached, filling
+    // GA4 with unattributed events.
+    stopHeartbeat()
     return
   }
 
@@ -144,16 +159,12 @@ export const setUserId = (id: string | number | undefined): void => {
   }
 }
 
-export const stopHeartbeat = (): void => {
-  if (heartbeat) {
-    clearInterval(heartbeat)
-    heartbeat = undefined
-  }
-}
-
 export const init = (): void => {
-  if (!measurementId || !apiSecret) {
-    dbg.log('analytics: no GA4 credentials configured, analytics disabled')
+  // Deliberately the same gate as every other send: isEnabled() covers both the
+  // credentials and the user's consent, so there is only one expression to keep
+  // correct as this evolves.
+  if (!isEnabled()) {
+    dbg.log('analytics: GA4 disabled (no credentials, or the user opted out)')
     return
   }
   sendEvent('app_start')
