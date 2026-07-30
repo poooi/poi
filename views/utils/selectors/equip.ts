@@ -129,7 +129,7 @@ export const shipEquipDataSelectorFactory = memoize((shipId: number) =>
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
               slotnum,
-            ).filter((data): data is EquipDataWithOnslot => data !== undefined),
+            ),
     ),
   ),
 )
@@ -153,7 +153,7 @@ export const landbaseEquipDataSelectorFactory = memoize((landbaseId: number) =>
                   : modifiedEquipDataSelectorFactory(equipId)({ state, onslot }),
               ),
               slotnum,
-            ).filter((data): data is EquipDataWithOnslot => data !== undefined),
+            ),
     ),
   ),
 )

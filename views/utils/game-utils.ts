@@ -404,7 +404,8 @@ export function equipIsAircraft(equip: APIMstSlotitem | number): boolean {
 }
 
 export function getTyku(
-  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
+  // slots are padded with undefined when empty, see shipEquipDataSelectorFactory
+  equipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
   landbaseStatus = 0,
 ): { basic: number; min: number; max: number } {
   let minTyku = 0
@@ -416,10 +417,11 @@ export function getTyku(
       continue
     }
     for (let j = 0; j < equipsData[i].length; j++) {
-      if (!equipsData[i][j]) {
+      const equipData = equipsData[i][j]
+      if (!equipData) {
         continue
       }
-      const [_equip, $equip, onslot] = equipsData[i][j]
+      const [_equip, $equip, onslot] = equipData
       if ((onslot ?? 0) < 1 || onslot == undefined) {
         continue
       }
@@ -507,7 +509,8 @@ export function getTyku(
 
 export function getSaku25(
   shipsData: [APIShip, APIMstShip][],
-  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
+  // slots are padded with undefined when empty, see shipEquipDataSelectorFactory
+  equipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
 ): { recon: number; radar: number; ship: number; total: number } {
   let reconSaku = 0
   let shipSaku = 0
@@ -517,10 +520,11 @@ export function getSaku25(
     const [_ship] = shipsData[i]
     shipSaku += _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
-      if (!equipsData[i][j]) {
+      const equipData = equipsData[i][j]
+      if (!equipData) {
         continue
       }
-      const $equip = equipsData[i][j][1]
+      const $equip = equipData[1]
       switch ($equip.api_type[3]) {
         case 9:
           reconSaku += $equip.api_saku
@@ -555,7 +559,8 @@ export function getSaku25(
 
 export function getSaku25a(
   shipsData: [APIShip, APIMstShip][],
-  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
+  // slots are padded with undefined when empty, see shipEquipDataSelectorFactory
+  equipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
   teitokuLv: number,
 ): { ship: number; item: number; teitoku: number; total: number } {
   let shipSaku = 0
@@ -565,10 +570,11 @@ export function getSaku25a(
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
-      if (!equipsData[i][j]) {
+      const equipData = equipsData[i][j]
+      if (!equipData) {
         continue
       }
-      const $equip = equipsData[i][j][1]
+      const $equip = equipData[1]
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[3]) {
         case 7:
@@ -616,7 +622,8 @@ export function getSaku25a(
 
 export function getSaku33(
   shipsData: [APIShip, APIMstShip][],
-  equipsData: [Equip, APIMstSlotitem, number | undefined][][],
+  // slots are padded with undefined when empty, see shipEquipDataSelectorFactory
+  equipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
   teitokuLv: number,
   mapModifier = 1.0,
   slotCount = 6,
@@ -630,10 +637,11 @@ export function getSaku33(
     const [_ship] = shipsData[i]
     let shipPureSaku = _ship.api_sakuteki[0]
     for (let j = 0; j < equipsData[i].length; j++) {
-      if (!equipsData[i][j]) {
+      const equipData = equipsData[i][j]
+      if (!equipData) {
         continue
       }
-      const [_equip, $equip] = equipsData[i][j]
+      const [_equip, $equip] = equipData
       shipPureSaku -= $equip.api_saku
       switch ($equip.api_type[2]) {
         case 8:

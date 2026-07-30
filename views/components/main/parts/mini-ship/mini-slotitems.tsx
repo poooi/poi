@@ -20,8 +20,10 @@ export const MiniSlotitems = ({ shipId }: { shipId: number }) => {
 
   return (
     <ItemName className="item-name slotitems-mini" hide={!equipsData}>
-      {(equipsData ?? []).filter(Boolean).map((equipData, equipIdx) => {
-        const [equip, $equip, onslot] = equipData!
+      {(equipsData ?? []).map((equipData, equipIdx) => {
+        // empty slots are padded with undefined, keep equipIdx aligned with api_maxeq
+        if (!equipData) return null
+        const [equip, $equip, onslot] = equipData
         const equipIconId = ($equip.api_type as number[])[3]
         const level = equip.api_level as number
         const proficiency = equip.api_alv as number | undefined
