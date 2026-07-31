@@ -53,12 +53,13 @@ jobs:
 
       - name: Run OpenCode review
         if: ${{ steps['trigger-permission'].outputs.can_review == 'true' }}
-        uses: anomalyco/opencode/github@ed75ce9eccb6d97a4ee0f79d3db8cb33b47b0661
+        uses: anomalyco/opencode/github@d4ad650f738aaa986cee5879c581bd4834277577
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode-go/deepseek-v4-pro
+          model: opencode-go/deepseek-v4-flash
+          share: false
           use_github_token: true
           prompt: |
             Review this pull request as a senior maintainer.
