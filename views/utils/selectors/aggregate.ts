@@ -92,7 +92,7 @@ export const fleetShipsEquipDataWithEscapeSelectorFactory = memoize((fleetId: nu
         : fleetShipsId
             .filter((shipId) => !escapeStatusSelectorFactory(shipId)(state))
             .map((shipId) => shipEquipDataSelectorFactory(shipId)(state))
-            .filter((data): data is EquipDataWithOnslot[] => data !== undefined),
+            .filter((data): data is (EquipDataWithOnslot | undefined)[] => data !== undefined),
     ),
   ),
 )
