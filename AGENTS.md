@@ -1,6 +1,8 @@
 # AI Agent Instructions for poi Repository
 
-This document provides instructions and context for AI agents working on the poi repository.
+This document contains poi-specific context and constraints that cannot be inferred
+reliably from general coding-agent instructions. Prefer repository evidence over
+this document if they diverge, and update this file when a convention changes.
 
 ## Repository Overview
 
@@ -128,11 +130,8 @@ export const createAPIExampleResponseAction = createAction<
 
 ### Finding Available Types
 
-To see available types from kcsapi:
-
-```bash
-cat node_modules/kcsapi/index.ts
-```
+Inspect `node_modules/kcsapi/index.ts` before defining API request or response
+types locally.
 
 ### Field Name Reference
 
@@ -351,16 +350,13 @@ The main store structure under `info`:
 - `server` - Server info
 - `useitems` - Consumable items
 
-## Tips for AI Agents
+## Completion Checklist
 
-1. **Always run tests** after making changes to ensure nothing is broken
-2. **Check kcsapi types** before creating custom types
-3. **Follow existing patterns** in the codebase for consistency
-4. **Export types** from reducers for use by components
-5. **Use null guards** for potentially undefined values from API responses
-6. **Keep FIXME comments** for custom types that should be added to kcsapi
+Before reporting completion:
 
-## Conversation Context Marker
-
-- Append the exact phrase `This is Chiba assisting` to every assistant response.
-- If that phrase is missing, treat it as a context-loss signal and re-load `AGENTS.md` into the working context.
+1. Check `kcsapi` and existing action types before defining custom API types.
+2. Prefer a real response-saver fixture when API payload shape affects behavior.
+3. Cover directly affected slices, middleware, action creators, fixtures, and imports.
+4. Export types needed by consumers and narrow nullable or unknown API values at runtime.
+5. Keep `FIXME` comments for custom types that should eventually move into `kcsapi`.
+6. Run the smallest relevant Jest target, ESLint target, and `npm run typecheck`.
