@@ -11,7 +11,15 @@ import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
 
 const AirbaseLabel = styled(Tag)`
+  flex: none;
   margin: 2px;
+`
+
+const SquadInfo = styled.div`
+  align-items: center;
+  display: flex;
+  flex-wrap: nowrap;
+  padding-left: 8px;
 `
 
 const LandbaseButtonContainer = styled(ButtonGroup)<{ isMini?: boolean }>`
@@ -79,35 +87,40 @@ type MapareaInfo = { api_name: string }
 
 const getAirbaseData = memoizeOne(
   (airbase: AirBase[], mapareas: Record<string | number, MapareaInfo>, sortieStatus: boolean[]) => {
-    const baseInfo = _(airbase)
+    const squadInfo = _(airbase)
       .filter((a) => !!mapareas[a.api_area_id ?? ''])
-      .groupBy('api_area_id')
-      .mapValues((bases, areaId) => {
-        const planes = _(bases).flatMap('api_plane_info')
+      .map((base) => {
+        const planes = _(base.api_plane_info ?? []).compact()
+        // api_cond is 0 on some responses; only 2+ means the squadron is fatigued.
+        const squardCond = planes.map((plane) => plane.api_cond || 1).max() ?? 1
+        const squardState = planes.map('api_state').max() ?? 0
+        const needSupply = planes.some((plane) => plane.api_count !== plane.api_max_count)
+        const noAction = ![1, 2].includes(base.api_action_kind ?? -1)
+        const fatigued = squardCond > 1
+        const empty = squardState < 1
+        const relocating = squardState > 1
         return {
-          areaId,
-          needSupply: planes.some((plane) => plane.api_count !== plane.api_max_count),
-          squardState: planes.map('api_state').max(),
-          squardCond: planes.map((plane) => plane.api_cond ?? 1).max(),
-          noAction: bases.some((base) => ![1, 2].includes(base.api_action_kind ?? -1)),
+          areaId: String(base.api_area_id),
+          squadId: base.api_rid ?? 0,
+          fatigued,
+          empty,
+          relocating,
+          needSupply,
+          noAction,
+          squardState,
+          squardCond,
+          ready: !fatigued && !empty && !relocating && !needSupply && !noAction,
           allEmpty: planes.every((plane) => plane.api_state === 0),
         }
       })
 
-    const needSupply = baseInfo.some((base) => !base.allEmpty && base.needSupply)
-    const squardState =
-      baseInfo
-        .filter((base) => !base.allEmpty)
-        .map('squardState')
-        .max() ?? 1
-    const squardCond =
-      baseInfo
-        .filter((base) => !base.allEmpty)
-        .map('squardCond')
-        .max() ?? 1
-    const noAction = baseInfo.some((base) => !base.allEmpty && base.noAction)
+    const activeSquads = squadInfo.filter((squad) => !squad.allEmpty)
+    const needSupply = activeSquads.some((squad) => squad.needSupply)
+    const squardState = activeSquads.map('squardState').max() ?? 1
+    const squardCond = activeSquads.map('squardCond').max() ?? 1
+    const noAction = activeSquads.some((squad) => squad.noAction)
 
-    const airbaseProps = baseInfo.value()
+    const airbaseProps = squadInfo.groupBy('areaId').value()
     const sortie = sortieStatus.some((s) => s)
 
     let intent: Intent
@@ -151,22 +164,27 @@ export const LandbaseButton = ({
 
   const tooltipContent = (
     <div>
-      {map(airbaseProps, (base) => {
-        const { areaId, needSupply, squardState, squardCond, noAction } = base
-        return (
-          <div key={areaId}>
-            <div>
-              [{areaId}] {mapareas[areaId] ? t(`resources:${mapareas[areaId].api_name}`) : ''}
-            </div>
-            {squardCond > 1 && fatiguedLabel}
-            {squardState < 1 && emptyLabel}
-            {squardState > 1 && relocateLabel}
-            {needSupply && resupplyLabel}
-            {noAction && noActionLabel}
-            {squardCond === 1 && squardState === 1 && !needSupply && !noAction && readyLabel}
+      {map(airbaseProps, (squads, areaId) => (
+        <div key={areaId}>
+          <div>
+            [{areaId}] {mapareas[areaId] ? t(`resources:${mapareas[areaId].api_name}`) : ''}
           </div>
-        )
-      })}
+          {map(squads, (squad) => {
+            const { squadId, fatigued, empty, relocating, needSupply, noAction, ready } = squad
+            return (
+              <SquadInfo key={squadId}>
+                <AirbaseLabel className="airbase-squad-label">{squadId}</AirbaseLabel>
+                {fatigued && fatiguedLabel}
+                {empty && emptyLabel}
+                {relocating && relocateLabel}
+                {needSupply && resupplyLabel}
+                {noAction && noActionLabel}
+                {ready && readyLabel}
+              </SquadInfo>
+            )
+          })}
+        </div>
+      ))}
     </div>
   )
 
