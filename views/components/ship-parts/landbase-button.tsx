@@ -10,6 +10,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
 
+import { fleetSwitchButtonStyle } from './styled-components'
+
 const AirbaseLabel = styled(Tag)`
   flex: none;
   margin: 2px;
@@ -50,6 +52,8 @@ const LandbaseButtonContainer = styled(ButtonGroup)<{ isMini?: boolean }>`
             overflow: hidden;
           }
         `}
+
+  ${fleetSwitchButtonStyle}
 `
 
 const fatiguedLabel = (

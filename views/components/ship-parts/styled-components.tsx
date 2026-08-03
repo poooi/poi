@@ -19,6 +19,41 @@ export const overAvatarText = ({
   text-shadow: #000 0 0 ${shadowBlur};
 `
 
+// Blueprint styles an intent button as a solid chip but a no-intent one as a
+// light surface (and assets/css/blueprint-vibrant.css makes that surface
+// translucent on top), so an `Intent.NONE` fleet sat visibly "unpressed" next
+// to its neighbours and the state colors read as selection instead. Patch the
+// no-intent buttons only, with blueprint's own solid `bp6-intent-default`
+// colors, so every state shares one shape and only `.bp6-active` looks pressed.
+// The `!important` matches the theme's own `!important` background rules.
+const plainFleetSwitchButton = `.bp6-button:not([class*='bp6-intent-'], :disabled, .bp6-disabled)`
+
+export const fleetSwitchButtonStyle = css`
+  ${plainFleetSwitchButton} {
+    background-color: var(--bp-intent-default-rest) !important;
+    box-shadow:
+      inset 0 0 0 var(--bp-surface-border-width)
+        color-mix(in oklch, var(--bp-surface-border-color-strong) 90%, var(--bp-palette-black)),
+      0 1px 2px color-mix(in oklch, var(--bp-palette-black) 10%, transparent);
+    color: var(--bp-intent-default-foreground);
+  }
+  ${plainFleetSwitchButton}:hover {
+    background-color: var(--bp-intent-default-hover) !important;
+    box-shadow:
+      inset 0 0 0 var(--bp-surface-border-width)
+        color-mix(in oklch, var(--bp-surface-border-color-strong) 90%, var(--bp-palette-black)),
+      0 1px 2px color-mix(in oklch, var(--bp-palette-black) 20%, transparent);
+  }
+  ${plainFleetSwitchButton}:active,
+  ${plainFleetSwitchButton}.bp6-active {
+    background-color: var(--bp-intent-default-active) !important;
+    box-shadow:
+      inset 0 0 0 var(--bp-surface-border-width)
+        color-mix(in oklch, var(--bp-surface-border-color-strong) 90%, var(--bp-palette-black)),
+      0 1px 2px color-mix(in oklch, var(--bp-palette-black) 20%, transparent);
+  }
+`
+
 export const ShipCard = styled(Card)`
   display: flex;
   flex-direction: column;
@@ -104,6 +139,8 @@ export const FleetNameButton = styled(ButtonGroup)`
     flex: 1;
     overflow: hidden;
   }
+
+  ${fleetSwitchButtonStyle}
 `
 
 export const AirbaseArea = styled.div`
