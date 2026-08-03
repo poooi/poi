@@ -335,38 +335,56 @@ export const getSpeedLabel = (speed: number): string => speedInterpretation[spee
 
 export const getSpeedStyle = (speed: number): React.CSSProperties => speedStyles[speed] || {}
 
-export function getStatusStyle(status: number | null | undefined): React.CSSProperties {
-  if (status != null) {
-    const flag = status == 0 || status == 1
-    if (flag) {
-      return { opacity: 0.4 }
-    }
+export enum ShipLabelStatus {
+  Retreated = 'Retreated',
+  Repairing = 'Repairing',
+  ResupplyNeeded = 'ResupplyNeeded',
+  ShipTag = 'ShipTag',
+}
+
+export interface ShipLabel {
+  status: ShipLabelStatus
+  /** `api_sally_area`, only set for `ShipLabelStatus.ShipTag` */
+  sallyArea?: number
+}
+
+const DIMMED_STATUSES = [ShipLabelStatus.Retreated, ShipLabelStatus.Repairing]
+
+export function getStatusStyle(labels: ShipLabel[] | null | undefined): React.CSSProperties {
+  if (labels?.some(({ status }) => DIMMED_STATUSES.includes(status))) {
+    return { opacity: 0.4 }
   }
   return {}
 }
 
+// NOTE: order matters, the first label decides the icon / intent shown on the tag.
 export function getShipLabelStatus(
   ship: APIShip | undefined,
   $ship: APIMstShip | undefined,
   inRepair: boolean,
   escaped: boolean,
-): number {
+): ShipLabel[] {
   if (!ship || !$ship) {
-    return -1
+    return []
   }
+  const labels: ShipLabel[] = []
   if (escaped) {
-    return 0
-  } else if (inRepair) {
-    return 1
-  } else if (
+    labels.push({ status: ShipLabelStatus.Retreated })
+  }
+  if (inRepair) {
+    labels.push({ status: ShipLabelStatus.Repairing })
+  }
+  if (
     Math.min(ship.api_fuel / ($ship.api_fuel_max ?? 1), ship.api_bull / ($ship.api_bull_max ?? 1)) <
     1
   ) {
-    return 2
-  } else if ((ship.api_sally_area ?? 0) > 0) {
-    return (ship.api_sally_area ?? 0) + 2
+    labels.push({ status: ShipLabelStatus.ResupplyNeeded })
   }
-  return -1
+  const sallyArea = ship.api_sally_area ?? 0
+  if (sallyArea > 0) {
+    labels.push({ status: ShipLabelStatus.ShipTag, sallyArea })
+  }
+  return labels
 }
 
 export function getHpStyle(percent: number): MaterialIntent {
