@@ -9,6 +9,12 @@ import FontAwesome from 'react-fontawesome'
 import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { css, styled } from 'styled-components'
+import {
+  AIRBASE_ACTING_KINDS,
+  PlaneCond,
+  PlaneState,
+  toAirbaseActionKind,
+} from 'views/utils/game-utils'
 
 import { fleetSwitchButtonStyle } from './styled-components'
 
@@ -95,14 +101,14 @@ const getAirbaseData = memoizeOne(
       .filter((a) => !!mapareas[a.api_area_id ?? ''])
       .map((base) => {
         const planes = _(base.api_plane_info ?? []).compact()
-        // api_cond is 0 on some responses; only 2+ means the squadron is fatigued.
-        const squardCond = planes.map((plane) => plane.api_cond || 1).max() ?? 1
-        const squardState = planes.map('api_state').max() ?? 0
+        const squardCond =
+          planes.map((plane) => plane.api_cond || PlaneCond.Normal).max() ?? PlaneCond.Normal
+        const squardState = planes.map('api_state').max() ?? PlaneState.Empty
         const needSupply = planes.some((plane) => plane.api_count !== plane.api_max_count)
-        const noAction = ![1, 2].includes(base.api_action_kind ?? -1)
-        const fatigued = squardCond > 1
-        const empty = squardState < 1
-        const relocating = squardState > 1
+        const noAction = !AIRBASE_ACTING_KINDS.includes(toAirbaseActionKind(base.api_action_kind))
+        const fatigued = squardCond > PlaneCond.Normal
+        const empty = squardState < PlaneState.Ready
+        const relocating = squardState > PlaneState.Ready
         return {
           areaId: String(base.api_area_id),
           squadId: base.api_rid ?? 0,
@@ -114,14 +120,14 @@ const getAirbaseData = memoizeOne(
           squardState,
           squardCond,
           ready: !fatigued && !empty && !relocating && !needSupply && !noAction,
-          allEmpty: planes.every((plane) => plane.api_state === 0),
+          allEmpty: planes.every((plane) => plane.api_state === PlaneState.Empty),
         }
       })
 
     const activeSquads = squadInfo.filter((squad) => !squad.allEmpty)
     const needSupply = activeSquads.some((squad) => squad.needSupply)
-    const squardState = activeSquads.map('squardState').max() ?? 1
-    const squardCond = activeSquads.map('squardCond').max() ?? 1
+    const squardState = activeSquads.map('squardState').max() ?? PlaneState.Ready
+    const squardCond = activeSquads.map('squardCond').max() ?? PlaneCond.Normal
     const noAction = activeSquads.some((squad) => squad.noAction)
 
     const airbaseProps = squadInfo.groupBy('areaId').value()
@@ -130,9 +136,9 @@ const getAirbaseData = memoizeOne(
     let intent: Intent
     if (sortie || noAction) {
       intent = Intent.NONE
-    } else if (squardCond > 1) {
+    } else if (squardCond > PlaneCond.Normal) {
       intent = Intent.DANGER
-    } else if (squardState !== 1 || needSupply) {
+    } else if (squardState !== PlaneState.Ready || needSupply) {
       intent = Intent.WARNING
     } else {
       intent = Intent.SUCCESS

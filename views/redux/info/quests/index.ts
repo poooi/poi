@@ -5,6 +5,7 @@ import CSON from 'cson'
 import { cloneDeep } from 'lodash'
 import path from 'path'
 import Scheduler from 'views/services/scheduler'
+import { QuestState } from 'views/utils/game-utils'
 import { copyIfSame } from 'views/utils/tools'
 
 import type { QuestGoal, QuestRecord, QuestsState } from './types'
@@ -144,7 +145,7 @@ const questsSlice = createSlice({
 
           // Active quests
           activeQuests = copyIfSame(activeQuests, state.activeQuests)
-          if (api_state >= 2) {
+          if (api_state >= QuestState.InProgress) {
             activeQuests[api_no] = { detail: q, time: now }
           } else {
             delete activeQuests[api_no]

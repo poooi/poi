@@ -11,6 +11,7 @@ import { Avatar } from 'views/components/etc/avatar'
 import { MaterialIcon } from 'views/components/etc/icon'
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
+import { ConstructionDockState } from 'views/utils/game-utils'
 
 import { CountdownNotifierLabel } from './countdown-timer'
 import {
@@ -23,9 +24,9 @@ import {
   EmptyDockWrapper,
 } from './styled-components'
 
-const EmptyDock = ({ state }: { state: number }) => (
+const EmptyDock = ({ state }: { state: ConstructionDockState }) => (
   <EmptyDockWrapper className="empty-dock">
-    <FA name={state === 0 ? 'inbox' : 'lock'} />
+    <FA name={state === ConstructionDockState.Empty ? 'inbox' : 'lock'} />
   </EmptyDockWrapper>
 )
 
@@ -86,15 +87,15 @@ export const ConstructionPanel = ({ editable }: { editable?: boolean }) => {
       <Panel>
         {range(4).map((i) => {
           const dock = constructions[i] ?? {
-            api_state: -1,
+            api_state: ConstructionDockState.Locked,
             api_complete_time: 0,
           }
-          const isInUse = dock.api_state > 0
+          const isInUse = dock.api_state > ConstructionDockState.Empty
           const isLSC = isInUse && (dock.api_item1 ?? 0) >= 1000
           const dockName =
-            dock.api_state === -1
+            dock.api_state === ConstructionDockState.Locked
               ? t('main:Locked')
-              : dock.api_state === 0
+              : dock.api_state === ConstructionDockState.Empty
                 ? t('main:Empty')
                 : getDockShipName(i, '???')
           const completeTime = isInUse ? dock.api_complete_time : -1
@@ -126,7 +127,7 @@ export const ConstructionPanel = ({ editable }: { editable?: boolean }) => {
               <DockInnerWrapper>
                 {enableAvatar && (
                   <>
-                    {dock.api_state > 0 ? (
+                    {dock.api_state > ConstructionDockState.Empty ? (
                       <Avatar height={20} mstId={constructions?.[i]?.api_created_ship_id ?? 0} />
                     ) : (
                       <EmptyDock state={dock.api_state} />

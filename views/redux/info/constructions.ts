@@ -1,6 +1,7 @@
 import type { APIKdock } from 'kcsapi/api_get_member/require_info/response'
 
 import { createSlice } from '@reduxjs/toolkit'
+import { ConstructionDockState } from 'views/utils/game-utils'
 
 import {
   createAPIGetMemberKdockResponseAction,
@@ -12,7 +13,7 @@ import {
 const completeConstruction = {
   api_complete_time: 0,
   api_complete_time_str: '0',
-  api_state: 3,
+  api_state: ConstructionDockState.Completed,
 }
 
 const constructionsSlice = createSlice({

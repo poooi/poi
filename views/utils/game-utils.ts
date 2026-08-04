@@ -731,34 +731,140 @@ export const getSlotitemCount = (slotitems: EquipsState): number => {
   ).length
 }
 
-export const FLEET_INTENTS = [
-  Intent.SUCCESS,
-  Intent.WARNING,
-  Intent.DANGER,
-  Intent.NONE,
-  Intent.PRIMARY,
-  Intent.NONE,
-]
+// What a fleet is busy with, as computed by `getDeckState`. The values are
+// ordered: a fleet gets the highest state that applies to it, and states from
+// `Repairing` up mean the fleet is not available for a sortie. Kept numeric
+// (and in the original order) because plugins read these values.
+export enum DeckState {
+  /** Ready to sortie */
+  Ready = 0,
+  /** Tired, moderately damaged or not resupplied */
+  Warning = 1,
+  /** Badly fatigued or heavily damaged */
+  Danger = 2,
+  /** A member is in a repair dock */
+  Repairing = 3,
+  /** Away on an expedition */
+  Expedition = 4,
+  /** Sortied */
+  Sortie = 5,
+}
 
-export const getFleetIntent = (state: number, disabled: boolean): Intent =>
-  state >= 0 && state <= 5 && !disabled ? FLEET_INTENTS[state] : Intent.NONE
+// A fleet in one of these states can't be sent out as it is
+export const UNAVAILABLE_DECK_STATES = [DeckState.Repairing, DeckState.Expedition, DeckState.Sortie]
+
+export const FLEET_INTENTS: Record<DeckState, Intent> = {
+  [DeckState.Ready]: Intent.SUCCESS,
+  [DeckState.Warning]: Intent.WARNING,
+  [DeckState.Danger]: Intent.DANGER,
+  [DeckState.Repairing]: Intent.NONE,
+  [DeckState.Expedition]: Intent.PRIMARY,
+  [DeckState.Sortie]: Intent.NONE,
+}
+
+export const getFleetIntent = (state: DeckState, disabled: boolean): Intent =>
+  disabled ? Intent.NONE : (FLEET_INTENTS[state] ?? Intent.NONE)
 
 export const DEFAULT_FLEET_NAMES = ['I', 'II', 'III', 'IV']
 
-export const LBAC_INTENTS = [
-  Intent.NONE,
-  Intent.DANGER,
-  Intent.WARNING,
-  Intent.PRIMARY,
-  Intent.SUCCESS,
+// `api_state` of a repair dock
+export enum RepairDockState {
+  /** Not unlocked yet */
+  Locked = -1,
+  Empty = 0,
+  Repairing = 1,
+}
+
+// `api_state` of a construction dock
+export enum ConstructionDockState {
+  /** Not unlocked yet */
+  Locked = -1,
+  Empty = 0,
+  Building = 2,
+  /** Built, waiting to be collected */
+  Completed = 3,
+}
+
+// `api_state` of a quest
+export enum QuestState {
+  Unselected = 1,
+  InProgress = 2,
+  Completed = 3,
+}
+
+// `api_progress_flag` of a quest: the coarse progress the game reports on top
+// of `QuestState`, for quests whose exact counter it doesn't expose
+export enum QuestProgressFlag {
+  /** Under 50% */
+  None = 0,
+  /** 50% or more */
+  Half = 1,
+  /** 80% or more */
+  Most = 2,
+}
+
+// `api_action_kind` of a land base: what its squadrons are ordered to do
+export enum AirbaseActionKind {
+  Standby = 0,
+  Sortie = 1,
+  Defense = 2,
+  Retreat = 3,
+  Rest = 4,
+}
+
+const AIRBASE_ACTION_KINDS = [
+  AirbaseActionKind.Standby,
+  AirbaseActionKind.Sortie,
+  AirbaseActionKind.Defense,
+  AirbaseActionKind.Retreat,
+  AirbaseActionKind.Rest,
 ]
 
-export const LBAC_STATUS_NAMES = ['Standby', 'Sortie', 'Defense', 'Retreat', 'Rest']
+// the game only ever sends the kinds above, but the payloads are optional and
+// partial in places, so narrow before indexing anything by the action kind
+export const toAirbaseActionKind = (value: unknown): AirbaseActionKind =>
+  AIRBASE_ACTION_KINDS.find((kind) => kind === value) ?? AirbaseActionKind.Standby
 
-export const LBAC_STATUS_AVATAR_COLOR = [
-  shipAvatarColor.WHITE,
-  shipAvatarColor.RED,
-  shipAvatarColor.ORANGE,
-  shipAvatarColor.BLUE,
-  shipAvatarColor.GREEN,
-]
+// A land base only takes part in a battle under these orders
+export const AIRBASE_ACTING_KINDS = [AirbaseActionKind.Sortie, AirbaseActionKind.Defense]
+
+// `api_state` of a squadron slot on a land base
+export enum PlaneState {
+  /** No plane assigned */
+  Empty = 0,
+  Ready = 1,
+  /** Being moved to another base */
+  Relocating = 2,
+}
+
+// `api_cond` of a squadron slot: its fatigue. Some responses send 0 for a slot
+// that is in fact rested, so treat anything below `Tired` as `Normal`.
+export enum PlaneCond {
+  Normal = 1,
+  Tired = 2,
+  Fatigued = 3,
+}
+
+export const LBAC_INTENTS: Record<AirbaseActionKind, Intent> = {
+  [AirbaseActionKind.Standby]: Intent.NONE,
+  [AirbaseActionKind.Sortie]: Intent.DANGER,
+  [AirbaseActionKind.Defense]: Intent.WARNING,
+  [AirbaseActionKind.Retreat]: Intent.PRIMARY,
+  [AirbaseActionKind.Rest]: Intent.SUCCESS,
+}
+
+export const LBAC_STATUS_NAMES: Record<AirbaseActionKind, string> = {
+  [AirbaseActionKind.Standby]: 'Standby',
+  [AirbaseActionKind.Sortie]: 'Sortie',
+  [AirbaseActionKind.Defense]: 'Defense',
+  [AirbaseActionKind.Retreat]: 'Retreat',
+  [AirbaseActionKind.Rest]: 'Rest',
+}
+
+export const LBAC_STATUS_AVATAR_COLOR: Record<AirbaseActionKind, string> = {
+  [AirbaseActionKind.Standby]: shipAvatarColor.WHITE,
+  [AirbaseActionKind.Sortie]: shipAvatarColor.RED,
+  [AirbaseActionKind.Defense]: shipAvatarColor.ORANGE,
+  [AirbaseActionKind.Retreat]: shipAvatarColor.BLUE,
+  [AirbaseActionKind.Rest]: shipAvatarColor.GREEN,
+}

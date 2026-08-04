@@ -15,6 +15,7 @@ import { styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import { getStore } from 'views/create-store'
 import { ROOT } from 'views/env'
+import { RepairDockState } from 'views/utils/game-utils'
 import {
   repairsSelector,
   constSelector,
@@ -53,9 +54,9 @@ const inRepairShipsDataSelector = createSelector(
   (inRepairShipsId, ships) => inRepairShipsId?.map((shipId) => ships[shipId]) ?? [],
 )
 
-const EmptyDock = ({ state }: { state: number }) => (
+const EmptyDock = ({ state }: { state: RepairDockState }) => (
   <EmptyDockWrapper className="empty-dock">
-    <FA name={state === 0 ? 'bath' : 'lock'} />
+    <FA name={state === RepairDockState.Empty ? 'bath' : 'lock'} />
   </EmptyDockWrapper>
 )
 
@@ -123,12 +124,12 @@ export const RepairPanel = ({ editable }: { editable?: boolean }) => {
             api_item3: 0,
             api_item4: 0,
             api_ship_id: 0,
-            api_state: 0,
+            api_state: RepairDockState.Empty,
           }
           const dock = (repairs[i] as RepairDock | undefined) ?? emptyRepair
           const completeTime = dock.api_complete_time || -1
           let hpPercentage: number | undefined
-          if (dock.api_state > 0) {
+          if (dock.api_state > RepairDockState.Empty) {
             hpPercentage =
               (100 * get(ships, [dock.api_ship_id, 'api_nowhp'])) /
               get(ships, [dock.api_ship_id, 'api_maxhp'])
@@ -189,9 +190,9 @@ const RepairPanelRow = ({
   const notifyMessage = (names: string) => `${names} ${t('main:repair completed')}`
 
   const dockName =
-    dock.api_state === -1
+    dock.api_state === RepairDockState.Locked
       ? t('main:Locked')
-      : dock.api_state === 0
+      : dock.api_state === RepairDockState.Empty
         ? t('main:Empty')
         : t(`resources:${$ships?.[ships[dock.api_ship_id]?.api_ship_id]?.api_name}`)
 
@@ -200,7 +201,7 @@ const RepairPanelRow = ({
       <DockInnerWrapper>
         {enableAvatar && (
           <>
-            {dock.api_state > 0 ? (
+            {dock.api_state > RepairDockState.Empty ? (
               <Avatar
                 height={20}
                 mstId={ships[dock.api_ship_id]?.api_ship_id}
@@ -216,7 +217,7 @@ const RepairPanelRow = ({
         </DockName>
         <Tooltip
           position={Position.LEFT}
-          disabled={dock.api_state < 0}
+          disabled={dock.api_state < RepairDockState.Empty}
           content={
             <div>
               <strong>{t('main:Finish By')}: </strong>

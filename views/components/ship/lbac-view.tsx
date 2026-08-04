@@ -1,4 +1,3 @@
-import type { Intent } from '@blueprintjs/core'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { Position, ProgressBar, Tag, Tooltip } from '@blueprintjs/core'
@@ -26,6 +25,7 @@ import {
   getTyku,
   LBAC_INTENTS,
   LBAC_STATUS_NAMES,
+  toAirbaseActionKind,
 } from 'views/utils/game-utils'
 import { landbaseEquipDataSelectorFactory, landbaseSelectorFactory } from 'views/utils/selectors'
 
@@ -50,14 +50,15 @@ export const SquardRow = memo(({ squardId, enableAvatar, compact }: SquardRowPro
   const { landbase, equipsData } = useSelector((state: RootState) => selector(state))
 
   const {
-    api_action_kind = 0,
+    api_action_kind: apiActionKind,
     api_distance,
     api_name = '',
     api_nowhp = 200,
     api_maxhp = 200,
   } = landbase ?? {}
   const { api_base = 0, api_bonus = 0 } = api_distance ?? {}
-  const tyku = getTyku([equipsData!], api_action_kind)
+  const actionKind = toAirbaseActionKind(apiActionKind)
+  const tyku = getTyku([equipsData!], actionKind)
   const hpPercentage = (api_nowhp / api_maxhp) * 100
   const hideLBACName = enableAvatar && compact
 
@@ -112,8 +113,8 @@ export const SquardRow = memo(({ squardId, enableAvatar, compact }: SquardRowPro
           {api_nowhp} / {api_maxhp}
         </ShipHP>
         <ShipStatusContainer className="lbac-status-label">
-          <Tag className="landbase-status" minimal intent={LBAC_INTENTS[api_action_kind] as Intent}>
-            {t(LBAC_STATUS_NAMES[api_action_kind])}
+          <Tag className="landbase-status" minimal intent={LBAC_INTENTS[actionKind]}>
+            {t(LBAC_STATUS_NAMES[actionKind])}
           </Tag>
         </ShipStatusContainer>
         <ShipHPProgress className="hp-progress">

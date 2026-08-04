@@ -17,6 +17,7 @@ import {
   type QuestRecord,
   type SubgoalRecord,
 } from 'views/redux/info/quests'
+import { QuestProgressFlag, QuestState } from 'views/utils/game-utils'
 import {
   configLayoutSelector,
   configReverseLayoutSelector,
@@ -90,13 +91,11 @@ interface Quest {
 function getIntentByProgress(quest: Quest | undefined): Intent {
   if (!quest) return Intent.NONE
   const { api_progress_flag, api_state } = quest
-  if (api_state === 3) return 'success' as Intent
+  if (api_state === QuestState.Completed) return Intent.SUCCESS
   switch (api_progress_flag) {
-    case 0:
-      return Intent.NONE
-    case 1:
+    case QuestProgressFlag.Half:
       return Intent.WARNING
-    case 2:
+    case QuestProgressFlag.Most:
       return Intent.PRIMARY
     default:
       return Intent.NONE
@@ -106,11 +105,11 @@ function getIntentByProgress(quest: Quest | undefined): Intent {
 function progressLabelText(quest: Quest | undefined): React.ReactNode {
   if (!quest) return ''
   const { api_progress_flag, api_state } = quest
-  if (api_state === 3) return <Trans>main:Completed</Trans>
+  if (api_state === QuestState.Completed) return <Trans>main:Completed</Trans>
   switch (api_progress_flag) {
-    case 1:
+    case QuestProgressFlag.Half:
       return '50%'
-    case 2:
+    case QuestProgressFlag.Most:
       return '80%'
     default:
       return <Trans>main:In progress</Trans>

@@ -1,4 +1,3 @@
-import type { Intent } from '@blueprintjs/core'
 import type { RootState } from 'views/redux/reducer-factory'
 
 import { memoize, get } from 'lodash'
@@ -14,6 +13,7 @@ import {
   getTyku,
   LBAC_INTENTS,
   LBAC_STATUS_NAMES,
+  toAirbaseActionKind,
 } from 'views/utils/game-utils'
 import { landbaseSelectorFactory, landbaseEquipDataSelectorFactory } from 'views/utils/selectors'
 
@@ -68,9 +68,9 @@ export const MiniSquardRow = ({
 
   const hideShipName = enableAvatar && compact
   const lb = landbase
-  const api_action_kind = lb?.api_action_kind ?? 0
+  const actionKind = toAirbaseActionKind(lb?.api_action_kind)
   const api_name = lb?.api_name ?? ''
-  const tyku = getTyku(equipsData ? [equipsData] : [], api_action_kind)
+  const tyku = getTyku(equipsData ? [equipsData] : [], actionKind)
   return (
     <ShipTile className="ship-tile">
       <MiniShipItem className="ship-item" avatar={enableAvatar} shipName={!hideShipName} isLBAC>
@@ -101,12 +101,8 @@ export const MiniSquardRow = ({
             </ShipFP>
           </>
         )}
-        <LandBaseStatTag
-          className="landbase-status"
-          minimal
-          intent={LBAC_INTENTS[api_action_kind] as Intent}
-        >
-          {t(LBAC_STATUS_NAMES[api_action_kind])}
+        <LandBaseStatTag className="landbase-status" minimal intent={LBAC_INTENTS[actionKind]}>
+          {t(LBAC_STATUS_NAMES[actionKind])}
         </LandBaseStatTag>
         <LandBaseState className="ship-stat landbase-stat">
           <ShipStateText>

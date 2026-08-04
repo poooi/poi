@@ -1,5 +1,6 @@
 import memoize from 'fast-memoize'
 import { createSelector } from 'reselect'
+import { DeckState } from 'views/utils/game-utils'
 
 import type { EquipDataWithOnslot, ShipData } from './base'
 
@@ -18,28 +19,32 @@ function getDeckState(
   inBattle: unknown,
   inExpedition: unknown,
   inRepairShipsId: number[] | undefined,
-): number {
-  let state = 0
-  if (inBattle) state = Math.max(state, 5)
-  if (inExpedition) state = Math.max(state, 4)
+): DeckState {
+  let state = DeckState.Ready
+  // a fleet keeps the most severe state that applies to it
+  const raiseTo = (candidate: DeckState) => {
+    if (candidate > state) state = candidate
+  }
+  if (inBattle) raiseTo(DeckState.Sortie)
+  if (inExpedition) raiseTo(DeckState.Expedition)
   shipsData?.forEach((pair) => {
     if (!pair) return
     const [ship, $ship] = pair
     if (!ship || !$ship) return
     // Cond < 20 or medium damage
     if ((ship.api_cond ?? 100) < 20 || (ship.api_nowhp ?? 1) / (ship.api_maxhp ?? 1) < 0.25)
-      state = Math.max(state, 2)
+      raiseTo(DeckState.Danger)
     // Cond < 40 or heavy damage
     else if ((ship.api_cond ?? 100) < 40 || (ship.api_nowhp ?? 1) / (ship.api_maxhp ?? 1) < 0.5)
-      state = Math.max(state, 1)
+      raiseTo(DeckState.Warning)
     // Not supplied
     if (
       (ship.api_fuel ?? 0) / ($ship.api_fuel_max ?? 1) < 0.99 ||
       (ship.api_bull ?? 0) / ($ship.api_bull_max ?? 1) < 0.99
     )
-      state = Math.max(state, 1)
+      raiseTo(DeckState.Warning)
     // Repairing
-    if (inRepairShipsId?.includes(ship.api_id)) state = Math.max(state, 3)
+    if (inRepairShipsId?.includes(ship.api_id)) raiseTo(DeckState.Repairing)
   })
   return state
 }
