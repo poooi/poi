@@ -16,7 +16,7 @@ import {
   SlotItemContainer,
   SlotItems,
 } from 'views/components/ship-parts/styled-components'
-import { equipIsAircraft } from 'views/utils/game-utils'
+import { equipIsAircraft, PlaneCond, PlaneState } from 'views/utils/game-utils'
 import {
   landbaseEquipDataSelectorFactory,
   landbaseSelectorFactory,
@@ -152,10 +152,12 @@ export const LandbaseSlotitems = memo(
           const onslotWarning = !!(equipData && onslot != null && onslot < maxOnslot)
           const onslotText = equipData ? onslot : maxOnslot
           const iconStyle: React.CSSProperties = {
-            opacity: api_state[equipIdx] === 2 ? 0.5 : undefined,
+            opacity: api_state[equipIdx] === PlaneState.Relocating ? 0.5 : undefined,
             filter:
-              (api_cond[equipIdx] ?? 0) > 1
-                ? `drop-shadow(0px 0px 4px ${api_cond[equipIdx] === 2 ? '#FB8C00' : '#E53935'})`
+              (api_cond[equipIdx] ?? 0) > PlaneCond.Normal
+                ? `drop-shadow(0px 0px 4px ${
+                    api_cond[equipIdx] === PlaneCond.Tired ? '#FB8C00' : '#E53935'
+                  })`
                 : undefined,
           }
           const itemOverlay = equipData && $equip && equip && (
@@ -182,7 +184,7 @@ export const LandbaseSlotitems = memo(
                     className="slotitem-onslot-mini"
                     intent={onslotWarning ? Intent.WARNING : Intent.NONE}
                     minimal
-                    hide={!showOnslot || api_state[equipIdx] !== 1}
+                    hide={!showOnslot || api_state[equipIdx] !== PlaneState.Ready}
                   >
                     {onslotText}
                   </OnSlotMini>

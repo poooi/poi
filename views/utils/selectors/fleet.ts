@@ -4,6 +4,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import memoize from 'fast-memoize'
 import { get, map } from 'lodash'
 import { createSelector } from 'reselect'
+import { RepairDockState } from 'views/utils/game-utils'
 
 import { arrayResultWrapper, repairsSelector, sortieStatusSelector } from './base'
 
@@ -13,7 +14,7 @@ export const inRepairShipsIdSelector = arrayResultWrapper(
   createSelector(repairsSelector, (repairs: RepairData[] | undefined) => {
     if (!repairs) return
     return map(
-      repairs.filter((repair) => repair.api_state == 1),
+      repairs.filter((repair) => repair.api_state === RepairDockState.Repairing),
       'api_ship_id',
     )
   }),
@@ -68,6 +69,9 @@ export const fleetExpeditionSelectorFactory = memoize((fleetId: number) =>
 export const shipRepairDockSelectorFactory = memoize((shipId: number) =>
   createSelector(repairsSelector, (repairs) => {
     if (repairs == null) return
-    return repairs.find(({ api_state, api_ship_id }) => api_state == 1 && api_ship_id == shipId)
+    return repairs.find(
+      ({ api_state, api_ship_id }) =>
+        api_state === RepairDockState.Repairing && api_ship_id === shipId,
+    )
   }),
 )

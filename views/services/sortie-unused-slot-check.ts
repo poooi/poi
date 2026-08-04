@@ -3,6 +3,7 @@ import type { Ship } from 'views/redux/info/ships'
 import { getStore } from 'views/create-store'
 import { config } from 'views/env'
 import i18next from 'views/env-parts/i18next'
+import { UNAVAILABLE_DECK_STATES } from 'views/utils/game-utils'
 
 import { fleetStateSelectorFactory } from '../utils/selectors'
 
@@ -31,7 +32,9 @@ window.addEventListener('game.response', (e) => {
   }
 
   const flag = fleets
-    .filter((_, fleetId) => ![3, 4, 5].includes(fleetStateSelectorFactory(fleetId)(state)))
+    .filter(
+      (_, fleetId) => !UNAVAILABLE_DECK_STATES.includes(fleetStateSelectorFactory(fleetId)(state)),
+    )
     .flatMap((fleet) => fleet.api_ship)
     .some((shipId) => checkSlot(ships[shipId]))
 

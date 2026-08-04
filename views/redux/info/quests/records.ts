@@ -1,6 +1,7 @@
 import type { APIList } from 'kcsapi/api_get_member/questlist/response'
 
 import { sortBy, mapValues, forEach, values, fromPairs, range } from 'lodash'
+import { QuestState } from 'views/utils/game-utils'
 
 import type { QuestOptions, QuestEvent } from '../../actions'
 import type { ActiveQuest, GoalKey, QuestGoal, QuestRecord, SubgoalRecord } from './types'
@@ -261,7 +262,7 @@ export function updateRecordProgress(record: QuestRecord, bodyQuest: APIList): Q
       subgoal.count,
       subgoal.required,
       api_progress_flag || 0,
-      api_state === 3,
+      api_state === QuestState.Completed,
     )
     if (count !== subgoal.count) {
       return {

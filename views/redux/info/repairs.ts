@@ -3,6 +3,7 @@ import type { Dispatch } from 'redux'
 import { createSlice } from '@reduxjs/toolkit'
 import _ from 'lodash'
 import { observer } from 'redux-observers'
+import { RepairDockState } from 'views/utils/game-utils'
 import { compareUpdate } from 'views/utils/tools'
 
 import type { RootState } from '../reducer-factory'
@@ -94,8 +95,8 @@ export const dockingCompleteObserver = observer<RootState, RepairsState>(
         // sanity check: now current position should be empty
         repairDataCur.api_ship_id === 0 &&
         // state transition: docking complete
-        repairDataPrev.api_state === 1 &&
-        repairDataCur.api_state === 0
+        repairDataPrev.api_state === RepairDockState.Repairing &&
+        repairDataCur.api_state === RepairDockState.Empty
       ) {
         dispatch(createInfoShipsRepairCompletedAction({ api_ship_id: rstId }))
       }
