@@ -1,4 +1,4 @@
-import type { BrowserWindowConstructorOptions } from 'electron'
+import type { BrowserWindowConstructorOptions, WebContents } from 'electron'
 
 import * as electronRemote from '@electron/remote/main'
 import { BrowserWindow, webContents, shell, webFrameMain } from 'electron'
@@ -6,7 +6,7 @@ import _ from 'lodash'
 import os from 'os'
 
 import config from './config'
-import { warn } from './utils'
+import { log, warn } from './utils'
 
 const isModernDarwin = process.platform === 'darwin' && Number(os.release().split('.')[0]) >= 17
 
@@ -15,6 +15,75 @@ export function stopFileNavigate(id: number) {
     if (url.startsWith('file')) {
       e.preventDefault()
     }
+  })
+}
+
+// Diagnostics for windows the game page opens itself (`window.open`, e.g. the DMM charge
+// page). poi has no other visibility into them, so when one dies the only trace is an
+// unrelated-looking error from whoever touches the dead frame next — which is exactly how
+// the crash below presented. Log the popup's URL and the renderer exit reason.
+function watchGuestPopup(win: BrowserWindow, url: string) {
+  const { webContents: popupContents } = win
+  log('webview popup created', url, 'osPid', popupContents.getOSProcessId())
+
+  popupContents.addListener('render-process-gone', (_event, details) => {
+    warn('webview popup renderer gone', popupContents.getURL() || url, details)
+  })
+  popupContents.addListener(
+    'did-fail-load',
+    (_event, errorCode, errorDescription, validatedURL) => {
+      warn('webview popup failed to load', validatedURL || url, errorCode, errorDescription)
+    },
+  )
+  popupContents.addListener('unresponsive', () => {
+    warn('webview popup unresponsive', popupContents.getURL() || url)
+  })
+}
+
+const parseWindowFeature = (features: string, key: string) => {
+  const matched = new RegExp(`(?:^|,)\\s*${key}\\s*=\\s*(\\d+)`).exec(features)
+  return matched ? Number(matched[1]) : undefined
+}
+
+// The game webview runs with `disablewebsecurity` (see views/kan-game-wrapper.tsx), which
+// the game page's own iframe traversal depends on. A popup opened from that page keeps an
+// opener relationship with it and so ends up in the same renderer process; loading an
+// ordinary secure page there — the DMM point-charge flow is the one that surfaced this —
+// crashes that renderer outright (STATUS_BREAKPOINT, no log output), taking the game down
+// with it. Opening the popup ourselves drops the opener link, so the page gets a clean
+// process with web security left on.
+function openGuestPopupDetached(url: string, features: string) {
+  const win = new BrowserWindow({
+    width: parseWindowFeature(features, 'width') ?? 800,
+    height: parseWindowFeature(features, 'height') ?? 600,
+    autoHideMenuBar: true,
+    webPreferences: {
+      nodeIntegration: false,
+      nodeIntegrationInSubFrames: false,
+      contextIsolation: true,
+      sandbox: true,
+      webSecurity: true,
+    },
+  })
+  watchGuestPopup(win, url)
+  win.loadURL(url)
+}
+
+function handleGuestPopups(wc: WebContents) {
+  wc.setWindowOpenHandler(({ url, features }) => {
+    // Only http(s) can be re-opened detached. Anything else (`about:blank` popups the page
+    // then scripts, in particular) still needs the opener link, so leave it alone rather
+    // than breaking game flows that rely on it.
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      openGuestPopupDetached(url, features)
+      return { action: 'deny' }
+    }
+    return { action: 'allow' }
+  })
+
+  // Popups still created by Chromium (the non-http case above).
+  wc.addListener('did-create-window', (win, { url }) => {
+    watchGuestPopup(win, url)
   })
 }
 
@@ -27,6 +96,8 @@ export function handleWebviewPreloadHack(id: number) {
   }
 
   webContent.addListener('did-attach-webview', (event, wc) => {
+    handleGuestPopups(wc)
+
     wc.addListener(
       'did-frame-navigate',
       async (
