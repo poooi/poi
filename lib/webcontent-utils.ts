@@ -18,25 +18,42 @@ export function stopFileNavigate(id: number) {
   })
 }
 
+// Popup URLs reach these logs, and the flows that open them (payment, login) carry tokens
+// in the query string. Keep origin + path, which is all the diagnostics need, and drop the
+// query and fragment.
+const redactUrl = (url: string) => {
+  try {
+    const { origin, pathname } = new URL(url)
+    return `${origin}${pathname}`
+  } catch (_e) {
+    return '(unparseable url)'
+  }
+}
+
 // Diagnostics for windows the game page opens itself (`window.open`, e.g. the DMM charge
 // page). poi has no other visibility into them, so when one dies the only trace is an
 // unrelated-looking error from whoever touches the dead frame next — which is exactly how
 // the crash below presented. Log the popup's URL and the renderer exit reason.
 function watchGuestPopup(win: BrowserWindow, url: string) {
   const { webContents: popupContents } = win
-  log('webview popup created', url, 'osPid', popupContents.getOSProcessId())
+  log('webview popup created', redactUrl(url), 'osPid', popupContents.getOSProcessId())
 
   popupContents.addListener('render-process-gone', (_event, details) => {
-    warn('webview popup renderer gone', popupContents.getURL() || url, details)
+    warn('webview popup renderer gone', redactUrl(popupContents.getURL() || url), details)
   })
   popupContents.addListener(
     'did-fail-load',
     (_event, errorCode, errorDescription, validatedURL) => {
-      warn('webview popup failed to load', validatedURL || url, errorCode, errorDescription)
+      warn(
+        'webview popup failed to load',
+        redactUrl(validatedURL || url),
+        errorCode,
+        errorDescription,
+      )
     },
   )
   popupContents.addListener('unresponsive', () => {
-    warn('webview popup unresponsive', popupContents.getURL() || url)
+    warn('webview popup unresponsive', redactUrl(popupContents.getURL() || url))
   })
 }
 
