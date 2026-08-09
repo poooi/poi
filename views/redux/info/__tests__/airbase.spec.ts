@@ -362,6 +362,50 @@ describe('airbase reduer', () => {
     ])
   })
 
+  it('createAPIReqAirCorpsCondRecoveryResponseAction - keeps fields the response omits', () => {
+    const before: AirBase[] = [
+      {
+        ...fatiguedBase[0],
+        api_plane_info: [
+          { ...fatiguedBase[0].api_plane_info![0], api_cond: PlaneCond.Fatigued },
+          { ...fatiguedBase[0].api_plane_info![1], api_cond: PlaneCond.Fatigued },
+        ],
+      },
+    ]
+
+    const payload: GameResponsePayload<
+      APIReqAirCorpsCondRecoveryResponse,
+      APIReqAirCorpsCondRecoveryRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_req_air_corps/cond_recovery',
+      postBody: { api_verno: '1', api_area_id: '6', api_base_id: '1' },
+      body: {
+        api_distance: { api_base: 5, api_bonus: 0 },
+        api_plane_info: [
+          // @ts-expect-error api_count/api_max_count omitted; kcsapi types them
+          // as required, but the real shape is unconfirmed and dropping them
+          // would show a spurious "needs supply" badge.
+          { api_squadron_id: 1, api_slotid: 52792, api_state: 1, api_cond: PlaneCond.Normal },
+        ],
+      },
+      time: 0,
+    }
+
+    const after = reducer(before, createAPIReqAirCorpsCondRecoveryResponseAction(payload))
+
+    expect(after[0].api_plane_info?.[0]).toEqual({
+      api_squadron_id: 1,
+      api_slotid: 52792,
+      api_state: 1,
+      api_count: 18,
+      api_max_count: 18,
+      api_cond: PlaneCond.Normal,
+    })
+    // The squadron the response did not mention is untouched.
+    expect(after[0].api_plane_info?.[1]?.api_cond).toBe(PlaneCond.Fatigued)
+  })
+
   it('createAPIPortAirCorpsCondRecoveryWithTimerResponseAction - clears squadron fatigue', () => {
     const before: AirBase[] = [
       {

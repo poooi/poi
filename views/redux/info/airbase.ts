@@ -87,7 +87,10 @@ const airBaseSlice = createSlice({
               },
             ],
           ),
-          3,
+          // Merge per field rather than replacing the squadron: a cond recovery
+          // never changes which plane sits in a slot, so anything the response
+          // leaves out is state we still want to keep.
+          4,
         )
       })
       .addCase(createAPIPortAirCorpsCondRecoveryWithTimerResponseAction, (state, { payload }) => {
@@ -110,9 +113,8 @@ const airBaseSlice = createSlice({
               },
             ],
           ),
-          // One level deeper than the other air corps cases: this endpoint may
-          // report a squadron partially, so merge per field instead of
-          // replacing the whole squadron.
+          // Same field-wise merge as cond_recovery above, and this endpoint
+          // additionally declares every field optional.
           4,
         )
       })
