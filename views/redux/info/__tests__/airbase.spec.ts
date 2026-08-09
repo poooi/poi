@@ -7,7 +7,13 @@ import type {
   APIPortPortResponse,
   APIReqAirCorpsChangeDeploymentBaseResponse,
   APIReqAirCorpsChangeDeploymentBaseRequest,
+  APIReqAirCorpsCondRecoveryResponse,
+  APIReqAirCorpsCondRecoveryRequest,
+  APIPortAirCorpsCondRecoveryWithTimerResponse,
+  APIPortAirCorpsCondRecoveryWithTimerRequest,
 } from 'kcsapi'
+
+import { PlaneCond } from 'views/utils/game-utils'
 
 import type { GameResponsePayload } from '../../actions'
 
@@ -17,6 +23,8 @@ import {
   createAPIReqAirCorpsChangeNameResponseAction,
   createAPIReqAirCorpsSetActionResponseAction,
   createAPIReqAirCorpsSupplyResponseAction,
+  createAPIReqAirCorpsCondRecoveryResponseAction,
+  createAPIPortAirCorpsCondRecoveryWithTimerResponseAction,
   createAPIReqAirCorpsChangeDeploymentBaseResponseAction,
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
@@ -289,5 +297,185 @@ describe('airbase reduer', () => {
     )
 
     expect(afterNotFound).toBe(before)
+  })
+
+  // A fatigued base, shaped after a real api_req_air_corps/supply capture.
+  const fatiguedBase: AirBase[] = [
+    {
+      api_area_id: 6,
+      api_rid: 1,
+      api_distance: { api_base: 5, api_bonus: 0 },
+      api_plane_info: [
+        { api_squadron_id: 1, api_slotid: 52792, api_state: 1, api_count: 18, api_max_count: 18 },
+        { api_squadron_id: 2, api_slotid: 52793, api_state: 1, api_count: 18, api_max_count: 18 },
+      ],
+    },
+  ]
+
+  it('createAPIReqAirCorpsCondRecoveryResponseAction - clears squadron fatigue', () => {
+    const before: AirBase[] = [
+      {
+        ...fatiguedBase[0],
+        api_plane_info: [
+          { ...fatiguedBase[0].api_plane_info![0], api_cond: PlaneCond.Fatigued },
+          { ...fatiguedBase[0].api_plane_info![1], api_cond: PlaneCond.Tired },
+        ],
+      },
+    ]
+
+    const payload: GameResponsePayload<
+      APIReqAirCorpsCondRecoveryResponse,
+      APIReqAirCorpsCondRecoveryRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_req_air_corps/cond_recovery',
+      postBody: { api_verno: '1', api_area_id: '6', api_base_id: '1' },
+      body: {
+        api_distance: { api_base: 5, api_bonus: 0 },
+        api_plane_info: [
+          {
+            api_squadron_id: 1,
+            api_slotid: 52792,
+            api_state: 1,
+            api_count: 18,
+            api_max_count: 18,
+            api_cond: PlaneCond.Normal,
+          },
+          {
+            api_squadron_id: 2,
+            api_slotid: 52793,
+            api_state: 1,
+            api_count: 18,
+            api_max_count: 18,
+            api_cond: PlaneCond.Normal,
+          },
+        ],
+      },
+      time: 0,
+    }
+
+    const after = reducer(before, createAPIReqAirCorpsCondRecoveryResponseAction(payload))
+
+    expect(after[0].api_plane_info?.map((plane) => plane.api_cond)).toEqual([
+      PlaneCond.Normal,
+      PlaneCond.Normal,
+    ])
+  })
+
+  it('createAPIReqAirCorpsCondRecoveryResponseAction - keeps fields the response omits', () => {
+    const before: AirBase[] = [
+      {
+        ...fatiguedBase[0],
+        api_plane_info: [
+          { ...fatiguedBase[0].api_plane_info![0], api_cond: PlaneCond.Fatigued },
+          { ...fatiguedBase[0].api_plane_info![1], api_cond: PlaneCond.Fatigued },
+        ],
+      },
+    ]
+
+    const payload: GameResponsePayload<
+      APIReqAirCorpsCondRecoveryResponse,
+      APIReqAirCorpsCondRecoveryRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_req_air_corps/cond_recovery',
+      postBody: { api_verno: '1', api_area_id: '6', api_base_id: '1' },
+      body: {
+        api_distance: { api_base: 5, api_bonus: 0 },
+        api_plane_info: [
+          // @ts-expect-error api_count/api_max_count omitted; kcsapi types them
+          // as required, but the real shape is unconfirmed and dropping them
+          // would show a spurious "needs supply" badge.
+          { api_squadron_id: 1, api_slotid: 52792, api_state: 1, api_cond: PlaneCond.Normal },
+        ],
+      },
+      time: 0,
+    }
+
+    const after = reducer(before, createAPIReqAirCorpsCondRecoveryResponseAction(payload))
+
+    expect(after[0].api_plane_info?.[0]).toEqual({
+      api_squadron_id: 1,
+      api_slotid: 52792,
+      api_state: 1,
+      api_count: 18,
+      api_max_count: 18,
+      api_cond: PlaneCond.Normal,
+    })
+    // The squadron the response did not mention is untouched.
+    expect(after[0].api_plane_info?.[1]?.api_cond).toBe(PlaneCond.Fatigued)
+  })
+
+  it('createAPIPortAirCorpsCondRecoveryWithTimerResponseAction - clears squadron fatigue', () => {
+    const before: AirBase[] = [
+      {
+        ...fatiguedBase[0],
+        api_plane_info: [
+          { ...fatiguedBase[0].api_plane_info![0], api_cond: PlaneCond.Fatigued },
+          { ...fatiguedBase[0].api_plane_info![1], api_cond: PlaneCond.Fatigued },
+        ],
+      },
+    ]
+
+    const payload: GameResponsePayload<
+      APIPortAirCorpsCondRecoveryWithTimerResponse,
+      APIPortAirCorpsCondRecoveryWithTimerRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_port/airCorpsCondRecoveryWithTimer',
+      postBody: { api_verno: '1', api_area_id: '6', api_base_id: '1' },
+      body: {
+        api_result: 1,
+        api_result_msg: '成功',
+        api_distance: { api_base: 5, api_bonus: 0 },
+        // Only the recovered squadron is reported.
+        api_plane_info: [
+          { api_squadron_id: 2, api_slotid: 52793, api_state: 1, api_cond: PlaneCond.Normal },
+        ],
+      },
+      time: 0,
+    }
+
+    const after = reducer(before, createAPIPortAirCorpsCondRecoveryWithTimerResponseAction(payload))
+
+    expect(after[0].api_plane_info?.map((plane) => plane.api_cond)).toEqual([
+      PlaneCond.Fatigued,
+      PlaneCond.Normal,
+    ])
+    // Untouched fields survive the partial update.
+    expect(after[0].api_plane_info?.[1]).toMatchObject({ api_count: 18, api_max_count: 18 })
+  })
+
+  it('createAPIPortAirCorpsCondRecoveryWithTimerResponseAction - no change on failure or empty body', () => {
+    const failure: GameResponsePayload<
+      APIPortAirCorpsCondRecoveryWithTimerResponse,
+      APIPortAirCorpsCondRecoveryWithTimerRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_port/airCorpsCondRecoveryWithTimer',
+      postBody: { api_verno: '1', api_area_id: '6', api_base_id: '1' },
+      body: {
+        api_result: 0,
+        api_result_msg: '失敗',
+        api_plane_info: [
+          { api_squadron_id: 1, api_slotid: 52792, api_state: 1, api_cond: PlaneCond.Normal },
+        ],
+      },
+      time: 0,
+    }
+
+    expect(
+      reducer(fatiguedBase, createAPIPortAirCorpsCondRecoveryWithTimerResponseAction(failure)),
+    ).toBe(fatiguedBase)
+
+    expect(
+      reducer(
+        fatiguedBase,
+        createAPIPortAirCorpsCondRecoveryWithTimerResponseAction({
+          ...failure,
+          body: { api_result: 1 },
+        }),
+      ),
+    ).toBe(fatiguedBase)
   })
 })

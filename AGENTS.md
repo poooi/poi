@@ -140,30 +140,35 @@ types locally.
 
 ### Custom Types for Missing APIs
 
-Some API endpoints are not typed in kcsapi. Define custom types with a `FIXME` comment:
+Some API endpoints are not typed in kcsapi. Reuse the closest existing type, or
+define a `*Compat` type, with a `FIXME` comment naming the endpoint:
 
 ```typescript
-// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_hensei/preset_order_change
-export interface APIReqHenseiPresetOrderChangeRequest {
-  api_verno: string
-  api_preset_from: string
-  api_preset_to: string
-}
-
-export interface APIReqHenseiPresetOrderChangeResponse {
-  api_result: number
-  api_result_msg: string
-}
+// FIXME: Not in kcsapi package - @@Response/kcsapi/api_req_combined_battle/sp_midnight
+export const createAPIReqCombinedBattleSPMidnightResponseAction = createAction<
+  GameResponsePayload<
+    APIReqCombinedBattleMidnightBattleResponse,
+    APIReqCombinedBattleMidnightBattleRequest
+  >
+>('@@Response/kcsapi/api_req_combined_battle/sp_midnight')
 ```
 
 ### Currently Missing from kcsapi
 
-These API endpoints are used but not typed in the kcsapi package:
+These API endpoints are used but not typed in the kcsapi package (verified
+against `kcsapi@1.260809.0`):
 
-1. `@@Response/kcsapi/api_req_hensei/preset_order_change`
-2. `@@Response/kcsapi/api_req_member/updatedeckname`
-3. `@@Response/kcsapi/api_req_air_corps/change_name`
-4. `@@Response/kcsapi/api_req_air_corps/change_deployment_base`
+1. `@@Response/kcsapi/api_req_combined_battle/airbattle`
+2. `@@Response/kcsapi/api_req_combined_battle/sp_midnight`
+3. `@@Response/kcsapi/api_req_combined_battle/ec_night_to_day`
+
+Additionally, `APIReqCombinedBattleBattleresultResponse` is missing
+`api_get_useitem`, which the endpoint returns in practice; `views/redux/actions/response.ts`
+covers it with a local `*Compat` type.
+
+When bumping kcsapi, re-check this list: `preset_order_change`, `updatedeckname`,
+`api_req_air_corps/change_name` and `change_deployment_base` used to be listed here
+and are now typed upstream.
 
 ## Testing Guidelines
 

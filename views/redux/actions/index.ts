@@ -26,6 +26,8 @@ export {
   createAPIReqAirCorpsChangeNameResponseAction,
   createAPIReqAirCorpsSetActionResponseAction,
   createAPIReqAirCorpsSupplyResponseAction,
+  createAPIReqAirCorpsCondRecoveryResponseAction,
+  createAPIPortAirCorpsCondRecoveryWithTimerResponseAction,
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
   createAPIGetMemberRequireInfoAction,

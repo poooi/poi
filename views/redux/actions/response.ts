@@ -141,6 +141,10 @@ import type {
   APIReqMemberUpdatedecknameRequest,
   APIReqKousyouRemodelSlotRecoverResponse,
   APIReqKousyouRemodelSlotRecoverRequest,
+  APIReqAirCorpsCondRecoveryResponse,
+  APIReqAirCorpsCondRecoveryRequest,
+  APIPortAirCorpsCondRecoveryWithTimerResponse,
+  APIPortAirCorpsCondRecoveryWithTimerRequest,
 } from 'kcsapi'
 import type { APIGetUseitem } from 'kcsapi/api_req_sortie/battleresult/response'
 
@@ -173,6 +177,17 @@ export const createAPIReqAirCorpsSetActionResponseAction = createAction<
 export const createAPIReqAirCorpsSupplyResponseAction = createAction<
   GameResponsePayload<APIReqAirCorpsSupplyResponse, APIReqAirCorpsSupplyRequest>
 >('@@Response/kcsapi/api_req_air_corps/supply')
+
+export const createAPIReqAirCorpsCondRecoveryResponseAction = createAction<
+  GameResponsePayload<APIReqAirCorpsCondRecoveryResponse, APIReqAirCorpsCondRecoveryRequest>
+>('@@Response/kcsapi/api_req_air_corps/cond_recovery')
+
+export const createAPIPortAirCorpsCondRecoveryWithTimerResponseAction = createAction<
+  GameResponsePayload<
+    APIPortAirCorpsCondRecoveryWithTimerResponse,
+    APIPortAirCorpsCondRecoveryWithTimerRequest
+  >
+>('@@Response/kcsapi/api_port/airCorpsCondRecoveryWithTimer')
 
 export const createAPIReqMapNextResponseAction = createAction<
   GameResponsePayload<APIReqMapNextResponse, APIReqMapNextRequest>
