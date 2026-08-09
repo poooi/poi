@@ -11,6 +11,8 @@ import {
   createAPIReqAirCorpsChangeNameResponseAction,
   createAPIReqAirCorpsSetActionResponseAction,
   createAPIReqAirCorpsSupplyResponseAction,
+  createAPIReqAirCorpsCondRecoveryResponseAction,
+  createAPIPortAirCorpsCondRecoveryWithTimerResponseAction,
   createAPIReqMapNextResponseAction,
   createAPIPortPortResponseAction,
   createAPIReqAirCorpsChangeDeploymentBaseResponseAction,
@@ -20,6 +22,24 @@ export interface AirBase extends Partial<APIAirBase> {
   api_maxhp?: number
   api_nowhp?: number
 }
+
+// Bases are addressed by (area, rid) in the API, but fall back to the 1-based
+// base id as index when the base is not in state yet.
+const findBaseIndex = (state: AirBase[], baseId: number | string, areaId: number | string) => {
+  const index = findIndex(
+    state,
+    (squad) => squad.api_rid === +baseId && squad.api_area_id === +areaId,
+  )
+  return index === -1 ? +baseId - 1 : index
+}
+
+// Squadrons are indexed by api_squadron_id - 1 in state, but responses only
+// carry the squadrons they touched.
+const constructSquadrons = <T extends { api_squadron_id: number }>(planeInfo: T[]) =>
+  constructArray(
+    planeInfo.map((p) => p.api_squadron_id - 1),
+    planeInfo,
+  )
 
 const airBaseSlice = createSlice({
   name: 'airbase',
@@ -37,15 +57,7 @@ const airBaseSlice = createSlice({
       .addCase(createAPIReqAirCorpsSetPlaneResponseAction, (state, { payload }) => {
         const { api_base_id, api_area_id } = payload.postBody
         const { api_distance, api_plane_info } = payload.body
-        const baseIndex = findIndex(
-          state,
-          (squad) => squad.api_rid === +api_base_id && squad.api_area_id === +api_area_id,
-        )
-        const index = baseIndex === -1 ? +api_base_id - 1 : baseIndex
-        const squadrons = constructArray(
-          api_plane_info.map((p) => p.api_squadron_id - 1),
-          api_plane_info,
-        )
+        const index = findBaseIndex(state, api_base_id, api_area_id)
         return compareUpdate(
           state,
           constructArray(
@@ -53,11 +65,55 @@ const airBaseSlice = createSlice({
             [
               {
                 api_distance,
-                api_plane_info: squadrons,
+                api_plane_info: constructSquadrons(api_plane_info),
               },
             ],
           ),
           3,
+        )
+      })
+      .addCase(createAPIReqAirCorpsCondRecoveryResponseAction, (state, { payload }) => {
+        const { api_base_id, api_area_id } = payload.postBody
+        const { api_distance, api_plane_info } = payload.body
+        const index = findBaseIndex(state, api_base_id, api_area_id)
+        return compareUpdate(
+          state,
+          constructArray(
+            [index],
+            [
+              {
+                api_distance,
+                api_plane_info: constructSquadrons(api_plane_info),
+              },
+            ],
+          ),
+          3,
+        )
+      })
+      .addCase(createAPIPortAirCorpsCondRecoveryWithTimerResponseAction, (state, { payload }) => {
+        const { api_base_id, api_area_id } = payload.postBody
+        const { api_result, api_distance, api_plane_info } = payload.body
+        // Every field is optional on this endpoint; bail out unless it actually
+        // reported recovered squadrons.
+        if ((typeof api_result === 'number' && api_result !== 1) || !api_plane_info) {
+          return state
+        }
+        const index = findBaseIndex(state, api_base_id, api_area_id)
+        return compareUpdate(
+          state,
+          constructArray(
+            [index],
+            [
+              {
+                ...(api_distance ? { api_distance } : {}),
+                api_plane_info: constructSquadrons(api_plane_info),
+              },
+            ],
+          ),
+          // One level deeper than the other air corps cases: this endpoint may
+          // report a squadron partially, so merge per field instead of
+          // replacing the whole squadron.
+          4,
         )
       })
       .addCase(createAPIReqAirCorpsChangeDeploymentBaseResponseAction, (state, { payload }) => {
@@ -70,17 +126,9 @@ const airBaseSlice = createSlice({
           return state
         }
 
-        const findSquadronIndex = (baseId: number | string) => {
-          const ret = findIndex(
-            state,
-            (squad) => squad.api_rid === +baseId && squad.api_area_id === +api_area_id,
-          )
-          return ret === -1 ? +baseId - 1 : ret
-        }
-
         // Moving a plane equip from src slot to dst slot.
-        const indexSrc = findSquadronIndex(api_base_id_src)
-        const indexDst = findSquadronIndex(api_base_id)
+        const indexSrc = findBaseIndex(state, api_base_id_src, api_area_id)
+        const indexDst = findBaseIndex(state, api_base_id, api_area_id)
 
         const squadronSrc = state[indexSrc]
         const squadronDst = state[indexDst]
@@ -103,16 +151,10 @@ const airBaseSlice = createSlice({
           return item0.api_rid === +api_base_id_src ? [item0, item1] : [item1, item0]
         })()
 
-        const convertItem = ({ api_distance, api_plane_info }: APIBaseItem) => {
-          const squadrons = constructArray(
-            (api_plane_info || []).map((p) => p.api_squadron_id - 1),
-            api_plane_info || [],
-          )
-          return {
-            api_distance,
-            api_plane_info: squadrons,
-          }
-        }
+        const convertItem = ({ api_distance, api_plane_info }: APIBaseItem) => ({
+          api_distance,
+          api_plane_info: constructSquadrons(api_plane_info || []),
+        })
 
         return compareUpdate(
           state,
@@ -122,11 +164,7 @@ const airBaseSlice = createSlice({
       })
       .addCase(createAPIReqAirCorpsChangeNameResponseAction, (state, { payload }) => {
         const { api_base_id, api_name, api_area_id } = payload.postBody
-        const baseIndex = findIndex(
-          state,
-          (squad) => squad.api_rid === +api_base_id && squad.api_area_id === +api_area_id,
-        )
-        const index = baseIndex === -1 ? +api_base_id - 1 : baseIndex
+        const index = findBaseIndex(state, api_base_id, api_area_id)
         return compareUpdate(
           state,
           constructArray(
@@ -144,12 +182,7 @@ const airBaseSlice = createSlice({
         const { api_action_kind, api_base_id, api_area_id } = payload.postBody
         const update = zip(api_base_id.split(','), api_action_kind.split(',')).map(
           ([base_id, action_kind]) => {
-            const baseIndex = findIndex(
-              state,
-              (squad) =>
-                squad.api_rid === Number(base_id ?? 0) && squad.api_area_id === +api_area_id,
-            )
-            const index = baseIndex === -1 ? Number(base_id ?? 0) - 1 : baseIndex
+            const index = findBaseIndex(state, Number(base_id ?? 0), api_area_id)
             return [index, { api_action_kind: Number(action_kind ?? 0) }] as [
               number,
               Partial<AirBase>,
@@ -162,22 +195,14 @@ const airBaseSlice = createSlice({
       .addCase(createAPIReqAirCorpsSupplyResponseAction, (state, { payload }) => {
         const { api_base_id, api_area_id } = payload.postBody
         const { api_plane_info } = payload.body
-        const baseIndex = findIndex(
-          state,
-          (squad) => squad.api_rid === +api_base_id && squad.api_area_id === +api_area_id,
-        )
-        const index = baseIndex === -1 ? +api_base_id - 1 : baseIndex
-        const squadrons = constructArray(
-          api_plane_info.map((p) => p.api_squadron_id - 1),
-          api_plane_info,
-        )
+        const index = findBaseIndex(state, api_base_id, api_area_id)
         return compareUpdate(
           state,
           constructArray(
             [index],
             [
               {
-                api_plane_info: squadrons,
+                api_plane_info: constructSquadrons(api_plane_info),
               },
             ],
           ),
