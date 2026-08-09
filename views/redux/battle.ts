@@ -1,3 +1,5 @@
+import type { RawFleetShip } from 'poi-lib-battle/packet'
+
 import { createAction, isAnyOf, type UnknownAction } from '@reduxjs/toolkit'
 import { cloneDeep, get } from 'lodash'
 import { Models, Simulator } from 'poi-lib-battle'
@@ -70,10 +72,7 @@ function getItem(itemId: number, store: Record<string, unknown>): Record<string,
   return item
 }
 
-function getShip(
-  shipId: number,
-  store: Record<string, unknown>,
-): (Record<string, unknown> & { poi_slot: unknown[]; poi_slot_ex: unknown }) | null {
+function getShip(shipId: number, store: Record<string, unknown>): RawFleetShip | null {
   const _ship = get(store, `info.ships.${shipId}`)
   if (!isRecord(_ship)) return null
   const master = get(store, `const.$ships.${_ship['api_ship_id']}`)
@@ -93,10 +92,17 @@ function getShip(
   delete ship['api_slot']
   delete ship['api_slot_ex']
   delete ship['api_yomi']
-  return ship
+  // The store is untyped here, so TypeScript cannot see that this is a real
+  // ship record merged with its master data. Assert once, at the single point
+  // where store data becomes a fleet ship, and keep callers strongly typed.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+  return ship as unknown as RawFleetShip
 }
 
-function getFleet(deckId: number, store: Record<string, unknown>): unknown[] | null {
+function getFleet(
+  deckId: number,
+  store: Record<string, unknown>,
+): Array<RawFleetShip | null> | null {
   const deckRaw = get(store, `info.fleets.${deckId - 1}`)
   if (!isRecord(deckRaw)) return null
   const ships = deckRaw['api_ship']
