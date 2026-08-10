@@ -18,7 +18,9 @@ const aircraftLevelBonus: Record<number, number[]> = {
   45: [0, 0, 2, 5, 9, 14, 14, 22, 22],
   47: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   48: [0, 0, 2, 5, 9, 14, 14, 22, 22],
-  56: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  // 56: 噴式戦闘機. It is a fighter, so it takes the same proficiency air power
+  // bonus as 艦戦/水戦/局戦 rather than the bomber-like zeroes of the other jets.
+  56: [0, 0, 2, 5, 9, 14, 14, 22, 22],
   57: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   58: [0, 0, 0, 0, 0, 0, 0, 0, 0],
 }
@@ -401,13 +403,16 @@ export function getHpStyle(percent: number): MaterialIntent {
 
 export function equipIsAircraft(equip: APIMstSlotitem | number): boolean {
   if (typeof equip === 'number') {
+    // icon id (`api_type[3]`); 56-60 covers the later fighter/jet icons, up to
+    // 60 (震電改三, the first 噴式戦闘機)
     return (
       equip != null &&
       (between(equip, 6, 10) ||
         between(equip, 21, 22) ||
         between(equip, 37, 40) ||
         between(equip, 43, 51) ||
-        [33, 56].includes(equip))
+        between(equip, 56, 60) ||
+        equip === 33)
     )
   } else {
     const id = equip?.api_type?.[2]
@@ -452,7 +457,9 @@ export function getTyku(
       }
       const levelFactor = $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) : 0
       if (
-        [6, 7, 45, 47, 57].includes($equip.api_type[2]) ||
+        // 56 (噴式戦闘機) uses the plain fighter formula on both fleets and land
+        // bases: unlike 局地戦闘機 it has no 迎撃/対爆 stats, so no landbase bonus.
+        [6, 7, 45, 47, 56, 57].includes($equip.api_type[2]) ||
         ([26].includes($equip.api_type[2]) && $equip.api_tyku > 0)
       ) {
         tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
