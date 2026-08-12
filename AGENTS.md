@@ -327,6 +327,12 @@ npm run typecheck
 
 The repository uses lint-staged with husky. ESLint runs automatically on staged files during commit.
 
+### Commit message
+
+Use prefix in `<type>(<component>): <short description>` format.
+
+Keep the message short and simple, evade putting all description into commit message
+
 ## Common Utility Functions
 
 Located in `/views/utils/tools.ts`:
