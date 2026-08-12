@@ -1,5 +1,3 @@
-import { maxBy } from 'lodash'
-
 import type { GameEquip, GameShip } from '../types'
 import type { AACIEntry } from './types'
 
@@ -53,10 +51,24 @@ export const getShipAllAACIs = (ship: GameShip): number[] =>
     })
     .map((key) => Number(key))
 
+// Pick the id of the AACI that actually fires: highest 固定ボーナス, ties broken by
+// highest 変動ボーナス — the same ordering as sortAaciIds. Returns 0 for an empty list.
+// The modifier tie-break matters for ship-exclusive types that share a 固定ボーナス
+// with a generic type (e.g. 53 vs 8, both fixed 4).
+const bestAACIId = (aaciIds: number[]): number =>
+  aaciIds.reduce((best, id) => {
+    const candidate = AACITable[id]
+    const incumbent = AACITable[best]
+    if (!candidate) return best
+    if (!incumbent) return id
+    if (candidate.fixed !== incumbent.fixed) return candidate.fixed > incumbent.fixed ? id : best
+    return candidate.modifier > incumbent.modifier ? id : best
+  }, 0)
+
 // return the AACIs to trigger for a ship, it will be array due to exceptions
 export const getShipAACIs = (ship: GameShip, equips: GameEquip[]): number[] => {
   const AACIs = getShipAvailableAACIs(ship, equips)
-  const maxFixed = maxBy(AACIs, (id) => (AACITable[id] || {}).fixed || 0) || 0
+  const maxFixed = bestAACIId(AACIs)
   // Kinu kai 2 exception
   if (AACIs.includes(19)) {
     return [19, 20]

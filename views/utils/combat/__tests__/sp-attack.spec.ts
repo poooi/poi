@@ -108,6 +108,23 @@ describe('isSpAttackAvailable', () => {
       expect(isSpAttackAvailable(fleet, { ...extra, spAttackCount: { 104: 2 } })).toBe(true)
       expect(isSpAttackAvailable(fleet, { ...extra, spAttackCount: { 104: 3 } })).toBe(false)
     })
+
+    // 大破未満 only: unlike the other special attacks, 中破 still triggers
+    it('still triggers when either ship is at medium damage', () => {
+      // fixture HP is 37/37; 18/37 is 中破 (>1/4, <=1/2)
+      const midDmgKongou: GameShip = { ...kongouK2C, api_nowhp: 18 }
+      const midDmgHiei: GameShip = { ...hieiK2C, api_nowhp: 18 }
+      expect(isSpAttackAvailable([midDmgKongou, hieiK2C, dd, dd, dd], extra)).toBe(true)
+      expect(isSpAttackAvailable([kongouK2C, midDmgHiei, dd, dd, dd], extra)).toBe(true)
+    })
+
+    it('does not trigger when either ship is at heavy damage', () => {
+      // 9/37 is 大破 (<=1/4)
+      const heavyDmgKongou: GameShip = { ...kongouK2C, api_nowhp: 9 }
+      const heavyDmgHiei: GameShip = { ...hieiK2C, api_nowhp: 9 }
+      expect(isSpAttackAvailable([heavyDmgKongou, hieiK2C, dd, dd, dd], extra)).toBe(false)
+      expect(isSpAttackAvailable([kongouK2C, heavyDmgHiei, dd, dd, dd], extra)).toBe(false)
+    })
   })
 
   it('handles short fleets without throwing', () => {

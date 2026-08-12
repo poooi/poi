@@ -11,6 +11,8 @@
    - https://github.com/andanteyk/ElectronicObserver/blob/master/ElectronicObserver/Other/Information/apilist.txt (as of Jan 1, 2019)
 
  */
+import type { GameShip } from '../types'
+
 import {
   hasAtLeast,
   hasSome,
@@ -40,6 +42,7 @@ import {
   isAtlantaOrKai,
   isBattleship,
   isBuiltinHighAngleMount,
+  isBuiltinHighAngleMountAA9,
   isCDMG,
   isFletcherClassOrKai,
   isFubukiK2,
@@ -83,6 +86,7 @@ import {
   isSatsukiK2,
   isShiratsuyuClassK2,
   isShirayukiK2,
+  isSuzunamiK2,
   isTamananiK2,
   isTatsutaK2,
   isTenryuuK2,
@@ -620,53 +624,51 @@ declareAACI({
   ),
 })
 
-// id 49: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni
+// id 49~52 share the same 対象艦: 吹雪改二/改三/改三護(六式), 白雪改二, 初雪改二 and the
+// 三十二駆改二 (藤波/早波/浜波/玉波/涼波; 涼波改二補 counts as 涼波改二).
+const isFubukiOr32ndDivisionK2 = (ship: GameShip) =>
+  isFubukiK2(ship) ||
+  isFubukiK3(ship) ||
+  isFubukiK3Go(ship) ||
+  isShirayukiK2(ship) ||
+  isHatsuyukiK2(ship) ||
+  isFujinamiK2(ship) ||
+  isHayanamiK2(ship) ||
+  isHamanamiK2(ship) ||
+  isTamananiK2(ship) ||
+  isSuzunamiK2(ship)
+
+const fubukiOr32ndDivisionK2Names = [
+  '吹雪改二',
+  '白雪改二',
+  '初雪改二',
+  '藤波改二',
+  '早波改二',
+  '浜波改二',
+  '玉波改二',
+  '涼波改二',
+  '涼波改二補',
+]
+
+// id 49
 declareAACI({
-  name: ['藤波改二', '吹雪改二', '白雪改二', '初雪改二', '早波改二', '浜波改二', '玉波改二'],
+  name: fubukiOr32ndDivisionK2Names,
   id: 49,
   fixed: 5,
   modifier: 1.5,
-  shipValid: (ship) =>
-    isFubukiK2(ship) ||
-    isFubukiK3(ship) ||
-    isFubukiK3Go(ship) ||
-    isShirayukiK2(ship) ||
-    isHatsuyukiK2(ship) ||
-    isFujinamiK2(ship) ||
-    isHayanamiK2(ship) ||
-    isHamanamiK2(ship) ||
-    isTamananiK2(ship),
+  shipValid: isFubukiOr32ndDivisionK2,
   equipsValid: validAny(
     validAll(hasAtLeast(isBuiltinHighAngleMount, 2), hasSome(isAdvancedAARadar)),
   ),
 })
 
-// id 50: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni / Akizuki Class
+// id 50: the same 対象艦 plus Akizuki Class
 declareAACI({
-  name: [
-    '吹雪改二',
-    '白雪改二',
-    '初雪改二',
-    '藤波改二',
-    '早波改二',
-    '浜波改二',
-    '玉波改二',
-    'Akizuki Class',
-  ],
+  name: [...fubukiOr32ndDivisionK2Names, 'Akizuki Class'],
   id: 50,
   fixed: 7,
   modifier: 1.5,
-  shipValid: (ship) =>
-    isFubukiK2(ship) ||
-    isFubukiK3(ship) ||
-    isFubukiK3Go(ship) ||
-    isShirayukiK2(ship) ||
-    isHatsuyukiK2(ship) ||
-    isFujinamiK2(ship) ||
-    isHayanamiK2(ship) ||
-    isHamanamiK2(ship) ||
-    isTamananiK2(ship) ||
-    isAkizukiClass(ship),
+  shipValid: (ship) => isFubukiOr32ndDivisionK2(ship) || isAkizukiClass(ship),
   equipsValid: validAny(
     validAll(
       hasAtLeast(is100mmTwinMountKaiOrAAFD, 2),
@@ -676,41 +678,34 @@ declareAACI({
   ),
 })
 
-// id 51~52: Fubuki Kai Ni / Shirayuki Kai Ni / Hatsuyuki Kai Ni / Fujinami Kai Ni / Hayanami Kai Ni / Hamanami Kai Ni / Tamanami Kai Ni
+// id 51~52
 declareAACI({
-  name: ['吹雪改二', '白雪改二', '初雪改二', '藤波改二', '早波改二', '浜波改二', '玉波改二'],
+  name: fubukiOr32ndDivisionK2Names,
   id: 51,
   fixed: 5,
   modifier: 1.35,
-  shipValid: (ship) =>
-    isFubukiK2(ship) ||
-    isFubukiK3(ship) ||
-    isFubukiK3Go(ship) ||
-    isShirayukiK2(ship) ||
-    isHatsuyukiK2(ship) ||
-    isFujinamiK2(ship) ||
-    isHayanamiK2(ship) ||
-    isHamanamiK2(ship) ||
-    isTamananiK2(ship),
+  shipValid: isFubukiOr32ndDivisionK2,
   equipsValid: validAny(
     validAll(hasSome(is100mmTwinMountKaiOrAAFD), hasSome(isAdvancedAARadar), hasSome(isAAGun)),
   ),
 })
 
 declareAACI({
-  name: ['吹雪改二', '白雪改二', '初雪改二', '藤波改二', '早波改二', '浜波改二', '玉波改二'],
+  name: fubukiOr32ndDivisionK2Names,
   id: 52,
   fixed: 4,
   modifier: 1.4,
-  shipValid: (ship) =>
-    isFubukiK2(ship) ||
-    isFubukiK3(ship) ||
-    isFubukiK3Go(ship) ||
-    isShirayukiK2(ship) ||
-    isHatsuyukiK2(ship) ||
-    isFujinamiK2(ship) ||
-    isHayanamiK2(ship) ||
-    isHamanamiK2(ship) ||
-    isTamananiK2(ship),
+  shipValid: isFubukiOr32ndDivisionK2,
   equipsValid: validAny(validAll(hasAtLeast(is100mmTwinMountKai, 2), hasSome(isType94AAFD))),
+})
+
+// id 53: Hiryuu Kai 3 (dedicated AACI)
+// NOTE: wikiwiki still marks the 変動ボーナス of this type with "?"; revisit once confirmed.
+declareAACI({
+  name: ['飛龍改三'],
+  id: 53,
+  fixed: 4,
+  modifier: 1.6,
+  shipValid: isHiryuuK3,
+  equipsValid: validAll(hasSome(isBuiltinHighAngleMountAA9), hasSome(isAdvancedAARadar)),
 })

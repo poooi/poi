@@ -5,7 +5,7 @@
 
 **Wiki reference**: https://wikiwiki.jp/kancolle/%E5%AF%BE%E6%BD%9C%E6%94%BB%E6%92%83#oasw (発動条件 section)
 
-## Validated Conditions (as of 2026-05-27)
+## Validated Conditions (as of 2026-08-12)
 
 All logic matches the wiki. 龍田改二 (ship ID 478) is now the shared `isTatsutaK2` predicate; 日向改二 (554) the shared `isHyuuGaK2`.
 
@@ -21,6 +21,11 @@ All logic matches the wiki. 龍田改二 (ship ID 478) is now the shared `isTats
 | `isSamuelKai`          | 681                    | Samuel B. Roberts改           |
 | `isSamuelKaiNi`        | 920                    | Samuel B. Roberts改二 (Mk.II) |
 | `isFletcherClassOrKai` | 562, 596, ctype=91+Kai | Fletcher級                    |
+| `isVisbyOrKai`         | 1062, 1067             | Visby / Visby改               |
+| `isHiedaMaruOrKai`     | 1065, 1070             | 日枝丸 / 日枝丸改             |
+
+日枝丸 is a 潜水母艦 (stype 20), which the general 対潜100+ソナー branch below does
+not cover, so the unconditional entry is the only thing that makes it fire.
 
 ### 海防艦 (DE, stype=1)
 

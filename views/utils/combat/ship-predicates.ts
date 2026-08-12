@@ -82,5 +82,7 @@ export const isFujinamiK2 = shipIdIs(981)
 export const isHayanamiK2 = shipIdIs(982)
 export const isHamanamiK2 = shipIdIs(983)
 export const isTamananiK2 = shipIdIs(1033)
+// 1034: 涼波改二, 745: 涼波改二補 — both count as 三十二駆改二
+export const isSuzunamiK2 = shipIdIsOneOf(1034, 745)
 export const isShirayukiK2 = shipIdIs(986)
 export const isHatsuyukiK2 = shipIdIs(987)

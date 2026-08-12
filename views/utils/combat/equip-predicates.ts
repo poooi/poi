@@ -25,6 +25,9 @@ export const isAdvancedAARadar = (equip: GameEquip) => isRadar(equip) && (equip.
 // (as of Jan 1, 2020)
 export const isBuiltinHighAngleMount = (equip: GameEquip) =>
   isHighAngleMount(equip) && (equip.api_tyku ?? 0) >= 8
+// 素対空9以上の特殊高角砲 (AACI id 53)
+export const isBuiltinHighAngleMountAA9 = (equip: GameEquip) =>
+  isHighAngleMount(equip) && (equip.api_tyku ?? 0) >= 9
 
 // 21=対空機銃
 export const isMachineGun = itemTypeIs(21)
