@@ -47,7 +47,8 @@ module.exports = {
   linux: {
     publish: [],
     target: createTargets(isFullTarget ? ['7z', 'deb', 'rpm', 'pacman', 'AppImage'] : ['7z']),
-    icon: 'assets/icons',
+    // must be a dir of `<size>x<size>.png` files; electron-builder ignores other names
+    icon: 'assets/icons/linux',
   },
   dmg: {
     contents: [
