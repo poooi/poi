@@ -23,7 +23,7 @@ const defaultFetchOption = {
 
 const { updater }: typeof Updater =
   process.platform !== 'linux' ? remote.require('./lib/updater') : {}
-const LANG = ['zh-CN', 'zh-TW', 'en-US']
+const LANG = ['zh-CN', 'zh-TW', 'ja-JP', 'en-US']
 const doUpdate = async () => {
   if (process.platform == 'win32') {
     try {
