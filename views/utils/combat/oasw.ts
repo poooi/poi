@@ -51,6 +51,13 @@ const isMogamiClassKouKaiNi: OASWPredicate = (ship) =>
 
 const isYuubariKaiNiTei = shipIdIs(624)
 
+// Visby (1062) / Visby改 (1067)
+const isVisbyOrKai: OASWPredicate = (ship) => ship.api_ship_id === 1062 || ship.api_ship_id === 1067
+// 日枝丸 (1065) / 日枝丸改 (1070); 潜水母艦 (stype 20), so not covered by the
+// 駆逐/軽巡/雷巡/練巡/補給 branch below
+const isHiedaMaruOrKai: OASWPredicate = (ship) =>
+  ship.api_ship_id === 1065 || ship.api_ship_id === 1070
+
 const isKagaKaiNiGo = shipIdIs(646)
 
 const isShinShuMaruKai = shipIdIs(626)
@@ -84,6 +91,8 @@ export const isOASW: OASWPredicate = overSome(
   isFletcherClassOrKai,
   isSamuelKaiNi,
   isFubukiK3Go,
+  isVisbyOrKai,
+  isHiedaMaruOrKai,
   // 海防艦
   overEvery(
     isDE,

@@ -8,7 +8,18 @@ The code was originally ported from KC3Kai commit a9edbe5. The wiki is the autho
 
 ## Last Validated
 
-2026-05-27. Fixed/modifier values for all types 1–52 match the wiki. Discrepancies were in ship eligibility and one equipment rule (type 27).
+2026-08-12. Fixed/modifier values for all types 1–53 match the wiki. Discrepancies were in ship eligibility and one equipment rule (type 27).
+
+## Added 2026-08-12
+
+**Type 53 — 飛龍改三 dedicated AACI**: 素対空9以上の特殊高角砲 + 素対空4以上の対空電探,
+固定 4, 変動 1.6. The wiki still marks the 変動ボーナス with `?`, so treat 1.6 as
+provisional and re-check on the next pass.
+
+**Types 49–52 — 涼波改二 (ID 1034) / 涼波改二補 (ID 745) added**: both count as 三十二駆改二,
+so they join 藤波/早波/浜波/玉波改二. The four entries now share one `isFubukiOr32ndDivisionK2`
+predicate and one `fubukiOr32ndDivisionK2Names` list (type 50 adds 秋月型 on top), so the next
+member only has to be added in one place.
 
 ## Fixes Applied (2026-05-27)
 

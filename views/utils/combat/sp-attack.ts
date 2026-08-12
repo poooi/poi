@@ -205,13 +205,15 @@ const isColoradoSpAttack = overEvery([
 ])
 
 // https://wikiwiki.jp/kancolle/%E9%87%91%E5%89%9B%E6%94%B9%E4%BA%8C%E4%B8%99#SpecialAttack
+// NOTE: unlike the other special attacks, both the flagship and the companion
+// only need to be 大破未満 here — 中破 still triggers.
 const isKongoClassKaiNiCSpAttack = overEvery([
   isSpAttackLessThan([SP_ATTACK_ID.Kongo_Class_Kaini_C_Charge])(3),
   isFleetWith5NonSubs,
   overSome([
     // Kongo Kai Ni C
     overEvery([
-      overShip(0)(shipEvery([isKongoKaiNiC, isNotMidDmg])),
+      overShip(0)(shipEvery([isKongoKaiNiC, isNotHeavyDmg])),
       overShip(1)(
         shipEvery([
           shipSome([
@@ -223,13 +225,13 @@ const isKongoClassKaiNiCSpAttack = overEvery([
             isWarspite,
             isValiant,
           ]),
-          isNotMidDmg,
+          isNotHeavyDmg,
         ]),
       ),
     ]),
     // Hiei Kai Ni C
     overEvery([
-      overShip(0)(shipEvery([isHieiKaiNiC, isNotMidDmg])),
+      overShip(0)(shipEvery([isHieiKaiNiC, isNotHeavyDmg])),
       overShip(1)(
         shipEvery([
           shipSome([
@@ -239,24 +241,24 @@ const isKongoClassKaiNiCSpAttack = overEvery([
             isKirishimaKaiNi,
             isKirishimaKaiNiC,
           ]),
-          isNotMidDmg,
+          isNotHeavyDmg,
         ]),
       ),
     ]),
     // Haruna Kai Ni B/C
     overEvery([
-      overShip(0)(shipEvery([shipSome([isHarunaKaiNiB, isHarunaKaiNiC]), isNotMidDmg])),
+      overShip(0)(shipEvery([shipSome([isHarunaKaiNiB, isHarunaKaiNiC]), isNotHeavyDmg])),
       overShip(1)(
-        shipEvery([shipSome([isKongoKaiNiC, isHieiKaiNiC, isKirishimaKaiNiC]), isNotMidDmg]),
+        shipEvery([shipSome([isKongoKaiNiC, isHieiKaiNiC, isKirishimaKaiNiC]), isNotHeavyDmg]),
       ),
     ]),
     // Kirishima Kai Ni C
     overEvery([
-      overShip(0)(shipEvery([isKirishimaKaiNiC, isNotMidDmg])),
+      overShip(0)(shipEvery([isKirishimaKaiNiC, isNotHeavyDmg])),
       overShip(1)(
         shipEvery([
           shipSome([isKongoKaiNiC, isHieiKaiNiC, isHarunaKaiNiB, isHarunaKaiNiC, isSouthDakotaKai]),
-          isNotMidDmg,
+          isNotHeavyDmg,
         ]),
       ),
     ]),

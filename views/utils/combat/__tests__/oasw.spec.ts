@@ -72,6 +72,20 @@ describe('isOASW', () => {
     expect(isOASW(taiyouKai, [torpedoBomber(0)])).toBe(false)
   })
 
+  it('triggers unconditionally for Visby and Visby改', () => {
+    expect(isOASW({ ...baseShip, api_ship_id: 1062, api_taisen: [0, 0] }, [])).toBe(true)
+    expect(isOASW({ ...baseShip, api_ship_id: 1067, api_taisen: [0, 0] }, [])).toBe(true)
+  })
+
+  it('triggers unconditionally for 日枝丸/改 despite being a 潜水母艦', () => {
+    // stype 20 is not covered by any of the ship-type branches
+    const hiedaMaru: GameShip = { ...baseShip, api_stype: 20, api_taisen: [0, 0] }
+    expect(isOASW({ ...hiedaMaru, api_ship_id: 1065 }, [])).toBe(true)
+    expect(isOASW({ ...hiedaMaru, api_ship_id: 1070 }, [])).toBe(true)
+    // a different 潜水母艦 still does not
+    expect(isOASW({ ...hiedaMaru, api_ship_id: 944, api_taisen: [100, 100] }, [sonar])).toBe(false)
+  })
+
   it('deprecated import path re-exports the same function', () => {
     expect(isOASWCompat).toBe(isOASW)
   })
