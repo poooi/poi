@@ -145,6 +145,13 @@ const ScollShadowWrapper = styled(ScrollShadow)`
   overflow: auto;
 `
 
+// task items lay out in columns; the wrapping row lives here rather than on
+// ScrollShadow's container, whose sentinels must stay full-width block siblings
+const TaskList = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+`
+
 const TaskItem = styled.div<{ colwidth: number }>`
   align-items: center;
   display: flex;
@@ -453,7 +460,7 @@ const TaskPanelContent = ({
 }) => {
   const { t } = useTranslation('main')
   return (
-    <>
+    <TaskList>
       {sortBy(map(values(activeQuests), 'detail'), 'api_no').map((quest, idx) => (
         <TaskRow key={quest?.api_no ?? idx} idx={idx} quest={quest} colwidth={colwidth} />
       ))}
@@ -478,6 +485,6 @@ const TaskPanelContent = ({
           />
         ),
       )}
-    </>
+    </TaskList>
   )
 }
