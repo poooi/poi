@@ -27,6 +27,11 @@ const createTargets = (targets) =>
 module.exports = {
   appId: 'org.poooi.poi',
   asar: true,
+  // Electron ships 55 locale paks; keep only the LOCALES of `views/env-parts/i18next.ts`.
+  // Region-qualified entries still match Electron's bare paks (`ja-JP` -> `ja.pak`).
+  // Saves ~7.5MB per arch, and applies to the locales dir on win/linux too, not just
+  // mac's .lproj bundles.
+  electronLanguages: ['en-US', 'zh-CN', 'zh-TW', 'ja-JP', 'ko-KR'],
   copyright: `Copyright ©${new Date().getFullYear()} poi Contributors`,
   mac: {
     publish: [],
