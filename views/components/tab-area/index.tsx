@@ -341,23 +341,38 @@ const ControlledTabAreaFC = (): React.ReactElement => {
     [plugins, isWindowMode, handleSelectTab, openWindow],
   )
 
+  // The registrations below happen once on mount, so they must not close over
+  // a stale render's handlers. Keep the latest ones in a ref and call through it.
+  const latestRef = useRef({ selectTab, ipcFocusPlugin, handleConfig, activePluginName, plugins })
+  useLayoutEffect(() => {
+    latestRef.current = { selectTab, ipcFocusPlugin, handleConfig, activePluginName, plugins }
+  })
+
   useEffect(() => {
+    const onConfigSet = (path: ConfigStringPath) => latestRef.current.handleConfig(path)
+    const onTouchbarTab = (_event: unknown, message: number) => {
+      const {
+        activePluginName: activePlugin,
+        plugins: allPlugins,
+        selectTab: select,
+      } = latestRef.current
+      const keys = ['main-view', 'ship-view', activePlugin || allPlugins[0]?.packageName]
+      select(keys[message] ?? '')
+    }
+
     registerKeyboard()
     window.addEventListener('game.start', registerKeyboard)
     window.addEventListener('game.response', handleResponse)
-    window.openSettings = () => selectTab('settings')
+    window.openSettings = () => latestRef.current.selectTab('settings')
     ipc.register('MainWindow', {
-      ipcFocusPlugin: (id: string) => ipcFocusPlugin(id),
+      ipcFocusPlugin: (id: string) => latestRef.current.ipcFocusPlugin(id),
     })
 
     if (process.platform === 'darwin') {
-      require('electron').ipcRenderer.on('touchbartab', (_event: unknown, message: number) => {
-        const keys = ['main-view', 'ship-view', activePluginName || plugins[0]?.packageName]
-        selectTab(keys[message] ?? '')
-      })
+      require('electron').ipcRenderer.on('touchbartab', onTouchbarTab)
     }
 
-    config.addListener('config.set', handleConfig)
+    config.addListener('config.set', onConfigSet)
 
     setTimeout(() => {
       const tabsInstance = tabsRef.current
@@ -371,7 +386,10 @@ const ControlledTabAreaFC = (): React.ReactElement => {
       window.removeEventListener('game.start', registerKeyboard)
       window.removeEventListener('game.response', handleResponse)
       ipc.unregisterAll('MainWindow')
-      config.removeListener('config.set', handleConfig)
+      config.removeListener('config.set', onConfigSet)
+      if (process.platform === 'darwin') {
+        require('electron').ipcRenderer.removeListener('touchbartab', onTouchbarTab)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
