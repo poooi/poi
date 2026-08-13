@@ -65,7 +65,6 @@
     "@babel/preset-typescript": "^8.0.1",
     "@blueprintjs/core": "^6.12.1",
     "@blueprintjs/datetime": "^6.0.25",
-    "@blueprintjs/popover2": "^2.1.32",
     "@blueprintjs/select": "^6.1.10",
     "@cspotcode/source-map-support": "^0.8.1",
     "@electron/remote": "^2.1.3",
