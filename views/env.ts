@@ -82,6 +82,9 @@ if (process.env.NODE_ENV === 'production' && config.get?.('poi.misc.exceptionRep
   })
 }
 
+// Fix Blueprint components mounted in a non-laid-out subtree (also covers plugins)
+require('./polyfills/blueprint-measurement')
+
 // Polyfill for old plugins
 require('./polyfills/react-bootstrap')
 require('./polyfills/react-fontawesome')
