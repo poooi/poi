@@ -9,20 +9,97 @@ import { shipAvatarColor } from './color'
 import { between } from './tools'
 
 const aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
+const MAX_AIRCRAFT_LEVEL = 7
+
+const FIGHTER_PROFICIENCY = [0, 0, 2, 5, 9, 14, 14, 22, 22]
+const BOMBER_PROFICIENCY = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+/** 制空値の熟練度ボーナス, keyed by equipment category (`api_type[2]`). */
 const aircraftLevelBonus: Record<number, number[]> = {
-  6: [0, 0, 2, 5, 9, 14, 14, 22, 22],
-  7: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  8: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  11: [0, 1, 1, 1, 1, 3, 3, 6, 6],
-  26: [0, 0, 2, 5, 9, 14, 14, 22, 22],
-  45: [0, 0, 2, 5, 9, 14, 14, 22, 22],
-  47: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  48: [0, 0, 2, 5, 9, 14, 14, 22, 22],
+  6: FIGHTER_PROFICIENCY, // 艦上戦闘機
+  7: BOMBER_PROFICIENCY, // 艦上爆撃機
+  8: BOMBER_PROFICIENCY, // 艦上攻撃機
+  11: [0, 1, 1, 1, 1, 3, 3, 6, 6], // 水上爆撃機
+  26: FIGHTER_PROFICIENCY, // 対潜哨戒機 (the 陸軍戦闘機 carried by escort carriers)
+  45: FIGHTER_PROFICIENCY, // 水上戦闘機
+  47: BOMBER_PROFICIENCY, // 陸上攻撃機
+  48: FIGHTER_PROFICIENCY, // 局地戦闘機
+  53: BOMBER_PROFICIENCY, // 大型陸上機
   // 56: 噴式戦闘機. It is a fighter, so it takes the same proficiency air power
   // bonus as 艦戦/水戦/局戦 rather than the bomber-like zeroes of the other jets.
-  56: [0, 0, 2, 5, 9, 14, 14, 22, 22],
-  57: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  58: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  56: FIGHTER_PROFICIENCY,
+  57: BOMBER_PROFICIENCY, // 噴式戦闘爆撃機
+  58: BOMBER_PROFICIENCY, // 噴式攻撃機
+}
+
+/** Categories whose 対空 counts towards fighter power wherever they are equipped. */
+const airPowerTypes = [6, 7, 8, 11, 26, 45, 47, 48, 53, 56, 57, 58]
+
+/**
+ * 偵察機. They never contribute on a fleet, but on a land base they add their own
+ * 対空 *and* multiply the whole air corps' fighter power. 艦上偵察機 (9) cannot be
+ * deployed to a land base, so only its multiplier is ever reachable.
+ */
+const reconTypes = [9, 10, 41, 49]
+
+/**
+ * ★ improvement bonus to 対空, by category. 陸上攻撃機 and 大型陸上機 scale with
+ * √★ rather than ★ — see {@link getImprovementAABonus}.
+ */
+const improvementAAFactor: Record<number, number> = {
+  6: 0.2, // 艦上戦闘機
+  45: 0.2, // 水上戦闘機
+  47: 0.5, // 陸上攻撃機
+  48: 0.2, // 局地戦闘機
+  53: 0.5, // 大型陸上機
+}
+const sqrtImprovementTypes = [47, 53]
+
+const getImprovementAABonus = ($equip: APIMstSlotitem, level: number): number => {
+  const type = $equip.api_type[2]
+  const factor = improvementAAFactor[type]
+  if (factor != null) {
+    return factor * (sqrtImprovementTypes.includes(type) ? Math.sqrt(level) : level)
+  }
+  // 艦上爆撃機 and the jets have no category-wide rule: only 爆戦 (dive bombers
+  // carrying a fighter's 対空) benefit, so fall back to reading the stat line.
+  return $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) * level : 0
+}
+
+/**
+ * 局地戦闘機 spend their 迎撃 (`api_houk`) / 対爆 (`api_houm`) only on a land base.
+ * 噴式戦闘機 reuses those two stat slots for plain 回避/命中, so it is left out.
+ */
+const getInterceptionBonus = ($equip: APIMstSlotitem, landbaseStatus: number): number => {
+  if ($equip.api_type[2] !== 48) return 0
+  if (landbaseStatus === 1) return 1.5 * $equip.api_houk
+  if (landbaseStatus === 2) return $equip.api_houk + 2 * $equip.api_houm
+  return 0
+}
+
+/** 偵察機の制空値倍率. Three 索敵 tiers: 7 or below, 8, and 9 or above. */
+const getReconBonus = ($equip: APIMstSlotitem, landbaseStatus: number): number => {
+  const tier = Math.min(Math.max($equip.api_saku - 7, 0), 2)
+  const type = $equip.api_type[2]
+  if (landbaseStatus === 1) {
+    // 出撃: only 陸上偵察機 help
+    return type === 49 ? 1.12 + tier * 0.03 : 1
+  }
+  if (landbaseStatus === 2) {
+    if (type === 9) return 1.2 + tier * 0.05 // 艦上偵察機
+    if (type === 10 || type === 41) return 1.1 + tier * 0.03 // 水上偵察機 / 大型飛行艇
+    if (type === 49) return 1.12 + tier * 0.06 // 陸上偵察機
+  }
+  return 1
+}
+
+const countsTowardsAirPower = ($equip: APIMstSlotitem, landbaseStatus: number): boolean => {
+  const type = $equip.api_type[2]
+  // 三式指揮連絡機 and friends share the category with the 陸軍戦闘機 but have no 対空
+  if (type === 26) return $equip.api_tyku > 0
+  if (airPowerTypes.includes(type)) return true
+  // 偵察機 only count on a land base, and 艦上偵察機 cannot be based on one
+  return type !== 9 && reconTypes.includes(type) && (landbaseStatus === 1 || landbaseStatus === 2)
 }
 
 const speedInterpretation: Record<number, string> = {
@@ -435,94 +512,34 @@ export function getTyku(
   let maxTyku = 0
   let basicTyku = 0
   let reconBonus = 1
-  for (let i = 0; i < equipsData.length; i++) {
-    if (!equipsData[i]) {
+  for (const shipEquips of equipsData) {
+    if (!shipEquips) {
       continue
     }
-    for (let j = 0; j < equipsData[i].length; j++) {
-      const equipData = equipsData[i][j]
+    for (const equipData of shipEquips) {
       if (!equipData) {
         continue
       }
       const [_equip, $equip, onslot] = equipData
-      if ((onslot ?? 0) < 1 || onslot == undefined) {
+      if (onslot == undefined || onslot < 1) {
         continue
       }
-      let tempTyku = 0.0
-      let tempAlv
-      if (_equip.api_alv) {
-        tempAlv = _equip.api_alv
-      } else {
-        tempAlv = 0
+      const type = $equip.api_type[2]
+      if (reconTypes.includes(type)) {
+        reconBonus = Math.max(reconBonus, getReconBonus($equip, landbaseStatus))
       }
-      const levelFactor = $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) : 0
-      if (
-        // 56 (噴式戦闘機) uses the plain fighter formula on both fleets and land
-        // bases: unlike 局地戦闘機 it has no 迎撃/対爆 stats, so no landbase bonus.
-        [6, 7, 45, 47, 56, 57].includes($equip.api_type[2]) ||
-        ([26].includes($equip.api_type[2]) && $equip.api_tyku > 0)
-      ) {
-        tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
-        tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
-        basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-      } else if ([8, 11].includes($equip.api_type[2])) {
-        tempTyku += Math.sqrt(onslot) * $equip.api_tyku
-        tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
-        basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-      } else if ([48].includes($equip.api_type[2])) {
-        let landbaseBonus = 0
-        if (landbaseStatus === 1) landbaseBonus = 1.5 * $equip.api_houk
-        if (landbaseStatus === 2) landbaseBonus = $equip.api_houk + 2 * $equip.api_houm
-        tempTyku +=
-          Math.sqrt(onslot) *
-          ($equip.api_tyku + landbaseBonus + (_equip.api_level || 0) * levelFactor)
-        tempTyku += aircraftLevelBonus[$equip.api_type[2]][tempAlv]
-        basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-        minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-        maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-      } else if ([10, 41].includes($equip.api_type[2])) {
-        if (landbaseStatus == 2) {
-          if ($equip.api_saku >= 9) {
-            reconBonus = Math.max(reconBonus, 1.16)
-          } else if ($equip.api_saku == 8) {
-            reconBonus = Math.max(reconBonus, 1.13)
-          } else {
-            reconBonus = Math.max(reconBonus, 1.1)
-          }
-        } else if (landbaseStatus == 1) {
-          tempTyku += Math.sqrt(onslot) * $equip.api_tyku
-          minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-          maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-        }
-      } else if ([9].includes($equip.api_type[2]) && landbaseStatus == 2) {
-        if ($equip.api_saku >= 9) {
-          reconBonus = Math.max(reconBonus, 1.3)
-        } else {
-          reconBonus = Math.max(reconBonus, 1.2)
-        }
-      } else if ([49].includes($equip.api_type[2])) {
-        if (landbaseStatus == 1) {
-          tempTyku += Math.sqrt(onslot) * ($equip.api_tyku + (_equip.api_level || 0) * levelFactor)
-          basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
-          minTyku += Math.floor(tempTyku + Math.sqrt(aircraftExpTable[tempAlv] / 10))
-          maxTyku += Math.floor(tempTyku + Math.sqrt((aircraftExpTable[tempAlv + 1] - 1) / 10))
-          if ($equip.api_saku >= 9) {
-            reconBonus = Math.max(reconBonus, 1.18)
-          } else {
-            reconBonus = Math.max(reconBonus, 1.15)
-          }
-        } else if (landbaseStatus == 2) {
-          if ($equip.api_saku >= 9) {
-            reconBonus = Math.max(reconBonus, 1.23)
-          } else {
-            reconBonus = Math.max(reconBonus, 1.18)
-          }
-        }
+      if (!countsTowardsAirPower($equip, landbaseStatus)) {
+        continue
       }
+      const alv = Math.min(_equip.api_alv || 0, MAX_AIRCRAFT_LEVEL)
+      const aa =
+        $equip.api_tyku +
+        getImprovementAABonus($equip, _equip.api_level || 0) +
+        getInterceptionBonus($equip, landbaseStatus)
+      const tyku = Math.sqrt(onslot) * aa + (aircraftLevelBonus[type]?.[alv] ?? 0)
+      basicTyku += Math.floor(Math.sqrt(onslot) * $equip.api_tyku)
+      minTyku += Math.floor(tyku + Math.sqrt(aircraftExpTable[alv] / 10))
+      maxTyku += Math.floor(tyku + Math.sqrt((aircraftExpTable[alv + 1] - 1) / 10))
     }
   }
   return {
