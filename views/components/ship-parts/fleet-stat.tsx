@@ -1,5 +1,6 @@
 import type { RootState } from 'views/redux/reducer-factory'
 import type { CountdownNotifyOptions } from 'views/utils/notifiers'
+import type { ShipData } from 'views/utils/selectors'
 
 import { Position, Tooltip } from '@blueprintjs/core'
 import { memoize } from 'lodash'
@@ -91,6 +92,50 @@ const Item = ({ label, children }: { label: string; children: React.ReactNode })
   </ItemContainer>
 )
 
+const tykuText = ({ min, max }: { min: number; max: number }) =>
+  max === min ? `${min}` : `${min}+`
+
+// the single fleet value takes less room so both fit on one line, and rides
+// along the top of the line so it reads as a note on the combined fleet value
+const OwnValue = styled.span`
+  display: inline-block;
+  font-size: 80%;
+  line-height: 1;
+  opacity: 0.8;
+  vertical-align: top;
+`
+
+interface DualProps {
+  own: React.ReactNode
+  /** combined fleet counterpart, `undefined` when no combined fleet is formed */
+  combined?: React.ReactNode
+}
+
+// `own / combined` while a combined fleet is formed, `own` alone otherwise
+const DualValue = ({ own, combined }: DualProps) =>
+  combined == null ? (
+    <>{own}</>
+  ) : (
+    <>
+      <OwnValue className="own-fleet-value">{own} /</OwnValue> {combined}
+    </>
+  )
+
+// same, with a tooltip telling which value is which (for stats without their own tooltip)
+const DualStat = ({ own, combined }: DualProps) => {
+  const { t } = useTranslation('main')
+  if (combined == null) {
+    return <>{own}</>
+  }
+  return (
+    <Tooltip position={Position.BOTTOM} content={t('main:Fleet / Combined Fleet')}>
+      <span>
+        <DualValue own={own} combined={combined} />
+      </span>
+    </Tooltip>
+  )
+}
+
 interface CountdownLabelProps {
   fleetId: string
   completeTime: number
@@ -166,6 +211,92 @@ const speedSelectorFactory = memoize((fleetId: number) =>
   ),
 )
 
+// > 0 once the 1st and 2nd fleet are joined into a combined fleet
+const combinedFlagSelector = (state: RootState) => state?.sortie?.combinedFlag ?? 0
+
+const combinedShipsDataSelector = createSelector(
+  [fleetShipsDataSelectorFactory(0), fleetShipsDataSelectorFactory(1)],
+  (mainShips = [], escortShips = []) => [...mainShips, ...escortShips],
+)
+
+const combinedTykuSelector = createSelector(
+  [
+    fleetShipsEquipDataWithEscapeSelectorFactory(0),
+    fleetShipsEquipDataWithEscapeSelectorFactory(1),
+  ],
+  (mainEquips = [], escortEquips = []) => getTyku([...mainEquips, ...escortEquips]),
+)
+
+const combinedSakuSelector = createSelector(
+  [
+    fleetShipsDataWithEscapeSelectorFactory(0),
+    fleetShipsDataWithEscapeSelectorFactory(1),
+    fleetShipsEquipDataWithEscapeSelectorFactory(0),
+    fleetShipsEquipDataWithEscapeSelectorFactory(1),
+    admiralLevelSelector,
+    fleetSlotCountSelectorFactory(0),
+    fleetSlotCountSelectorFactory(1),
+  ],
+  (
+    mainShips = [],
+    escortShips = [],
+    mainEquips = [],
+    escortEquips = [],
+    admiralLevel,
+    mainSlotCount,
+    escortSlotCount,
+  ) => {
+    const shipsData = [...mainShips, ...escortShips]
+    const equipsData = [...mainEquips, ...escortEquips]
+    // the admiral term is subtracted once, empty slots are counted over both fleets
+    const slotCount = mainSlotCount + escortSlotCount
+    return {
+      saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0, slotCount),
+      saku33x2: getSaku33(shipsData, equipsData, admiralLevel, 2.0, slotCount),
+      saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0, slotCount),
+      saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0, slotCount),
+    }
+  },
+)
+
+const combinedSpeedSelector = createSelector(
+  [fleetShipsDataWithEscapeSelectorFactory(0), fleetShipsDataWithEscapeSelectorFactory(1)],
+  (mainShips = [], escortShips = []) => getFleetSpeed([...mainShips, ...escortShips]),
+)
+
+interface ShipTotals {
+  totalLv: number
+  totalFP: number
+  totalASW: number
+  totalLoS: number
+  totalAA: number
+}
+
+const sumShipStats = (shipsData: (ShipData | undefined)[] = []): ShipTotals => {
+  const totals: ShipTotals = { totalLv: 0, totalFP: 0, totalASW: 0, totalLoS: 0, totalAA: 0 }
+  shipsData.forEach((shipData) => {
+    const _ship = shipData?.[0]
+    if (_ship) {
+      totals.totalLv += _ship.api_lv ?? 0
+      totals.totalFP += _ship.api_karyoku?.[0] ?? 0
+      totals.totalASW += _ship.api_taisen?.[0] ?? 0
+      totals.totalLoS += _ship.api_sakuteki?.[0] ?? 0
+      totals.totalAA += _ship.api_taiku?.[0] ?? 0
+    }
+  })
+  return totals
+}
+
+const combinedStatSelector = createSelector(
+  [combinedShipsDataSelector, combinedTykuSelector, combinedSakuSelector, combinedSpeedSelector],
+  (shipsData, tyku, saku, fleetSpeed) => ({
+    ...sumShipStats(shipsData),
+    tyku,
+    saku,
+    fleetSpeed,
+  }),
+)
+
 const fleetStatSelectorFactory = memoize((fleetId: number) =>
   createSelector(
     [
@@ -235,26 +366,14 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
   const { saku33, saku33x2, saku33x3, saku33x4 } = saku
   const { speed } = fleetSpeed
 
-  let totalLv = 0
-  let minCond = 100
-  let totalFP = 0
-  let totalASW = 0
-  let totalLoS = 0
-  let totalAA = 0
+  const combinedFlag = useSelector(combinedFlagSelector)
+  // the combined fleet is made of the 1st (main) and 2nd (escort) fleet only
+  const showCombined = combinedFlag > 0 && fleetId < 2
+  const combined = useSelector((state: RootState) =>
+    showCombined ? combinedStatSelector(state) : undefined,
+  )
 
-  shipsData.forEach((shipData) => {
-    const _ship = shipData?.[0]
-    if (_ship) {
-      totalLv += _ship.api_lv ?? 0
-      minCond = Math.min(minCond, _ship.api_cond ?? minCond)
-      totalFP += _ship.api_karyoku?.[0] ?? 0
-      totalASW += _ship.api_taisen?.[0] ?? 0
-      totalLoS += _ship.api_sakuteki?.[0] ?? 0
-      totalAA += _ship.api_taiku?.[0] ?? 0
-    }
-  })
-
-  void minCond
+  const { totalLv, totalFP, totalASW, totalLoS, totalAA } = sumShipStats(shipsData)
 
   let completeTime: number
   if (inExpedition) {
@@ -270,39 +389,68 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
     <FleetStats className="fleet-stat">
       {isMini ? (
         <MiniContainer>
-          <MiniItem>{t(`main:${getSpeedLabel(speed)}`)}</MiniItem>
           <MiniItem>
-            {t('main:Fighter Power')}: {tyku.max === tyku.min ? tyku.min : `${tyku.min}+`}
+            <DualValue
+              own={t(`main:${getSpeedLabel(speed)}`)}
+              combined={combined && t(`main:${getSpeedLabel(combined.fleetSpeed.speed)}`)}
+            />
           </MiniItem>
           <MiniItem>
-            {t('main:LOS')}: {saku33.total.toFixed(2)}
+            {t('main:Fighter Power')}:{' '}
+            <DualValue own={tykuText(tyku)} combined={combined && tykuText(combined.tyku)} />
+          </MiniItem>
+          <MiniItem>
+            {t('main:LOS')}:{' '}
+            <DualValue
+              own={saku33.total.toFixed(1)}
+              combined={combined && combined.saku.saku33.total.toFixed(1)}
+            />
           </MiniItem>
         </MiniContainer>
       ) : (
         <Container>
-          <Item label={t('data:Speed')}>{t(`main:${getSpeedLabel(speed)}`)}</Item>
-          <Item label={t('data:Lv')}>{totalLv}</Item>
-          <Item label={t('data:FP')}>{totalFP}</Item>
-          <Item label={t('data:ASW')}>{totalASW}</Item>
-          <Item label={t('data:AA')}>{totalAA}</Item>
+          <Item label={t('data:Speed')}>
+            <DualStat
+              own={t(`main:${getSpeedLabel(speed)}`)}
+              combined={combined && t(`main:${getSpeedLabel(combined.fleetSpeed.speed)}`)}
+            />
+          </Item>
+          <Item label={t('data:Lv')}>
+            <DualStat own={totalLv} combined={combined?.totalLv} />
+          </Item>
+          <Item label={t('data:FP')}>
+            <DualStat own={totalFP} combined={combined?.totalFP} />
+          </Item>
+          <Item label={t('data:ASW')}>
+            <DualStat own={totalASW} combined={combined?.totalASW} />
+          </Item>
+          <Item label={t('data:AA')}>
+            <DualStat own={totalAA} combined={combined?.totalAA} />
+          </Item>
           <Item label={t('main:Fighter Power')}>
             <Tooltip
               position={Position.BOTTOM}
               content={
                 <div>
+                  {combined && <div>{t('main:Fleet / Combined Fleet')}</div>}
                   <div>
-                    {t('main:Minimum FP')}: {tyku.min}
+                    {t('main:Minimum FP')}:{' '}
+                    <DualValue own={tyku.min} combined={combined?.tyku.min} />
                   </div>
                   <div>
-                    {t('main:Maximum FP')}: {tyku.max}
+                    {t('main:Maximum FP')}:{' '}
+                    <DualValue own={tyku.max} combined={combined?.tyku.max} />
                   </div>
                   <div>
-                    {t('main:Basic FP')}: {tyku.basic}
+                    {t('main:Basic FP')}:{' '}
+                    <DualValue own={tyku.basic} combined={combined?.tyku.basic} />
                   </div>
                 </div>
               }
             >
-              <span>{tyku.max === tyku.min ? tyku.min : `${tyku.min}+`}</span>
+              <span>
+                <DualValue own={tykuText(tyku)} combined={combined && tykuText(combined.tyku)} />
+              </span>
             </Tooltip>
           </Item>
           <Item label={t('main:LOS')}>
@@ -310,32 +458,52 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
               position={Position.BOTTOM}
               content={
                 <InfoTooltip className="info-tooltip">
+                  {combined && (
+                    <ReconTile className="recon-title">
+                      {t('main:Fleet / Combined Fleet')}
+                    </ReconTile>
+                  )}
                   <ReconTile className="recon-title">{t('main:Total')}</ReconTile>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item" />
-                    <span>{totalLoS}</span>
+                    <span>
+                      <DualValue own={totalLoS} combined={combined?.totalLoS} />
+                    </span>
                   </InfoTooltipEntry>
                   <ReconTile className="recon-title">{t('main:Formula 33')}</ReconTile>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item">× 1</InfoTooltipItem>
-                    <span>{saku33.total}</span>
+                    <span>
+                      <DualValue own={saku33.total} combined={combined?.saku.saku33.total} />
+                    </span>
                   </InfoTooltipEntry>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item">{'× 2'}</InfoTooltipItem>
-                    <span>{saku33x2.total}</span>
+                    <span>
+                      <DualValue own={saku33x2.total} combined={combined?.saku.saku33x2.total} />
+                    </span>
                   </InfoTooltipEntry>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item">{'× 3'}</InfoTooltipItem>
-                    <span>{saku33x3.total}</span>
+                    <span>
+                      <DualValue own={saku33x3.total} combined={combined?.saku.saku33x3.total} />
+                    </span>
                   </InfoTooltipEntry>
                   <InfoTooltipEntry className="info-tooltip-entry">
                     <InfoTooltipItem className="info-tooltip-item">{'× 4'}</InfoTooltipItem>
-                    <span>{saku33x4.total}</span>
+                    <span>
+                      <DualValue own={saku33x4.total} combined={combined?.saku.saku33x4.total} />
+                    </span>
                   </InfoTooltipEntry>
                 </InfoTooltip>
               }
             >
-              <span>{saku33.total.toFixed(2)}</span>
+              <span>
+                <DualValue
+                  own={saku33.total.toFixed(1)}
+                  combined={combined && combined.saku.saku33.total.toFixed(1)}
+                />
+              </span>
             </Tooltip>
           </Item>
           <Item label={inExpedition ? t('main:Expedition') : t('main:Resting')}>

@@ -104,5 +104,6 @@
   "RemodelReady": "可以進行改造",
   "TotalExp": "總經驗值：{{exp}}",
   "NextExp": "距下一級：{{nextExp}}",
-  "Total": "合計"
+  "Total": "合計",
+  "Fleet / Combined Fleet": "單艦隊 / 聯合艦隊"
 }

@@ -98,5 +98,6 @@
   "RemodelLv": "다음 개장 레벨: Lv. {{remodelLevel}}",
   "RemodelReady": "개장 가능",
   "TotalExp": "총 경험치: {{exp}}",
-  "NextExp": "Next: {{nextExp}}"
+  "NextExp": "Next: {{nextExp}}",
+  "Fleet / Combined Fleet": "함대 / 연합함대"
 }
