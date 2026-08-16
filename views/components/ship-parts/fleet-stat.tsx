@@ -95,14 +95,13 @@ const Item = ({ label, children }: { label: string; children: React.ReactNode })
 const tykuText = ({ min, max }: { min: number; max: number }) =>
   max === min ? `${min}` : `${min}+`
 
-// the single fleet value takes less room so both fit on one line, and rides
-// along the top of the line so it reads as a note on the combined fleet value
+// the single fleet value takes less room so both fit on one line, and is raised
+// so its top lines up with the top of the full-size combined fleet value
+// (0.2em ≈ the cap height a 80% glyph loses against the full-size one)
 const OwnValue = styled.span`
-  display: inline-block;
   font-size: 80%;
-  line-height: 1;
   opacity: 0.8;
-  vertical-align: top;
+  vertical-align: 0.2em;
 `
 
 interface DualProps {
@@ -111,13 +110,13 @@ interface DualProps {
   combined?: React.ReactNode
 }
 
-// `own / combined` while a combined fleet is formed, `own` alone otherwise
+// `combined (own)` while a combined fleet is formed, `own` alone otherwise
 const DualValue = ({ own, combined }: DualProps) =>
   combined == null ? (
     <>{own}</>
   ) : (
     <>
-      <OwnValue className="own-fleet-value">{own} /</OwnValue> {combined}
+      {combined} <OwnValue className="own-fleet-value">({own})</OwnValue>
     </>
   )
 
@@ -128,7 +127,7 @@ const DualStat = ({ own, combined }: DualProps) => {
     return <>{own}</>
   }
   return (
-    <Tooltip position={Position.BOTTOM} content={t('main:Fleet / Combined Fleet')}>
+    <Tooltip position={Position.BOTTOM} content={t('main:Combined Fleet (Fleet)')}>
       <span>
         <DualValue own={own} combined={combined} />
       </span>
@@ -432,7 +431,7 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
               position={Position.BOTTOM}
               content={
                 <div>
-                  {combined && <div>{t('main:Fleet / Combined Fleet')}</div>}
+                  {combined && <div>{t('main:Combined Fleet (Fleet)')}</div>}
                   <div>
                     {t('main:Minimum FP')}:{' '}
                     <DualValue own={tyku.min} combined={combined?.tyku.min} />
@@ -460,7 +459,7 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
                 <InfoTooltip className="info-tooltip">
                   {combined && (
                     <ReconTile className="recon-title">
-                      {t('main:Fleet / Combined Fleet')}
+                      {t('main:Combined Fleet (Fleet)')}
                     </ReconTile>
                   )}
                   <ReconTile className="recon-title">{t('main:Total')}</ReconTile>

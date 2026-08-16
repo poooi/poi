@@ -105,5 +105,5 @@
   "TotalExp": "総経験値：{{exp}}",
   "NextExp": "次のレベルまで：{{nextExp}}",
   "Total": "合計",
-  "Fleet / Combined Fleet": "艦隊 / 連合艦隊"
+  "Combined Fleet (Fleet)": "連合艦隊（艦隊）"
 }
