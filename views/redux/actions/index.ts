@@ -56,6 +56,7 @@ export {
   createAPIReqHenseiPresetSelectResponseAction,
   createAPIReqHenseiPresetOrderChangeResponseAction,
   createAPIReqHokyuChargeResponseAction,
+  createAPIReqKaisouHangarExpandResponseAction,
   createAPIReqKaisouLockResponseAction,
   createAPIReqKaisouMarriageResponseAction,
   createAPIReqKaisouOpenExslotResponseAction,

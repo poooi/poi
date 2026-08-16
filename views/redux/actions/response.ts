@@ -91,6 +91,8 @@ import type {
   APIReqHenseiPresetSelectResponse,
   APIReqHokyuChargeRequest,
   APIReqHokyuChargeResponse,
+  APIReqKaisouHangarExpandRequest,
+  APIReqKaisouHangarExpandResponse,
   APIReqKaisouLockRequest,
   APIReqKaisouLockResponse,
   APIReqKaisouMarriageRequest,
@@ -313,6 +315,10 @@ export const createAPIReqHenseiPresetOrderChangeResponseAction = createAction<
 export const createAPIReqHokyuChargeResponseAction = createAction<
   GameResponsePayload<APIReqHokyuChargeResponse, APIReqHokyuChargeRequest>
 >('@@Response/kcsapi/api_req_hokyu/charge')
+
+export const createAPIReqKaisouHangarExpandResponseAction = createAction<
+  GameResponsePayload<APIReqKaisouHangarExpandResponse, APIReqKaisouHangarExpandRequest>
+>('@@Response/kcsapi/api_req_kaisou/hangar_expand')
 
 export const createAPIReqKaisouLockResponseAction = createAction<
   GameResponsePayload<APIReqKaisouLockResponse, APIReqKaisouLockRequest>

@@ -13,6 +13,8 @@ import type {
   APIReqHenseiLockResponse,
   APIReqHokyuChargeRequest,
   APIReqHokyuChargeResponse,
+  APIReqKaisouHangarExpandRequest,
+  APIReqKaisouHangarExpandResponse,
   APIReqKaisouMarriageRequest,
   APIReqKaisouMarriageResponse,
   APIReqKaisouOpenExslotRequest,
@@ -53,6 +55,7 @@ import {
   createAPIGetMemberNdockResponseAction,
   createAPIReqMapAnchorageRepairResponseAction,
   createAPIReqKaisouOpenExslotResponseAction,
+  createAPIReqKaisouHangarExpandResponseAction,
   createInfoShipsRepairCompletedAction,
 } from '../../actions'
 import { reducer } from '../ships'
@@ -63,6 +66,7 @@ import ship3Fixture from './__fixtures__/api_get_member_ship3_with_slot_data.jso
 import portFixture from './__fixtures__/api_port_port_typical.json'
 import lockFixture from './__fixtures__/api_req_hensei_lock_unlock_ship.json'
 import hokyuChargeFixture from './__fixtures__/api_req_hokyu_charge_refuel_rearm.json'
+import hangarExpandFixture from './__fixtures__/api_req_kaisou_hangar_expand_raises_slot_capacity.json'
 import marriageFixture from './__fixtures__/api_req_kaisou_marriage_level_100.json'
 import openExslotFixture from './__fixtures__/api_req_kaisou_open_exslot_unlock_exslot.json'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
@@ -514,6 +518,59 @@ describe('ships reducer', () => {
       time: 0,
     }
     const result = reducer(initialState, createAPIReqKaisouOpenExslotResponseAction(badPayload))
+    expect(result).toBe(initialState)
+  })
+
+  it('should handle api_req_kaisou/hangar_expand', () => {
+    const payload: GameResponsePayload<
+      APIReqKaisouHangarExpandResponse,
+      APIReqKaisouHangarExpandRequest
+    > = hangarExpandFixture
+    const initialState: ShipsState = {
+      '112': {
+        ...createShip(112, 599),
+        api_onslot_max: [16, 16, 40, 6, 3],
+      },
+    }
+    const result = reducer(initialState, createAPIReqKaisouHangarExpandResponseAction(payload))
+    // slot_pos 3 was expanded, so the third entry goes 40 -> 41
+    expect(result['112'].api_onslot_max).toEqual([16, 16, 41, 6, 3])
+  })
+
+  it('should set api_onslot_max on a ship that has never been expanded', () => {
+    const payload: GameResponsePayload<
+      APIReqKaisouHangarExpandResponse,
+      APIReqKaisouHangarExpandRequest
+    > = hangarExpandFixture
+    const initialState: ShipsState = { '112': createShip(112, 599) }
+    const result = reducer(initialState, createAPIReqKaisouHangarExpandResponseAction(payload))
+    expect(result['112'].api_onslot_max).toEqual([16, 16, 41, 6, 3])
+  })
+
+  it('should return current state for api_req_kaisou/hangar_expand on an unknown ship', () => {
+    const initialState: ShipsState = { '1': createShip(1, 100) }
+    const payload: GameResponsePayload<
+      APIReqKaisouHangarExpandResponse,
+      APIReqKaisouHangarExpandRequest
+    > = hangarExpandFixture
+    const result = reducer(initialState, createAPIReqKaisouHangarExpandResponseAction(payload))
+    expect(result).toBe(initialState)
+  })
+
+  it('should return current state for api_req_kaisou/hangar_expand when api_ship_id is missing', () => {
+    const initialState: ShipsState = { '112': createShip(112, 599) }
+    const badPayload: GameResponsePayload<
+      APIReqKaisouHangarExpandResponse,
+      APIReqKaisouHangarExpandRequest
+    > = {
+      method: 'POST',
+      path: '/kcsapi/api_req_kaisou/hangar_expand',
+      body: { api_onslot_max: [16, 16, 41, 6, 3] },
+      // @ts-expect-error api_ship_id is missing; test invalid payload guard
+      postBody: { api_verno: '1', api_slot_pos: '3' },
+      time: 0,
+    }
+    const result = reducer(initialState, createAPIReqKaisouHangarExpandResponseAction(badPayload))
     expect(result).toBe(initialState)
   })
 

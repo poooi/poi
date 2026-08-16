@@ -156,7 +156,7 @@ export const createAPIReqCombinedBattleSPMidnightResponseAction = createAction<
 ### Currently Missing from kcsapi
 
 These API endpoints are used but not typed in the kcsapi package (verified
-against `kcsapi@1.260809.0`):
+against `kcsapi@1.260817.0`):
 
 1. `@@Response/kcsapi/api_req_combined_battle/airbattle`
 2. `@@Response/kcsapi/api_req_combined_battle/sp_midnight`

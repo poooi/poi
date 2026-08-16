@@ -22,6 +22,7 @@ import {
   createAPIGetMemberNdockResponseAction,
   createAPIReqMapAnchorageRepairResponseAction,
   createAPIReqKaisouOpenExslotResponseAction,
+  createAPIReqKaisouHangarExpandResponseAction,
   createInfoShipsRepairCompletedAction,
 } from '../actions'
 
@@ -260,6 +261,23 @@ const shipsSlice = createSlice({
           [api_id]: {
             ...state[api_id],
             api_slot_ex: -1,
+          },
+        }
+      })
+      // Hangar expansion raises a ship's per-slot plane capacity above the
+      // master data api_maxeq. The response carries the ship's full new
+      // capacity array, so api_slot_pos only tells us which slot was expanded.
+      .addCase(createAPIReqKaisouHangarExpandResponseAction, (state, { payload }) => {
+        const api_ship_id = Number(payload.postBody?.api_ship_id || 0)
+        const api_onslot_max = payload.body?.api_onslot_max
+        if (!api_ship_id || !Array.isArray(api_onslot_max)) return state
+        const ship = state[api_ship_id]
+        if (!ship) return state
+        return {
+          ...state,
+          [api_ship_id]: {
+            ...ship,
+            api_onslot_max,
           },
         }
       })

@@ -33,7 +33,8 @@ export const slotitemsDataSelectorFactory = memoize((shipId: number) =>
     (shipPair, equipsData) => {
       const [ship, $ship] = shipPair ?? []
       return {
-        api_maxeq: $ship?.api_maxeq,
+        // hangar expansion raises capacity per ship, so it wins over master data
+        api_maxeq: ship?.api_onslot_max ?? $ship?.api_maxeq,
         equipsData,
         exslotUnlocked: (ship?.api_slot_ex ?? 0) !== 0,
       }
