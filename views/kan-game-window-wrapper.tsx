@@ -5,7 +5,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import { restoreWindowState, watchWindowBounds } from 'lib/window-bounds'
+import { watchWindowBounds } from 'lib/window-bounds'
 import { debounce } from 'lodash'
 import { join } from 'path'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -260,12 +260,10 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         BrowserWindow.getAllWindows().find((a) =>
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
+      // Maximized / fullscreen state is deliberately not restored here: this
+      // window is aspect-ratio locked and the resize handler below forces its
+      // content size, which drops it right back out of the maximized state.
       curWindow?.once('ready-to-show', () => {
-        // Fixed resolution keeps the window at a computed size, so a stored
-        // maximized / fullscreen state must not be restored in that mode
-        if (!initialWindowUseFixedResolution) {
-          restoreWindowState(curWindow, config.get('poi.kangameWindow.bounds'))
-        }
         curWindow.show()
       })
       currentWindowRef.current = curWindow

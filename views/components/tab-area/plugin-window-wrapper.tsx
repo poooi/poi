@@ -5,7 +5,6 @@ import type { Plugin } from 'views/services/plugin-manager'
 import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
-import config from 'lib/config'
 import { restoreWindowState, watchWindowBounds } from 'lib/window-bounds'
 import { join } from 'path'
 import React, {
@@ -19,7 +18,9 @@ import React, {
 import ReactDOM from 'react-dom'
 import { StyleSheetManager, styled } from 'styled-components'
 import { appMenu } from 'views/components/etc/menu'
-import { ROOT, ipc } from 'views/env'
+// Must be the shared main-process instance: a bundled `lib/config` copy would be
+// a second PoiConfig rewriting the whole config file from a stale snapshot
+import { ROOT, config, ipc } from 'views/env'
 import { loadStyle } from 'views/env-parts/theme'
 import { fileUrl } from 'views/utils/tools'
 
