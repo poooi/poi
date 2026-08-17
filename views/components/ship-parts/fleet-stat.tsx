@@ -85,24 +85,35 @@ const ItemLabel = styled.div`
   font-size: 80%;
 `
 
-const Item = ({ label, children }: { label: string; children: React.ReactNode }) => (
-  <ItemContainer>
-    <ItemLabel>{label}</ItemLabel>
-    <div>{children}</div>
-  </ItemContainer>
-)
+// marks a label whose value belongs to the combined fleet instead of this fleet alone
+const CombinedMark = styled.span`
+  margin-left: 0.25em;
+  opacity: 0.8;
+`
+
+const Item = ({
+  label,
+  combined,
+  children,
+}: {
+  label: string
+  combined?: boolean
+  children: React.ReactNode
+}) => {
+  const { t } = useTranslation('main')
+  return (
+    <ItemContainer>
+      <ItemLabel>
+        {label}
+        {combined && <CombinedMark className="combined-fleet-mark">{t('main:ComFl')}</CombinedMark>}
+      </ItemLabel>
+      <div>{children}</div>
+    </ItemContainer>
+  )
+}
 
 const tykuText = ({ min, max }: { min: number; max: number }) =>
   max === min ? `${min}` : `${min}+`
-
-// the single fleet value takes less room so both fit on one line, and is raised
-// so its top lines up with the top of the full-size combined fleet value
-// (0.2em ≈ the cap height a 80% glyph loses against the full-size one)
-const OwnValue = styled.span`
-  font-size: 80%;
-  opacity: 0.8;
-  vertical-align: 0.2em;
-`
 
 interface DualProps {
   own: React.ReactNode
@@ -110,27 +121,32 @@ interface DualProps {
   combined?: React.ReactNode
 }
 
-// `combined (own)` while a combined fleet is formed, `own` alone otherwise
+// `combined (own)` inside tooltips, where there is room for both
 const DualValue = ({ own, combined }: DualProps) =>
   combined == null ? (
     <>{own}</>
   ) : (
     <>
-      {combined} <OwnValue className="own-fleet-value">({own})</OwnValue>
+      {combined} ({own})
     </>
   )
 
-// same, with a tooltip telling which value is which (for stats without their own tooltip)
+// the combined fleet value, with this fleet's own value on hover
 const DualStat = ({ own, combined }: DualProps) => {
   const { t } = useTranslation('main')
   if (combined == null) {
     return <>{own}</>
   }
   return (
-    <Tooltip position={Position.BOTTOM} content={t('main:Combined Fleet (Fleet)')}>
-      <span>
-        <DualValue own={own} combined={combined} />
-      </span>
+    <Tooltip
+      position={Position.BOTTOM}
+      content={
+        <span>
+          {t('main:Fleet')}: {own}
+        </span>
+      }
+    >
+      <span>{combined}</span>
     </Tooltip>
   )
 }
@@ -389,18 +405,20 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
       {isMini ? (
         <MiniContainer>
           <MiniItem>
-            <DualValue
+            <DualStat
               own={t(`main:${getSpeedLabel(speed)}`)}
               combined={combined && t(`main:${getSpeedLabel(combined.fleetSpeed.speed)}`)}
             />
           </MiniItem>
           <MiniItem>
-            {t('main:Fighter Power')}:{' '}
-            <DualValue own={tykuText(tyku)} combined={combined && tykuText(combined.tyku)} />
+            {t('main:Fighter Power')}
+            {combined && <CombinedMark>{t('main:ComFl')}</CombinedMark>}{' '}
+            <DualStat own={tykuText(tyku)} combined={combined && tykuText(combined.tyku)} />
           </MiniItem>
           <MiniItem>
-            {t('main:LOS')}:{' '}
-            <DualValue
+            {t('main:LOS')}
+            {combined && <CombinedMark>{t('main:ComFl')}</CombinedMark>}{' '}
+            <DualStat
               own={saku33.total.toFixed(1)}
               combined={combined && combined.saku.saku33.total.toFixed(1)}
             />
@@ -408,25 +426,25 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
         </MiniContainer>
       ) : (
         <Container>
-          <Item label={t('data:Speed')}>
+          <Item label={t('data:Speed')} combined={!!combined}>
             <DualStat
               own={t(`main:${getSpeedLabel(speed)}`)}
               combined={combined && t(`main:${getSpeedLabel(combined.fleetSpeed.speed)}`)}
             />
           </Item>
-          <Item label={t('data:Lv')}>
+          <Item label={t('data:Lv')} combined={!!combined}>
             <DualStat own={totalLv} combined={combined?.totalLv} />
           </Item>
-          <Item label={t('data:FP')}>
+          <Item label={t('data:FP')} combined={!!combined}>
             <DualStat own={totalFP} combined={combined?.totalFP} />
           </Item>
-          <Item label={t('data:ASW')}>
+          <Item label={t('data:ASW')} combined={!!combined}>
             <DualStat own={totalASW} combined={combined?.totalASW} />
           </Item>
-          <Item label={t('data:AA')}>
+          <Item label={t('data:AA')} combined={!!combined}>
             <DualStat own={totalAA} combined={combined?.totalAA} />
           </Item>
-          <Item label={t('main:Fighter Power')}>
+          <Item label={t('main:Fighter Power')} combined={!!combined}>
             <Tooltip
               position={Position.BOTTOM}
               content={
@@ -447,12 +465,10 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
                 </div>
               }
             >
-              <span>
-                <DualValue own={tykuText(tyku)} combined={combined && tykuText(combined.tyku)} />
-              </span>
+              <span>{tykuText(combined?.tyku ?? tyku)}</span>
             </Tooltip>
           </Item>
-          <Item label={t('main:LOS')}>
+          <Item label={t('main:LOS')} combined={!!combined}>
             <Tooltip
               position={Position.BOTTOM}
               content={
@@ -497,12 +513,7 @@ export const FleetStat = memo(({ fleetId, isMini, isMainView = false }: FleetSta
                 </InfoTooltip>
               }
             >
-              <span>
-                <DualValue
-                  own={saku33.total.toFixed(1)}
-                  combined={combined && combined.saku.saku33.total.toFixed(1)}
-                />
-              </span>
+              <span>{(combined?.saku.saku33 ?? saku33).total.toFixed(1)}</span>
             </Tooltip>
           </Item>
           <Item label={inExpedition ? t('main:Expedition') : t('main:Resting')}>

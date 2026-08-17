@@ -105,5 +105,6 @@
   "TotalExp": "总经验值：{{exp}}",
   "NextExp": "距下一级：{{nextExp}}",
   "Total": "合计",
-  "Combined Fleet (Fleet)": "联合舰队（单舰队）"
+  "Combined Fleet (Fleet)": "联合舰队（单舰队）",
+  "ComFl": "联合"
 }

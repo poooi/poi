@@ -99,5 +99,6 @@
   "RemodelReady": "개장 가능",
   "TotalExp": "총 경험치: {{exp}}",
   "NextExp": "Next: {{nextExp}}",
-  "Combined Fleet (Fleet)": "연합함대 (함대)"
+  "Combined Fleet (Fleet)": "연합함대 (함대)",
+  "ComFl": "연합"
 }
