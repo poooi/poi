@@ -209,7 +209,14 @@ interface PoiAutoSwitchPlugins {
 }
 
 interface PoiKangameWindow {
-  bounds?: { x?: number; y?: number; width: number; height: number }
+  bounds?: {
+    x?: number
+    y?: number
+    width: number
+    height: number
+    isMaximized?: boolean
+    isFullScreen?: boolean
+  }
 }
 
 interface Poi {
@@ -274,6 +281,8 @@ interface IndividualPluginConfig {
     y: number
     width: number
     height: number
+    isMaximized?: boolean
+    isFullScreen?: boolean
   }
 }
 

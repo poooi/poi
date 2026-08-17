@@ -6,6 +6,7 @@ import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
 import config from 'lib/config'
+import { restoreWindowState, watchWindowBounds } from 'lib/window-bounds'
 import { join } from 'path'
 import React, {
   forwardRef,
@@ -123,6 +124,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
 
     const externalWindowRef = useRef<Window | null>(null)
     const currentWindowRef = useRef<Electron.BrowserWindow | undefined>(undefined)
+    const unwatchBoundsRef = useRef<(() => void) | undefined>(undefined)
     const pluginContainer = useRef<HTMLDivElement>(null)
 
     const [loaded, setLoaded] = useState(false)
@@ -202,6 +204,7 @@ export const PluginWindowWrap = forwardRef<PluginWindowWrapHandle, Props>(
             a.webContents.getURL().endsWith(plugin.id),
           )
           currentWindow?.once('ready-to-show', () => {
+            restoreWindowState(currentWindow, config.get(`plugin.${plugin.id}.bounds`))
             currentWindow.show()
           })
           currentWindowRef.current = currentWindow
@@ -229,11 +232,12 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
           const { stopFileNavigate }: typeof WebContentUtils =
             remote.require('./lib/webcontent-utils')
           stopFileNavigate(currentWindow?.webContents.id ?? -1)
+          if (currentWindow) {
+            unwatchBoundsRef.current = watchWindowBounds(currentWindow, (state) => {
+              config.set(`plugin.${plugin.id}.bounds`, state)
+            })
+          }
           currentWindowRef.current?.once('close', () => {
-            if (currentWindowRef.current && !currentWindowRef.current.isDestroyed()) {
-              const bounds = currentWindowRef.current.getBounds()
-              config.set(`plugin.${plugin.id}.bounds`, bounds)
-            }
             try {
               closeWindowPortal()
             } catch (e) {
@@ -256,6 +260,8 @@ ${stylesheetTagsWithID}${stylesheetTagsWithHref}`
 
       return () => {
         config.removeListener('config.set', handleZoom)
+        unwatchBoundsRef.current?.()
+        unwatchBoundsRef.current = undefined
         try {
           if (externalWindowRef.current) {
             externalWindowRef.current.onbeforeunload = null

@@ -5,6 +5,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
+import { restoreWindowState, watchWindowBounds } from 'lib/window-bounds'
 import { debounce } from 'lodash'
 import { join } from 'path'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -148,6 +149,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
 
   const externalWindowRef = useRef<Window | null>(null)
   const currentWindowRef = useRef<Electron.BrowserWindow | null>(null)
+  const unwatchBoundsRef = useRef<(() => void) | undefined>(undefined)
   const kangameContainerRef = useRef<HTMLDivElement>(null)
 
   // Latest-value refs: allow effects to read current values without becoming
@@ -259,6 +261,11 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
       curWindow?.once('ready-to-show', () => {
+        // Fixed resolution keeps the window at a computed size, so a stored
+        // maximized / fullscreen state must not be restored in that mode
+        if (!initialWindowUseFixedResolution) {
+          restoreWindowState(curWindow, config.get('poi.kangameWindow.bounds'))
+        }
         curWindow.show()
       })
       currentWindowRef.current = curWindow
@@ -330,16 +337,11 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       stopFileNavigate(curWindow!.webContents.id)
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
-      curWindow?.once('close', () => {
-        try {
-          if (curWindow && !curWindow.isDestroyed()) {
-            const bounds = curWindow.getBounds()
-            config.set('poi.kangameWindow.bounds', bounds)
-          }
-        } catch (e) {
-          console.error(e)
-        }
-      })
+      if (curWindow) {
+        unwatchBoundsRef.current = watchWindowBounds(curWindow, (state) => {
+          config.set('poi.kangameWindow.bounds', state)
+        })
+      }
 
       if (initialWindowUseFixedResolution) {
         const w = latestWindowWidth.current
@@ -356,6 +358,8 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     })
 
     return () => {
+      unwatchBoundsRef.current?.()
+      unwatchBoundsRef.current = undefined
       try {
         if (externalWindowRef.current) {
           externalWindowRef.current.onbeforeunload = null
