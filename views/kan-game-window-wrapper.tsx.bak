@@ -336,14 +336,9 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
       if (curWindow) {
-        // Only the geometry is kept: the maximized / fullscreen flags can never be
-        // honored for this window, so persisting them would be dead config
-        unwatchBoundsRef.current = watchWindowBounds(
-          curWindow,
-          ({ isMaximized: _isMaximized, isFullScreen: _isFullScreen, ...bounds }) => {
-            config.set('poi.kangameWindow.bounds', bounds)
-          },
-        )
+        unwatchBoundsRef.current = watchWindowBounds(curWindow, (state) => {
+          config.set('poi.kangameWindow.bounds', state)
+        })
       }
 
       if (initialWindowUseFixedResolution) {
