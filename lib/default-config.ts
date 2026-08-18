@@ -209,6 +209,7 @@ interface PoiAutoSwitchPlugins {
 }
 
 interface PoiKangameWindow {
+  // Aspect-ratio locked window: no maximized / fullscreen state to store
   bounds?: { x?: number; y?: number; width: number; height: number }
 }
 
@@ -274,6 +275,8 @@ interface IndividualPluginConfig {
     y: number
     width: number
     height: number
+    isMaximized?: boolean
+    isFullScreen?: boolean
   }
 }
 

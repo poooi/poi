@@ -5,6 +5,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 import { BlueprintProvider } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { TitleBar } from 'electron-react-titlebar/renderer'
+import { watchWindowBounds } from 'lib/window-bounds'
 import { debounce } from 'lodash'
 import { join } from 'path'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -148,6 +149,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
 
   const externalWindowRef = useRef<Window | null>(null)
   const currentWindowRef = useRef<Electron.BrowserWindow | null>(null)
+  const unwatchBoundsRef = useRef<(() => void) | undefined>(undefined)
   const kangameContainerRef = useRef<HTMLDivElement>(null)
 
   // Latest-value refs: allow effects to read current values without becoming
@@ -258,6 +260,9 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         BrowserWindow.getAllWindows().find((a) =>
           a.webContents.getURL().endsWith('index-plugin.html?kangame'),
         ) ?? null
+      // Maximized / fullscreen state is deliberately not restored here: this
+      // window is aspect-ratio locked and the resize handler below forces its
+      // content size, which drops it right back out of the maximized state.
       curWindow?.once('ready-to-show', () => {
         curWindow.show()
       })
@@ -330,16 +335,16 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       stopFileNavigate(curWindow!.webContents.id)
       handleWebviewPreloadHack(curWindow!.webContents.id)
 
-      curWindow?.once('close', () => {
-        try {
-          if (curWindow && !curWindow.isDestroyed()) {
-            const bounds = curWindow.getBounds()
+      if (curWindow) {
+        // Only the geometry is kept: the maximized / fullscreen flags can never be
+        // honored for this window, so persisting them would be dead config
+        unwatchBoundsRef.current = watchWindowBounds(
+          curWindow,
+          ({ isMaximized: _isMaximized, isFullScreen: _isFullScreen, ...bounds }) => {
             config.set('poi.kangameWindow.bounds', bounds)
-          }
-        } catch (e) {
-          console.error(e)
-        }
-      })
+          },
+        )
+      }
 
       if (initialWindowUseFixedResolution) {
         const w = latestWindowWidth.current
@@ -356,6 +361,8 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     })
 
     return () => {
+      unwatchBoundsRef.current?.()
+      unwatchBoundsRef.current = undefined
       try {
         if (externalWindowRef.current) {
           externalWindowRef.current.onbeforeunload = null

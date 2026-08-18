@@ -4,6 +4,8 @@ import * as electronRemote from '@electron/remote/main'
 import { app, BrowserWindow, screen, webContents } from 'electron'
 import path from 'path'
 
+import { watchWindowBounds } from './window-bounds'
+
 const windows: typeof global.windows = (global.windows = [])
 const windowsIndex: typeof global.windowsIndex = (global.windowsIndex = {})
 
@@ -138,6 +140,20 @@ const normalizePosition = (options: PoiWindowOptions) => {
   })
 }
 
+const saveMainWindowState = () => {
+  const win = global.mainWindow
+  if (!win || win.isDestroyed()) {
+    return
+  }
+  // getNormalBounds() reports the restored bounds, so a maximized / fullscreen
+  // window doesn't need to be un-maximized first
+  require('./config').set('poi.window', {
+    ...win.getNormalBounds(),
+    isFullScreen: win.isFullScreen(),
+    isMaximized: win.isMaximized(),
+  })
+}
+
 export default {
   createWindow: (options: PoiWindowOptions) => {
     options = Object.assign(
@@ -237,21 +253,16 @@ export default {
     pluginUnload = true
     win.close()
   },
-  rememberMain: () => {
+  rememberMain: saveMainWindowState,
+  // Keep the stored main window state in sync while the user moves / resizes it,
+  // instead of only writing it on quit
+  watchMain: () => {
     const win = global.mainWindow
-    const isFullScreen = win.isFullScreen()
-    if (win.isFullScreen()) {
-      win.setFullScreen(false)
+    if (!win || win.isDestroyed()) {
+      return
     }
-    const isMaximized = win.isMaximized()
-    if (win.isMaximized()) {
-      win.unmaximize()
-    }
-    const b = win.getBounds()
-    require('./config').set('poi.window', {
-      ...b,
-      isFullScreen,
-      isMaximized,
+    watchWindowBounds(win, (state) => {
+      require('./config').set('poi.window', state)
     })
   },
   hideAllWindowsToTray,

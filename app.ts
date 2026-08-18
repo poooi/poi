@@ -298,6 +298,9 @@ app.on('ready', () => {
   })
   global.mainWindow = mainWindow = win
 
+  const { watchMain }: typeof windowManagerType = require('./lib/window')
+  watchMain()
+
   win.once('ready-to-show', () => {
     win.show()
   })
