@@ -69,9 +69,10 @@ export const isFletcherClassOrKai = shipIdIsOneOf(
   726,
 )
 
-// 597: Atlanta
-// 696: Atlanta Kai
-export const isAtlantaOrKai = (ship: GameShip) => [597, 696].includes(ship.api_ship_id ?? -1)
+// 99 = Atlanta級 (597: Atlanta, 696: Atlanta改, 991: Reno, 747: Reno改).
+// The wiki lists the dedicated AACI (types 38~41) against the class, not single
+// ship ids, so match on ctype to stay correct as the class gains members.
+export const isAtlantaClass = ctypeIs(99)
 
 export const isHarunaKaiNiB = shipIdIs(593)
 

@@ -39,7 +39,7 @@ import {
   isAARadar,
   isAdvancedAARadar,
   isAkizukiClass,
-  isAtlantaOrKai,
+  isAtlantaClass,
   isBattleship,
   isBuiltinHighAngleMount,
   isBuiltinHighAngleMountAA9,
@@ -487,24 +487,27 @@ declareAACI({
   equipsValid: hasAtLeast(is5InckSingleGunMountMk30Kai, 2),
 })
 
-// id 38~41: Atlanta
+// id 38~41: Atlanta class
+// Eligibility is class-wide (ctype 99), so a new class member only needs adding here.
+const atlantaClassNames = ['Atlanta', 'Atlanta改', 'Reno', 'Reno改']
+
 declareAACI({
-  name: ['Atlanta', 'Atlanta改'],
+  name: atlantaClassNames,
   id: 38,
   fixed: 10,
   modifier: 1.85,
-  shipValid: isAtlantaOrKai,
+  shipValid: isAtlantaClass,
   equipsValid: validAll(hasAtLeast(isGFCSMk37And5InchTwinDualPurposeGunMount, 2)),
 })
 
 // (as of Jan 1, 2020) Wikia listed this as Atlanta Kai's AACI and wikiwiki listed this as Atlanta's
 // Applying to both Atlanta and Atlanta Kai since I'm seeing Atlanta trigering type 39.
 declareAACI({
-  name: ['Atlanta', 'Atlanta改'],
+  name: atlantaClassNames,
   id: 39,
   fixed: 10,
   modifier: 1.7,
-  shipValid: isAtlantaOrKai,
+  shipValid: isAtlantaClass,
   equipsValid: validAll(
     // GFCS Mk.37＋5inch連装両用砲(集中配備) must be equipped for this one
     hasSome(isGFCSMk37And5InchTwinDualPurposeGunMount),
@@ -514,20 +517,20 @@ declareAACI({
 })
 
 declareAACI({
-  name: ['Atlanta', 'Atlanta改'],
+  name: atlantaClassNames,
   id: 40,
   fixed: 10,
   modifier: 1.7,
-  shipValid: isAtlantaOrKai,
+  shipValid: isAtlantaClass,
   equipsValid: validAll(hasSome(isGFCSMk37), hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2)),
 })
 
 declareAACI({
-  name: ['Atlanta', 'Atlanta改'],
+  name: atlantaClassNames,
   id: 41,
   fixed: 9,
   modifier: 1.65,
-  shipValid: isAtlantaOrKai,
+  shipValid: isAtlantaClass,
   equipsValid: hasAtLeast(is5InchTwinDualPurposeGunMountLike, 2),
 })
 

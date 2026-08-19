@@ -88,3 +88,45 @@ describe('AACI type 53 (飛龍改三)', () => {
     ).not.toContain(53)
   })
 })
+
+describe('Atlanta class AACI (types 38~41)', () => {
+  // 363: GFCS Mk.37+5inch連装両用砲(集中配備), 362: 5inch連装両用砲(集中配備)
+  const gfcsDualPurposeMount: GameEquip = { ...equips[0], api_slotitem_id: 363 }
+  const dualPurposeMount: GameEquip = { ...equips[0], api_slotitem_id: 362 }
+  // ctype 99 = Atlanta級; the fixture ship is 秋月型, so ctype must be overridden
+  const asAtlantaClass = (shipId: number): GameShip => ({
+    ...ship,
+    api_ship_id: shipId,
+    api_stype: 3,
+    api_ctype: 99,
+  })
+
+  // Atlanta / Atlanta改 are the already-covered members, used here as the control
+  it.each([
+    ['Atlanta', 597],
+    ['Atlanta改', 696],
+    ['Reno', 991],
+    ['Reno改', 747],
+  ])('%s is eligible for type 38', (_name, shipId) => {
+    expect(
+      getShipAvailableAACIs(asAtlantaClass(shipId), [gfcsDualPurposeMount, gfcsDualPurposeMount]),
+    ).toContain(38)
+  })
+
+  it.each([
+    ['Atlanta', 597],
+    ['Reno', 991],
+  ])('%s is eligible for type 41 without a GFCS Mk.37', (_name, shipId) => {
+    expect(
+      getShipAvailableAACIs(asAtlantaClass(shipId), [dualPurposeMount, dualPurposeMount]),
+    ).toContain(41)
+  })
+
+  it('does not extend to a light cruiser outside the class', () => {
+    // 名取 (ctype 20 長良型)
+    const natori: GameShip = { ...ship, api_ship_id: 59, api_stype: 3, api_ctype: 20 }
+    expect(
+      getShipAvailableAACIs(natori, [gfcsDualPurposeMount, gfcsDualPurposeMount]),
+    ).not.toContain(38)
+  })
+})

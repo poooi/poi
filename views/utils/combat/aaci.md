@@ -8,7 +8,16 @@ The code was originally ported from KC3Kai commit a9edbe5. The wiki is the autho
 
 ## Last Validated
 
-2026-08-12. Fixed/modifier values for all types 1–53 match the wiki. Discrepancies were in ship eligibility and one equipment rule (type 27).
+2026-08-19. Fixed/modifier values for all types 1–53 match the wiki. Discrepancies were in ship eligibility and one equipment rule (type 27).
+
+## Changed 2026-08-19
+
+**Types 38–41 — Atlanta class eligibility widened from ship ids to ctype.** `isAtlantaOrKai`
+matched only Atlanta (597) / Atlanta改 (696), so Reno (991) / Reno改 (747) — the same class —
+never triggered the dedicated AACI. The wiki's 対空カットイン一覧表 lists these rows against
+`Atlanta級`, Reno's own wiki page defers to Atlanta's for the details, and KC3Kai upstream uses
+`ctypeIdEq(99)`. Replaced with `isAtlantaClass = ctypeIs(99)`, which also covers future class
+members automatically; only the display `name` list (`atlantaClassNames`) needs updating then.
 
 ## Added 2026-08-12
 
