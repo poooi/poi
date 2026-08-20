@@ -203,11 +203,15 @@ export const mergeSelectorTables = (
 ): SelectorTables => {
   if (!tables) return DEFAULT_SELECTOR_TABLES
   return {
-    shipFilterTabs: nonEmpty(tables.shipFilterTabs) ?? DEFAULT_SELECTOR_TABLES.shipFilterTabs,
-    airbaseFilterTabs:
-      nonEmpty(tables.airbaseFilterTabs) ?? DEFAULT_SELECTOR_TABLES.airbaseFilterTabs,
-    equipFilterCategories:
-      nonEmpty(tables.equipFilterCategories) ?? DEFAULT_SELECTOR_TABLES.equipFilterCategories,
+    shipFilterTabs: mergeEntries(tables.shipFilterTabs, DEFAULT_SELECTOR_TABLES.shipFilterTabs),
+    airbaseFilterTabs: mergeEntries(
+      tables.airbaseFilterTabs,
+      DEFAULT_SELECTOR_TABLES.airbaseFilterTabs,
+    ),
+    equipFilterCategories: mergeEntries(
+      tables.equipFilterCategories,
+      DEFAULT_SELECTOR_TABLES.equipFilterCategories,
+    ),
     filteringDetailCategories:
       tables.filteringDetailCategories ?? DEFAULT_SELECTOR_TABLES.filteringDetailCategories,
     equipTypeSpOverrides:
@@ -219,6 +223,24 @@ export const mergeSelectorTables = (
 
 const nonEmpty = <T>(value: T[] | undefined): T[] | undefined =>
   Array.isArray(value) && value.length > 0 ? value : undefined
+
+/**
+ * Merges a delivered tab/category list over the built-in one, entry by entry.
+ *
+ * A payload can be *older* than the code — poi only refreshes fcd when the
+ * remote version is newer, so a copy cached before a field existed would
+ * otherwise win wholesale and blank that field out. Backfilling per id keeps a
+ * stale payload from dropping anything the current build added.
+ */
+const mergeEntries = <T extends { id: number }>(delivered: T[] | undefined, defaults: T[]): T[] => {
+  const entries = nonEmpty(delivered)
+  if (!entries) return defaults
+  const byId = new Map(defaults.map((entry) => [entry.id, entry]))
+  return entries.map((entry) => {
+    const fallback = byId.get(entry.id)
+    return fallback ? { ...fallback, ...entry } : entry
+  })
+}
 
 export const resetSelectorTables = (): void => {
   currentTables = DEFAULT_SELECTOR_TABLES

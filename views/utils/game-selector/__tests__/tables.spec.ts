@@ -38,6 +38,49 @@ describe('mergeSelectorTables', () => {
     expect(merged.filteringDetailCategories).toBe(DEFAULT_SELECTOR_TABLES.filteringDetailCategories)
   })
 
+  spec('backfills fields a payload predating them does not carry', () => {
+    // poi only refreshes fcd when the remote version is newer, so a copy
+    // cached before `icon` existed can outlive the build that added it.
+    const stale = DEFAULT_SELECTOR_TABLES.equipFilterCategories.map(({ id, name, details }) => ({
+      id,
+      name,
+      details,
+    }))
+    // @ts-expect-error the stale payload is missing `icon`, which is the point
+    const merged = mergeSelectorTables({ equipFilterCategories: stale })
+
+    expect(merged.equipFilterCategories).toEqual(DEFAULT_SELECTOR_TABLES.equipFilterCategories)
+    merged.equipFilterCategories.forEach((category) => expect(category.icon).toBeDefined())
+  })
+
+  spec('a delivered field still wins over the built-in one', () => {
+    const merged = mergeSelectorTables({
+      equipFilterCategories: [
+        { id: 0, name: 'Renamed', details: [], icon: 99 },
+        ...DEFAULT_SELECTOR_TABLES.equipFilterCategories.slice(1),
+      ],
+    })
+    expect(merged.equipFilterCategories[0]).toEqual({
+      id: 0,
+      name: 'Renamed',
+      details: [],
+      icon: 99,
+    })
+  })
+
+  spec('an entry with no built-in counterpart passes through as delivered', () => {
+    const merged = mergeSelectorTables({
+      airbaseFilterTabs: [
+        ...DEFAULT_SELECTOR_TABLES.airbaseFilterTabs,
+        { id: 9, name: 'New', types: [1], icon: 2 },
+      ],
+    })
+    expect(merged.airbaseFilterTabs).toHaveLength(
+      DEFAULT_SELECTOR_TABLES.airbaseFilterTabs.length + 1,
+    )
+    expect(merged.airbaseFilterTabs[5]).toEqual({ id: 9, name: 'New', types: [1], icon: 2 })
+  })
+
   spec('ignores empty arrays rather than emptying the picker', () => {
     // A truncated or malformed fcd payload must not wipe out the tab strip.
     const merged = mergeSelectorTables({ shipFilterTabs: [], equipFilterCategories: [] })
