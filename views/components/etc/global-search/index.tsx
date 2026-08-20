@@ -38,11 +38,11 @@ import {
   shipEntriesSelector,
 } from './entries'
 import { isSearchMode, searchEventEmitter, type SearchMode } from './event'
+import { FilterSelect } from './filter-select'
 import {
   Backdrop,
   Empty,
   FilterRow,
-  FilterSelect,
   ListModeTagEl,
   Meta,
   Name,
@@ -55,7 +55,6 @@ import {
   ScopeBar,
   SearchField,
   SearchRow,
-  SortButton,
   TabButton,
 } from './styles'
 import { useSearchHotkey } from './use-search-hotkey'
@@ -279,14 +278,6 @@ const GlobalSearchPanel = ({
     [allTabIds],
   )
 
-  const cycleSortKey = useCallback(
-    () =>
-      setSortKey(
-        (prev) => SHIP_SORT_KEYS[(SHIP_SORT_KEYS.indexOf(prev) + 1) % SHIP_SORT_KEYS.length],
-      ),
-    [],
-  )
-
   // A query written for one roster rarely means anything against the other,
   // so switching modes starts from a clean search box.
   const changeMode = useCallback(
@@ -360,38 +351,55 @@ const GlobalSearchPanel = ({
         </SearchField>
         {/* Sort and secondary filters sit with the search box; the tab strip
             below is too wide to share this row. */}
-        {mode === 'ship' ? (
+        {mode === 'ship' && (
           <>
-            <SortButton small icon="sort" onClick={cycleSortKey}>
-              {translateSortCaption(SHIP_SORT_KEY_NAMES[sortKey])}
-            </SortButton>
+            {/* The picker cycles its sort key; the menu just makes the
+                available keys visible instead of hiding them behind clicks. */}
+            <FilterSelect
+              value={sortKey}
+              onSelect={setSortKey}
+              width="8em"
+              options={SHIP_SORT_KEYS.map((key) => ({
+                value: key,
+                label: translateSortCaption(SHIP_SORT_KEY_NAMES[key]),
+              }))}
+            />
             {/* The game only offers the sortie-tag filter while an event runs */}
             <FilterSelect
               value={tag}
+              onSelect={setTag}
               disabled={!eventActive}
+              width="9em"
               title={eventActive ? undefined : t('main:Available during events only')}
-              onChange={(e) => {
-                const next = e.currentTarget.value
-                if (next === 'all' || next === 'tagged' || next === 'untagged') setTag(next)
-              }}
               options={[
-                { value: 'all', label: t('main:All ships') },
-                { value: 'tagged', label: t('main:Tagged') },
-                { value: 'untagged', label: t('main:Untagged') },
+                { value: 'all' as ShipTagFilter, label: t('main:All ships') },
+                { value: 'tagged' as ShipTagFilter, label: t('main:Tagged') },
+                { value: 'untagged' as ShipTagFilter, label: t('main:Untagged') },
               ]}
             />
           </>
-        ) : (
+        )}
+        {mode === 'equip' && (
           <FilterSelect
-            $wide
             value={equipCategory}
-            onChange={(e) => {
-              const next = Number(e.currentTarget.value)
-              if (Number.isFinite(next)) setEquipCategory(next)
-            }}
+            onSelect={setEquipCategory}
+            width="13em"
             options={tables.equipFilterCategories.map((category) => ({
               value: category.id,
               label: translateCaption(category.name),
+              icon: category.icon,
+            }))}
+          />
+        )}
+        {mode === 'airbase' && (
+          <FilterSelect
+            value={airbaseTab}
+            onSelect={setAirbaseTab}
+            width="11em"
+            options={tables.airbaseFilterTabs.map((tab) => ({
+              value: tab.id,
+              label: translateCaption(tab.name),
+              icon: tab.icon,
             }))}
           />
         )}
@@ -435,21 +443,8 @@ const GlobalSearchPanel = ({
         </FilterRow>
       )}
 
-      {/* One tab at a time here, unlike the ship strip's multi-select */}
       {mode === 'airbase' && (
         <FilterRow>
-          <ButtonGroup>
-            {tables.airbaseFilterTabs.map((tab) => (
-              <TabButton
-                key={tab.id}
-                small
-                $selected={airbaseTab === tab.id}
-                onClick={() => setAirbaseTab(tab.id)}
-              >
-                {translateCaption(tab.name)}
-              </TabButton>
-            ))}
-          </ButtonGroup>
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
         </FilterRow>
       )}

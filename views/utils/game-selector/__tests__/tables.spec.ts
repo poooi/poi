@@ -89,7 +89,7 @@ describe('fcd-updatable classification', () => {
     const tables = mergeSelectorTables({
       equipFilterCategories: [
         ...DEFAULT_SELECTOR_TABLES.equipFilterCategories,
-        { id: 15, name: 'New', details: [901] },
+        { id: 15, name: 'New', details: [901], icon: 1 },
       ],
       filteringDetailCategories: {
         ...DEFAULT_SELECTOR_TABLES.filteringDetailCategories,

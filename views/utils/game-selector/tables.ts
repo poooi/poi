@@ -27,6 +27,8 @@ export interface EquipFilterCategory {
   id: number
   name: string
   details: number[]
+  /** Representative equipment icon (`api_type[3]`) for the dropdown. */
+  icon: number
 }
 
 /**
@@ -50,6 +52,8 @@ export interface AirbaseFilterTab {
   id: number
   name: string
   types: number[]
+  /** Representative equipment icon (`api_type[3]`) for the tab. */
+  icon: number
 }
 
 export interface SelectorTables {
@@ -77,30 +81,32 @@ export const DEFAULT_SELECTOR_TABLES: SelectorTables = {
     { id: 7, name: '補助艦艇', stypes: [15, 16, 17, 19, 20, 22] },
   ],
 
+  // Icons are the api_type[3] of the lowest-sorted non-abyssal item each tab
+  // accepts, so they are the icon the game itself shows for that gear.
   airbaseFilterTabs: [
-    { id: 0, name: '陸上攻撃機', types: [47, 53, 91] },
-    { id: 1, name: '局地戦闘機', types: [48] },
-    { id: 2, name: '艦上戦闘機', types: [6, 56] },
-    { id: 3, name: '艦上爆撃機', types: [7, 8, 26, 57, 58] },
-    { id: 4, name: '偵察機', types: [9, 10, 11, 25, 41, 45, 49, 59, 94] },
+    { id: 0, name: '陸上攻撃機', types: [47, 53, 91], icon: 37 },
+    { id: 1, name: '局地戦闘機', types: [48], icon: 38 },
+    { id: 2, name: '艦上戦闘機', types: [6, 56], icon: 6 },
+    { id: 3, name: '艦上爆撃機', types: [7, 8, 26, 57, 58], icon: 8 },
+    { id: 4, name: '偵察機', types: [9, 10, 11, 25, 41, 45, 49, 59, 94], icon: 10 },
   ],
 
   equipFilterCategories: [
-    { id: 0, name: '全装備', details: [] },
-    { id: 1, name: '艦上戦闘機', details: [11, 12] },
-    { id: 2, name: '艦上爆撃機・攻撃機', details: [21, 23, 22, 24] },
-    { id: 3, name: '偵察機・水上機', details: [31, 32, 33, 35, 34] },
-    { id: 4, name: '主砲', details: [41, 42, 43] },
-    { id: 5, name: '特殊砲弾・強化装備', details: [51, 52, 53] },
-    { id: 6, name: '副砲・対空', details: [61, 62, 63, 64] },
-    { id: 7, name: '魚雷・潜航艇', details: [71, 72, 73] },
-    { id: 8, name: '対潜装備', details: [81, 82] },
-    { id: 9, name: '電探', details: [91, 92, 93] },
-    { id: 10, name: '上陸・輸送', details: [101, 102, 103] },
-    { id: 11, name: '要員・物資', details: [111, 112, 113, 114] },
-    { id: 12, name: '陸上機', details: [121, 122, 123] },
-    { id: 13, name: '装甲・機関', details: [131, 132] },
-    { id: 14, name: 'その他', details: [141, 142, 143, 144] },
+    { id: 0, name: '全装備', details: [], icon: -1 },
+    { id: 1, name: '艦上戦闘機', details: [11, 12], icon: 6 },
+    { id: 2, name: '艦上爆撃機・攻撃機', details: [21, 23, 22, 24], icon: 7 },
+    { id: 3, name: '偵察機・水上機', details: [31, 32, 33, 35, 34], icon: 10 },
+    { id: 4, name: '主砲', details: [41, 42, 43], icon: 1 },
+    { id: 5, name: '特殊砲弾・強化装備', details: [51, 52, 53], icon: 12 },
+    { id: 6, name: '副砲・対空', details: [61, 62, 63, 64], icon: 16 },
+    { id: 7, name: '魚雷・潜航艇', details: [71, 72, 73], icon: 5 },
+    { id: 8, name: '対潜装備', details: [81, 82], icon: 17 },
+    { id: 9, name: '電探', details: [91, 92, 93], icon: 11 },
+    { id: 10, name: '上陸・輸送', details: [101, 102, 103], icon: 20 },
+    { id: 11, name: '要員・物資', details: [111, 112, 113, 114], icon: 14 },
+    { id: 12, name: '陸上機', details: [121, 122, 123], icon: 37 },
+    { id: 13, name: '装甲・機関', details: [131, 132], icon: 19 },
+    { id: 14, name: 'その他', details: [141, 142, 143, 144], icon: 24 },
   ],
 
   filteringDetailCategories: {
