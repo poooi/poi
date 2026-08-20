@@ -55,13 +55,19 @@ export const normalizeRomaji = (input: string): string => {
   return out
 }
 
-/** The searchable romaji form of a kana reading. */
+/**
+ * The searchable romaji form of a name.
+ *
+ * wanakana leaves non-kana text alone, so this accepts an already-romanised
+ * name ("Shimakaze" from poi-plugin-translator) just as happily as a kana
+ * reading — both come out folded onto the same spelling.
+ */
 export const romajiOf = (reading: string | undefined): string =>
   reading ? normalizeRomaji(toRomaji(reading)) : ''
 
 /**
- * Does a romaji query match this kana reading? Substring matching, so "kasu"
- * finds かすみ.
+ * Does a romaji query match this name? Substring matching, so "kasu" finds
+ * かすみ. Works against a kana reading or an existing romanisation.
  */
 export const matchesRomaji = (query: string, reading: string | undefined): boolean => {
   if (!query || !reading) return false

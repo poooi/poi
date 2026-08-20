@@ -70,3 +70,36 @@ describe('matchesRomaji', () => {
     expect(matchesRomaji('kasumi', undefined)).toBe(false)
   })
 })
+
+describe('matching an existing romanisation', () => {
+  // poi-plugin-translator supplies curated English names, which for Japanese
+  // ships are already romaji. wanakana passes them through untouched, so the
+  // same fold applies and Kunrei input finds a Hepburn name.
+  const cases: [string, string][] = [
+    ['shimakaze', 'Shimakaze'],
+    ['simakaze', 'Shimakaze'],
+    ['junyou', "Jun'you"],
+    ['zyunyou', "Jun'you"],
+    ['ryuujou', 'Ryuujou'],
+    ['ryujo', 'Ryuujou'],
+    ['fusou', 'Fusou'],
+    ['husou', 'Fusou'],
+    ['kasumi', 'Kasumi Kai Ni'],
+    ['warspite', 'Warspite'],
+  ]
+
+  cases.forEach(([query, name]) => {
+    spec(`"${query}" matches the translated name ${name}`, () => {
+      expect(matchesRomaji(query, name)).toBe(true)
+    })
+  })
+
+  spec('still rejects unrelated names', () => {
+    expect(matchesRomaji('yamato', 'Shimakaze')).toBe(false)
+  })
+
+  spec('a kana reading and its romanisation fold to the same form', () => {
+    expect(romajiOf('しまかぜ')).toBe(romajiOf('Shimakaze'))
+    expect(romajiOf('じゅんよう')).toBe(romajiOf("Jun'you"))
+  })
+})

@@ -79,6 +79,27 @@ const matchesQuery = (query: string, ...candidates: (string | undefined)[]): boo
   return candidates.some((candidate) => candidate?.toLowerCase().includes(needle))
 }
 
+/**
+ * Name matching, most reliable source first:
+ *
+ * 1. the raw Japanese name, for anyone typing Japanese
+ * 2. the display translation — with poi-plugin-translator installed this is a
+ *    curated English/romaji name, which beats any transliteration we could do
+ * 3. that same translation folded onto a canonical romaji spelling, so Kunrei
+ *    input ("simakaze") still finds a Hepburn name ("Shimakaze")
+ * 4. the kana reading transliterated, as the fallback when no translation is
+ *    available — the translator plugin is opt-in and ships disabled
+ */
+const matchesName = (query: string, name: string | undefined, yomi?: string): boolean => {
+  if (!query) return true
+  const translated = translateName(name)
+  return (
+    matchesQuery(query, name, translated) ||
+    matchesRomaji(query, translated) ||
+    matchesRomaji(query, yomi)
+  )
+}
+
 const PositionTag = ({ position }: { position: SelectorPosition | undefined }) => {
   const { t } = useTranslation('main')
   if (!position) return null
@@ -184,13 +205,8 @@ const GlobalSearchPanel = ({
     for (const entry of list) {
       const name = entry.$ship.api_name
       const yomi = entry.$ship.api_yomi
-      if (
-        !matchesQuery(query, name, translateName(name), yomi) &&
-        !matchesRomaji(query, yomi) &&
-        !matchesRomaji(query, name)
-      ) {
-        continue
-      }
+      // The reading is also matched literally, for anyone typing kana.
+      if (!matchesName(query, name, yomi) && !matchesQuery(query, yomi)) continue
       matched.push({ entry, position: positions.get(entry.ship.api_id) })
       if (matched.length >= MAX_RESULTS) break
     }
@@ -214,7 +230,7 @@ const GlobalSearchPanel = ({
     const matched: EquipResult[] = []
     for (const entry of [...lists.unset, ...lists.set]) {
       const name = entry.$equip.api_name
-      if (!matchesQuery(query, name, translateName(name)) && !matchesRomaji(query, name)) continue
+      if (!matchesName(query, name)) continue
       matched.push({ entry, position: positions.get(entry.equip.api_id) })
       if (matched.length >= MAX_RESULTS) break
     }
