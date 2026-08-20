@@ -56,7 +56,13 @@ export const FilterSelect = <T,>({
       disabled={disabled}
       activeItem={active ?? null}
       onItemSelect={(option) => onSelect(option.value)}
-      popoverProps={{ minimal: true, matchTargetWidth: false }}
+      popoverProps={{
+        minimal: true,
+        matchTargetWidth: false,
+        // Portals to document.body, which sits below the overlay's z-index
+        // without this class; see .global-search-popover in app.css.
+        portalClassName: 'global-search-popover',
+      }}
       itemRenderer={(option, { handleClick, modifiers }) =>
         modifiers.matchesPredicate ? (
           <MenuItem

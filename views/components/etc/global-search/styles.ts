@@ -1,6 +1,8 @@
 import { Button, HTMLSelect, Tag } from '@blueprintjs/core'
 import { css, keyframes, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
+import { SlotitemIcon } from 'views/components/etc/icon'
+import { Gradient } from 'views/components/ship-parts/styled-components'
 
 // Matching the plugin drawer's motion, so the two overlays feel like one app.
 const backdropReveal = keyframes`
@@ -180,19 +182,46 @@ export const ResultRow = styled.div`
  * sets an inline width under `useFixedWidth`, so these must carry an explicit
  * width or they collapse to nothing.
  */
-export const RowAvatar = styled(Avatar)`
+/**
+ * The ship tile, sized and tinted like the mini ship panel's: the avatar art
+ * with the same per-ship gradient fading out of it, so the two panels read the
+ * same way.
+ */
+export const ShipTile = styled.div`
   flex: 0 0 auto;
-  width: 52px;
-  border-radius: 3px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 96px;
+  height: 38px;
   overflow: hidden;
+  border-radius: 3px;
+`
+
+export const RowAvatar = styled(Avatar)`
+  position: absolute;
+  inset: 0;
+  width: 70px;
   pointer-events: none;
 `
 
-export const RowIcon = styled(Avatar)`
+export const TileGradient = styled(Gradient)`
+  position: absolute;
+  inset: 0 0 0 34px;
+  z-index: 1;
+  pointer-events: none;
+`
+
+/**
+ * Equipment leads with the game's own gear icon rather than the item artwork:
+ * it is the glyph the picker itself shows, and it honours the SVG/PNG icon
+ * setting.
+ */
+export const RowIcon = styled(SlotitemIcon)`
   flex: 0 0 auto;
-  width: 30px;
-  border-radius: 3px;
-  overflow: hidden;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
   pointer-events: none;
 `
 

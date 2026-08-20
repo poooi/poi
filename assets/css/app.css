@@ -106,3 +106,9 @@ img {
   pointer-events: none;
   z-index: 18;
 }
+
+/* The search overlay sits at z-index 30 inside poi-app, above Blueprint's
+   default popover layer, so its own dropdowns have to be lifted past it. */
+.global-search-popover {
+  z-index: 40;
+}

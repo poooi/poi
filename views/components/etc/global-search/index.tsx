@@ -28,8 +28,9 @@ import {
   isEventActive,
   shipPositions,
 } from 'views/utils/game-selector'
+import { selectShipAvatarColor } from 'views/utils/game-utils'
 import { matchesRomaji } from 'views/utils/kana'
-import { constSelector, mapsSelector } from 'views/utils/selectors'
+import { constSelector, fcdShipTagColorSelector, mapsSelector } from 'views/utils/selectors'
 
 import {
   airbaseDeploymentSelector,
@@ -52,6 +53,8 @@ import {
   ResultRow,
   RowAvatar,
   RowIcon,
+  ShipTile,
+  TileGradient,
   ScopeBar,
   SearchField,
   SearchRow,
@@ -182,6 +185,10 @@ const GlobalSearchPanel = ({
   const enableAvatar = useSelector(
     (state: RootState): boolean => state.config?.poi?.appearance?.avatar ?? false,
   )
+  const avatarType = useSelector(
+    (state: RootState): string => state.config?.poi?.appearance?.avatarType ?? 'rarity',
+  )
+  const shipTagColor = useSelector(fcdShipTagColorSelector)
 
   // The tab set comes from the (possibly fcd-updated) table, so the initial
   // "everything on" state cannot be captured at mount time.
@@ -456,13 +463,18 @@ const GlobalSearchPanel = ({
           shipResults.map(({ entry, position }) => (
             <ResultRow key={entry.ship.api_id}>
               {enableAvatar && (
-                <RowAvatar
-                  mstId={entry.$ship.api_id}
-                  isDamaged={(entry.ship.api_nowhp ?? 0) * 2 <= (entry.ship.api_maxhp ?? 1)}
-                  useFixedWidth={false}
-                  useDefaultBG={false}
-                  height={28}
-                />
+                <ShipTile>
+                  <RowAvatar
+                    mstId={entry.$ship.api_id}
+                    isDamaged={(entry.ship.api_nowhp ?? 0) * 2 <= (entry.ship.api_maxhp ?? 1)}
+                    useFixedWidth={false}
+                    useDefaultBG={false}
+                    height={38}
+                  />
+                  <TileGradient
+                    color={selectShipAvatarColor(entry.ship, entry.$ship, shipTagColor, avatarType)}
+                  />
+                </ShipTile>
               )}
               <Name title={entry.$ship.api_name}>
                 {translateName(entry.$ship.api_name) || entry.$ship.api_name}
@@ -484,7 +496,7 @@ const GlobalSearchPanel = ({
         ) : mode === 'equip' ? (
           equipResults.map(({ entry, position }) => (
             <ResultRow key={entry.equip.api_id}>
-              <RowIcon mstId={entry.$equip.api_id} type="equip" useFixedWidth={false} height={26} />
+              <RowIcon slotitemId={entry.$equip.api_type?.[3]} alt="" />
               <Name title={entry.$equip.api_name}>
                 {translateName(entry.$equip.api_name) || entry.$equip.api_name}
                 {(entry.equip.api_level ?? 0) > 0 && ` ★+${entry.equip.api_level}`}
@@ -503,12 +515,7 @@ const GlobalSearchPanel = ({
             const deployment = airbaseDeployments.get(entry.equip.api_id)
             return (
               <ResultRow key={entry.equip.api_id}>
-                <RowIcon
-                  mstId={entry.$equip.api_id}
-                  type="equip"
-                  useFixedWidth={false}
-                  height={26}
-                />
+                <RowIcon slotitemId={entry.$equip.api_type?.[3]} alt="" />
                 <Name title={entry.$equip.api_name}>
                   {translateName(entry.$equip.api_name) || entry.$equip.api_name}
                   {(entry.equip.api_level ?? 0) > 0 && ` ★+${entry.equip.api_level}`}
