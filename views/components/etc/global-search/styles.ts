@@ -1,8 +1,8 @@
-import { Button, HTMLSelect, Tag } from '@blueprintjs/core'
+import { Button, Tag } from '@blueprintjs/core'
 import { css, keyframes, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import { SlotitemIcon } from 'views/components/etc/icon'
-import { Gradient } from 'views/components/ship-parts/styled-components'
+import { Gradient, overAvatarText } from 'views/components/ship-parts/styled-components'
 
 // Matching the plugin drawer's motion, so the two overlays feel like one app.
 const backdropReveal = keyframes`
@@ -118,18 +118,6 @@ export const SearchField = styled.div`
 `
 
 /**
- * The sort button cycles through labels of differing width (Lv, 艦種, 疲労,
- * Fatigue…). A fixed width keeps it from resizing — and shoving the rest of the
- * row around — every time it is clicked.
- */
-export const SortButton = styled(Button)`
-  && {
-    width: 7.5em;
-    justify-content: flex-start;
-  }
-`
-
-/**
  * Filter toggles read as pressed rather than merely hovered: Blueprint's
  * minimal active state is too faint against the panel, so selected tabs get a
  * filled background and unselected ones are dimmed.
@@ -143,19 +131,6 @@ export const TabButton = styled(Button)<{ $selected: boolean }>`
     background: ${({ $selected }) => ($selected ? 'rgb(45 114 210 / 0.85)' : 'transparent')};
     color: ${({ $selected }) => ($selected ? '#fff' : 'inherit')};
     border: 1px solid ${({ $selected }) => ($selected ? 'transparent' : 'rgb(128 128 128 / 0.4)')};
-  }
-`
-
-/**
- * Blueprint sizes a select to its widest option minus the chevron, which clips
- * CJK captions like 全艦 or 艦上爆撃機・攻撃機. Give it room and let the label
- * ellipsize instead of colliding with the arrow.
- */
-export const FilterSelect = styled(HTMLSelect)<{ $wide?: boolean }>`
-  && select {
-    min-width: ${({ $wide }) => ($wide ? '11em' : '7em')};
-    padding-right: 26px;
-    text-overflow: ellipsis;
   }
 `
 
@@ -178,38 +153,77 @@ export const ResultRow = styled.div`
 `
 
 /**
- * Leading art for a row. `Avatar` positions its contents absolutely and only
- * sets an inline width under `useFixedWidth`, so these must carry an explicit
- * width or they collapse to nothing.
+ * The ship tile, mirroring the mini ship panel's grid so the two read
+ * identically: avatar, then the name and level stacked over it, then HP and the
+ * status label. Only the trailing columns differ, since a search row ends with
+ * the per-ship button and the position tag instead of morale and an HP bar.
  */
-/**
- * The ship tile, sized and tinted like the mini ship panel's: the avatar art
- * with the same per-ship gradient fading out of it, so the two panels read the
- * same way.
- */
-export const ShipTile = styled.div`
-  flex: 0 0 auto;
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 96px;
-  height: 38px;
+export const ShipTile = styled.div<{ $avatar?: boolean }>`
+  align-items: start;
+  display: grid;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow: hidden;
-  border-radius: 3px;
+  position: relative;
+  white-space: nowrap;
+  grid-template-columns:
+    ${({ $avatar = true }) => ($avatar ? '50px' : '0')} minmax(60px, 1fr)
+    74px 18px;
+  grid-template-rows: 20px 13px;
+  gap: 2px 6px;
 `
 
 export const RowAvatar = styled(Avatar)`
-  position: absolute;
-  inset: 0;
-  width: 70px;
   pointer-events: none;
+  align-items: end;
+  align-self: center;
+  grid-row: 1 / 3;
+  grid-column: 1 / 3;
 `
 
+// Same treatment as MiniGradient: span the avatar column too, so the ramp has
+// room to reach full colour before the name starts.
 export const TileGradient = styled(Gradient)`
-  position: absolute;
-  inset: 0 0 0 34px;
-  z-index: 1;
-  pointer-events: none;
+  grid-row: 1 / 3;
+  grid-column: 2 / 3;
+  mask-image: linear-gradient(to right, transparent, rgb(0 0 0 / 1));
+`
+
+export const TileName = styled.div<{ $avatar?: boolean }>`
+  z-index: 2;
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  ${({ $avatar }) => $avatar && overAvatarText({ fontWeight: 600, shadowBlur: '3px' })}
+`
+
+export const TileLevel = styled.div<{ $avatar?: boolean }>`
+  z-index: 2;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  font-size: 70%;
+  line-height: 1;
+  overflow: hidden;
+  align-items: center;
+  ${({ $avatar }) => $avatar && overAvatarText({ shadowBlur: '3px' })}
+`
+
+export const TileHP = styled.span`
+  font-size: 110%;
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
+  text-align: right;
+`
+
+export const TileStatusLabel = styled.div`
+  grid-row: 1 / 2;
+  grid-column: 4 / 5;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  z-index: 101;
 `
 
 /**

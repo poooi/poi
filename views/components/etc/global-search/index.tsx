@@ -13,6 +13,7 @@ import { Button, ButtonGroup, InputGroup, SegmentedControl, Tag } from '@bluepri
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import i18next from 'views/env-parts/i18next'
 import {
   ALL_EQUIPS_CATEGORY,
@@ -28,9 +29,14 @@ import {
   isEventActive,
   shipPositions,
 } from 'views/utils/game-selector'
-import { selectShipAvatarColor } from 'views/utils/game-utils'
+import { getShipLabelStatus, getStatusStyle, selectShipAvatarColor } from 'views/utils/game-utils'
 import { matchesRomaji } from 'views/utils/kana'
-import { constSelector, fcdShipTagColorSelector, mapsSelector } from 'views/utils/selectors'
+import {
+  constSelector,
+  fcdShipTagColorSelector,
+  inRepairShipsIdSelector,
+  mapsSelector,
+} from 'views/utils/selectors'
 
 import {
   airbaseDeploymentSelector,
@@ -55,6 +61,10 @@ import {
   RowIcon,
   ShipTile,
   TileGradient,
+  TileHP,
+  TileLevel,
+  TileName,
+  TileStatusLabel,
   ScopeBar,
   SearchField,
   SearchRow,
@@ -140,6 +150,80 @@ interface Result<T> {
   position: SelectorPosition | undefined
 }
 
+/**
+ * A ship result, laid out as the mini ship panel lays out its rows: the avatar
+ * with the name and level stacked over it, then HP and the status label. The
+ * search-only controls sit after the tile.
+ */
+const ShipResultRow = ({
+  entry,
+  position,
+  enableAvatar,
+  avatarType,
+  shipTagColor,
+  inRepair,
+  onSearchEquips,
+}: {
+  entry: ShipEntry
+  position: SelectorPosition | undefined
+  enableAvatar: boolean
+  avatarType: string
+  shipTagColor: string[]
+  inRepair: boolean
+  onSearchEquips: (entry: ShipEntry) => void
+}) => {
+  const { t } = useTranslation('main')
+  const { ship, $ship } = entry
+  const nowHp = ship.api_nowhp ?? 0
+  const maxHp = ship.api_maxhp ?? 1
+  // Escape only applies mid-sortie, which is not what this panel is for.
+  const labelStatus = getShipLabelStatus(ship, $ship, inRepair, false)
+  const labelStatusStyle = getStatusStyle(labelStatus)
+
+  return (
+    <ResultRow>
+      <ShipTile $avatar={enableAvatar}>
+        {enableAvatar && (
+          <>
+            <RowAvatar
+              mstId={$ship.api_id}
+              isDamaged={nowHp * 2 <= maxHp}
+              useDefaultBG={false}
+              useFixedWidth={false}
+              height={38}
+            />
+            <TileGradient color={selectShipAvatarColor(ship, $ship, shipTagColor, avatarType)} />
+          </>
+        )}
+        <TileName
+          $avatar={enableAvatar}
+          title={$ship.api_name}
+          style={enableAvatar ? undefined : labelStatusStyle}
+        >
+          {translateName($ship.api_name) || $ship.api_name}
+        </TileName>
+        <TileLevel $avatar={enableAvatar} style={enableAvatar ? undefined : labelStatusStyle}>
+          {t('main:Lv', { level: ship.api_lv ?? 0 })}
+        </TileLevel>
+        <TileHP style={labelStatusStyle}>
+          {nowHp} / {ship.api_maxhp ?? 0}
+        </TileHP>
+        <TileStatusLabel>
+          <StatusLabel label={labelStatus} />
+        </TileStatusLabel>
+      </ShipTile>
+      <Button
+        small
+        minimal
+        icon="cog"
+        title={t('main:Search equipment for this ship')}
+        onClick={() => onSearchEquips(entry)}
+      />
+      <PositionTag position={position} />
+    </ResultRow>
+  )
+}
+
 interface EquipResult {
   entry: EquipEntry
   position: EquipListPosition | undefined
@@ -189,6 +273,8 @@ const GlobalSearchPanel = ({
     (state: RootState): string => state.config?.poi?.appearance?.avatarType ?? 'rarity',
   )
   const shipTagColor = useSelector(fcdShipTagColorSelector)
+  const inRepairIds = useSelector(inRepairShipsIdSelector)
+  const inRepair = useMemo(() => new Set(inRepairIds ?? []), [inRepairIds])
 
   // The tab set comes from the (possibly fcd-updated) table, so the initial
   // "everything on" state cannot be captured at mount time.
@@ -461,37 +547,16 @@ const GlobalSearchPanel = ({
           <Empty>{t('main:No matching entry')}</Empty>
         ) : mode === 'ship' ? (
           shipResults.map(({ entry, position }) => (
-            <ResultRow key={entry.ship.api_id}>
-              {enableAvatar && (
-                <ShipTile>
-                  <RowAvatar
-                    mstId={entry.$ship.api_id}
-                    isDamaged={(entry.ship.api_nowhp ?? 0) * 2 <= (entry.ship.api_maxhp ?? 1)}
-                    useFixedWidth={false}
-                    useDefaultBG={false}
-                    height={38}
-                  />
-                  <TileGradient
-                    color={selectShipAvatarColor(entry.ship, entry.$ship, shipTagColor, avatarType)}
-                  />
-                </ShipTile>
-              )}
-              <Name title={entry.$ship.api_name}>
-                {translateName(entry.$ship.api_name) || entry.$ship.api_name}
-              </Name>
-              <Meta>
-                Lv.{entry.ship.api_lv ?? 0} · HP {entry.ship.api_nowhp ?? 0}/
-                {entry.ship.api_maxhp ?? 0}
-              </Meta>
-              <Button
-                small
-                minimal
-                icon="cog"
-                title={t('main:Search equipment for this ship')}
-                onClick={() => searchEquipsFor(entry)}
-              />
-              <PositionTag position={position} />
-            </ResultRow>
+            <ShipResultRow
+              key={entry.ship.api_id}
+              entry={entry}
+              position={position}
+              enableAvatar={enableAvatar}
+              avatarType={avatarType}
+              shipTagColor={shipTagColor}
+              inRepair={inRepair.has(entry.ship.api_id)}
+              onSearchEquips={searchEquipsFor}
+            />
           ))
         ) : mode === 'equip' ? (
           equipResults.map(({ entry, position }) => (

@@ -75,48 +75,20 @@
                 0.163, 0.320, 0.516, 0, 0
                 0,     0,     0,     1, 0"/>
     </filter>
+    <!-- Blanks the backdrop entirely: maps every backdrop pixel to
+         transparent black so nothing behind the element shows through.
+         Must consume SourceGraphic - a chain that ignores it (e.g. a bare
+         feFlood) is treated as a no-op and the raw backdrop shows. -->
     <filter id="blur"
-      x="-50%" y="-50%"
-      width="200%" height="200%"
+      x="0%" y="0%"
+      width="100%" height="100%"
       color-interpolation-filters="sRGB"
     >
-      <!-- Step 1: un-premultiply RGB for semi-transparent background -->
-      <feComponentTransfer in="SourceGraphic" result="unpremul">
-        <feFuncA type="linear" slope="0" intercept="1"/>
-      </feComponentTransfer>
-
-      <!-- Step 2: dilate to thicken thin text strokes -->
-      <feMorphology in="unpremul" operator="dilate"
-        radius="0.2" result="thickened"/>
-
-      <!-- Step 3: blur the thickened opaque RGB copy -->
-      <feGaussianBlur in="thickened" stdDeviation="30"
-        edgeMode="duplicate" result="blurred"/>
-
-      <!-- Step 4: extract original alpha channel -->
       <feColorMatrix in="SourceGraphic" type="matrix"
         values="0 0 0 0 0
                 0 0 0 0 0
                 0 0 0 0 0
-                0 0 0 1 0"
-        result="alpha-only"/>
-
-      <!-- Step 5: dilate alpha to match thickened RGB -->
-      <feMorphology in="alpha-only" operator="dilate"
-        radius="12" result="alpha-dilated"/>
-
-      <!-- Step 6: blur the alpha mask -->
-      <feGaussianBlur in="alpha-dilated" stdDeviation="30"
-        edgeMode="duplicate" result="alpha-blurred"/>
-
-      <!-- Step 7: clip blurred RGB to soft alpha boundary -->
-      <feComposite in="blurred" in2="alpha-blurred"
-        operator="in" result="blurred-clipped"/>
-
-      <!-- Step 8: re-boost opacity to suppress background bleed -->
-      <feComponentTransfer in="blurred-clipped">
-        <feFuncA type="linear" slope="1.8"/>
-      </feComponentTransfer>
+                0 0 0 0 0"/>
     </filter>
   </defs>
 </svg>
