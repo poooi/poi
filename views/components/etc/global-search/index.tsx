@@ -16,7 +16,9 @@ import { useSelector } from 'react-redux'
 import i18next from 'views/env-parts/i18next'
 import {
   ALL_EQUIPS_CATEGORY,
+  airbasePositions,
   allShipTabIds,
+  buildAirbaseList,
   buildEquipLists,
   buildShipList,
   equipListPositions,
@@ -29,8 +31,13 @@ import {
 import { matchesRomaji } from 'views/utils/kana'
 import { constSelector, mapsSelector } from 'views/utils/selectors'
 
-import { equipEntriesSelector, selectorTablesSelector, shipEntriesSelector } from './entries'
-import { searchEventEmitter, type SearchMode } from './event'
+import {
+  airbaseDeploymentSelector,
+  equipEntriesSelector,
+  selectorTablesSelector,
+  shipEntriesSelector,
+} from './entries'
+import { isSearchMode, searchEventEmitter, type SearchMode } from './event'
 import {
   Backdrop,
   Empty,
@@ -43,6 +50,8 @@ import {
   PositionTagEl,
   Results,
   ResultRow,
+  RowAvatar,
+  RowIcon,
   ScopeBar,
   SearchField,
   SearchRow,
@@ -160,6 +169,7 @@ const GlobalSearchPanel = ({
   const [tag, setTag] = useState<ShipTagFilter>('all')
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
+  const [airbaseTab, setAirbaseTab] = useState(0)
   const [equipScope, setEquipScope] = useState<EquipScope | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -168,7 +178,11 @@ const GlobalSearchPanel = ({
   const constState = useSelector(constSelector)
   const maps = useSelector(mapsSelector)
   const tables = useSelector(selectorTablesSelector)
+  const airbaseDeployments = useSelector(airbaseDeploymentSelector)
   const eventActive = isEventActive(maps)
+  const enableAvatar = useSelector(
+    (state: RootState): boolean => state.config?.poi?.appearance?.avatar ?? false,
+  )
 
   // The tab set comes from the (possibly fcd-updated) table, so the initial
   // "everything on" state cannot be captured at mount time.
@@ -237,6 +251,19 @@ const GlobalSearchPanel = ({
     return matched
   }, [mode, equipEntries, equipCategory, equipScope, constState, query, tables])
 
+  const airbaseResults = useMemo((): Result<EquipEntry>[] => {
+    if (mode !== 'airbase') return []
+    const list = buildAirbaseList(equipEntries, { tab: airbaseTab }, tables)
+    const positions = airbasePositions(list)
+    const matched: Result<EquipEntry>[] = []
+    for (const entry of list) {
+      if (!matchesName(query, entry.$equip.api_name)) continue
+      matched.push({ entry, position: positions.get(entry.equip.api_id) })
+      if (matched.length >= MAX_RESULTS) break
+    }
+    return matched
+  }, [mode, equipEntries, airbaseTab, tables, query])
+
   const toggleTab = useCallback(
     (id: number) =>
       setTabs((prev) => {
@@ -264,7 +291,7 @@ const GlobalSearchPanel = ({
   // so switching modes starts from a clean search box.
   const changeMode = useCallback(
     (next: string) => {
-      if (next !== 'ship' && next !== 'equip') return
+      if (!isSearchMode(next)) return
       setQuery('')
       setMode(next)
     },
@@ -283,7 +310,7 @@ const GlobalSearchPanel = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const results = mode === 'ship' ? shipResults : equipResults
+  const results = mode === 'ship' ? shipResults : mode === 'equip' ? equipResults : airbaseResults
   const allTabsOn = activeTabs.length === allTabIds.length
 
   return (
@@ -299,6 +326,7 @@ const GlobalSearchPanel = ({
           options={[
             { value: 'ship', label: t('main:Ships') },
             { value: 'equip', label: t('main:Equip') },
+            { value: 'airbase', label: t('main:Land base') },
           ]}
           intent="primary"
           size="small"
@@ -407,12 +435,40 @@ const GlobalSearchPanel = ({
         </FilterRow>
       )}
 
+      {/* One tab at a time here, unlike the ship strip's multi-select */}
+      {mode === 'airbase' && (
+        <FilterRow>
+          <ButtonGroup>
+            {tables.airbaseFilterTabs.map((tab) => (
+              <TabButton
+                key={tab.id}
+                small
+                $selected={airbaseTab === tab.id}
+                onClick={() => setAirbaseTab(tab.id)}
+              >
+                {translateCaption(tab.name)}
+              </TabButton>
+            ))}
+          </ButtonGroup>
+          <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
+        </FilterRow>
+      )}
+
       <Results>
         {results.length === 0 ? (
           <Empty>{t('main:No matching entry')}</Empty>
         ) : mode === 'ship' ? (
           shipResults.map(({ entry, position }) => (
             <ResultRow key={entry.ship.api_id}>
+              {enableAvatar && (
+                <RowAvatar
+                  mstId={entry.$ship.api_id}
+                  isDamaged={(entry.ship.api_nowhp ?? 0) * 2 <= (entry.ship.api_maxhp ?? 1)}
+                  useFixedWidth={false}
+                  useDefaultBG={false}
+                  height={28}
+                />
+              )}
               <Name title={entry.$ship.api_name}>
                 {translateName(entry.$ship.api_name) || entry.$ship.api_name}
               </Name>
@@ -430,9 +486,10 @@ const GlobalSearchPanel = ({
               <PositionTag position={position} />
             </ResultRow>
           ))
-        ) : (
+        ) : mode === 'equip' ? (
           equipResults.map(({ entry, position }) => (
             <ResultRow key={entry.equip.api_id}>
+              <RowIcon mstId={entry.$equip.api_id} type="equip" useFixedWidth={false} height={26} />
               <Name title={entry.$equip.api_name}>
                 {translateName(entry.$equip.api_name) || entry.$equip.api_name}
                 {(entry.equip.api_level ?? 0) > 0 && ` ★+${entry.equip.api_level}`}
@@ -446,6 +503,30 @@ const GlobalSearchPanel = ({
               <PositionTag position={position} />
             </ResultRow>
           ))
+        ) : (
+          airbaseResults.map(({ entry, position }) => {
+            const deployment = airbaseDeployments.get(entry.equip.api_id)
+            return (
+              <ResultRow key={entry.equip.api_id}>
+                <RowIcon
+                  mstId={entry.$equip.api_id}
+                  type="equip"
+                  useFixedWidth={false}
+                  height={26}
+                />
+                <Name title={entry.$equip.api_name}>
+                  {translateName(entry.$equip.api_name) || entry.$equip.api_name}
+                  {(entry.equip.api_level ?? 0) > 0 && ` ★+${entry.equip.api_level}`}
+                </Name>
+                <Meta>
+                  {deployment
+                    ? `${deployment.baseName} · ${t('main:Squadron')} ${deployment.squadron}`
+                    : t('main:In stock')}
+                </Meta>
+                <PositionTag position={position} />
+              </ResultRow>
+            )
+          })
         )}
       </Results>
     </Panel>

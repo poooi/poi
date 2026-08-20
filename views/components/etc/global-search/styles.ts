@@ -1,5 +1,6 @@
 import { Button, HTMLSelect, Tag } from '@blueprintjs/core'
 import { css, keyframes, styled } from 'styled-components'
+import { Avatar } from 'views/components/etc/avatar'
 
 // Matching the plugin drawer's motion, so the two overlays feel like one app.
 const backdropReveal = keyframes`
@@ -172,6 +173,27 @@ export const ResultRow = styled.div`
   &:last-child {
     border-bottom: none;
   }
+`
+
+/**
+ * Leading art for a row. `Avatar` positions its contents absolutely and only
+ * sets an inline width under `useFixedWidth`, so these must carry an explicit
+ * width or they collapse to nothing.
+ */
+export const RowAvatar = styled(Avatar)`
+  flex: 0 0 auto;
+  width: 52px;
+  border-radius: 3px;
+  overflow: hidden;
+  pointer-events: none;
+`
+
+export const RowIcon = styled(Avatar)`
+  flex: 0 0 auto;
+  width: 30px;
+  border-radius: 3px;
+  overflow: hidden;
+  pointer-events: none;
 `
 
 export const Name = styled.div`

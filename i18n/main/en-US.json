@@ -141,5 +141,11 @@
   "Sort 新着": "Newest",
   "Sort 損傷": "Damage",
   "Sort 修復": "Repair",
-  "Sort 疲労": "Fatigue"
+  "Sort 疲労": "Fatigue",
+  "Land base": "Land base",
+  "Squadron": "Squadron",
+  "陸上攻撃機": "Land-based Bomber",
+  "局地戦闘機": "Interceptor",
+  "艦上爆撃機": "Carrier Bomber",
+  "偵察機": "Reconnaissance"
 }

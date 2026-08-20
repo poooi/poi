@@ -1,6 +1,11 @@
 import { EventEmitter } from 'views/utils/event-emitter'
 
-export type SearchMode = 'ship' | 'equip'
+export type SearchMode = 'ship' | 'equip' | 'airbase'
+
+export const SEARCH_MODES: SearchMode[] = ['ship', 'equip', 'airbase']
+
+export const isSearchMode = (value: string): value is SearchMode =>
+  (SEARCH_MODES as string[]).includes(value)
 
 export interface SearchOpenEvent {
   /** Mode to open in; omitted keeps whatever the bar was last using. */

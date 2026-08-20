@@ -90,6 +90,28 @@ describe('equipment categories vs master data', () => {
   })
 })
 
+describe('land base tabs vs master data', () => {
+  spec('every plane a land base can carry is reachable from a tab', () => {
+    // getEquipTypes gained a branch if something here is uncovered. Restricted
+    // to types the airbase tabs already claim, so ship-only gear is ignored.
+    const reachable = new Set(DEFAULT_SELECTOR_TABLES.airbaseFilterTabs.flatMap((tab) => tab.types))
+    const carrierOrLandPlane = [6, 7, 8, 9, 10, 11, 25, 26, 41, 45, 47, 48, 49, 53, 56, 57, 58, 59]
+    const uncovered = new Map<number, string>()
+
+    Object.values($equips).forEach(($equip) => {
+      const type = equipTypeSp($equip)
+      if (carrierOrLandPlane.includes(type) && !reachable.has(type)) {
+        uncovered.set(type, `${$equip.api_id}:${$equip.api_name}`)
+      }
+    })
+    expect([...uncovered.entries()].map(([type, sample]) => `${type} e.g. ${sample}`)).toEqual([])
+  })
+
+  // No assertion the other way: the game's tables legitimately name types no
+  // item carries yet (as the ship tabs do for stype 12), so an unused entry is
+  // not drift.
+})
+
 describe('special-cased master ids', () => {
   // main.js reclassifies these by hardcoded id. If one is retired or renumbered
   // the override silently stops applying, so assert they still exist.

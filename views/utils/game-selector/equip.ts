@@ -4,10 +4,10 @@ import type { Equip } from 'views/redux/info/equips'
 
 import type { SelectorTables } from './tables'
 
-import { equipTypeForFilter, equipTypeSp, typesOfCategory } from './equip-type'
+import { equipType, equipTypeForFilter, equipTypeSp, typesOfCategory } from './equip-type'
 import { canShipEquip } from './equipability'
 import { getSelectorTables } from './tables'
-import { positionOf, type SelectorPosition } from './types'
+import { AIRBASE_ROWS_PER_PAGE, positionOf, type SelectorPosition } from './types'
 
 export * from './equip-type'
 
@@ -45,8 +45,10 @@ export const compareEquips = (
   b: EquipEntry,
   key = 0,
   tables: SelectorTables = getSelectorTables(),
+  useSp = true,
 ): number => {
-  const byType = asc(equipTypeSp(a.$equip, tables), equipTypeSp(b.$equip, tables))
+  const typeOf = useSp ? ($equip: EquipEntry['$equip']) => equipTypeSp($equip, tables) : equipType
+  const byType = asc(typeOf(a.$equip), typeOf(b.$equip))
   if (byType !== 0) return byType
   const byMst = asc(mstID(a), mstID(b))
   if (byMst !== 0) return byMst
@@ -175,6 +177,40 @@ export const buildEquipLists = (
 
 export const equipPositions = (list: EquipEntry[]): Map<number, SelectorPosition> =>
   new Map(list.map((entry, offset) => [entry.equip.api_id, positionOf(offset)]))
+
+export interface AirbaseFilter {
+  /** Tab id from `airbaseFilterTabs`. */
+  tab: number
+}
+
+/**
+ * The 基地航空隊 squadron picker, which is a third list with its own rules.
+ *
+ * `AirUnitList.update` filters by `equipTypeSp` against the tab's type set,
+ * then sorts with `SlotUtil.sort(items, 0, false)` — note the `false`, which
+ * makes the primary key the *raw* `api_type[2]` rather than `equipTypeSp`.
+ *
+ * It has no unset/set split: the game builds one list from the unequipped
+ * squadrons plus everything already deployed to an air unit, which together is
+ * simply "not carried by a ship".
+ */
+export const buildAirbaseList = (
+  entries: EquipEntry[],
+  filter: AirbaseFilter,
+  tables: SelectorTables = getSelectorTables(),
+): EquipEntry[] => {
+  const tab = tables.airbaseFilterTabs.find((t) => t.id === filter.tab)
+  if (!tab) return []
+  const accepted = new Set(tab.types)
+  return entries
+    .filter((entry) => entry.equippedOn == null && accepted.has(equipTypeSp(entry.$equip, tables)))
+    .sort((a, b) => compareEquips(a, b, 0, tables, false))
+}
+
+export const airbasePositions = (list: EquipEntry[]): Map<number, SelectorPosition> =>
+  new Map(
+    list.map((entry, offset) => [entry.equip.api_id, positionOf(offset, AIRBASE_ROWS_PER_PAGE)]),
+  )
 
 /**
  * Positions across both lists, each numbered from its own page 1, tagged with

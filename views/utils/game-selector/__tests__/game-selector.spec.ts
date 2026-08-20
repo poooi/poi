@@ -6,7 +6,11 @@ import type { Ship } from 'views/redux/info/ships'
 import { indexify } from 'views/utils/tools'
 
 import {
+  AIRBASE_ROWS_PER_PAGE,
+  airbasePositions,
+  buildAirbaseList,
   DEFAULT_SELECTOR_TABLES,
+  equipType,
   ALL_EQUIPS_CATEGORY,
   allShipTabIds,
   buildEquipList,
@@ -526,5 +530,92 @@ describe('isEventActive', () => {
   spec('is false before the map list has loaded', () => {
     expect(isEventActive(undefined)).toBe(false)
     expect(isEventActive({})).toBe(false)
+  })
+})
+
+describe('land base squadron picker', () => {
+  const tabs = DEFAULT_SELECTOR_TABLES.airbaseFilterTabs
+
+  spec('has the five tabs getEquipTypes defines', () => {
+    expect(tabs.map((tab) => tab.id)).toEqual([0, 1, 2, 3, 4])
+    expect(tabs.map((tab) => tab.types)).toEqual([
+      [47, 53, 91],
+      [48],
+      [6, 56],
+      [7, 8, 26, 57, 58],
+      [9, 10, 11, 25, 41, 45, 49, 59, 94],
+    ])
+  })
+
+  spec('an unknown tab yields nothing rather than everything', () => {
+    expect(buildAirbaseList(entriesWithEquipState, { tab: 99 })).toHaveLength(0)
+  })
+
+  spec('each tab admits only equipment whose equipTypeSp it lists', () => {
+    tabs.forEach(({ id, types }) => {
+      buildAirbaseList(entriesWithEquipState, { tab: id }).forEach((entry) =>
+        expect(types).toContain(equipTypeSp(entry.$equip)),
+      )
+    })
+  })
+
+  spec('never lists equipment a ship is carrying', () => {
+    tabs.forEach(({ id }) => {
+      buildAirbaseList(entriesWithEquipState, { tab: id }).forEach((entry) =>
+        expect(entry.equippedOn).toBeUndefined(),
+      )
+    })
+  })
+
+  spec('the tabs do not overlap', () => {
+    const seen = new Set<number>()
+    tabs.forEach(({ types }) =>
+      types.forEach((type) => {
+        expect(seen.has(type)).toBe(false)
+        seen.add(type)
+      }),
+    )
+  })
+
+  spec('orders by the raw equipment type, not equipTypeSp', () => {
+    // SlotUtil.sort is called with useSp = false here, unlike every other list.
+    const list = buildAirbaseList(entriesWithEquipState, { tab: 0 })
+    const rawTypes = list.map((e) => equipType(e.$equip))
+    expect(rawTypes).toEqual([...rawTypes].sort((a, b) => a - b))
+
+    for (let i = 1; i < list.length; i++) {
+      const prev = list[i - 1]
+      const curr = list[i]
+      if (equipType(prev.$equip) !== equipType(curr.$equip)) continue
+      if (prev.$equip.api_id !== curr.$equip.api_id) {
+        expect(prev.$equip.api_id).toBeLessThan(curr.$equip.api_id)
+      } else {
+        expect(prev.equip.api_id).toBeLessThan(curr.equip.api_id)
+      }
+    }
+  })
+
+  spec('paginates by nine, not by ten', () => {
+    const list = buildAirbaseList(entriesWithEquipState, { tab: 4 })
+    expect(list.length).toBeGreaterThan(AIRBASE_ROWS_PER_PAGE)
+    const positions = airbasePositions(list)
+
+    expect(positions.get(list[0].equip.api_id)).toEqual({ page: 1, index: 1, offset: 0 })
+    expect(positions.get(list[AIRBASE_ROWS_PER_PAGE - 1].equip.api_id)).toEqual({
+      page: 1,
+      index: AIRBASE_ROWS_PER_PAGE,
+      offset: AIRBASE_ROWS_PER_PAGE - 1,
+    })
+    expect(positions.get(list[AIRBASE_ROWS_PER_PAGE].equip.api_id)).toEqual({
+      page: 2,
+      index: 1,
+      offset: AIRBASE_ROWS_PER_PAGE,
+    })
+  })
+
+  spec('positionOf honours a custom page size', () => {
+    expect(positionOf(9, AIRBASE_ROWS_PER_PAGE)).toEqual({ page: 2, index: 1, offset: 9 })
+    // The default is still the 10-row ship/equipment page.
+    expect(positionOf(9)).toEqual({ page: 1, index: 10, offset: 9 })
   })
 })

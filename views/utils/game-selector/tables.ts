@@ -42,8 +42,19 @@ export interface EquipTypeSplit {
   result: number
 }
 
+/**
+ * One tab of the 基地航空隊 squadron picker, from `getEquipTypes`. These match
+ * on `equipTypeSp`, so the list includes the synthetic types (91, 94).
+ */
+export interface AirbaseFilterTab {
+  id: number
+  name: string
+  types: number[]
+}
+
 export interface SelectorTables {
   shipFilterTabs: ShipFilterTab[]
+  airbaseFilterTabs: AirbaseFilterTab[]
   equipFilterCategories: EquipFilterCategory[]
   /** Detail category id → accepted `equipTypeForFilter` values. */
   filteringDetailCategories: Record<number, number[]>
@@ -64,6 +75,14 @@ export const DEFAULT_SELECTOR_TABLES: SelectorTables = {
     { id: 5, name: '海防艦', stypes: [1] },
     { id: 6, name: '潜水艦', stypes: [13, 14] },
     { id: 7, name: '補助艦艇', stypes: [15, 16, 17, 19, 20, 22] },
+  ],
+
+  airbaseFilterTabs: [
+    { id: 0, name: '陸上攻撃機', types: [47, 53, 91] },
+    { id: 1, name: '局地戦闘機', types: [48] },
+    { id: 2, name: '艦上戦闘機', types: [6, 56] },
+    { id: 3, name: '艦上爆撃機', types: [7, 8, 26, 57, 58] },
+    { id: 4, name: '偵察機', types: [9, 10, 11, 25, 41, 45, 49, 59, 94] },
   ],
 
   equipFilterCategories: [
@@ -179,6 +198,8 @@ export const mergeSelectorTables = (
   if (!tables) return DEFAULT_SELECTOR_TABLES
   return {
     shipFilterTabs: nonEmpty(tables.shipFilterTabs) ?? DEFAULT_SELECTOR_TABLES.shipFilterTabs,
+    airbaseFilterTabs:
+      nonEmpty(tables.airbaseFilterTabs) ?? DEFAULT_SELECTOR_TABLES.airbaseFilterTabs,
     equipFilterCategories:
       nonEmpty(tables.equipFilterCategories) ?? DEFAULT_SELECTOR_TABLES.equipFilterCategories,
     filteringDetailCategories:

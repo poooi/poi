@@ -53,3 +53,32 @@ export const selectorTablesSelector = createSelector(
   [(state: RootState) => state.fcd?.gameselector],
   (tables) => mergeSelectorTables(tables),
 )
+
+/** Where a deployed squadron sits: which air unit, and which of its slots. */
+export interface AirbaseDeployment {
+  baseName: string
+  squadron: number
+}
+
+/**
+ * Equipment roster id → the air unit carrying it. The land-base picker lists
+ * deployed squadrons alongside spare ones, so a result has to say which.
+ */
+export const airbaseDeploymentSelector = createSelector(
+  [(state: RootState) => state.info?.airbase],
+  (airbase) => {
+    const deployments = new Map<number, AirbaseDeployment>()
+    ;(airbase ?? []).forEach((base) => {
+      ;(base?.api_plane_info ?? []).forEach((plane, index) => {
+        const slotId = plane?.api_slotid
+        if (typeof slotId === 'number' && slotId > 0) {
+          deployments.set(slotId, {
+            baseName: base.api_name ?? '',
+            squadron: plane.api_squadron_id ?? index + 1,
+          })
+        }
+      })
+    })
+    return deployments
+  },
+)
