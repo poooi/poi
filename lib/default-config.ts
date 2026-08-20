@@ -77,6 +77,8 @@ interface PoiShortcut {
     | {
         macos: string
       }
+  /** Opens the ship / equipment search bar. Handled in the renderer. */
+  search: string
 }
 
 interface PoiUpdate {
@@ -343,6 +345,7 @@ const defaultConfig: Config = {
     },
     shortcut: {
       bosskey: '',
+      search: 'CmdOrCtrl+F',
     },
     update: {
       beta: false,

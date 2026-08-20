@@ -9,6 +9,7 @@ import { ResizableArea } from 'react-resizable-area'
 import { styled, css } from 'styled-components'
 import { config } from 'views/env'
 
+import { GlobalSearch } from './components/etc/global-search'
 import { ControlledTabArea } from './components/tab-area'
 
 interface AreaSize {
@@ -235,6 +236,8 @@ export const PoiApp = () => {
             </poi-nav-tabs>
           </poi-nav>
         </PoiAppContainer>
+        {/* Scoped to PoiAppE so the overlay never reaches over the game view */}
+        <GlobalSearch />
       </PoiAppE>
     </>
   )

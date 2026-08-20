@@ -63,6 +63,12 @@ export function canEquipShipItem(
   shipMstId: number,
   equipMstId: number,
   constState: ConstState,
+  /**
+   * The equipment type to resolve against, when the caller knows better than
+   * the item's raw `api_type[2]`. The equipment picker passes the special-cased
+   * type the game itself checks; see `views/utils/game-selector/equipability`.
+   */
+  equipTypeIdOverride?: number,
 ): boolean {
   if (!isEquipabilityReady(constState)) return false
 
@@ -70,7 +76,7 @@ export function canEquipShipItem(
   const equip = constState.$equips[equipMstId]
   if (!equip) return false
 
-  const equipTypeId = equip.api_type[2]
+  const equipTypeId = equipTypeIdOverride ?? equip.api_type[2]
   if (equipTypeId == null) return false
 
   // Per-ship override: key absent => denied, null => any allowed, number[] => specific mstIDs

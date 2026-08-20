@@ -26,7 +26,10 @@ config.on('config.set', (path: string) => {
 })
 
 // the component records a key string, so it only accepts config paths whose value is a shortcut string
-type ShortcutConfigName = 'poi.shortcut.bosskey' | 'poi.shortcut.bosskey.macos'
+type ShortcutConfigName =
+  | 'poi.shortcut.bosskey'
+  | 'poi.shortcut.bosskey.macos'
+  | 'poi.shortcut.search'
 
 interface Props {
   configName: ShortcutConfigName

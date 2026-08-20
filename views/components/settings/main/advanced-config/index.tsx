@@ -63,6 +63,8 @@ export const AdvancedConfig = () => {
   return (
     <Section title={t('Advanced')}>
       <Wrapper>
+        {/* One Wrapper per shortcut: Wrapper is a full-width flex row, so
+            sharing one would put both on the same line. */}
         <Wrapper>
           <FormGroup inline label={t('Boss key')}>
             {isMacOS ? (
@@ -74,6 +76,12 @@ export const AdvancedConfig = () => {
             ) : (
               <ShortcutConfig configName="poi.shortcut.bosskey" />
             )}
+          </FormGroup>
+        </Wrapper>
+
+        <Wrapper>
+          <FormGroup inline label={t('Search ships and equipment')}>
+            <ShortcutConfig configName="poi.shortcut.search" defaultValue="CmdOrCtrl+F" />
           </FormGroup>
         </Wrapper>
 
