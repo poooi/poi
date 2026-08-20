@@ -75,6 +75,9 @@ export const AdvancedConfig = () => {
               <ShortcutConfig configName="poi.shortcut.bosskey" />
             )}
           </FormGroup>
+          <FormGroup inline label={t('Search ships and equipment')}>
+            <ShortcutConfig configName="poi.shortcut.search" defaultValue="CmdOrCtrl+F" />
+          </FormGroup>
         </Wrapper>
 
         <FillAvailable>

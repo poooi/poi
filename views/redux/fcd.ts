@@ -1,3 +1,5 @@
+import type { SelectorTables } from 'views/utils/game-selector/tables'
+
 import { createSlice } from '@reduxjs/toolkit'
 
 import { createReplaceFCDAction, createUpdateFCDAction } from './actions/app'
@@ -32,11 +34,19 @@ export interface FcdShipTagState {
   mapname: string[]
 }
 
+/**
+ * Tables the game hardcodes in main.js, shipped over fcd so they can be
+ * corrected without a poi release. Partial: anything omitted falls back to the
+ * built-in defaults in views/utils/game-selector/tables.
+ */
+export type FcdGameSelectorState = Partial<SelectorTables>
+
 export interface FcdState {
   version: Record<string, string>
   map?: FcdMapState
   shipavatar?: FcdShipAvatarState
   shiptag?: FcdShipTagState
+  gameselector?: FcdGameSelectorState
 }
 
 export interface FcdValue<K extends keyof FcdState = keyof FcdState> {
