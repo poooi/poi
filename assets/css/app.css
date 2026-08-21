@@ -49,6 +49,25 @@ poi-main {
   overflow: hidden;
 }
 
+/* At fractional display scaling (150%) the arrow lands flush against the
+   bubble's edge and the shared boundary antialiases into a grey hairline across
+   the arrow. Pull the arrow one more pixel in; Blueprint already nudges it 3px. */
+.bp6-tooltip.bp6-popover-placement-top .bp6-popover-arrow {
+  transform: translateY(-4px);
+}
+
+.bp6-tooltip.bp6-popover-placement-bottom .bp6-popover-arrow {
+  transform: translateY(4px);
+}
+
+.bp6-tooltip.bp6-popover-placement-left .bp6-popover-arrow {
+  transform: translateX(-4px);
+}
+
+.bp6-tooltip.bp6-popover-placement-right .bp6-popover-arrow {
+  transform: translateX(4px);
+}
+
 .bp6-html-select select,
 .bp6-select select {
   background-image: none;
