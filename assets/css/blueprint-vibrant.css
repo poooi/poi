@@ -4,6 +4,11 @@
   --bp-surface-background-color-default-active: rgb(237 239 242 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(255 255 255 / 0.6);
   --poi-background-color: rgb(246 247 249 / 0.25) !important;
+
+  /* Tint composited over the blurred backdrop, matching what the OS vibrant
+     window does. Kept separate from the surface color above so the blurred
+     surfaces can be darkened without touching buttons/inputs/cards. */
+  --poi-vibrancy-tint: rgb(246 247 249 / 0.7);
 }
 
 .bp6-dark {
@@ -12,6 +17,7 @@
   --bp-surface-background-color-default-active: rgb(37 42 49 / 0.6);
   --bp-surface-background-color-default-disabled: rgb(17 20 24 / 0.6);
   --poi-background-color: rgb(47 52 60 / 0.5) !important;
+  --poi-vibrancy-tint: rgb(22 25 29 / 0.72);
 }
 
 body.darwin {
@@ -51,7 +57,7 @@ body.darwin.bp6-dark {
 }
 
 .bp6-dialog {
-  background-color: var(--bp-surface-background-color-default-rest) !important;
+  background-color: var(--poi-vibrancy-tint) !important;
 }
 
 .bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow::before,
@@ -72,9 +78,9 @@ body.darwin.bp6-dark {
 }
 
 .bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow-fill {
-  fill: var(--bp-surface-background-color-default-rest) !important;
+  fill: var(--poi-vibrancy-tint) !important;
 }
 
 .bp6-popover:not(.bp6-tooltip) .bp6-popover-content {
-  background-color: var(--bp-surface-background-color-default-rest) !important;
+  background-color: var(--poi-vibrancy-tint) !important;
 }

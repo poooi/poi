@@ -114,9 +114,13 @@
         operator="in" result="blurred-clipped"/>
 
       <!-- Step 8: re-boost opacity to suppress background bleed -->
-      <feComponentTransfer in="blurred-clipped">
+      <feComponentTransfer in="blurred-clipped" result="opaque">
         <feFuncA type="linear" slope="1.8"/>
       </feComponentTransfer>
+
+      <!-- Step 9: saturation boost, as the OS acrylic/vibrancy recipe does
+           before the tint layer is composited on top -->
+      <feColorMatrix in="opaque" type="saturate" values="1.25"/>
     </filter>
   </defs>
 </svg>
