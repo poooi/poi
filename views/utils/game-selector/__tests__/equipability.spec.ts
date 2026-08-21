@@ -336,6 +336,35 @@ describe('the ex-slot', () => {
     ).toBe(true)
   })
 
+  // The EXTRA branch is `cp.has(type) && (exTypes.has(type) || perItemMatch)`,
+  // where `cp` is the ship's ordinary equip-type set. Both routes are gated on
+  // it, and these two pin that gate: without it each would flip.
+  spec('the by-type route still needs the ship to accept the type normally', () => {
+    // 増設バルジ(中型艦) is ex-slot capable by type and 睦月 is not barred from
+    // it, but a plain destroyer cannot carry a medium bulge in any slot. The
+    // 43 destroyer remodels that can do so through a per-ship override, which
+    // is why this is keyed per ship rather than per ship type.
+    const bulge = $equips[72]
+    const mutsuki = $ships[1]
+    if (!bulge || !mutsuki) return
+    expect(canShipEquip(mutsuki.api_id, entryOf(bulge), constState, EXTRA_SLOT)).toBe(false)
+
+    const cruiser = shipOfStype(5)
+    expect(canShipEquip(cruiser.api_id, entryOf(bulge), constState, EXTRA_SLOT)).toBe(true)
+  })
+
+  spec('the per-item route does not turn its stype wildcard into "everyone"', () => {
+    // 改良型艦本式タービン is the one per-item rule written against stype 99,
+    // i.e. every ship type. The gate is what keeps that from meaning every
+    // ship: 海防艦 cannot carry 機関部強化 at all, destroyers can.
+    const turbine = $equips[33]
+    const ayanami = $ships[13]
+    const shimushu = $ships[517]
+    if (!turbine || !ayanami || !shimushu) return
+    expect(canShipEquip(ayanami.api_id, entryOf(turbine), constState, EXTRA_SLOT)).toBe(true)
+    expect(canShipEquip(shimushu.api_id, entryOf(turbine), constState, EXTRA_SLOT)).toBe(false)
+  })
+
   spec('rejects everything when the ship cannot carry the type at all', () => {
     const destroyer = shipOfStype(2)
     const largeGun = equipOfType(3)
