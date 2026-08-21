@@ -9,6 +9,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
+import { ShipContextMenuHint } from 'views/components/ship-parts/ship-context-menu'
 import {
   AirbaseArea,
   FleetNameButton,
@@ -107,6 +108,7 @@ const FleetShipView = ({
   return (
     <>
       <FleetStat fleetId={fleetId} isMini={false} />
+      <ShipContextMenuHint />
       <ShipDetails className="ship-details">
         {(shipsId ?? []).map((shipId, i) => (
           <ShipRow

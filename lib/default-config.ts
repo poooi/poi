@@ -39,6 +39,8 @@ interface PoiMisc {
   untrustedCerts?: string[]
   pinminimap: boolean
   arm64TranslationWarningDismissedVersion: string
+  /** One-shot hint pointing at the ship tiles' right-click menu. */
+  shipContextMenuHintDismissed: boolean
   language?: string
 }
 
@@ -322,6 +324,7 @@ const defaultConfig: Config = {
       trustedCerts: [],
       pinminimap: false,
       arm64TranslationWarningDismissedVersion: '',
+      shipContextMenuHintDismissed: false,
     },
     content: {
       resizable: true,
