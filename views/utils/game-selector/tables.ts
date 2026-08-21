@@ -60,6 +60,25 @@ export interface AirbaseFilterTab {
   icon: number
 }
 
+/**
+ * A per-slot equipment restriction, from `SlotUtil.excludeEquipList`.
+ *
+ * A few ships bar certain equipment from particular slots — Ise/Hyuuga's aft
+ * slots take no medium or large main gun, Yamato-class slot 4 takes only three
+ * types, and so on. The game keys these on (ship master id, slot index).
+ */
+export interface SlotExclusionRule {
+  shipMstIds: number[]
+  /** 0-based slot index the rule applies to. */
+  slot: number
+  /** Treat `slot` as a lower bound ("this slot and every later one"). */
+  fromSlot?: boolean
+  /** Equipment types the slot rejects. */
+  exclude?: number[]
+  /** Or the only types it accepts — the game writes these as "all but these". */
+  allowOnly?: number[]
+}
+
 export interface SelectorTables {
   shipFilterTabs: ShipFilterTab[]
   airbaseFilterTabs: AirbaseFilterTab[]
@@ -71,6 +90,7 @@ export interface SelectorTables {
   filterTypeSplits: EquipTypeSplit[]
   /** Master id → type, applied only inside the picker's equippability check. */
   pickerTypeOverrides: Record<number, number>
+  slotExclusions: SlotExclusionRule[]
 }
 
 export const DEFAULT_SELECTOR_TABLES: SelectorTables = {
@@ -182,6 +202,30 @@ export const DEFAULT_SELECTOR_TABLES: SelectorTables = {
   pickerTypeOverrides: {
     467: 95, // special-cased inside isEquipAbleSlot itself
   },
+
+  // Ported from SlotUtil.excludeEquipList. The ex-slot has no entry here: it
+  // carries its own rule instead (see ./equipability).
+  //
+  // The ids are the authority, not the names beside them — the game keys this
+  // table by master id, and a remodel's id says nothing about which ship it is.
+  // Check a name against api_mst_ship before acting on it.
+  slotExclusions: [
+    // 伊勢改二 / 日向改二: no medium or large main gun aft
+    { shipMstIds: [553, 554], slot: 2, fromSlot: true, exclude: [2, 3] },
+    // 夕張改二 / 改二特 / 改二丁
+    { shipMstIds: [622, 623, 624], slot: 3, exclude: [1, 2, 5, 22] },
+    { shipMstIds: [622, 623, 624], slot: 4, allowOnly: [12, 21, 43] },
+    // 能代改二 / 矢矧改二 / 矢矧改二乙
+    { shipMstIds: [662, 663, 668], slot: 3, exclude: [5] },
+    // 秋月改二 / 初月改二
+    { shipMstIds: [963, 968], slot: 3, exclude: [1, 5, 13] },
+    // Thonburi改
+    { shipMstIds: [978], slot: 2, exclude: [2] },
+    // 時雨改三 / 吹雪改三
+    { shipMstIds: [961, 1035], slot: 3, exclude: [1, 5] },
+    // 長波改二補 / 朝霜改二補 / 涼波改二補
+    { shipMstIds: [743, 744, 745], slot: 3, allowOnly: [21, 43] },
+  ],
 }
 
 /**
@@ -231,6 +275,9 @@ export const mergeSelectorTables = (
       tables.pickerTypeOverrides,
       DEFAULT_SELECTOR_TABLES.pickerTypeOverrides,
     ),
+    // Also keyless — a rule is identified by its (ships, slot) pair, which a
+    // payload may legitimately restate in full.
+    slotExclusions: nonEmpty(tables.slotExclusions) ?? DEFAULT_SELECTOR_TABLES.slotExclusions,
   }
 }
 

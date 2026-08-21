@@ -39,6 +39,9 @@ interface PoiMisc {
   untrustedCerts?: string[]
   pinminimap: boolean
   arm64TranslationWarningDismissedVersion: string
+  /** One-shot hints pointing at the right-click menus. */
+  shipContextMenuHintDismissed: boolean
+  pluginContextMenuHintDismissed: boolean
   language?: string
 }
 
@@ -322,6 +325,8 @@ const defaultConfig: Config = {
       trustedCerts: [],
       pinminimap: false,
       arm64TranslationWarningDismissedVersion: '',
+      shipContextMenuHintDismissed: false,
+      pluginContextMenuHintDismissed: false,
     },
     content: {
       resizable: true,

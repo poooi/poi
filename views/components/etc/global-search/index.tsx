@@ -5,6 +5,7 @@ import type {
   EquipListPosition,
   SelectorPosition,
   ShipEntry,
+  SlotTarget,
   ShipSortKey,
   ShipTagFilter,
 } from 'views/utils/game-selector'
@@ -25,6 +26,7 @@ import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import i18next from 'views/env-parts/i18next'
 import {
   ALL_EQUIPS_CATEGORY,
+  EXTRA_SLOT,
   airbasePositions,
   allShipTabIds,
   buildAirbaseList,
@@ -51,7 +53,13 @@ import {
   selectorTablesSelector,
   shipEntriesSelector,
 } from './entries'
-import { isSearchMode, searchEventEmitter, type SearchMode } from './event'
+import {
+  isSearchMode,
+  searchEventEmitter,
+  type EquipScope,
+  type SearchMode,
+  type SearchOpenEvent,
+} from './event'
 import { FilterSelect } from './filter-select'
 import {
   Backdrop,
@@ -231,7 +239,7 @@ const ShipResultRow = ({
         </TileStatusLabel>
       </ShipTile>
       <Tooltip content={t('main:Search equipment for this ship')} position={Position.TOP}>
-        <Button small minimal icon="cog" onClick={() => onSearchEquips(entry)} />
+        <Button small minimal icon="search" onClick={() => onSearchEquips(entry)} />
       </Tooltip>
       <PositionTag position={position} />
     </ResultRow>
@@ -243,22 +251,32 @@ interface EquipResult {
   position: EquipListPosition | undefined
 }
 
-/** Restricts the equipment list to what one ship can carry. */
-interface EquipScope {
-  shipMstId: number
-  shipMemId: number
-  name: string
+/** `null` is "any normal slot", which is the unscoped list the panel opens on. */
+const parseSlot = (value: string): SlotTarget | null => {
+  if (value === EXTRA_SLOT) return EXTRA_SLOT
+  const slot = Number(value)
+  return Number.isFinite(slot) && slot >= 0 ? slot : null
 }
+
+const slotValue = (slot: SlotTarget | null): string =>
+  slot == null ? 'any' : slot === EXTRA_SLOT ? EXTRA_SLOT : String(slot)
 
 const GlobalSearchPanel = ({
   mode,
   setMode,
+  initialEquipScope,
   onClose,
   closing,
   noAnimation,
 }: {
   mode: SearchMode
   setMode: (mode: SearchMode) => void
+  /**
+   * Scope to open with, when the panel was opened from a ship's context menu.
+   * A later request remounts the panel rather than updating it, so this is
+   * only ever read once per mount.
+   */
+  initialEquipScope?: EquipScope
   onClose: () => void
   closing?: boolean
   noAnimation?: boolean
@@ -270,7 +288,8 @@ const GlobalSearchPanel = ({
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
   const [airbaseTab, setAirbaseTab] = useState(0)
-  const [equipScope, setEquipScope] = useState<EquipScope | null>(null)
+  const [equipScope, setEquipScope] = useState<EquipScope | null>(initialEquipScope ?? null)
+  const [equipSlot, setEquipSlot] = useState<SlotTarget | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const shipEntries = useSelector(shipEntriesSelector)
@@ -332,14 +351,20 @@ const GlobalSearchPanel = ({
     return matched
   }, [mode, shipEntries, activeTabs, effectiveTag, sortKey, query, tables])
 
+  // The ex-slot picker has no category tabs in game, so the category filter is
+  // pinned to 全装備 (and disabled) while the ex-slot is selected.
+  const slotLocksCategory = equipScope != null && equipSlot === EXTRA_SLOT
+  const effectiveCategory = slotLocksCategory ? ALL_EQUIPS_CATEGORY : equipCategory
+
   const equipResults = useMemo((): EquipResult[] => {
     if (mode !== 'equip') return []
     const lists = buildEquipLists(
       equipEntries,
       {
-        category: equipCategory,
+        category: effectiveCategory,
         forShipMstId: equipScope?.shipMstId,
         forShipMemId: equipScope?.shipMemId,
+        slot: equipScope ? (equipSlot ?? undefined) : undefined,
       },
       constState,
       tables,
@@ -354,7 +379,7 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, equipCategory, equipScope, constState, query, tables])
+  }, [mode, equipEntries, effectiveCategory, equipScope, equipSlot, constState, query, tables])
 
   const airbaseResults = useMemo((): Result<EquipEntry>[] => {
     if (mode !== 'airbase') return []
@@ -399,8 +424,12 @@ const GlobalSearchPanel = ({
     setEquipScope({
       shipMstId: entry.$ship.api_id,
       shipMemId: entry.ship.api_id,
-      name: translateName(entry.$ship.api_name) || entry.$ship.api_name,
+      name: entry.$ship.api_name,
+      slots: entry.ship.api_slotnum ?? 0,
+      // 0 means the ex-slot was never opened; -1 is open and empty.
+      hasExtra: (entry.ship.api_slot_ex ?? 0) !== 0,
     })
+    setEquipSlot(null)
     setEquipCategory(ALL_EQUIPS_CATEGORY)
     setQuery('')
     setMode('equip')
@@ -486,8 +515,10 @@ const GlobalSearchPanel = ({
         )}
         {mode === 'equip' && (
           <FilterSelect
-            value={equipCategory}
+            value={effectiveCategory}
             onSelect={setEquipCategory}
+            disabled={slotLocksCategory}
+            title={slotLocksCategory ? t('main:The ex-slot lists every equipment') : undefined}
             width="13em"
             options={tables.equipFilterCategories.map((category) => ({
               value: category.id,
@@ -522,10 +553,39 @@ const GlobalSearchPanel = ({
         </FilterRow>
       )}
 
+      {/* A few ships bar particular equipment from particular slots, and the
+          ex-slot has rules of its own, so the list is only exact once a slot is
+          named. "Any" keeps the whole-ship view the scope opens on. */}
       {mode === 'equip' && equipScope && (
         <ScopeBar>
-          <span>{t('main:Equippable by {{name}}', { name: equipScope.name })}</span>
-          <Button small minimal icon="cross" onClick={() => setEquipScope(null)}>
+          <span>
+            {t('main:Equippable by {{name}}', {
+              name: translateName(equipScope.name) || equipScope.name,
+            })}
+          </span>
+          <SegmentedControl
+            value={slotValue(equipSlot)}
+            onValueChange={(next) => setEquipSlot(parseSlot(next))}
+            options={[
+              { value: 'any', label: t('main:Any slot') },
+              ...Array.from({ length: equipScope.slots }, (_, slot) => ({
+                value: String(slot),
+                label: String(slot + 1),
+              })),
+              ...(equipScope.hasExtra ? [{ value: EXTRA_SLOT, label: t('main:Ex') }] : []),
+            ]}
+            intent="primary"
+            size="small"
+          />
+          <Button
+            small
+            minimal
+            icon="cross"
+            onClick={() => {
+              setEquipScope(null)
+              setEquipSlot(null)
+            }}
+          >
             {t('main:Clear')}
           </Button>
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
@@ -636,6 +696,13 @@ type SearchState = 'closed' | 'open' | 'closing'
 export const GlobalSearch = () => {
   const [state, setState] = useState<SearchState>('closed')
   const [mode, setMode] = useState<SearchMode>('ship')
+  // Keyed by an ever-increasing serial, bumped on every open: the panel
+  // remounts, so its query, category and slot start clean and the scope is read
+  // straight out of the request — no effect needed to reset any of it, and a
+  // scoped session cannot leak into the next plain one.
+  const [scopeRequest, setScopeRequest] = useState<{ serial: number; scope?: EquipScope }>({
+    serial: 0,
+  })
   const accelerator = useSelector(
     (state: RootState) => state.config?.poi?.shortcut?.search ?? 'CmdOrCtrl+F',
   )
@@ -644,8 +711,10 @@ export const GlobalSearch = () => {
   )
   const noAnimation = !enableTransition
 
-  const handleOpen = useCallback((nextMode?: SearchMode) => {
-    if (nextMode) setMode(nextMode)
+  const handleOpen = useCallback((event: SearchOpenEvent) => {
+    if (event.mode) setMode(event.mode)
+    const scope = event.scope
+    setScopeRequest((prev) => ({ serial: prev.serial + 1, scope }))
     // Re-opening mid-dismissal cancels it rather than queueing a second cycle.
     setState('open')
   }, [])
@@ -655,15 +724,10 @@ export const GlobalSearch = () => {
     [noAnimation],
   )
 
-  useSearchHotkey(accelerator, () =>
-    setState((prev) => {
-      if (prev === 'open') return noAnimation ? 'closed' : 'closing'
-      return 'open'
-    }),
-  )
+  useSearchHotkey(accelerator, () => (state === 'open' ? handleClose() : handleOpen({})))
 
   useEffect(() => {
-    const disposable = searchEventEmitter.on((e) => handleOpen(e.mode))
+    const disposable = searchEventEmitter.on(handleOpen)
     return () => disposable.dispose()
   }, [handleOpen])
 
@@ -699,8 +763,10 @@ export const GlobalSearch = () => {
       }
     >
       <GlobalSearchPanel
+        key={scopeRequest.serial}
         mode={mode}
         setMode={setMode}
+        initialEquipScope={scopeRequest.scope}
         onClose={handleClose}
         closing={closing}
         noAnimation={noAnimation}

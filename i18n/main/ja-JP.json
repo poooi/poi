@@ -161,5 +161,11 @@
   "陸上攻撃機": "陸上攻撃機",
   "局地戦闘機": "局地戦闘機",
   "艦上爆撃機": "艦上爆撃機",
-  "偵察機": "偵察機"
+  "偵察機": "偵察機",
+  "Any slot": "全スロット",
+  "Ex": "増設",
+  "The ex-slot lists every equipment": "補強増設では全装備が表示されます",
+  "Right-click a ship for more options": "艦娘を右クリックするとメニューが開きます",
+  "Got it": "了解",
+  "Right-click a plugin for more options": "プラグインを右クリックするとメニューが開きます"
 }

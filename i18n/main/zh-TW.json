@@ -161,5 +161,11 @@
   "陸上攻撃機": "陸上攻擊機",
   "局地戦闘機": "局地戰鬥機",
   "艦上爆撃機": "艦上爆擊機",
-  "偵察機": "偵察機"
+  "偵察機": "偵察機",
+  "Any slot": "全部格子",
+  "Ex": "增設",
+  "The ex-slot lists every equipment": "補強增設格顯示全部裝備",
+  "Right-click a ship for more options": "右鍵點擊艦娘可開啟選單",
+  "Got it": "知道了",
+  "Right-click a plugin for more options": "右鍵點擊擴充功能可開啟選單"
 }

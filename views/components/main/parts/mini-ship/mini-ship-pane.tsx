@@ -7,6 +7,7 @@ import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
 import ScrollShadow from 'views/components/etc/scroll-shadow'
 import { FleetStat } from 'views/components/ship-parts/fleet-stat'
+import { ShipContextMenuHint } from 'views/components/ship-parts/ship-context-menu'
 import { fleetShipsIdSelectorFactory } from 'views/utils/selectors'
 
 import { ShipRow } from '../../../ship/ship-item'
@@ -39,6 +40,7 @@ export const PaneBodyMini = ({ fleetId }: { fleetId: number }) => {
   return (
     <>
       <FleetStat fleetId={fleetId} isMini={!enableOverviewFleetDetail} isMainView />
+      <ShipContextMenuHint />
       <ShipDetailsMini className="ship-details-mini">
         {!enableOverviewFleetDetail
           ? (shipsId ?? []).map((shipId) => (

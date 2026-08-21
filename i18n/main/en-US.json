@@ -147,5 +147,11 @@
   "陸上攻撃機": "Land-based Bomber",
   "局地戦闘機": "Interceptor",
   "艦上爆撃機": "Carrier Bomber",
-  "偵察機": "Reconnaissance"
+  "偵察機": "Reconnaissance",
+  "Any slot": "Any slot",
+  "Ex": "Ex",
+  "The ex-slot lists every equipment": "The ex-slot lists every equipment",
+  "Right-click a ship for more options": "Right-click a ship for more options",
+  "Got it": "Got it",
+  "Right-click a plugin for more options": "Right-click a plugin for more options"
 }

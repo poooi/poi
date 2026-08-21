@@ -6,6 +6,7 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
+import { useShipContextMenu } from 'views/components/ship-parts/ship-context-menu'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import {
   selectShipAvatarColor,
@@ -84,6 +85,7 @@ export const MiniShipRow = memo(
       selector(state),
     )
     const hideShipName = enableAvatar && compact
+    const handleContextMenu = useShipContextMenu(ship, $ship)
     if (!ship || !ship.api_id) return <div />
     const labelStatusStyle = getStatusStyle(labelStatus)
     const apiNowhp = ship.api_nowhp ?? 0
@@ -115,6 +117,7 @@ export const MiniShipRow = memo(
       >
         <MiniShipItem
           className="ship-item"
+          onContextMenu={handleContextMenu}
           avatar={enableAvatar}
           shipName={!hideShipName}
           data-master-id={ship.api_ship_id as number}

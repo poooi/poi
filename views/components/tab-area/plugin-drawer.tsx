@@ -3,6 +3,7 @@ import type { Plugin } from 'views/services/plugin-manager'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { PluginContextMenuHint } from './plugin-context-menu-hint'
 import PluginDropdownMenuItem from './plugin-dropdown-menu-item'
 import {
   DrawerScrollShadow,
@@ -69,6 +70,7 @@ export const PluginDrawer = ({
   return (
     <PluginDrawerCard {...cardProps}>
       <DrawerScrollShadow>
+        <PluginContextMenuHint />
         <PluginDrawerOverlay>
           {plugins.map((plugin) => {
             const isTab = !plugin.handleClick && !isWindowMode(plugin)
