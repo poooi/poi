@@ -1,6 +1,6 @@
 import type { RootState } from 'views/redux/reducer-factory'
 
-import { Tag, Position, Intent, Tooltip } from '@blueprintjs/core'
+import { Tag, Position, Intent, Tooltip, Button } from '@blueprintjs/core'
 import { map } from 'lodash'
 import moment from 'moment-timezone'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -9,6 +9,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { styled } from 'styled-components'
+import { openGlobalSearch } from 'views/components/etc/global-search/event'
 import { InfoTooltipEntry, InfoTooltipItem } from 'views/components/etc/styled-components'
 import { getStore } from 'views/create-store'
 import i18next from 'views/env-parts/i18next'
@@ -166,6 +167,19 @@ const CardWrapper = styled(CardWrapperL)`
   align-items: center;
 `
 
+const SearchButton = styled(Button)`
+  margin-left: 0.5em;
+`
+
+const SearchControl = () => {
+  const { t } = useTranslation('main')
+  return (
+    <Tooltip content={t('main:Search ships and equipment')} position={Position.TOP}>
+      <SearchButton minimal small icon="search" onClick={() => openGlobalSearch()} />
+    </Tooltip>
+  )
+}
+
 const isActive = () => getStore('ui.activeMainTab') === 'main-view'
 
 const CountdownContent = ({ moments }: { moments: Record<MomentKey, moment.Moment> }) => (
@@ -320,6 +334,7 @@ export const AdmiralPanel = ({ editable }: { editable?: boolean }) => {
           {equipNum || '?'} / {maxSlotitem || '?'}
         </Tag>
       </span>
+      <SearchControl />
     </CardWrapper>
   )
 }
