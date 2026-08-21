@@ -53,7 +53,13 @@ import {
   selectorTablesSelector,
   shipEntriesSelector,
 } from './entries'
-import { isSearchMode, searchEventEmitter, type SearchMode } from './event'
+import {
+  isSearchMode,
+  searchEventEmitter,
+  type EquipScope,
+  type SearchMode,
+  type SearchOpenEvent,
+} from './event'
 import { FilterSelect } from './filter-select'
 import {
   Backdrop,
@@ -245,17 +251,6 @@ interface EquipResult {
   position: EquipListPosition | undefined
 }
 
-/** Restricts the equipment list to what one ship can carry. */
-interface EquipScope {
-  shipMstId: number
-  shipMemId: number
-  name: string
-  /** Number of normal slots, so the slot picker offers exactly those. */
-  slots: number
-  /** Whether the ex-slot (補強増設) has been opened on this ship. */
-  hasExtra: boolean
-}
-
 /** `null` is "any normal slot", which is the unscoped list the panel opens on. */
 const parseSlot = (value: string): SlotTarget | null => {
   if (value === EXTRA_SLOT) return EXTRA_SLOT
@@ -269,12 +264,19 @@ const slotValue = (slot: SlotTarget | null): string =>
 const GlobalSearchPanel = ({
   mode,
   setMode,
+  initialEquipScope,
   onClose,
   closing,
   noAnimation,
 }: {
   mode: SearchMode
   setMode: (mode: SearchMode) => void
+  /**
+   * Scope to open with, when the panel was opened from a ship's context menu.
+   * A later request remounts the panel rather than updating it, so this is
+   * only ever read once per mount.
+   */
+  initialEquipScope?: EquipScope
   onClose: () => void
   closing?: boolean
   noAnimation?: boolean
@@ -286,7 +288,7 @@ const GlobalSearchPanel = ({
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
   const [airbaseTab, setAirbaseTab] = useState(0)
-  const [equipScope, setEquipScope] = useState<EquipScope | null>(null)
+  const [equipScope, setEquipScope] = useState<EquipScope | null>(initialEquipScope ?? null)
   const [equipSlot, setEquipSlot] = useState<SlotTarget | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -422,7 +424,7 @@ const GlobalSearchPanel = ({
     setEquipScope({
       shipMstId: entry.$ship.api_id,
       shipMemId: entry.ship.api_id,
-      name: translateName(entry.$ship.api_name) || entry.$ship.api_name,
+      name: entry.$ship.api_name,
       slots: entry.ship.api_slotnum ?? 0,
       // 0 means the ex-slot was never opened; -1 is open and empty.
       hasExtra: (entry.ship.api_slot_ex ?? 0) !== 0,
@@ -556,7 +558,11 @@ const GlobalSearchPanel = ({
           named. "Any" keeps the whole-ship view the scope opens on. */}
       {mode === 'equip' && equipScope && (
         <ScopeBar>
-          <span>{t('main:Equippable by {{name}}', { name: equipScope.name })}</span>
+          <span>
+            {t('main:Equippable by {{name}}', {
+              name: translateName(equipScope.name) || equipScope.name,
+            })}
+          </span>
           <SegmentedControl
             value={slotValue(equipSlot)}
             onValueChange={(next) => setEquipSlot(parseSlot(next))}
@@ -690,6 +696,13 @@ type SearchState = 'closed' | 'open' | 'closing'
 export const GlobalSearch = () => {
   const [state, setState] = useState<SearchState>('closed')
   const [mode, setMode] = useState<SearchMode>('ship')
+  // Keyed by an ever-increasing serial, bumped on every open: the panel
+  // remounts, so its query, category and slot start clean and the scope is read
+  // straight out of the request — no effect needed to reset any of it, and a
+  // scoped session cannot leak into the next plain one.
+  const [scopeRequest, setScopeRequest] = useState<{ serial: number; scope?: EquipScope }>({
+    serial: 0,
+  })
   const accelerator = useSelector(
     (state: RootState) => state.config?.poi?.shortcut?.search ?? 'CmdOrCtrl+F',
   )
@@ -698,8 +711,10 @@ export const GlobalSearch = () => {
   )
   const noAnimation = !enableTransition
 
-  const handleOpen = useCallback((nextMode?: SearchMode) => {
-    if (nextMode) setMode(nextMode)
+  const handleOpen = useCallback((event: SearchOpenEvent) => {
+    if (event.mode) setMode(event.mode)
+    const scope = event.scope
+    setScopeRequest((prev) => ({ serial: prev.serial + 1, scope }))
     // Re-opening mid-dismissal cancels it rather than queueing a second cycle.
     setState('open')
   }, [])
@@ -709,15 +724,10 @@ export const GlobalSearch = () => {
     [noAnimation],
   )
 
-  useSearchHotkey(accelerator, () =>
-    setState((prev) => {
-      if (prev === 'open') return noAnimation ? 'closed' : 'closing'
-      return 'open'
-    }),
-  )
+  useSearchHotkey(accelerator, () => (state === 'open' ? handleClose() : handleOpen({})))
 
   useEffect(() => {
-    const disposable = searchEventEmitter.on((e) => handleOpen(e.mode))
+    const disposable = searchEventEmitter.on(handleOpen)
     return () => disposable.dispose()
   }, [handleOpen])
 
@@ -753,8 +763,10 @@ export const GlobalSearch = () => {
       }
     >
       <GlobalSearchPanel
+        key={scopeRequest.serial}
         mode={mode}
         setMode={setMode}
+        initialEquipScope={scopeRequest.scope}
         onClose={handleClose}
         closing={closing}
         noAnimation={noAnimation}

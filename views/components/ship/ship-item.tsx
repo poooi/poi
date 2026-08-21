@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { createSelector } from 'reselect'
 import { MaterialIcon } from 'views/components/etc/icon'
+import { useShipContextMenu } from 'views/components/ship-parts/ship-context-menu'
 import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import {
   Gradient,
@@ -88,6 +89,7 @@ export const ShipRow = memo(
       (state: RootState) => selector(state),
     )
     const hideShipName = enableAvatar && compact
+    const handleContextMenu = useShipContextMenu(ship, $ship)
     const labelStatusStyle = getStatusStyle(labelStatus)
     const shipMstId = $ship?.api_id ?? -1
     const apiNowhp = ship?.api_nowhp ?? 0
@@ -163,6 +165,7 @@ export const ShipRow = memo(
       >
         <ShipItem
           className="ship-item"
+          onContextMenu={handleContextMenu}
           data-master-id={$ship?.api_id}
           data-ship-id={shipId}
           avatar={enableAvatar}
