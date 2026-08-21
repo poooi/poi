@@ -357,4 +357,7 @@ export const ScopeBar = styled(Row)`
   border-radius: 4px;
   background: rgb(45 114 210 / 0.18);
   font-size: 12px;
+  /* Ship name + a slot per equipment slot + the count outgrow one line on the
+     wider hulls, so let the row break rather than clip inside the panel. */
+  flex-wrap: wrap;
 `

@@ -5,6 +5,7 @@ import type {
   EquipListPosition,
   SelectorPosition,
   ShipEntry,
+  SlotTarget,
   ShipSortKey,
   ShipTagFilter,
 } from 'views/utils/game-selector'
@@ -25,6 +26,7 @@ import { StatusLabel } from 'views/components/ship-parts/statuslabel'
 import i18next from 'views/env-parts/i18next'
 import {
   ALL_EQUIPS_CATEGORY,
+  EXTRA_SLOT,
   airbasePositions,
   allShipTabIds,
   buildAirbaseList,
@@ -248,7 +250,21 @@ interface EquipScope {
   shipMstId: number
   shipMemId: number
   name: string
+  /** Number of normal slots, so the slot picker offers exactly those. */
+  slots: number
+  /** Whether the ex-slot (補強増設) has been opened on this ship. */
+  hasExtra: boolean
 }
+
+/** `null` is "any normal slot", which is the unscoped list the panel opens on. */
+const parseSlot = (value: string): SlotTarget | null => {
+  if (value === EXTRA_SLOT) return EXTRA_SLOT
+  const slot = Number(value)
+  return Number.isFinite(slot) && slot >= 0 ? slot : null
+}
+
+const slotValue = (slot: SlotTarget | null): string =>
+  slot == null ? 'any' : slot === EXTRA_SLOT ? EXTRA_SLOT : String(slot)
 
 const GlobalSearchPanel = ({
   mode,
@@ -271,6 +287,7 @@ const GlobalSearchPanel = ({
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
   const [airbaseTab, setAirbaseTab] = useState(0)
   const [equipScope, setEquipScope] = useState<EquipScope | null>(null)
+  const [equipSlot, setEquipSlot] = useState<SlotTarget | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const shipEntries = useSelector(shipEntriesSelector)
@@ -332,14 +349,20 @@ const GlobalSearchPanel = ({
     return matched
   }, [mode, shipEntries, activeTabs, effectiveTag, sortKey, query, tables])
 
+  // The ex-slot picker has no category tabs in game, so the category filter is
+  // pinned to 全装備 (and disabled) while the ex-slot is selected.
+  const slotLocksCategory = equipScope != null && equipSlot === EXTRA_SLOT
+  const effectiveCategory = slotLocksCategory ? ALL_EQUIPS_CATEGORY : equipCategory
+
   const equipResults = useMemo((): EquipResult[] => {
     if (mode !== 'equip') return []
     const lists = buildEquipLists(
       equipEntries,
       {
-        category: equipCategory,
+        category: effectiveCategory,
         forShipMstId: equipScope?.shipMstId,
         forShipMemId: equipScope?.shipMemId,
+        slot: equipScope ? (equipSlot ?? undefined) : undefined,
       },
       constState,
       tables,
@@ -354,7 +377,7 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, equipCategory, equipScope, constState, query, tables])
+  }, [mode, equipEntries, effectiveCategory, equipScope, equipSlot, constState, query, tables])
 
   const airbaseResults = useMemo((): Result<EquipEntry>[] => {
     if (mode !== 'airbase') return []
@@ -400,7 +423,11 @@ const GlobalSearchPanel = ({
       shipMstId: entry.$ship.api_id,
       shipMemId: entry.ship.api_id,
       name: translateName(entry.$ship.api_name) || entry.$ship.api_name,
+      slots: entry.ship.api_slotnum ?? 0,
+      // 0 means the ex-slot was never opened; -1 is open and empty.
+      hasExtra: (entry.ship.api_slot_ex ?? 0) !== 0,
     })
+    setEquipSlot(null)
     setEquipCategory(ALL_EQUIPS_CATEGORY)
     setQuery('')
     setMode('equip')
@@ -486,8 +513,10 @@ const GlobalSearchPanel = ({
         )}
         {mode === 'equip' && (
           <FilterSelect
-            value={equipCategory}
+            value={effectiveCategory}
             onSelect={setEquipCategory}
+            disabled={slotLocksCategory}
+            title={slotLocksCategory ? t('main:The ex-slot lists every equipment') : undefined}
             width="13em"
             options={tables.equipFilterCategories.map((category) => ({
               value: category.id,
@@ -522,10 +551,35 @@ const GlobalSearchPanel = ({
         </FilterRow>
       )}
 
+      {/* A few ships bar particular equipment from particular slots, and the
+          ex-slot has rules of its own, so the list is only exact once a slot is
+          named. "Any" keeps the whole-ship view the scope opens on. */}
       {mode === 'equip' && equipScope && (
         <ScopeBar>
           <span>{t('main:Equippable by {{name}}', { name: equipScope.name })}</span>
-          <Button small minimal icon="cross" onClick={() => setEquipScope(null)}>
+          <SegmentedControl
+            value={slotValue(equipSlot)}
+            onValueChange={(next) => setEquipSlot(parseSlot(next))}
+            options={[
+              { value: 'any', label: t('main:Any slot') },
+              ...Array.from({ length: equipScope.slots }, (_, slot) => ({
+                value: String(slot),
+                label: String(slot + 1),
+              })),
+              ...(equipScope.hasExtra ? [{ value: EXTRA_SLOT, label: t('main:Ex') }] : []),
+            ]}
+            intent="primary"
+            size="small"
+          />
+          <Button
+            small
+            minimal
+            icon="cross"
+            onClick={() => {
+              setEquipScope(null)
+              setEquipSlot(null)
+            }}
+          >
             {t('main:Clear')}
           </Button>
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>

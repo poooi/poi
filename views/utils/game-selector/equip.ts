@@ -2,10 +2,11 @@ import type { APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
 import type { ConstState } from 'views/redux/const'
 import type { Equip } from 'views/redux/info/equips'
 
+import type { SlotTarget } from './equipability'
 import type { SelectorTables } from './tables'
 
 import { equipType, equipTypeForFilter, equipTypeSp, typesOfCategory } from './equip-type'
-import { canShipEquip } from './equipability'
+import { canShipEquip, slotRejectsEntry } from './equipability'
 import { getSelectorTables } from './tables'
 import { AIRBASE_ROWS_PER_PAGE, positionOf, type SelectorPosition } from './types'
 
@@ -78,6 +79,11 @@ export interface EquipFilter {
    * target ship is already carrying, which `isEquipAbleSlot` does by roster id.
    */
   forShipMemId?: number
+  /**
+   * Which of that ship's slots, since a few ships restrict particular slots and
+   * the ex-slot has a rule of its own. Omitted means "any normal slot".
+   */
+  slot?: SlotTarget
 }
 
 /**
@@ -115,7 +121,9 @@ export const filterEquips = (
     filter.category === ALL_EQUIPS_CATEGORY ? entries : filterByCategory(entries, filter, tables)
   if (filter.forShipMstId == null || !constState) return byCategory
   const shipMstId = filter.forShipMstId
-  return byCategory.filter((entry) => canShipEquip(shipMstId, entry.$equip, constState, tables))
+  return byCategory.filter((entry) =>
+    canShipEquip(shipMstId, entry, constState, filter.slot, tables),
+  )
 }
 
 const filterByCategory = (
@@ -155,6 +163,10 @@ export const buildEquipList = (
  * every ship's slots, including the ex-slot. When the picker is scoped to a
  * ship, `isEquipAbleSlot` additionally drops that ship's own equipment from the
  * 他艦娘装備中 list — it is already on the target, so it is not "on another".
+ *
+ * `_initSetList` re-runs the slot exclusion on the raw equipment type, which is
+ * slightly stricter than the pass `filterEquips` already made; see
+ * `slotRejectsEntry`.
  */
 export const buildEquipLists = (
   entries: EquipEntry[],
@@ -165,10 +177,21 @@ export const buildEquipLists = (
   const filtered = filterEquips(entries, filter, constState, tables)
   const unset: EquipEntry[] = []
   const set: EquipEntry[] = []
+  // Only a numbered slot carries raw-type exclusions; the ex-slot has none.
+  const setExclusion =
+    filter.forShipMstId != null && typeof filter.slot === 'number'
+      ? { shipMstId: filter.forShipMstId, slot: filter.slot }
+      : null
   for (const entry of filtered) {
     if (entry.equippedOn == null) {
       unset.push(entry)
     } else if (filter.forShipMemId == null || entry.equippedOn !== filter.forShipMemId) {
+      if (
+        setExclusion &&
+        slotRejectsEntry(setExclusion.shipMstId, setExclusion.slot, entry.$equip, 'set', tables)
+      ) {
+        continue
+      }
       set.push(entry)
     }
   }

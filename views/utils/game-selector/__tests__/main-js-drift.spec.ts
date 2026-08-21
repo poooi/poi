@@ -149,3 +149,38 @@ describe('special-cased master ids', () => {
     expect(raw.map(($equip) => `${$equip.api_id}:${$equip.api_name}`)).toEqual([])
   })
 })
+
+describe('per-slot exclusions vs master data', () => {
+  // `SlotUtil.excludeEquipList` keys off master ship ids, so a renumbered or
+  // retired remodel would leave the rule pointing at nothing.
+  spec('every ship named by a rule still exists', () => {
+    const missing = DEFAULT_SELECTOR_TABLES.slotExclusions.flatMap((rule) =>
+      rule.shipMstIds.filter((id) => !$ships[id]),
+    )
+    expect(missing).toEqual([])
+  })
+
+  spec('no rule points past the ship it applies to', () => {
+    // A rule that names slot n needs the ship to actually have slot n. The
+    // "from this slot onwards" rules only need the first one to exist.
+    const overshot = DEFAULT_SELECTOR_TABLES.slotExclusions.flatMap((rule) =>
+      rule.shipMstIds
+        .filter(($id) => ($ships[$id]?.api_slot_num ?? 0) <= rule.slot)
+        .map(($id) => `${$id}@${rule.slot}`),
+    )
+    expect(overshot).toEqual([])
+  })
+
+  spec('every excluded type is one the game still defines', () => {
+    const known = new Set(
+      Object.values($equips).flatMap(($equip) => {
+        const type = $equip.api_type?.[2]
+        return typeof type === 'number' ? [type] : []
+      }),
+    )
+    const unknown = DEFAULT_SELECTOR_TABLES.slotExclusions.flatMap((rule) =>
+      [...(rule.exclude ?? []), ...(rule.allowOnly ?? [])].filter((type) => !known.has(type)),
+    )
+    expect(unknown).toEqual([])
+  })
+})
