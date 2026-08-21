@@ -239,7 +239,7 @@ const ShipResultRow = ({
         </TileStatusLabel>
       </ShipTile>
       <Tooltip content={t('main:Search equipment for this ship')} position={Position.TOP}>
-        <Button small minimal icon="cog" onClick={() => onSearchEquips(entry)} />
+        <Button small minimal icon="search" onClick={() => onSearchEquips(entry)} />
       </Tooltip>
       <PositionTag position={position} />
     </ResultRow>

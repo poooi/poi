@@ -41,7 +41,7 @@ export const useShipContextMenu = (ship?: Ship, $ship?: APIMstShip) => {
           <Menu>
             <MenuDivider title={t(`resources:${$ship.api_name}`, { keySeparator: 'chiba' })} />
             <MenuItem
-              icon="cog"
+              icon="search"
               text={t('main:Search equipment for this ship')}
               onClick={() =>
                 openEquipSearchForShip({
