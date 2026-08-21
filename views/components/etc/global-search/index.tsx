@@ -63,7 +63,9 @@ import {
 import { FilterSelect } from './filter-select'
 import {
   Backdrop,
+  CloseSlot,
   Empty,
+  PillControl,
   FilterRow,
   ListModeTagEl,
   Meta,
@@ -492,7 +494,7 @@ const GlobalSearchPanel = ({
             <FilterSelect
               value={sortKey}
               onSelect={setSortKey}
-              width="8em"
+              width="7em"
               options={SHIP_SORT_KEYS.map((key) => ({
                 value: key,
                 label: translateSortCaption(SHIP_SORT_KEY_NAMES[key]),
@@ -503,7 +505,7 @@ const GlobalSearchPanel = ({
               value={tag}
               onSelect={setTag}
               disabled={!eventActive}
-              width="9em"
+              width="7em"
               title={eventActive ? undefined : t('main:Available during events only')}
               options={[
                 { value: 'all' as ShipTagFilter, label: t('main:All ships') },
@@ -527,10 +529,13 @@ const GlobalSearchPanel = ({
             }))}
           />
         )}
+      </SearchRow>
+
+      <CloseSlot>
         <Tooltip content={t('main:Close')} position={Position.TOP}>
           <Button minimal icon="cross" onClick={onClose} />
         </Tooltip>
-      </SearchRow>
+      </CloseSlot>
 
       {mode === 'ship' && (
         <FilterRow>
@@ -603,7 +608,7 @@ const GlobalSearchPanel = ({
           share a line with the search box. */}
       {mode === 'airbase' && (
         <FilterRow>
-          <SegmentedControl
+          <PillControl
             value={String(airbaseTab)}
             onValueChange={(next) => {
               const id = Number(next)

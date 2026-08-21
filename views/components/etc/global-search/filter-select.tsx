@@ -13,9 +13,28 @@ export interface FilterOption<T> {
   icon?: number
 }
 
+/**
+ * The label is clipped, never wrapped: these buttons carry a fixed width and a
+ * caret pinned to the far edge, and a second line would push both out of the
+ * row they share with the search box.
+ */
+const TriggerLabel = styled.span`
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
 const TriggerButton = styled(Button)`
   && {
     white-space: nowrap;
+  }
+
+  .bp6-button-text {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
   }
 `
 
@@ -52,7 +71,7 @@ export const FilterSelect = <T,>({
       text={
         <>
           {active?.icon != null && <OptionIcon slotitemId={active.icon} alt="" />}
-          {active?.label ?? ''}
+          <TriggerLabel>{active?.label ?? ''}</TriggerLabel>
         </>
       }
     />

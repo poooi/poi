@@ -1,4 +1,4 @@
-import { Button, Tag } from '@blueprintjs/core'
+import { Button, SegmentedControl, Tag } from '@blueprintjs/core'
 import { css, keyframes, styled } from 'styled-components'
 import { Avatar } from 'views/components/etc/avatar'
 import { SlotitemIcon } from 'views/components/etc/icon'
@@ -62,6 +62,7 @@ export const Backdrop = styled.div<AnimatedProps>`
 // stay readable over whatever the tab area is showing behind it, so the
 // background is the theme's opaque token rather than a translucent surface.
 export const Panel = styled.div<AnimatedProps>`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -114,9 +115,46 @@ export const FilterRow = styled(Row)`
  */
 export const SearchRow = styled(Row)`
   flex-wrap: wrap;
+  /* Room for the close button, which is pinned to the panel corner rather than
+     riding along in the flow — see CloseSlot. */
+  padding-right: 34px;
 
   > * {
     flex: 0 0 auto;
+    white-space: nowrap;
+  }
+`
+
+/**
+ * The close button belongs to the panel, not to the first row: once the row is
+ * narrow enough to wrap, a button at the end of the flow lands wherever the
+ * last line happens to end. Pinned to the corner it stays where a close button
+ * is looked for.
+ */
+export const CloseSlot = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`
+
+/**
+ * The land base tabs, whose five captions are the widest labels in the panel.
+ * Clipped rather than wrapped: a two-line caption would set the height of the
+ * whole strip for the sake of one tab.
+ */
+export const PillControl = styled(SegmentedControl)`
+  min-width: 0;
+
+  .bp6-button {
+    min-width: 0;
+  }
+
+  .bp6-button-text {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 `
