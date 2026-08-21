@@ -171,6 +171,39 @@ describe('per-slot exclusions vs master data', () => {
     expect(overshot).toEqual([])
   })
 
+  // Pins the ids to the ships they are meant to be, which the comments beside
+  // the table claim but cannot enforce. Getting this wrong is silent: a wrong
+  // id that happens to name a real ship with enough slots passes every other
+  // guard here while quietly restricting the wrong hull.
+  spec('every rule still names the ship its comment claims', () => {
+    const EXPECTED: Record<number, string> = {
+      553: '伊勢改二',
+      554: '日向改二',
+      622: '夕張改二',
+      623: '夕張改二特',
+      624: '夕張改二丁',
+      662: '能代改二',
+      663: '矢矧改二',
+      668: '矢矧改二乙',
+      963: '秋月改二',
+      968: '初月改二',
+      978: 'Thonburi改',
+      961: '時雨改三',
+      1035: '吹雪改三',
+      743: '長波改二補',
+      744: '朝霜改二補',
+      745: '涼波改二補',
+    }
+    const named = [
+      ...new Set(DEFAULT_SELECTOR_TABLES.slotExclusions.flatMap((rule) => rule.shipMstIds)),
+    ]
+    // Every rule id is accounted for, and still points at the same ship.
+    expect(named.filter((id) => !(id in EXPECTED))).toEqual([])
+    expect(named.map((id) => `${id}:${$ships[id]?.api_name}`)).toEqual(
+      named.map((id) => `${id}:${EXPECTED[id]}`),
+    )
+  })
+
   spec('every excluded type is one the game still defines', () => {
     const known = new Set(
       Object.values($equips).flatMap(($equip) => {

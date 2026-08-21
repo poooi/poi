@@ -205,16 +205,25 @@ export const DEFAULT_SELECTOR_TABLES: SelectorTables = {
 
   // Ported from SlotUtil.excludeEquipList. The ex-slot has no entry here: it
   // carries its own rule instead (see ./equipability).
+  //
+  // The ids are the authority, not the names beside them — the game keys this
+  // table by master id, and a remodel's id says nothing about which ship it is.
+  // Check a name against api_mst_ship before acting on it.
   slotExclusions: [
     // 伊勢改二 / 日向改二: no medium or large main gun aft
     { shipMstIds: [553, 554], slot: 2, fromSlot: true, exclude: [2, 3] },
-    // 大和改二 / 改二重 / 武蔵改二
+    // 夕張改二 / 改二特 / 改二丁
     { shipMstIds: [622, 623, 624], slot: 3, exclude: [1, 2, 5, 22] },
     { shipMstIds: [622, 623, 624], slot: 4, allowOnly: [12, 21, 43] },
+    // 能代改二 / 矢矧改二 / 矢矧改二乙
     { shipMstIds: [662, 663, 668], slot: 3, exclude: [5] },
+    // 秋月改二 / 初月改二
     { shipMstIds: [963, 968], slot: 3, exclude: [1, 5, 13] },
+    // Thonburi改
     { shipMstIds: [978], slot: 2, exclude: [2] },
+    // 時雨改三 / 吹雪改三
     { shipMstIds: [961, 1035], slot: 3, exclude: [1, 5] },
+    // 長波改二補 / 朝霜改二補 / 涼波改二補
     { shipMstIds: [743, 744, 745], slot: 3, allowOnly: [21, 43] },
   ],
 }

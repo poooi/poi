@@ -209,7 +209,7 @@ describe('per-ship equipment list', () => {
 
 /**
  * The per-slot exclusions the game hardcodes in `SlotUtil.excludeEquipList`.
- * 伊勢改二 (553) is the "this slot and every later one" shape; 大和改二 (622)
+ * 伊勢改二 (553) is the "this slot and every later one" shape; 夕張改二 (622)
  * covers both a plain exclusion and an "only these types" slot.
  */
 describe('slotRejectsType', () => {
@@ -221,13 +221,13 @@ describe('slotRejectsType', () => {
     expect(slotRejectsType(553, 2, 1)).toBe(false)
   })
 
-  spec('大和改二 slot 4 bars the four listed types and nothing else', () => {
+  spec('夕張改二 slot 4 bars the four listed types and nothing else', () => {
     expect(slotRejectsType(622, 3, 5)).toBe(true)
     expect(slotRejectsType(622, 3, 22)).toBe(true)
     expect(slotRejectsType(622, 3, 12)).toBe(false)
   })
 
-  spec('大和改二 slot 5 accepts only the three listed types', () => {
+  spec('夕張改二 slot 5 accepts only the three listed types', () => {
     for (const allowed of [12, 21, 43]) expect(slotRejectsType(622, 4, allowed)).toBe(false)
     expect(slotRejectsType(622, 4, 1)).toBe(true)
     expect(slotRejectsType(622, 4, 13)).toBe(true)
