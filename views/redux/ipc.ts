@@ -21,14 +21,26 @@ const ipcSlice = createSlice({
         ...state,
         ...payload,
       }))
+      // `ipc.register` merges into the existing scope, so the mirror must merge too
+      // instead of replacing the scope with only the newly registered keys.
       .addCase(createRegisterIPCAction, (state, { payload }) => ({
         ...state,
-        [payload.scope]: mapValues(payload.opts, () => true),
+        [payload.scope]: {
+          ...state[payload.scope],
+          ...mapValues(payload.opts, () => true),
+        },
       }))
-      .addCase(createUnregisterIPCAction, (state, { payload }) => ({
-        ...state,
-        [payload.scope]: omit(state[payload.scope], ...payload.keys) as IpcScope,
-      }))
+      .addCase(createUnregisterIPCAction, (state, { payload }) => {
+        // `ipc.register` unregisters the keys it is about to set, which fires this
+        // for scopes that do not exist yet; don't materialize an empty scope.
+        if (!state[payload.scope]) {
+          return state
+        }
+        return {
+          ...state,
+          [payload.scope]: omit(state[payload.scope], payload.keys),
+        }
+      })
       .addCase(
         createUnregisterAllIPCAction,
         (state, { payload }) => omit(state, payload.scope) as IpcState,

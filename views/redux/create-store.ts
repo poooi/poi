@@ -1,8 +1,8 @@
 import type { ConfigInstance, ConfigStringPath, ConfigValue } from 'lib/config'
+import type { IPC } from 'lib/ipc'
 import type { DeepKeyOf, DeepValueOf } from 'shims/utils'
 
 import * as remote from '@electron/remote'
-import ipc from 'lib/ipc'
 import { get, set, debounce, compact, cloneDeep, isEqual } from 'lodash'
 import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
@@ -132,15 +132,23 @@ const solveConfDelete = <P extends ConfigStringPath>(path: P): void => {
 const remoteConfig: ConfigInstance = remote.require('./lib/config')
 remoteConfig.addListener('config.set', solveConfSet)
 remoteConfig.addListener('config.delete', solveConfDelete)
-window.addEventListener('unload', () => {
-  remoteConfig.removeListener('config.set', solveConfSet)
-  remoteConfig.removeListener('config.delete', solveConfDelete)
-})
+// `lib/ipc` is a singleton living in the main process: plugins register through
+// `window.ipc` (see views/env-parts/ipc.ts), which is the remote instance. A plain
+// `import ipc from 'lib/ipc'` would give this renderer its own empty copy, so the
+// store would never see any registration.
+const ipc: IPC = remote.require('./lib/ipc')
+const solveIPCUpdate = (action: { type: string }) => store.dispatch(action)
 
 if (!isMain) {
   store.dispatch(createInitIPCAction(ipc.list()))
 }
-ipc.on('update', (action: { type: string }) => store.dispatch(action))
+ipc.on('update', solveIPCUpdate)
+
+window.addEventListener('unload', () => {
+  remoteConfig.removeListener('config.set', solveConfSet)
+  remoteConfig.removeListener('config.delete', solveConfDelete)
+  ipc.removeListener('update', solveIPCUpdate)
+})
 
 observe(
   store,
