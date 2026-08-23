@@ -16,6 +16,7 @@ that are expensive to rediscover and easy to regress.
 If skills stop loading automatically after a fresh clone, recreate it:
 
 ```
+mkdir .claude                               # not tracked, so absent on a fresh clone
 cmd /c mklink /J .claude\skills skills      # Windows
 ln -s ../skills .claude/skills              # macOS / Linux
 ```
@@ -25,7 +26,7 @@ Reading `skills/<name>/SKILL.md` directly works regardless of whether the juncti
 | Skill                 | Load it when                                                                                                                                                                                                             |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `combat-mechanics`    | editing `views/utils/combat/**` or `views/utils/{aaci,oasw,aapb,sp_attack}.ts`; validating ship/equipment eligibility; "check game data", "new ships were added", "update combat conditions"                             |
-| `quest-goal-data`     | editing `assets/data/quest_goal.cson`, `views/redux/info/quests.ts`, `views/redux/actions/quest.ts`, `views/redux/middlewares/quests-cross-slice.ts`; asking which quests are untracked                                  |
+| `quest-goal-data`     | editing `assets/data/quest_goal.cson`, `views/redux/info/quests/**`, `views/redux/actions/quest.ts`, `views/redux/middlewares/quests-cross-slice.ts`; asking which quests are untracked                                  |
 | `redux-api-testing`   | editing `views/redux/**` or any `__tests__`; adding an API response action; needing a real API payload or `api_start2` master data                                                                                       |
 | `game-webview`        | editing `views/kan-game-wrapper.tsx`, `assets/js/{webview-preload,resource-hack,kcs-resource-path}.js`, `lib/kcs-resource.ts`, `lib/webcontent-utils.ts`; debugging game asset loading, screenshots, or renderer crashes |
 | `build-and-run`       | editing `babel.config.js`, `babel-hook.js`, `babel-register.config.js`, `gulpfile.js`, `build/**`, `app.ts`, `index.html`; running `gulp build`; launching Electron; a build/plugin/i18n load silently producing nothing |

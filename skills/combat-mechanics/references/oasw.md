@@ -88,7 +88,14 @@ no defined condition, so they are correctly excluded.
 ## When updating
 
 1. Check the wiki's activation-condition table for new ships or changed conditions.
-2. Add ship ids to the appropriate predicate, or add a new `validAll(...)` branch.
-3. Use `shipIdIs(n)` for a single remodel form; `ctypeIs(n)` when the whole class qualifies
+2. Add ship ids to the appropriate predicate, or add a new branch to `isOASW`.
+3. Compose branches with the **module-local** `overSome` / `overEvery` in `oasw.ts`, not with
+   `validAll` / `validAny` from `combinators.ts`. OASW predicates are two-arity
+   (`(ship, equips) => boolean`, the `OASWPredicate` type), whereas the `valid*` combinators
+   take a single `GameEquip[]`; mixing them will not typecheck. `oasw.ts` defines its own pair
+   precisely because lodash's `overSome`/`overEvery` cannot type mixed-arity predicates — the
+   comment above them says so. Use `overEquips(...)` to lift an equips-only predicate into an
+   `OASWPredicate`.
+4. Use `shipIdIs(n)` for a single remodel form; `ctypeIs(n)` when the whole class qualifies
    (preferred — see the main skill).
-4. Run `npm run typecheck` and the `combat` jest suite.
+5. Run `npm run typecheck` and the `combat` jest suite.

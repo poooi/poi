@@ -59,7 +59,8 @@ run `npm test -- --testPathPattern="views/redux/info/__tests__"`.
 
 - Reducers migrated to RTK `createSlice` with
   `extraReducers(builder.addCase(actionCreator, ...))` match on the **action creator**, so
-  tests must dispatch the real creator from `views/redux/actions.ts`, not a raw
+  tests must dispatch the real creator from `views/redux/actions/` (API response creators live
+  in `response.ts`, re-exported from `index.ts`), not a raw
   `{ type: '...' }` object.
 - Let TypeScript infer fixture types by assigning to a typed variable rather than casting:
 
@@ -77,7 +78,8 @@ run `npm test -- --testPathPattern="views/redux/info/__tests__"`.
 
 Behaviour spanning multiple endpoints or slices goes in a small middleware that listens to API
 response actions and dispatches an **internal domain action** (e.g. `@@info.ships@RepairCompleted`),
-defined in `views/redux/actions.ts` alongside the API actions. See
+defined alongside the API actions under `views/redux/actions/` (the ships repair action lives in
+`quest.ts`). See
 `views/redux/middlewares/ships-cross-slice.ts`.
 
 One notable edge case is instant docking completion: when repair finishes in under 60 seconds,
@@ -104,8 +106,9 @@ Do not try to fix these:
 - Generic plumbing: `lib/config.ts` emit/get internals, `views/utils/tools.ts` generics
   (`pickExisting`, `compareUpdate`, `copyIfSame`),
   `views/redux/{reducer-factory,combine-reducers,create-store}.ts`, `data-resolver.ts`,
-  `lib/ipc.ts`, `views/redux/info/quests.ts` (lodash `forEach` over hybrid record types),
-  `views/redux/layout/index.ts` `getIntegerSize`.
+  `lib/ipc.ts`, `views/redux/layout/index.ts` `getIntegerSize`.
+  (The audit also listed `views/redux/info/quests.ts`; that file was since split into
+  `views/redux/info/quests/`, which now carries no suppressions.)
 - Boundary assertions kept deliberately per the "assert once at the boundary" rule:
   `lib/constant.ts` (CSON), `views/env-parts/const.ts` (`remote.require`), `update.tsx`
   (fetch json), `views/redux/info/index.ts` (admiral-change reset).

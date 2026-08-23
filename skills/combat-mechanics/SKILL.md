@@ -21,6 +21,12 @@ All battle-mechanics logic lives in `views/utils/combat/`:
 - `aapb.ts`, `oasw.ts`, `sp-attack.ts` — each imports from the shared pool; feature-specific
   predicates stay local.
 
+Note that `combinators.ts`'s `validAll` / `validAny` / `validNot` operate on a single
+`GameEquip[]`. `oasw.ts` works with two-arity `(ship, equips)` predicates and therefore defines
+its own local `overSome` / `overEvery` (lodash's cannot type mixed arity) plus `overEquips` to
+lift an equips-only predicate. Do not substitute one family for the other — see
+[references/oasw.md](references/oasw.md).
+
 **Merged-object convention**: all four modules take merged `GameShip` / `GameEquip`. Consumers
 do the merge in their selectors (see the `oasw-indicator.tsx` pattern). This is safe because
 state and master-data field names do not collide except `api_id`, which no predicate uses
@@ -59,8 +65,8 @@ Validated condition tables live alongside this skill — read the relevant one b
 - [references/sp-attack.md](references/sp-attack.md) — every special-attack id, its predicates,
   and the valid ship combos.
 
-These replace the former `views/utils/combat/{aaci,oasw}.md`. Keep them here — module-adjacent
-copies drift (the old `oasw.md` documented an `overEvery(...)` combinator that no longer exists).
+These replace the former `views/utils/combat/{aaci,oasw}.md`. Keep them here rather than beside
+the modules, so there is one place to update.
 
 ## Sourcing and validation
 

@@ -1,19 +1,24 @@
 ---
 name: quest-goal-data
-description: Quest tracking — the assets/data/quest_goal.cson schema and the engine that consumes it (views/redux/info/quests.ts, views/redux/actions/quest.ts, views/redux/middlewares/quests-cross-slice.ts). Use when editing quest_goal.cson, adding or fixing quest tracking, adding a new subgoal filter, or when asked which quests are untracked.
+description: Quest tracking — the assets/data/quest_goal.cson schema and the engine that consumes it (views/redux/info/quests/**, views/redux/actions/quest.ts, views/redux/middlewares/quests-cross-slice.ts). Use when editing quest_goal.cson, adding or fixing quest tracking, adding a new subgoal filter, or when asked which quests are untracked.
 ---
 
 # Quest Goal Data and Tracking
 
 ## Where things live
 
-| Concern                                                            | File                                            |
-| ------------------------------------------------------------------ | ----------------------------------------------- |
-| Quest goal definitions (data)                                      | `assets/data/quest_goal.cson`                   |
-| `QuestOptions` (what an event dispatch carries)                    | `views/redux/actions/quest.ts`                  |
-| `QuestGoalSubgoal` + matching logic (`satisfyGoal`, `satisfyShip`) | `views/redux/info/quests.ts`                    |
-| API responses -> quest events                                      | `views/redux/middlewares/quests-cross-slice.ts` |
-| Tests                                                              | `views/redux/info/__tests__/quests.spec.ts`     |
+| Concern                                                 | File                                            |
+| ------------------------------------------------------- | ----------------------------------------------- |
+| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                   |
+| `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                  |
+| `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`              |
+| Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`      |
+| Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`            |
+| API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts` |
+| Tests                                                   | `views/redux/info/__tests__/quests.spec.ts`     |
+
+The engine is a directory of focused modules (`views/redux/info/quests/`), not a single
+`quests.ts` — it was split in commit `2fe7bf01`.
 
 Adding a new filter is a three-file change: a field on `QuestOptions`, a field on
 `QuestGoalSubgoal` plus its check, and a dispatch in the middleware.
@@ -94,8 +99,10 @@ progress counter at all and is not trackable.
 Limited-time (期間限定) quests are out of scope unless the user says otherwise. Untracked but
 trackable ids seen in captures: 382, 383, 1048.
 
-## Open work
+## Existing test coverage
 
-`views/redux/info/__tests__/quests.spec.ts` still has **no** tests for the `slotitemId` filter
-or for the `materialShipType` / `materialShipMinCount` combined-count check. Add them if you
-touch either path.
+`views/redux/info/__tests__/quests.spec.ts` already covers both filters — check it before
+writing new cases:
+
+- `destory_item counts by slotitemId`
+- `remodel_ship materialShipType combined count — passes when >= materialShipMinCount match`
