@@ -1,7 +1,7 @@
 {
   "Preferences": "환경설정",
   "Services": "서비스",
-  "About poi": "poi?",
+  "About poi": "poi 정보",
   "Hide poi": "poi 숨기기",
   "Show poi": "poi 표시",
   "Hide others": "기타 항목 숨기기",
@@ -19,7 +19,7 @@
   "Paste": "붙여넣기",
   "Select All": "모두 선택",
   "View": "보기",
-  "Reload": "재시작",
+  "Reload": "새로고침",
   "Stop": "중지",
   "Developer Tools": "개발자 도구",
   "Developer Tools of WebView": "WebView의 개발자 도구",
