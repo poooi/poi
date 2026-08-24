@@ -59,3 +59,6 @@ dist/
 *.local.*
 /fcd/.cache
 /fcd/.cache-map
+
+# Claude Code skill discovery junction -> /skills (the tracked copy)
+/.claude/skills

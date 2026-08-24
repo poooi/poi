@@ -54,7 +54,7 @@
   "Repairing": "入渠中",
   "Resupply Needed": "補給不足",
   "In Sortie": "出撃中",
-  "Ship tag": "出擊限定",
+  "Ship tag": "出撃限定",
   "Slow": "低速",
   "Fast": "高速",
   "Fast+": "高速+",
@@ -167,5 +167,12 @@
   "The ex-slot lists every equipment": "補強増設では全装備が表示されます",
   "Right-click a ship for more options": "艦娘を右クリックするとメニューが開きます",
   "Got it": "了解",
-  "Right-click a plugin for more options": "プラグインを右クリックするとメニューが開きます"
+  "Right-click a plugin for more options": "プラグインを右クリックするとメニューが開きます",
+  "編成": "編成",
+  "改装": "改装",
+  "The remodel screen has no sort": "改装画面には並び替えがありません",
+  "装備": "装備",
+  "基地航空隊": "基地航空隊",
+  "The land base has its own tabs": "基地航空隊は専用のタブで絞り込みます",
+  "The remodel screen has no tag filter": "改装画面にはタグ絞り込みがありません"
 }

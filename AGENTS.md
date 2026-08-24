@@ -4,6 +4,36 @@ This document contains poi-specific context and constraints that cannot be infer
 reliably from general coding-agent instructions. Prefer repository evidence over
 this document if they diverge, and update this file when a convention changes.
 
+## Skills
+
+Deep, area-specific knowledge lives in `skills/<name>/SKILL.md` at the repo root, rather than in
+this file. Claude Code loads a skill automatically when its `description` matches the task, but
+**read the matching skill before editing the files it covers** — each one records constraints
+that are expensive to rediscover and easy to regress.
+
+`skills/` is the tracked source of truth. Claude Code only auto-discovers skills under
+`.claude/skills/`, so that path is a directory junction pointing at `skills/` and is gitignored.
+If skills stop loading automatically after a fresh clone, recreate it:
+
+```
+mkdir .claude                               # not tracked, so absent on a fresh clone
+cmd /c mklink /J .claude\skills skills      # Windows
+ln -s ../skills .claude/skills              # macOS / Linux
+```
+
+Reading `skills/<name>/SKILL.md` directly works regardless of whether the junction exists.
+
+| Skill                 | Load it when                                                                                                                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `combat-mechanics`    | editing `views/utils/combat/**` or `views/utils/{aaci,oasw,aapb,sp_attack}.ts`; validating ship/equipment eligibility; "check game data", "new ships were added", "update combat conditions"                             |
+| `quest-goal-data`     | editing `assets/data/quest_goal.cson`, `views/redux/info/quests/**`, `views/redux/actions/quest.ts`, `views/redux/middlewares/quests-cross-slice.ts`; asking which quests are untracked                                  |
+| `redux-api-testing`   | editing `views/redux/**` or any `__tests__`; adding an API response action; needing a real API payload or `api_start2` master data                                                                                       |
+| `game-webview`        | editing `views/kan-game-wrapper.tsx`, `assets/js/{webview-preload,resource-hack,kcs-resource-path}.js`, `lib/kcs-resource.ts`, `lib/webcontent-utils.ts`; debugging game asset loading, screenshots, or renderer crashes |
+| `build-and-run`       | editing `babel.config.js`, `babel-hook.js`, `babel-register.config.js`, `gulpfile.js`, `build/**`, `app.ts`, `index.html`; running `gulp build`; launching Electron; a build/plugin/i18n load silently producing nothing |
+| `visual-verification` | screenshotting poi; confirming a CSS/layout/theme change actually renders                                                                                                                                                |
+| `ui-patterns`         | editing `views/components/**`, `assets/css/**`, `assets/svg/ui/**`; optimizing hidden panes; CSS transitions; blur/vibrancy                                                                                              |
+| `fcd-assets`          | editing `fcd/**`; regenerating ship avatars                                                                                                                                                                              |
+
 ## Repository Overview
 
 poi is an Electron-based game assistant for Kantai Collection (KanColle). It uses:
@@ -268,6 +298,9 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 
 ### Response-Saver Fixtures
 
+See the `redux-api-testing` skill for the full workflow (capture layout, `api_start2` master
+data, naming, privacy).
+
 - Prefer tests built from real response-saver payload JSONs (shape: `{ method, path, body, postBody, time }`). In this repo, fixtures live under `views/redux/info/__tests__/__fixtures__/`.
 - Response-saver location is machine-specific; on Windows it is typically under `%APPDATA%\poi\response-saver\kcsapi`.
 - For tests that require response-saver fixtures, prefer copying the JSON file into the repo fixture path unchanged (no reformatting/minifying). This helps keep the fixture byte-for-byte comparable with the original response-saver file.
@@ -365,6 +398,7 @@ The main store structure under `info`:
 
 Before reporting completion:
 
+0. Confirm you loaded any skill from the table above that covers the files you touched.
 1. Check `kcsapi` and existing action types before defining custom API types.
 2. Prefer a real response-saver fixture when API payload shape affects behavior.
 3. Cover directly affected slices, middleware, action creators, fixtures, and imports.

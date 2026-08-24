@@ -5,7 +5,7 @@ import type { Ship } from 'views/redux/info/ships'
 import type { SelectorTables, ShipFilterTab } from './tables'
 
 import { getSelectorTables } from './tables'
-import { positionOf, type SelectorPosition } from './types'
+import { positionOf, type RemodelPosition, type SelectorPosition } from './types'
 
 /**
  * Filter tabs of the in-game 艦船選択 picker, in on-screen order.
@@ -149,6 +149,71 @@ export const buildShipList = (
 
 export const shipPositions = (list: ShipEntry[]): Map<number, SelectorPosition> =>
   new Map(list.map((entry, offset) => [entry.ship.api_id, positionOf(offset)]))
+
+/** `ShipUtil.sort(list, 1)` reversed: level ascending. */
+export const REMODEL_OTHER_SORT_KEY = 0
+
+/**
+ * The 改装 ship picker, which orders its roster quite differently from 編成.
+ *
+ * `SelectShipView` has no filters and no sort button: one tab per fleet showing
+ * that fleet in slot order, and an その他 tab holding everything not in a fleet.
+ * That tab is `_getOtherShipData` — `ship.getAllOther()` sorted by key 1 and
+ * then reversed, which is key 0 here — and it paginates by ten like every other
+ * list in the game.
+ */
+export const buildRemodelPositions = (
+  entries: ShipEntry[],
+  fleets: readonly { api_ship: number[] }[] | undefined,
+): Map<number, RemodelPosition> => {
+  const positions = new Map<number, RemodelPosition>()
+  const inFleet = new Set<number>()
+  ;(fleets ?? []).forEach((fleet, fleetIndex) => {
+    let slot = 0
+    for (const shipId of fleet?.api_ship ?? []) {
+      // -1 is an empty slot, which the game skips rather than numbers.
+      if (shipId === -1) continue
+      inFleet.add(shipId)
+      positions.set(shipId, { kind: 'fleet', fleet: fleetIndex + 1, index: ++slot })
+    }
+  })
+
+  const others = sortShips(
+    entries.filter((entry) => !inFleet.has(entry.ship.api_id)),
+    REMODEL_OTHER_SORT_KEY,
+  )
+  others.forEach((entry, offset) =>
+    positions.set(entry.ship.api_id, { kind: 'other', ...positionOf(offset) }),
+  )
+  return positions
+}
+
+/**
+ * The 改装 roster in on-screen order: every fleet in turn, then the rest.
+ */
+export const buildRemodelList = (
+  entries: ShipEntry[],
+  fleets: readonly { api_ship: number[] }[] | undefined,
+): ShipEntry[] => {
+  const byId = new Map(entries.map((entry) => [entry.ship.api_id, entry]))
+  const list: ShipEntry[] = []
+  const taken = new Set<number>()
+  for (const fleet of fleets ?? []) {
+    for (const shipId of fleet?.api_ship ?? []) {
+      const entry = shipId !== -1 ? byId.get(shipId) : undefined
+      if (!entry || taken.has(shipId)) continue
+      taken.add(shipId)
+      list.push(entry)
+    }
+  }
+  return [
+    ...list,
+    ...sortShips(
+      entries.filter((entry) => !taken.has(entry.ship.api_id)),
+      REMODEL_OTHER_SORT_KEY,
+    ),
+  ]
+}
 
 /** Standard worlds are 1–7; anything past this is an event world. */
 const LAST_NORMAL_WORLD = 10

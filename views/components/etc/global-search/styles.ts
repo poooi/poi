@@ -366,10 +366,25 @@ export const Meta = styled.div`
   opacity: 0.75;
 `
 
-export const PositionTagEl = styled(Tag)`
+/**
+ * Fixed width, like Meta above — a tag that resized to its own content made
+ * neighboring rows' icons drift out of column. Two segments ("Page 10 · Row
+ * 10", "Fleet 4 · Row 6") is what every mode but one shows, and 9.5em is the
+ * long-standing width that already fit that case comfortably in every shipped
+ * locale, so it stays the default.
+ *
+ * `$wide` is for the one exception: the remodel scene's その他 tag carries a
+ * third segment ("Other · Page 10 · Row 10"), which is the longest tag any
+ * mode produces in every shipped locale (checked en/ja/zh-CN/zh-TW/ko —
+ * full-width CJK glyphs cost more per character than they save by being
+ * shorter words). A tag that still overflows either width — three-digit page
+ * numbers, which only a very large single-category inventory would reach —
+ * degrades to Blueprint's built-in ellipsis rather than breaking the row.
+ */
+export const PositionTagEl = styled(Tag)<{ $wide?: boolean }>`
   && {
     flex: 0 0 auto;
-    width: 9.5em;
+    width: ${({ $wide }) => ($wide ? '16em' : '9.5em')};
     justify-content: center;
     text-align: center;
   }
