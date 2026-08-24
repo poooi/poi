@@ -162,5 +162,8 @@
   "The ex-slot lists every equipment": "보강증설 슬롯은 모든 장비를 표시합니다",
   "Right-click a ship for more options": "함선을 우클릭하면 메뉴가 열립니다",
   "Got it": "확인",
-  "Right-click a plugin for more options": "플러그인을 우클릭하면 메뉴가 열립니다"
+  "Right-click a plugin for more options": "플러그인을 우클릭하면 메뉴가 열립니다",
+  "編成": "편성",
+  "改装": "개장",
+  "The remodel screen has no sort": "개장 화면에는 정렬이 없습니다"
 }

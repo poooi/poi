@@ -15,6 +15,8 @@ import {
   allShipTabIds,
   buildEquipList,
   buildEquipLists,
+  buildRemodelList,
+  buildRemodelPositions,
   buildShipList,
   compareEquips,
   compareShips,
@@ -26,6 +28,7 @@ import {
   worldOf,
   positionOf,
   ROWS_PER_PAGE,
+  REMODEL_OTHER_SORT_KEY,
   SHIP_SORT_KEYS,
   shipPositions,
   sortShips,
@@ -632,5 +635,83 @@ describe('an equipment category that accepts nothing', () => {
 
   spec('but 全装備 still means everything', () => {
     expect(buildEquipList(allEquipEntries, equipFilter())).toHaveLength(allEquipEntries.length)
+  })
+})
+
+/**
+ * The 改装 roster: `SelectShipView` shows a tab per fleet and one paginated
+ * その他 tab for everything not in a fleet, the latter ordered by
+ * `ShipUtil.sort(list, 1)` reversed.
+ */
+describe('the 改装 roster', () => {
+  // Two fleets off the front of the fixture, with a gap where the game writes
+  // -1 for an empty slot.
+  const rosterIds = allShipEntries.map((entry) => entry.ship.api_id)
+  const fleets = [
+    { api_ship: [rosterIds[3], rosterIds[7], -1, rosterIds[1]] },
+    { api_ship: [rosterIds[10], -1, -1, -1, -1, -1] },
+  ]
+
+  spec('lists every fleet in slot order before anything else', () => {
+    const list = buildRemodelList(allShipEntries, fleets)
+    expect(list.slice(0, 4).map((entry) => entry.ship.api_id)).toEqual([
+      rosterIds[3],
+      rosterIds[7],
+      rosterIds[1],
+      rosterIds[10],
+    ])
+  })
+
+  spec('orders the rest by level ascending, as the その他 tab does', () => {
+    const list = buildRemodelList(allShipEntries, fleets)
+    const others = list.slice(4)
+    const levels = others.map((entry) => entry.ship.api_lv ?? 0)
+    expect([...levels].sort((a, b) => a - b)).toEqual(levels)
+    // Same ordering the game reaches by sorting on key 1 and reversing.
+    const expected = sortShips(
+      allShipEntries.filter(
+        (entry) => !fleets.some((fleet) => fleet.api_ship.includes(entry.ship.api_id)),
+      ),
+      REMODEL_OTHER_SORT_KEY,
+    )
+    expect(others.map((entry) => entry.ship.api_id)).toEqual(
+      expected.map((entry) => entry.ship.api_id),
+    )
+  })
+
+  spec('holds the whole roster exactly once', () => {
+    const list = buildRemodelList(allShipEntries, fleets)
+    expect(list).toHaveLength(allShipEntries.length)
+    expect(new Set(list.map((entry) => entry.ship.api_id)).size).toBe(allShipEntries.length)
+  })
+
+  spec('numbers fleet ships by fleet and slot, skipping empty slots', () => {
+    const positions = buildRemodelPositions(allShipEntries, fleets)
+    expect(positions.get(rosterIds[3])).toEqual({ kind: 'fleet', fleet: 1, index: 1 })
+    expect(positions.get(rosterIds[7])).toEqual({ kind: 'fleet', fleet: 1, index: 2 })
+    // The -1 slot is skipped rather than counted, so this is 3 and not 4.
+    expect(positions.get(rosterIds[1])).toEqual({ kind: 'fleet', fleet: 1, index: 3 })
+    expect(positions.get(rosterIds[10])).toEqual({ kind: 'fleet', fleet: 2, index: 1 })
+  })
+
+  spec('paginates the その他 tab by ten from its own first page', () => {
+    const positions = buildRemodelPositions(allShipEntries, fleets)
+    const others = buildRemodelList(allShipEntries, fleets).slice(4)
+    const first = positions.get(others[0].ship.api_id)
+    const eleventh = positions.get(others[ROWS_PER_PAGE].ship.api_id)
+    expect(first).toEqual({ kind: 'other', page: 1, index: 1, offset: 0 })
+    expect(eleventh).toEqual({
+      kind: 'other',
+      page: 2,
+      index: 1,
+      offset: ROWS_PER_PAGE,
+    })
+  })
+
+  spec('treats a missing fleet list as an empty roster of fleets', () => {
+    const list = buildRemodelList(allShipEntries, undefined)
+    expect(list).toHaveLength(allShipEntries.length)
+    const positions = buildRemodelPositions(allShipEntries, undefined)
+    expect([...positions.values()].every((position) => position.kind === 'other')).toBe(true)
   })
 })

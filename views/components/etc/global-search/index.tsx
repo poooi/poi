@@ -3,6 +3,7 @@ import type {
   EquipEntry,
   EquipListMode,
   EquipListPosition,
+  RemodelPosition,
   SelectorPosition,
   ShipEntry,
   SlotTarget,
@@ -31,6 +32,8 @@ import {
   allShipTabIds,
   buildAirbaseList,
   buildEquipLists,
+  buildRemodelList,
+  buildRemodelPositions,
   buildShipList,
   equipListPositions,
   shipFilterTabs,
@@ -43,6 +46,7 @@ import { getShipLabelStatus, getStatusStyle, selectShipAvatarColor } from 'views
 import {
   constSelector,
   fcdShipTagColorSelector,
+  fleetsSelector,
   inRepairShipsIdSelector,
   mapsSelector,
 } from 'views/utils/selectors'
@@ -173,9 +177,44 @@ const Proficiency = ({ alv }: { alv: number | undefined }) => {
   return <RowALevel className="alv-img" src={`assets/img/airplane/alv${alv}.png`} alt="" />
 }
 
+/**
+ * Which in-game screen's roster the ship list mirrors. 編成 is the 艦船選択
+ * picker this panel was built around; 改装 is the remodel screen, whose ship
+ * list has neither filters nor a sort button — see `buildRemodelList`.
+ */
+type ShipScene = 'organize' | 'remodel'
+
 interface Result<T> {
   entry: T
   position: SelectorPosition | undefined
+}
+
+/** A ship row is numbered by whichever screen's list it came from. */
+interface ShipResult {
+  entry: ShipEntry
+  position: SelectorPosition | RemodelPosition | undefined
+}
+
+/**
+ * The 改装 picker's position, which is a fleet and a slot for anything in a
+ * fleet and a page and row in the その他 tab for everything else.
+ */
+const RemodelPositionTag = ({ position }: { position: RemodelPosition | undefined }) => {
+  const { t } = useTranslation('main')
+  if (!position) return null
+  if (position.kind === 'fleet') {
+    return (
+      <PositionTagEl minimal intent="primary">
+        {t('main:Fleet')} {position.fleet} · {t('main:Row')} {position.index}
+      </PositionTagEl>
+    )
+  }
+  return (
+    <PositionTagEl minimal>
+      {translateCaption('その他')} · {t('main:Page')} {position.page} · {t('main:Row')}{' '}
+      {position.index}
+    </PositionTagEl>
+  )
 }
 
 /**
@@ -193,7 +232,7 @@ const ShipResultRow = ({
   onSearchEquips,
 }: {
   entry: ShipEntry
-  position: SelectorPosition | undefined
+  position: SelectorPosition | RemodelPosition | undefined
   enableAvatar: boolean
   avatarType: string
   shipTagColor: string[]
@@ -243,7 +282,11 @@ const ShipResultRow = ({
       <Tooltip content={t('main:Search equipment for this ship')} position={Position.TOP}>
         <Button small minimal icon="search" onClick={() => onSearchEquips(entry)} />
       </Tooltip>
-      <PositionTag position={position} />
+      {position && 'kind' in position ? (
+        <RemodelPositionTag position={position} />
+      ) : (
+        <PositionTag position={position} />
+      )}
     </ResultRow>
   )
 }
@@ -288,6 +331,7 @@ const GlobalSearchPanel = ({
   const [tabs, setTabs] = useState<number[] | null>(null)
   const [tag, setTag] = useState<ShipTagFilter>('all')
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
+  const [shipScene, setShipScene] = useState<ShipScene>('organize')
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
   const [airbaseTab, setAirbaseTab] = useState(0)
   const [equipScope, setEquipScope] = useState<EquipScope | null>(initialEquipScope ?? null)
@@ -308,6 +352,7 @@ const GlobalSearchPanel = ({
     (state: RootState): string => state.config?.poi?.appearance?.avatarType ?? 'rarity',
   )
   const shipTagColor = useSelector(fcdShipTagColorSelector)
+  const fleets = useSelector(fleetsSelector)
   const inRepairIds = useSelector(inRepairShipsIdSelector)
   const inRepair = useMemo(() => new Set(inRepairIds ?? []), [inRepairIds])
 
@@ -334,15 +379,19 @@ const GlobalSearchPanel = ({
 
   // Positions must come from the *full* list under the current filter, since
   // that is what the in-game picker paginates; the query only hides rows.
-  const shipResults = useMemo((): Result<ShipEntry>[] => {
+  const remodelScene = mode === 'ship' && shipScene === 'remodel'
+
+  const shipResults = useMemo((): ShipResult[] => {
     if (mode !== 'ship') return []
-    const list = buildShipList(
-      shipEntries,
-      { tabs: activeTabs, tag: effectiveTag, sortKey },
-      tables,
-    )
-    const positions = shipPositions(list)
-    const matched: Result<ShipEntry>[] = []
+    // 改装 shows the whole roster in fleet order; none of the 編成 filters
+    // exist on that screen, so none of them are consulted here either.
+    const list = remodelScene
+      ? buildRemodelList(shipEntries, fleets)
+      : buildShipList(shipEntries, { tabs: activeTabs, tag: effectiveTag, sortKey }, tables)
+    const positions: Map<number, SelectorPosition | RemodelPosition> = remodelScene
+      ? buildRemodelPositions(shipEntries, fleets)
+      : shipPositions(list)
+    const matched: ShipResult[] = []
     for (const entry of list) {
       const name = entry.$ship.api_name
       // The reading is matched literally too, for anyone typing kana.
@@ -351,7 +400,7 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, shipEntries, activeTabs, effectiveTag, sortKey, query, tables])
+  }, [mode, remodelScene, shipEntries, fleets, activeTabs, effectiveTag, sortKey, query, tables])
 
   // The ex-slot picker has no category tabs in game, so the category filter is
   // pinned to 全装備 (and disabled) while the ex-slot is selected.
@@ -494,6 +543,8 @@ const GlobalSearchPanel = ({
             <FilterSelect
               value={sortKey}
               onSelect={setSortKey}
+              disabled={remodelScene}
+              title={remodelScene ? t('main:The remodel screen has no sort') : undefined}
               width="7em"
               options={SHIP_SORT_KEYS.map((key) => ({
                 value: key,
@@ -504,9 +555,15 @@ const GlobalSearchPanel = ({
             <FilterSelect
               value={tag}
               onSelect={setTag}
-              disabled={!eventActive}
+              disabled={!eventActive || remodelScene}
               width="7em"
-              title={eventActive ? undefined : t('main:Available during events only')}
+              title={
+                remodelScene
+                  ? t('main:The remodel screen has no sort')
+                  : eventActive
+                    ? undefined
+                    : t('main:Available during events only')
+              }
               options={[
                 { value: 'all' as ShipTagFilter, label: t('main:All ships') },
                 { value: 'tagged' as ShipTagFilter, label: t('main:Tagged') },
@@ -539,19 +596,37 @@ const GlobalSearchPanel = ({
 
       {mode === 'ship' && (
         <FilterRow>
+          {/* 改装 has no type tabs, no tag filter and no sort button, so the
+              rest of the ship controls go dead while it is selected. */}
+          <PillControl
+            value={shipScene}
+            onValueChange={(next) => setShipScene(next === 'remodel' ? 'remodel' : 'organize')}
+            options={[
+              { value: 'organize', label: translateCaption('編成') },
+              { value: 'remodel', label: translateCaption('改装') },
+            ]}
+            intent="primary"
+            size="small"
+          />
           <ButtonGroup>
             {shipFilterTabs(tables).map((tab) => (
               <TabButton
                 key={tab.id}
                 small
-                $selected={activeTabs.includes(tab.id)}
+                disabled={remodelScene}
+                $selected={!remodelScene && activeTabs.includes(tab.id)}
                 onClick={() => toggleTab(tab.id)}
               >
                 {translateCaption(tab.name)}
               </TabButton>
             ))}
           </ButtonGroup>
-          <TabButton small $selected={allTabsOn} onClick={toggleAllTabs}>
+          <TabButton
+            small
+            disabled={remodelScene}
+            $selected={!remodelScene && allTabsOn}
+            onClick={toggleAllTabs}
+          >
             {translateCaption('全艦艇')}
           </TabButton>
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
