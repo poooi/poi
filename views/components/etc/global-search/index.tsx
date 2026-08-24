@@ -217,7 +217,7 @@ const RemodelPositionTag = ({ position }: { position: RemodelPosition | undefine
     )
   }
   return (
-    <PositionTagEl minimal>
+    <PositionTagEl minimal $wide>
       {translateCaption('その他')} · {t('main:Page')} {position.page} · {t('main:Row')}{' '}
       {position.index}
     </PositionTagEl>
