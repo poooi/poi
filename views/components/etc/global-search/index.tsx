@@ -184,6 +184,13 @@ const Proficiency = ({ alv }: { alv: number | undefined }) => {
  */
 type ShipScene = 'organize' | 'remodel'
 
+/**
+ * The same split on the equipment side: 装備 is the ship-equipment picker, 基地
+ *航空隊 the land base squadron picker, which draws from the same inventory but
+ * has its own tabs, its own ordering and a shorter page.
+ */
+type EquipScene = 'equip' | 'airbase'
+
 interface Result<T> {
   entry: T
   position: SelectorPosition | undefined
@@ -333,6 +340,7 @@ const GlobalSearchPanel = ({
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
   const [shipScene, setShipScene] = useState<ShipScene>('organize')
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
+  const [equipScene, setEquipScene] = useState<EquipScene>('equip')
   const [airbaseTab, setAirbaseTab] = useState(0)
   const [equipScope, setEquipScope] = useState<EquipScope | null>(initialEquipScope ?? null)
   const [equipSlot, setEquipSlot] = useState<SlotTarget | null>(null)
@@ -402,13 +410,15 @@ const GlobalSearchPanel = ({
     return matched
   }, [mode, remodelScene, shipEntries, fleets, activeTabs, effectiveTag, sortKey, query, tables])
 
+  const airbaseScene = mode === 'equip' && equipScene === 'airbase'
+
   // The ex-slot picker has no category tabs in game, so the category filter is
   // pinned to 全装備 (and disabled) while the ex-slot is selected.
   const slotLocksCategory = equipScope != null && equipSlot === EXTRA_SLOT
   const effectiveCategory = slotLocksCategory ? ALL_EQUIPS_CATEGORY : equipCategory
 
   const equipResults = useMemo((): EquipResult[] => {
-    if (mode !== 'equip') return []
+    if (mode !== 'equip' || airbaseScene) return []
     const lists = buildEquipLists(
       equipEntries,
       {
@@ -430,10 +440,20 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, effectiveCategory, equipScope, equipSlot, constState, query, tables])
+  }, [
+    mode,
+    airbaseScene,
+    equipEntries,
+    effectiveCategory,
+    equipScope,
+    equipSlot,
+    constState,
+    query,
+    tables,
+  ])
 
   const airbaseResults = useMemo((): Result<EquipEntry>[] => {
-    if (mode !== 'airbase') return []
+    if (!airbaseScene) return []
     const list = buildAirbaseList(equipEntries, { tab: airbaseTab }, tables)
     const positions = airbasePositions(list)
     const matched: Result<EquipEntry>[] = []
@@ -443,7 +463,7 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, airbaseTab, tables, query])
+  }, [airbaseScene, equipEntries, airbaseTab, tables, query])
 
   const toggleTab = useCallback(
     (id: number) =>
@@ -482,12 +502,14 @@ const GlobalSearchPanel = ({
     })
     setEquipSlot(null)
     setEquipCategory(ALL_EQUIPS_CATEGORY)
+    // A ship scope means the ship-equipment picker, never the land base.
+    setEquipScene('equip')
     setQuery('')
     setMode('equip')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const results = mode === 'ship' ? shipResults : mode === 'equip' ? equipResults : airbaseResults
+  const results = mode === 'ship' ? shipResults : airbaseScene ? airbaseResults : equipResults
   const allTabsOn = activeTabs.length === allTabIds.length
 
   return (
@@ -503,7 +525,6 @@ const GlobalSearchPanel = ({
           options={[
             { value: 'ship', label: t('main:Ships') },
             { value: 'equip', label: t('main:Equip') },
-            { value: 'airbase', label: t('main:Land base') },
           ]}
           intent="primary"
         />
@@ -576,8 +597,14 @@ const GlobalSearchPanel = ({
           <FilterSelect
             value={effectiveCategory}
             onSelect={setEquipCategory}
-            disabled={slotLocksCategory}
-            title={slotLocksCategory ? t('main:The ex-slot lists every equipment') : undefined}
+            disabled={slotLocksCategory || airbaseScene}
+            title={
+              airbaseScene
+                ? t('main:The land base has its own tabs')
+                : slotLocksCategory
+                  ? t('main:The ex-slot lists every equipment')
+                  : undefined
+            }
             width="13em"
             options={tables.equipFilterCategories.map((category) => ({
               value: category.id,
@@ -636,7 +663,7 @@ const GlobalSearchPanel = ({
       {/* A few ships bar particular equipment from particular slots, and the
           ex-slot has rules of its own, so the list is only exact once a slot is
           named. "Any" keeps the whole-ship view the scope opens on. */}
-      {mode === 'equip' && equipScope && (
+      {mode === 'equip' && !airbaseScene && equipScope && (
         <ScopeBar>
           <span>
             {t('main:Equippable by {{name}}', {
@@ -672,31 +699,38 @@ const GlobalSearchPanel = ({
         </ScopeBar>
       )}
 
-      {mode === 'equip' && !equipScope && (
+      {mode === 'equip' && (airbaseScene || !equipScope) && (
         <FilterRow>
-          <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
-        </FilterRow>
-      )}
-
-      {/* One tab at a time, as in game — a radio group rather than the ship
-          strip's independent toggles. On its own row: five CJK captions do not
-          share a line with the search box. */}
-      {mode === 'airbase' && (
-        <FilterRow>
+          {/* 装備 and 基地航空隊 draw from the same inventory but are separate
+              screens in game, with their own tabs and their own ordering. */}
           <PillControl
-            value={String(airbaseTab)}
-            onValueChange={(next) => {
-              const id = Number(next)
-              if (Number.isFinite(id)) setAirbaseTab(id)
-            }}
-            options={tables.airbaseFilterTabs.map((tab) => ({
-              value: String(tab.id),
-              label: translateCaption(tab.name),
-              icon: <PillIcon slotitemId={tab.icon} alt="" />,
-            }))}
+            value={equipScene}
+            onValueChange={(next) => setEquipScene(next === 'airbase' ? 'airbase' : 'equip')}
+            options={[
+              { value: 'equip', label: translateCaption('装備') },
+              { value: 'airbase', label: translateCaption('基地航空隊') },
+            ]}
             intent="primary"
             size="small"
           />
+          {/* One tab at a time, as in game — a radio group rather than the ship
+              strip's independent toggles. */}
+          {airbaseScene && (
+            <PillControl
+              value={String(airbaseTab)}
+              onValueChange={(next) => {
+                const id = Number(next)
+                if (Number.isFinite(id)) setAirbaseTab(id)
+              }}
+              options={tables.airbaseFilterTabs.map((tab) => ({
+                value: String(tab.id),
+                label: translateCaption(tab.name),
+                icon: <PillIcon slotitemId={tab.icon} alt="" />,
+              }))}
+              intent="primary"
+              size="small"
+            />
+          )}
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
         </FilterRow>
       )}
@@ -717,7 +751,7 @@ const GlobalSearchPanel = ({
               onSearchEquips={searchEquipsFor}
             />
           ))
-        ) : mode === 'equip' ? (
+        ) : !airbaseScene ? (
           equipResults.map(({ entry, position }) => (
             <ResultRow key={entry.equip.api_id}>
               <RowIcon slotitemId={entry.$equip.api_type?.[3]} alt="" />

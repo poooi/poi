@@ -156,5 +156,8 @@
   "Right-click a plugin for more options": "Right-click a plugin for more options",
   "編成": "Organize",
   "改装": "Remodel",
-  "The remodel screen has no sort": "The remodel screen has no sort"
+  "The remodel screen has no sort": "The remodel screen has no sort",
+  "装備": "Equipment",
+  "基地航空隊": "Land Base",
+  "The land base has its own tabs": "The land base has its own tabs"
 }

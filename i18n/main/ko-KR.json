@@ -165,5 +165,8 @@
   "Right-click a plugin for more options": "플러그인을 우클릭하면 메뉴가 열립니다",
   "編成": "편성",
   "改装": "개장",
-  "The remodel screen has no sort": "개장 화면에는 정렬이 없습니다"
+  "The remodel screen has no sort": "개장 화면에는 정렬이 없습니다",
+  "装備": "장비",
+  "基地航空隊": "기지항공대",
+  "The land base has its own tabs": "기지항공대는 전용 탭으로 좁힙니다"
 }

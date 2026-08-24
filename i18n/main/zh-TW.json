@@ -170,5 +170,8 @@
   "Right-click a plugin for more options": "右鍵點擊擴展程式可開啟選單",
   "編成": "編成",
   "改装": "改裝",
-  "The remodel screen has no sort": "改裝畫面沒有排序功能"
+  "The remodel screen has no sort": "改裝畫面沒有排序功能",
+  "装備": "裝備",
+  "基地航空隊": "基地航空隊",
+  "The land base has its own tabs": "基地航空隊使用專用的分類標籤"
 }

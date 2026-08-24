@@ -1,8 +1,14 @@
 import { EventEmitter } from 'views/utils/event-emitter'
 
-export type SearchMode = 'ship' | 'equip' | 'airbase'
+/**
+ * The two rosters the panel searches. Each has more than one in-game screen
+ * behind it — 編成 / 改装 for ships, 装備 / 基地航空隊 for equipment — and those
+ * are picked on the second row rather than here, since they share a roster and
+ * differ only in how it is filtered and ordered.
+ */
+export type SearchMode = 'ship' | 'equip'
 
-export const SEARCH_MODES: SearchMode[] = ['ship', 'equip', 'airbase']
+export const SEARCH_MODES: SearchMode[] = ['ship', 'equip']
 
 export const isSearchMode = (value: string): value is SearchMode =>
   (SEARCH_MODES as string[]).includes(value)
