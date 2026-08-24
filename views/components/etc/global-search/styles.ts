@@ -366,10 +366,17 @@ export const Meta = styled.div`
   opacity: 0.75;
 `
 
+/**
+ * Sized to its content rather than a fixed width: the remodel scene's その他
+ * tag carries three segments ("Other · Page 10 · Row 10") where every other
+ * mode carries two, and a fixed width sized for the short case clips the long
+ * one — worse once any of the three segments runs long in translation. The
+ * ship tile and name column absorb the difference; both already shrink.
+ */
 export const PositionTagEl = styled(Tag)`
   && {
     flex: 0 0 auto;
-    width: 9.5em;
+    white-space: nowrap;
     justify-content: center;
     text-align: center;
   }

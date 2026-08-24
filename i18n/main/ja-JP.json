@@ -173,5 +173,6 @@
   "The remodel screen has no sort": "改装画面には並び替えがありません",
   "装備": "装備",
   "基地航空隊": "基地航空隊",
-  "The land base has its own tabs": "基地航空隊は専用のタブで絞り込みます"
+  "The land base has its own tabs": "基地航空隊は専用のタブで絞り込みます",
+  "The remodel screen has no tag filter": "改装画面にはタグ絞り込みがありません"
 }

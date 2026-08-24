@@ -580,7 +580,7 @@ const GlobalSearchPanel = ({
               width="7em"
               title={
                 remodelScene
-                  ? t('main:The remodel screen has no sort')
+                  ? t('main:The remodel screen has no tag filter')
                   : eventActive
                     ? undefined
                     : t('main:Available during events only')
