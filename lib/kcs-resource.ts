@@ -47,6 +47,46 @@ const OVERRIDE_ONLY_RESOURCE_TYPES = new Set(['script'])
 
 const getCacheDir = () => config.get('poi.misc.cache.path', DEFAULT_CACHE_PATH)
 
+export const readKcsResource = async (
+  pathname: string,
+  serverIp?: string,
+): Promise<Buffer | undefined> => {
+  if (!isStaticResource(pathname)) {
+    return undefined
+  }
+
+  const cacheDir = getCacheDir()
+  const [, originFilePath] = getCacheCandidatePaths(cacheDir, pathname)
+  const resolvedCacheRoot = path.resolve(cacheDir, 'KanColle')
+  const resolvedOriginFilePath = path.resolve(originFilePath)
+  if (!resolvedOriginFilePath.startsWith(resolvedCacheRoot + path.sep)) {
+    return undefined
+  }
+
+  try {
+    return await fsp.readFile(resolvedOriginFilePath)
+  } catch (_e) {
+    // Continue to fetch resources from game server
+  }
+
+  if (!serverIp) {
+    return undefined
+  }
+
+  const resourceUrl = `https://${serverIp}${pathname}`
+  try {
+    const response = await session.defaultSession.fetch(resourceUrl)
+    if (!response.ok) {
+      warn('kcs-resource: game server returned', response.status, resourceUrl)
+      return undefined
+    }
+    return Buffer.from(await response.arrayBuffer())
+  } catch (e) {
+    warn('kcs-resource: failed to fetch', resourceUrl, e)
+    return undefined
+  }
+}
+
 const findHackFilePathAsync = async (
   cacheDir: string,
   pathname: string,
