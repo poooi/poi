@@ -3,6 +3,7 @@ import type {
   EquipEntry,
   EquipListMode,
   EquipListPosition,
+  RemodelPosition,
   SelectorPosition,
   ShipEntry,
   SlotTarget,
@@ -31,6 +32,8 @@ import {
   allShipTabIds,
   buildAirbaseList,
   buildEquipLists,
+  buildRemodelList,
+  buildRemodelPositions,
   buildShipList,
   equipListPositions,
   shipFilterTabs,
@@ -43,6 +46,7 @@ import { getShipLabelStatus, getStatusStyle, selectShipAvatarColor } from 'views
 import {
   constSelector,
   fcdShipTagColorSelector,
+  fleetsSelector,
   inRepairShipsIdSelector,
   mapsSelector,
 } from 'views/utils/selectors'
@@ -173,9 +177,51 @@ const Proficiency = ({ alv }: { alv: number | undefined }) => {
   return <RowALevel className="alv-img" src={`assets/img/airplane/alv${alv}.png`} alt="" />
 }
 
+/**
+ * Which in-game screen's roster the ship list mirrors. 編成 is the 艦船選択
+ * picker this panel was built around; 改装 is the remodel screen, whose ship
+ * list has neither filters nor a sort button — see `buildRemodelList`.
+ */
+type ShipScene = 'organize' | 'remodel'
+
+/**
+ * The same split on the equipment side: 装備 is the ship-equipment picker, 基地
+ *航空隊 the land base squadron picker, which draws from the same inventory but
+ * has its own tabs, its own ordering and a shorter page.
+ */
+type EquipScene = 'equip' | 'airbase'
+
 interface Result<T> {
   entry: T
   position: SelectorPosition | undefined
+}
+
+/** A ship row is numbered by whichever screen's list it came from. */
+interface ShipResult {
+  entry: ShipEntry
+  position: SelectorPosition | RemodelPosition | undefined
+}
+
+/**
+ * The 改装 picker's position, which is a fleet and a slot for anything in a
+ * fleet and a page and row in the その他 tab for everything else.
+ */
+const RemodelPositionTag = ({ position }: { position: RemodelPosition | undefined }) => {
+  const { t } = useTranslation('main')
+  if (!position) return null
+  if (position.kind === 'fleet') {
+    return (
+      <PositionTagEl minimal intent="primary">
+        {t('main:Fleet')} {position.fleet} · {t('main:Row')} {position.index}
+      </PositionTagEl>
+    )
+  }
+  return (
+    <PositionTagEl minimal $wide>
+      {translateCaption('その他')} · {t('main:Page')} {position.page} · {t('main:Row')}{' '}
+      {position.index}
+    </PositionTagEl>
+  )
 }
 
 /**
@@ -193,7 +239,7 @@ const ShipResultRow = ({
   onSearchEquips,
 }: {
   entry: ShipEntry
-  position: SelectorPosition | undefined
+  position: SelectorPosition | RemodelPosition | undefined
   enableAvatar: boolean
   avatarType: string
   shipTagColor: string[]
@@ -243,7 +289,11 @@ const ShipResultRow = ({
       <Tooltip content={t('main:Search equipment for this ship')} position={Position.TOP}>
         <Button small minimal icon="search" onClick={() => onSearchEquips(entry)} />
       </Tooltip>
-      <PositionTag position={position} />
+      {position && 'kind' in position ? (
+        <RemodelPositionTag position={position} />
+      ) : (
+        <PositionTag position={position} />
+      )}
     </ResultRow>
   )
 }
@@ -288,7 +338,9 @@ const GlobalSearchPanel = ({
   const [tabs, setTabs] = useState<number[] | null>(null)
   const [tag, setTag] = useState<ShipTagFilter>('all')
   const [sortKey, setSortKey] = useState<ShipSortKey>(1)
+  const [shipScene, setShipScene] = useState<ShipScene>('organize')
   const [equipCategory, setEquipCategory] = useState(ALL_EQUIPS_CATEGORY)
+  const [equipScene, setEquipScene] = useState<EquipScene>('equip')
   const [airbaseTab, setAirbaseTab] = useState(0)
   const [equipScope, setEquipScope] = useState<EquipScope | null>(initialEquipScope ?? null)
   const [equipSlot, setEquipSlot] = useState<SlotTarget | null>(null)
@@ -308,6 +360,7 @@ const GlobalSearchPanel = ({
     (state: RootState): string => state.config?.poi?.appearance?.avatarType ?? 'rarity',
   )
   const shipTagColor = useSelector(fcdShipTagColorSelector)
+  const fleets = useSelector(fleetsSelector)
   const inRepairIds = useSelector(inRepairShipsIdSelector)
   const inRepair = useMemo(() => new Set(inRepairIds ?? []), [inRepairIds])
 
@@ -334,15 +387,19 @@ const GlobalSearchPanel = ({
 
   // Positions must come from the *full* list under the current filter, since
   // that is what the in-game picker paginates; the query only hides rows.
-  const shipResults = useMemo((): Result<ShipEntry>[] => {
+  const remodelScene = mode === 'ship' && shipScene === 'remodel'
+
+  const shipResults = useMemo((): ShipResult[] => {
     if (mode !== 'ship') return []
-    const list = buildShipList(
-      shipEntries,
-      { tabs: activeTabs, tag: effectiveTag, sortKey },
-      tables,
-    )
-    const positions = shipPositions(list)
-    const matched: Result<ShipEntry>[] = []
+    // 改装 shows the whole roster in fleet order; none of the 編成 filters
+    // exist on that screen, so none of them are consulted here either.
+    const list = remodelScene
+      ? buildRemodelList(shipEntries, fleets)
+      : buildShipList(shipEntries, { tabs: activeTabs, tag: effectiveTag, sortKey }, tables)
+    const positions: Map<number, SelectorPosition | RemodelPosition> = remodelScene
+      ? buildRemodelPositions(shipEntries, fleets)
+      : shipPositions(list)
+    const matched: ShipResult[] = []
     for (const entry of list) {
       const name = entry.$ship.api_name
       // The reading is matched literally too, for anyone typing kana.
@@ -351,7 +408,9 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, shipEntries, activeTabs, effectiveTag, sortKey, query, tables])
+  }, [mode, remodelScene, shipEntries, fleets, activeTabs, effectiveTag, sortKey, query, tables])
+
+  const airbaseScene = mode === 'equip' && equipScene === 'airbase'
 
   // The ex-slot picker has no category tabs in game, so the category filter is
   // pinned to 全装備 (and disabled) while the ex-slot is selected.
@@ -359,7 +418,7 @@ const GlobalSearchPanel = ({
   const effectiveCategory = slotLocksCategory ? ALL_EQUIPS_CATEGORY : equipCategory
 
   const equipResults = useMemo((): EquipResult[] => {
-    if (mode !== 'equip') return []
+    if (mode !== 'equip' || airbaseScene) return []
     const lists = buildEquipLists(
       equipEntries,
       {
@@ -381,10 +440,20 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, effectiveCategory, equipScope, equipSlot, constState, query, tables])
+  }, [
+    mode,
+    airbaseScene,
+    equipEntries,
+    effectiveCategory,
+    equipScope,
+    equipSlot,
+    constState,
+    query,
+    tables,
+  ])
 
   const airbaseResults = useMemo((): Result<EquipEntry>[] => {
-    if (mode !== 'airbase') return []
+    if (!airbaseScene) return []
     const list = buildAirbaseList(equipEntries, { tab: airbaseTab }, tables)
     const positions = airbasePositions(list)
     const matched: Result<EquipEntry>[] = []
@@ -394,7 +463,7 @@ const GlobalSearchPanel = ({
       if (matched.length >= MAX_RESULTS) break
     }
     return matched
-  }, [mode, equipEntries, airbaseTab, tables, query])
+  }, [airbaseScene, equipEntries, airbaseTab, tables, query])
 
   const toggleTab = useCallback(
     (id: number) =>
@@ -433,12 +502,14 @@ const GlobalSearchPanel = ({
     })
     setEquipSlot(null)
     setEquipCategory(ALL_EQUIPS_CATEGORY)
+    // A ship scope means the ship-equipment picker, never the land base.
+    setEquipScene('equip')
     setQuery('')
     setMode('equip')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const results = mode === 'ship' ? shipResults : mode === 'equip' ? equipResults : airbaseResults
+  const results = mode === 'ship' ? shipResults : airbaseScene ? airbaseResults : equipResults
   const allTabsOn = activeTabs.length === allTabIds.length
 
   return (
@@ -454,7 +525,6 @@ const GlobalSearchPanel = ({
           options={[
             { value: 'ship', label: t('main:Ships') },
             { value: 'equip', label: t('main:Equip') },
-            { value: 'airbase', label: t('main:Land base') },
           ]}
           intent="primary"
         />
@@ -494,6 +564,8 @@ const GlobalSearchPanel = ({
             <FilterSelect
               value={sortKey}
               onSelect={setSortKey}
+              disabled={remodelScene}
+              title={remodelScene ? t('main:The remodel screen has no sort') : undefined}
               width="7em"
               options={SHIP_SORT_KEYS.map((key) => ({
                 value: key,
@@ -504,9 +576,15 @@ const GlobalSearchPanel = ({
             <FilterSelect
               value={tag}
               onSelect={setTag}
-              disabled={!eventActive}
+              disabled={!eventActive || remodelScene}
               width="7em"
-              title={eventActive ? undefined : t('main:Available during events only')}
+              title={
+                remodelScene
+                  ? t('main:The remodel screen has no tag filter')
+                  : eventActive
+                    ? undefined
+                    : t('main:Available during events only')
+              }
               options={[
                 { value: 'all' as ShipTagFilter, label: t('main:All ships') },
                 { value: 'tagged' as ShipTagFilter, label: t('main:Tagged') },
@@ -519,8 +597,14 @@ const GlobalSearchPanel = ({
           <FilterSelect
             value={effectiveCategory}
             onSelect={setEquipCategory}
-            disabled={slotLocksCategory}
-            title={slotLocksCategory ? t('main:The ex-slot lists every equipment') : undefined}
+            disabled={slotLocksCategory || airbaseScene}
+            title={
+              airbaseScene
+                ? t('main:The land base has its own tabs')
+                : slotLocksCategory
+                  ? t('main:The ex-slot lists every equipment')
+                  : undefined
+            }
             width="13em"
             options={tables.equipFilterCategories.map((category) => ({
               value: category.id,
@@ -539,19 +623,37 @@ const GlobalSearchPanel = ({
 
       {mode === 'ship' && (
         <FilterRow>
+          {/* 改装 has no type tabs, no tag filter and no sort button, so the
+              rest of the ship controls go dead while it is selected. */}
+          <PillControl
+            value={shipScene}
+            onValueChange={(next) => setShipScene(next === 'remodel' ? 'remodel' : 'organize')}
+            options={[
+              { value: 'organize', label: translateCaption('編成') },
+              { value: 'remodel', label: translateCaption('改装') },
+            ]}
+            intent="primary"
+            size="small"
+          />
           <ButtonGroup>
             {shipFilterTabs(tables).map((tab) => (
               <TabButton
                 key={tab.id}
                 small
-                $selected={activeTabs.includes(tab.id)}
+                disabled={remodelScene}
+                $selected={!remodelScene && activeTabs.includes(tab.id)}
                 onClick={() => toggleTab(tab.id)}
               >
                 {translateCaption(tab.name)}
               </TabButton>
             ))}
           </ButtonGroup>
-          <TabButton small $selected={allTabsOn} onClick={toggleAllTabs}>
+          <TabButton
+            small
+            disabled={remodelScene}
+            $selected={!remodelScene && allTabsOn}
+            onClick={toggleAllTabs}
+          >
             {translateCaption('全艦艇')}
           </TabButton>
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
@@ -561,7 +663,7 @@ const GlobalSearchPanel = ({
       {/* A few ships bar particular equipment from particular slots, and the
           ex-slot has rules of its own, so the list is only exact once a slot is
           named. "Any" keeps the whole-ship view the scope opens on. */}
-      {mode === 'equip' && equipScope && (
+      {mode === 'equip' && !airbaseScene && equipScope && (
         <ScopeBar>
           <span>
             {t('main:Equippable by {{name}}', {
@@ -597,31 +699,38 @@ const GlobalSearchPanel = ({
         </ScopeBar>
       )}
 
-      {mode === 'equip' && !equipScope && (
+      {mode === 'equip' && (airbaseScene || !equipScope) && (
         <FilterRow>
-          <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
-        </FilterRow>
-      )}
-
-      {/* One tab at a time, as in game — a radio group rather than the ship
-          strip's independent toggles. On its own row: five CJK captions do not
-          share a line with the search box. */}
-      {mode === 'airbase' && (
-        <FilterRow>
+          {/* 装備 and 基地航空隊 draw from the same inventory but are separate
+              screens in game, with their own tabs and their own ordering. */}
           <PillControl
-            value={String(airbaseTab)}
-            onValueChange={(next) => {
-              const id = Number(next)
-              if (Number.isFinite(id)) setAirbaseTab(id)
-            }}
-            options={tables.airbaseFilterTabs.map((tab) => ({
-              value: String(tab.id),
-              label: translateCaption(tab.name),
-              icon: <PillIcon slotitemId={tab.icon} alt="" />,
-            }))}
+            value={equipScene}
+            onValueChange={(next) => setEquipScene(next === 'airbase' ? 'airbase' : 'equip')}
+            options={[
+              { value: 'equip', label: translateCaption('装備') },
+              { value: 'airbase', label: translateCaption('基地航空隊') },
+            ]}
             intent="primary"
             size="small"
           />
+          {/* One tab at a time, as in game — a radio group rather than the ship
+              strip's independent toggles. */}
+          {airbaseScene && (
+            <PillControl
+              value={String(airbaseTab)}
+              onValueChange={(next) => {
+                const id = Number(next)
+                if (Number.isFinite(id)) setAirbaseTab(id)
+              }}
+              options={tables.airbaseFilterTabs.map((tab) => ({
+                value: String(tab.id),
+                label: translateCaption(tab.name),
+                icon: <PillIcon slotitemId={tab.icon} alt="" />,
+              }))}
+              intent="primary"
+              size="small"
+            />
+          )}
           <Tag minimal>{t('main:{{count}} shown', { count: results.length })}</Tag>
         </FilterRow>
       )}
@@ -642,7 +751,7 @@ const GlobalSearchPanel = ({
               onSearchEquips={searchEquipsFor}
             />
           ))
-        ) : mode === 'equip' ? (
+        ) : !airbaseScene ? (
           equipResults.map(({ entry, position }) => (
             <ResultRow key={entry.equip.api_id}>
               <RowIcon slotitemId={entry.$equip.api_type?.[3]} alt="" />
@@ -717,7 +826,11 @@ export const GlobalSearch = () => {
   const noAnimation = !enableTransition
 
   const handleOpen = useCallback((event: SearchOpenEvent) => {
-    if (event.mode) setMode(event.mode)
+    // event.mode is typed as SearchMode, but the emitter is reachable from
+    // untyped plugin code, so a stale 'airbase' (or any other string) has to
+    // be rejected here rather than trusted — same guard changeMode applies to
+    // the segmented control's own onValueChange.
+    if (event.mode && isSearchMode(event.mode)) setMode(event.mode)
     const scope = event.scope
     setScopeRequest((prev) => ({ serial: prev.serial + 1, scope }))
     // Re-opening mid-dismissal cancels it rather than queueing a second cycle.

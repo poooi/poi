@@ -22,3 +22,12 @@ export const positionOf = (offset: number, perPage = ROWS_PER_PAGE): SelectorPos
   index: (offset % perPage) + 1,
   offset,
 })
+
+/**
+ * Where a ship sits in the 改装 picker, which is not one paginated list: a tab
+ * per fleet showing that fleet whole, plus a paginated その他 tab for everything
+ * not in a fleet.
+ */
+export type RemodelPosition =
+  | { kind: 'fleet'; fleet: number; index: number }
+  | ({ kind: 'other' } & SelectorPosition)
