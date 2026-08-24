@@ -367,16 +367,21 @@ export const Meta = styled.div`
 `
 
 /**
- * Sized to its content rather than a fixed width: the remodel scene's その他
- * tag carries three segments ("Other · Page 10 · Row 10") where every other
- * mode carries two, and a fixed width sized for the short case clips the long
- * one — worse once any of the three segments runs long in translation. The
- * ship tile and name column absorb the difference; both already shrink.
+ * Fixed width, like Meta above — a tag that resized to its own content made
+ * neighboring rows' icons drift out of column. 16em covers the widest tag any
+ * mode produces with margin: the remodel scene's その他 case carries three
+ * segments ("Other · Page 10 · Row 10") where every other mode carries two,
+ * and that three-segment form is the longest in every shipped locale (checked
+ * en/ja/zh-CN/zh-TW/ko — full-width CJK glyphs cost more per character than
+ * they save by being shorter words, so no locale is meaningfully narrower). A
+ * tag that still overflows this — three-digit page numbers, which only a very
+ * large single-category inventory would reach — degrades to Blueprint's
+ * built-in ellipsis rather than breaking the row.
  */
 export const PositionTagEl = styled(Tag)`
   && {
     flex: 0 0 auto;
-    white-space: nowrap;
+    width: 16em;
     justify-content: center;
     text-align: center;
   }
