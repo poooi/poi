@@ -826,7 +826,11 @@ export const GlobalSearch = () => {
   const noAnimation = !enableTransition
 
   const handleOpen = useCallback((event: SearchOpenEvent) => {
-    if (event.mode) setMode(event.mode)
+    // event.mode is typed as SearchMode, but the emitter is reachable from
+    // untyped plugin code, so a stale 'airbase' (or any other string) has to
+    // be rejected here rather than trusted — same guard changeMode applies to
+    // the segmented control's own onValueChange.
+    if (event.mode && isSearchMode(event.mode)) setMode(event.mode)
     const scope = event.scope
     setScopeRequest((prev) => ({ serial: prev.serial + 1, scope }))
     // Re-opening mid-dismissal cancels it rather than queueing a second cycle.
