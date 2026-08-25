@@ -105,6 +105,30 @@ const findHackFilePathAsync = async (
   return undefined
 }
 
+export const readKcsResourceOverride = async (pathname: string): Promise<Buffer | undefined> => {
+  if (!isStaticResource(pathname)) {
+    return undefined
+  }
+
+  const cacheDir = getCacheDir()
+  const overrideFilePath = await findHackFilePathAsync(cacheDir, pathname, true)
+  if (!overrideFilePath) {
+    return undefined
+  }
+
+  const resolvedCacheRoot = path.resolve(cacheDir, 'KanColle')
+  const resolvedOverrideFilePath = path.resolve(overrideFilePath)
+  if (!resolvedOverrideFilePath.startsWith(resolvedCacheRoot + path.sep)) {
+    return undefined
+  }
+
+  try {
+    return await fsp.readFile(resolvedOverrideFilePath)
+  } catch (_e) {
+    return undefined
+  }
+}
+
 // Must run before app `ready`.
 export const registerKcsResourceScheme = () => {
   protocol.registerSchemesAsPrivileged([
