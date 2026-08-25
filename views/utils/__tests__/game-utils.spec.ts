@@ -17,6 +17,18 @@ const $equip = (mstId: number): APIMstSlotitem => {
 const JET_FIGHTER = 548
 // 20: 零式艦戦52型, a plain 艦上戦闘機 with the same proficiency bonus table
 const CARRIER_FIGHTER = 20
+// 486 / 487: 零式艦戦64型(制空戦闘機仕様) and (熟練爆戦), a 艦上戦闘機 and a 爆戦
+// that both improve 0.3 AA per star
+const ZERO_64_FIGHTER = 486
+const ZERO_64_BOMBER = 487
+// 60: 零式艦戦62型(爆戦), a 爆戦 (艦上爆撃機 improving 0.25 AA per star)
+const FIGHTER_BOMBER = 60
+// 319: 彗星一二型(六三四空/三号爆弾搭載機), AA 3 but not a 爆戦
+const PLAIN_DIVE_BOMBER = 319
+// 481: Mosquito TR Mk.33 (艦上攻撃機, AA 5)
+const TORPEDO_BOMBER = 481
+// 322: 瑞雲改二(六三四空) (水上爆撃機, AA 4)
+const SEAPLANE_BOMBER = 322
 // 186: 一式陸攻 三四型 (陸上攻撃機, AA 4)
 const LAND_BASED_ATTACKER = 186
 // 396: 深山改 (大型陸上機, AA 2)
@@ -64,6 +76,42 @@ describe('getTyku', () => {
     const jet = getTyku(oneSlot(JET_FIGHTER, 18, { level: 10 }))
     // sqrt(18) * (17 + 10 * 0.2) = 80.61
     expect(jet).toEqual({ basic: 72, min: 80, max: 81 })
+  })
+
+  spec('零式艦戦64型(制空戦闘機仕様) improvement adds 0.3 AA per star, not 0.2', () => {
+    // AA 9 + 10 stars * 0.3 = 12, so sqrt(18) * 12 = 50.91
+    expect(getTyku(oneSlot(ZERO_64_FIGHTER, 18, { level: 10 }))).toEqual({
+      basic: 38,
+      min: 50,
+      max: 51,
+    })
+  })
+
+  spec('零式艦戦64型(熟練爆戦) improvement adds 0.3 AA per star, not a 爆戦の 0.25', () => {
+    // AA 7 + 10 stars * 0.3 = 10, so sqrt(18) * 10 = 42.43
+    expect(getTyku(oneSlot(ZERO_64_BOMBER, 18, { level: 10 }))).toEqual({
+      basic: 29,
+      min: 42,
+      max: 43,
+    })
+  })
+
+  spec('爆戦 improvement adds 0.25 AA per star', () => {
+    // 零式艦戦62型(爆戦) has AA 4: sqrt(18) * (4 + 10 * 0.25) = 27.58
+    expect(getTyku(oneSlot(FIGHTER_BOMBER, 18, { level: 10 }))).toEqual({
+      basic: 16,
+      min: 27,
+      max: 28,
+    })
+  })
+
+  spec.each([
+    ['艦上爆撃機 that is not a 爆戦', PLAIN_DIVE_BOMBER],
+    ['艦上攻撃機', TORPEDO_BOMBER],
+    ['水上爆撃機', SEAPLANE_BOMBER],
+  ])('improvement adds no AA to a %s', (_label, mstId) => {
+    // These improve attack power only, however much 対空 they carry
+    expect(getTyku(oneSlot(mstId, 18, { level: 10 }))).toEqual(getTyku(oneSlot(mstId, 18)))
   })
 
   spec('噴式戦闘機 has no 局地戦闘機 interception bonus on a land base', () => {
@@ -153,6 +201,12 @@ describe('getTyku', () => {
     const skilled = getTyku(oneSlot(LAND_BASED_RECON_SKILLED, 4), SORTIE)
     // sqrt(4) * 3 = 6, times 1.15 and 1.18
     expect([plain.min, skilled.min]).toEqual([6, 7])
+  })
+
+  spec('陸上偵察機 improvement adds 0.2 AA per star', () => {
+    // Provisional: wikiwiki confirms 陸偵 gains 制空値 but not the formula, so this
+    // follows KC3Kai. sqrt(4) * (3 + 10 * 0.2) = 10, times the 1.15 multiplier
+    expect(getTyku(oneSlot(LAND_BASED_RECON, 4, { level: 10 }), SORTIE).min).toBe(11)
   })
 
   spec('噴式戦闘機 matches a carrier fighter of the same AA stat', () => {

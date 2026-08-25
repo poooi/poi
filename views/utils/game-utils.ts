@@ -43,27 +43,57 @@ const airPowerTypes = [6, 7, 8, 11, 26, 45, 47, 48, 53, 56, 57, 58]
 const reconTypes = [9, 10, 41, 49]
 
 /**
- * ★ improvement bonus to 対空, by category. 陸上攻撃機 and 大型陸上機 scale with
- * √★ rather than ★ — see {@link getImprovementAABonus}.
+ * ★ improvement bonus to 対空, by category — what improving a plane adds to 制空値.
+ * wikiwiki 改修工廠 gives 艦戦・水戦・陸戦 ★×0.2 and 陸攻・大型陸上機 0.5×√★;
+ * 陸上偵察機 and 大型飛行艇 are confirmed to gain 制空値 but "改修強化値の正確な式は
+ * 不明", so those two carry the values kc-web and KC3Kai measured.
+ * https://wikiwiki.jp/kancolle/%E6%94%B9%E4%BF%AE%E5%B7%A5%E5%BB%A0
  */
 const improvementAAFactor: Record<number, number> = {
   6: 0.2, // 艦上戦闘機
+  41: 0.15, // 大型飛行艇 — provisional
   45: 0.2, // 水上戦闘機
   47: 0.5, // 陸上攻撃機
   48: 0.2, // 局地戦闘機
+  49: 0.2, // 陸上偵察機 — provisional
   53: 0.5, // 大型陸上機
+  56: 0.2, // 噴式戦闘機 — improves like the fighter it is, once it becomes improvable
 }
+
+/** The two categories that scale with √★ rather than ★. */
 const sqrtImprovementTypes = [47, 53]
 
+/** "★×0.3：零式艦戦64型(制空戦闘機仕様)・零式艦戦64型(熟練爆戦)" — a line of its own. */
+const improvementAAFactorById: Record<number, number> = {
+  486: 0.3,
+  487: 0.3,
+}
+
+/**
+ * 爆戦 — 艦上爆撃機 that gain 対空 like a fighter, ★×0.25. wikiwiki names them one
+ * by one rather than giving a 対空 threshold, since 彗星一二型(六三四空/三号爆弾
+ * 搭載機) and Re.2001 CB改 carry a fighter's 対空 yet improve as plain 艦爆.
+ * 零式艦戦64型(熟練爆戦) is listed with the ★×0.3 planes above instead.
+ */
+const fighterBomberIds = [
+  60, // 零式艦戦62型(爆戦)
+  154, // 零戦62型(爆戦/岩井隊)
+  219, // 零式艦戦63型(爆戦)
+  447, // 零式艦戦64型(複座KMX搭載機)
+]
+
 const getImprovementAABonus = ($equip: APIMstSlotitem, level: number): number => {
+  if (!(level > 0)) return 0
+  const byId = improvementAAFactorById[$equip.api_id]
+  if (byId != null) return byId * level
   const type = $equip.api_type[2]
   const factor = improvementAAFactor[type]
   if (factor != null) {
     return factor * (sqrtImprovementTypes.includes(type) ? Math.sqrt(level) : level)
   }
-  // 艦上爆撃機 and the jets have no category-wide rule: only 爆戦 (dive bombers
-  // carrying a fighter's 対空) benefit, so fall back to reading the stat line.
-  return $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) * level : 0
+  // "※艦攻、水爆、爆戦以外の艦爆は改修しても制空値は上昇しない" — everything left
+  // improves attack power only, except the 爆戦 above.
+  return fighterBomberIds.includes($equip.api_id) ? 0.25 * level : 0
 }
 
 /**
