@@ -14,6 +14,13 @@ import {
 let slotitemIconServerIp: string | undefined
 
 const initializeSlotitemIcons = () => {
+  // Only the PNG path reads the atlas, and building it costs a game-server fetch plus a
+  // crop and a base64 encode per icon on the renderer thread. Skip all of it while SVG
+  // icons are on; `setIcon` below re-runs this if the setting is turned off later.
+  if (config.get('poi.appearance.svgicon', false)) {
+    return
+  }
+
   const serverIp = getStore('info.server.ip')
   if (!serverIp || serverIp === slotitemIconServerIp) {
     return
@@ -52,6 +59,8 @@ const iconConfSetter = new IconConf()
 const setIcon = (path: string, val: unknown) => {
   if (path === 'poi.appearance.svgicon' && typeof val === 'boolean') {
     iconConfSetter.setConf(val)
+    // Switching to PNG icons is the first point at which the atlas is worth building.
+    initializeSlotitemIcons()
   }
 }
 
