@@ -1,8 +1,30 @@
 import classnames from 'classnames'
 import fs from 'fs-extra'
 import { memoize } from 'lodash'
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import { getStore, store } from 'views/create-store'
 import { ROOT } from 'views/env'
+import {
+  getSlotitemIcon,
+  getSlotitemIconRevision,
+  initSlotitemIconMap,
+  subscribeSlotitemIconMap,
+} from 'views/utils/slotitem-icon'
+
+let slotitemIconServerIp: string | undefined
+
+const initializeSlotitemIcons = () => {
+  const serverIp = getStore('info.server.ip')
+  if (!serverIp || serverIp === slotitemIconServerIp) {
+    return
+  }
+
+  slotitemIconServerIp = serverIp
+  void initSlotitemIconMap(serverIp)
+}
+
+store.subscribe(initializeSlotitemIcons)
+initializeSlotitemIcons()
 
 const getClassName = (props: string | undefined, isSVG: boolean) => {
   const type = isSVG ? 'svg' : 'png'
@@ -39,19 +61,15 @@ window.addEventListener('unload', () => {
   config.removeListener('config.set', setIcon)
 })
 
-const getAvailableSlotitemIconPath = memoize((slotitemId: number) =>
-  memoize((useSVGIcon: boolean) => {
-    try {
-      const iconPath = useSVGIcon
-        ? `${ROOT}/assets/svg/slotitem/${slotitemId}.svg`
-        : `${ROOT}/assets/img/slotitem/${slotitemId + 100}.png`
-      fs.statSync(iconPath)
-      return iconPath
-    } catch (_e) {
-      return null
-    }
-  }),
-)
+const getAvailableSlotitemSVGPath = memoize((slotitemId: number) => {
+  const iconPath = `${ROOT}/assets/svg/slotitem/${slotitemId}.svg`
+  try {
+    fs.statSync(iconPath)
+    return iconPath
+  } catch (_e) {
+    return null
+  }
+})
 
 interface SlotitemIconProps {
   slotitemId?: number
@@ -62,6 +80,7 @@ interface SlotitemIconProps {
 export const SlotitemIcon = memo(({ alt, slotitemId = 0, className }: SlotitemIconProps) => {
   const [useSVGIcon, setUseSVGIcon] = useState(() => config.get('poi.appearance.svgicon', false))
   const keyRef = useRef(0)
+  useSyncExternalStore(subscribeSlotitemIconMap, getSlotitemIconRevision, getSlotitemIconRevision)
 
   useEffect(() => {
     keyRef.current = iconConfSetter.reg(setUseSVGIcon)
@@ -70,14 +89,11 @@ export const SlotitemIcon = memo(({ alt, slotitemId = 0, className }: SlotitemIc
     }
   }, [])
 
-  const maybeIconPath = getAvailableSlotitemIconPath(slotitemId)(useSVGIcon)
-  const iconPath =
-    maybeIconPath ??
-    (useSVGIcon ? `${ROOT}/assets/svg/slotitem/-1.svg` : `${ROOT}/assets/img/slotitem/-1.png`)
+  const src = useSVGIcon
+    ? `file://${getAvailableSlotitemSVGPath(slotitemId) ?? `${ROOT}/assets/svg/slotitem/-1.svg`}`
+    : (getSlotitemIcon(slotitemId)?.src ?? `file://${ROOT}/assets/img/slotitem/-1.png`)
 
-  return (
-    <img alt={alt} src={`file://${iconPath}`} className={getClassName(className, useSVGIcon)} />
-  )
+  return <img alt={alt} src={src} className={getClassName(className, useSVGIcon)} />
 })
 SlotitemIcon.displayName = 'SlotitemIcon'
 
