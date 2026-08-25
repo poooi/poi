@@ -1,6 +1,6 @@
 ---
 name: equipment-improvement
-description: 改修 (★) bonus data in views/utils/improvement — the rule table, where each value is sourced from, and how to verify a change. Use when editing views/utils/improvement/**, getTyku / 制空値 in views/utils/game-utils.ts, or anything reading a ★ bonus; when asked what a ★ adds to a stat; or when a fighter power number looks wrong for improved equipment.
+description: 改修 (★) bonus data in views/utils/improvement — the rule table, where each value is sourced from, the fcd mirror it ships as, and how to verify a change. Use when editing views/utils/improvement/**, assets/data/fcd/improvement.json, getTyku / 制空値 in views/utils/game-utils.ts, or the equip tooltip in views/components/ship/slotitems-data.ts; when asked what a ★ adds to a stat; or when a fighter power or tooltip number looks wrong for improved equipment.
 ---
 
 # 改修 (★) Bonuses (views/utils/improvement/)
@@ -13,9 +13,11 @@ in silently. Everything here is therefore _measured_ data, not API data.
 
 - `table.ts` — the data. `DEFAULT_IMPROVEMENT_TABLE`, the rule/stat/context types, and the
   named id lists (`FIGHTER_BOMBER_IDS`, the three 副砲 classes).
-- `index.ts` — `getImprovementBonus`, which evaluates the table.
+- `index.ts` — `getImprovementBonus`, the module-level current table
+  (`get/set/resetImprovementTable`), and `mergeImprovementTable` for fcd payloads.
 
-Consumer: `getImprovementAABonus` in `views/utils/game-utils.ts`, i.e. 制空値.
+Consumers: `getImprovementAABonus` in `views/utils/game-utils.ts` (制空値), and
+`getItemData` in `views/components/ship/slotitems-data.ts` (the equip tooltip).
 
 **Not a consumer, deliberately: OASW.** 先制対潜 thresholds are judged on the displayed
 対潜 and "ただし、改修はこの条件に影響しない" — see the note on `taisenAbove` in
@@ -127,3 +129,33 @@ Unsettled between sources, currently following wikiwiki: **水上電探** is 命
 Values wikiwiki confirms exist but cannot quantify are marked `provisional` in the table:
 陸上偵察機 (0.2) and 大型飛行艇 (0.15) 対空 — "改修強化値の正確な式は不明". kc-web carries
 the same two numbers with the same caveat.
+
+## Shipping a change (the fcd mirror)
+
+`assets/data/fcd/improvement.json` is a hand-generated mirror of `DEFAULT_IMPROVEMENT_TABLE`,
+same pattern as `gameselector.json`: defaults live in the app, fcd can correct them without
+a poi release, and a test asserts the two stay equal. `fcd/build.js` has no source for
+either — it only lists them in the manifest.
+
+After editing `table.ts`:
+
+```js
+// scratch script, run from the repo root
+require('./babel-hook.js')
+const { DEFAULT_IMPROVEMENT_TABLE } = require('./views/utils/improvement/table.ts')
+require('fs').writeFileSync(
+  'assets/data/fcd/improvement.json',
+  JSON.stringify({
+    meta: { name: 'improvement', version: 'YYYY/MM/DD/NN' },
+    data: DEFAULT_IMPROVEMENT_TABLE,
+  }),
+)
+```
+
+Then bump the same version in `assets/data/fcd/meta.json` and run
+`npm test -- --testPathPattern="views/utils/improvement"`. The payload test fails if the
+mirror or the manifest drifts.
+
+At runtime the payload reaches code with no store access through an observer in
+`views/redux/create-store.ts` that calls `setImprovementTable`, plus a seeding call for the
+localStorage-hydrated initial state. Components can read `state.fcd.improvement` directly.

@@ -1,12 +1,38 @@
 ---
 name: fcd-assets
-description: Regenerating fcd data, in particular ship-avatar marginMagic values via fcd/gen-shipavatar.js. Use when editing anything under fcd/, when asked to regenerate or fix ship avatar crops, or when ship portraits in the fleet view are framed wrongly.
+description: Regenerating fcd data — how the generated files and the app-mirrored tables differ, and ship-avatar marginMagic values via fcd/gen-shipavatar.js. Use when editing anything under fcd/ or assets/data/fcd/, when adding a new fcd payload, when asked to regenerate or fix ship avatar crops, or when ship portraits in the fleet view are framed wrongly.
 ---
 
-# fcd Assets — Ship Avatar Generation
+# fcd Assets
+
+## Two kinds of fcd payload
+
+- **Generated here**: `map.json`, `shipavatar.json`, `shiptag.cson` have a source under
+  `fcd/` and are built into `assets/data/fcd/` by `fcd/build.js`, which bumps the version
+  when the data changes.
+- **Mirrored from the app**: `gameselector.json` and `improvement.json` have _no_ source
+  under `fcd/`. They are copies of tables that live in the app
+  (`views/utils/game-selector/tables`, `views/utils/improvement/table`), so a fresh install
+  works without fcd and fcd can still correct the values later. A test in each area asserts
+  the mirror equals the defaults and that the manifest version matches; regenerate the JSON
+  and bump `assets/data/fcd/meta.json` by hand. See the `equipment-improvement` skill for
+  the regeneration snippet.
+
+`fcd/build.js` only lists the mirrored files in `buildMeta` — it cannot build them. **Keep
+every payload in that list**: it rewrites `meta.json` wholesale, so a file missing from it
+silently stops being shipped to clients (that bug dropped `gameselector` until 2026-08).
+
+`views/components/settings/about/update/fcd.tsx` needs no change for a new payload — it
+globs `assets/data/fcd/*` locally and reads the remote `meta.json`.
+
+# Ship Avatar Generation
 
 `fcd/gen-shipavatar.js` generates the `marginMagic` values in `fcd/shipavatar.json`, which
 control how each ship's remodel art is cropped into an avatar.
+
+The map generator ports its extraction from kcs2-mapdata (MIT) and the `face` method
+downloads nagadomi's `lbpcascade_animeface.xml`; both are recorded in
+[THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md).
 
 ## Two methods — use `banner`
 

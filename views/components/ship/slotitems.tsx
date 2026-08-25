@@ -91,7 +91,7 @@ export const Slotitems = memo(({ shipId }: SlotitemsProps) => {
                 />
               )}
             </div>
-            {getItemData($equip).map((data, propId) => (
+            {getItemData($equip, equip.api_level ?? 0).map((data, propId) => (
               <div key={propId}>{data}</div>
             ))}
           </div>
@@ -192,7 +192,7 @@ export const LandbaseSlotitems = memo(
                 )}
                 <FontAwesome name="dot-circle-o" /> {$equip.api_distance}
               </div>
-              {getItemData($equip).map((data, propId) => (
+              {getItemData($equip, equip.api_level ?? 0).map((data, propId) => (
                 <div key={propId}>{data}</div>
               ))}
             </div>

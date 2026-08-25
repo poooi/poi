@@ -1,6 +1,14 @@
 import type { APIMstSlotitem } from 'kcsapi/api_start2/getData/response'
 
-import { getImprovementBonus } from '..'
+import {
+  DEFAULT_IMPROVEMENT_TABLE,
+  getImprovementBonus,
+  getImprovementTable,
+  mergeImprovementTable,
+  resetImprovementTable,
+  setImprovementTable,
+  type ImprovementTable,
+} from '..'
 
 const spec = it
 
@@ -153,5 +161,60 @@ describe('getImprovementBonus', () => {
   spec('lets a per-id 触接 value beat its category', () => {
     // 零式水上観測機 is a 水上偵察機 (0.14) but measures 0.2
     expect(getImprovementBonus($equip(OBSERVATION_SEAPLANE), 5, 'los', 'contact')).toBe(1)
+  })
+})
+
+describe('the fcd table', () => {
+  afterEach(() => {
+    resetImprovementTable()
+  })
+
+  spec('starts out as the built-in default', () => {
+    expect(getImprovementTable()).toBe(DEFAULT_IMPROVEMENT_TABLE)
+  })
+
+  spec('replaces the delivered lists and keeps the rest', () => {
+    const delivered: ImprovementTable = {
+      aa: { fire: [{ types: [6], factor: 0.35, scale: 'linear' }] },
+    }
+    const merged = mergeImprovementTable(delivered)
+    expect(merged.aa?.fire).toEqual(delivered.aa?.fire)
+    // untouched contexts of the same stat, and untouched stats, survive
+    expect(merged.aa?.exped).toEqual(DEFAULT_IMPROVEMENT_TABLE.aa.exped)
+    expect(merged.power).toEqual(DEFAULT_IMPROVEMENT_TABLE.power)
+  })
+
+  spec('falls back to the defaults for an empty or missing payload', () => {
+    expect(mergeImprovementTable(undefined)).toBe(DEFAULT_IMPROVEMENT_TABLE)
+    expect(mergeImprovementTable({})).toEqual(DEFAULT_IMPROVEMENT_TABLE)
+  })
+
+  spec('is what getImprovementBonus reads once set', () => {
+    setImprovementTable({ aa: { fire: [{ types: [6], factor: 0.35, scale: 'linear' }] } })
+    // 零式艦戦52型, a plain 艦上戦闘機, at the delivered rate rather than 0.2
+    expect(getImprovementBonus($equip(20), 10, 'aa')).toBeCloseTo(3.5)
+    resetImprovementTable()
+    expect(getImprovementBonus($equip(20), 10, 'aa')).toBeCloseTo(2)
+  })
+})
+
+describe('the shipped fcd payload', () => {
+  const payload: {
+    meta: { name: string; version: string }
+    data: ImprovementTable
+  } = require('../../../../assets/data/fcd/improvement.json')
+
+  spec('is registered in the fcd manifest', () => {
+    const meta: {
+      name: string
+      version: string
+    }[] = require('../../../../assets/data/fcd/meta.json')
+    const entry = meta.find((m) => m.name === 'improvement')
+    expect(entry).toBeDefined()
+    expect(entry!.version).toBe(payload.meta.version)
+  })
+
+  spec('matches the built-in defaults, so a fresh install and fcd agree', () => {
+    expect(payload.data).toEqual(DEFAULT_IMPROVEMENT_TABLE)
   })
 })

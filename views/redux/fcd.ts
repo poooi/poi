@@ -1,4 +1,5 @@
 import type { SelectorTables } from 'views/utils/game-selector/tables'
+import type { ImprovementTable } from 'views/utils/improvement'
 
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -41,12 +42,20 @@ export interface FcdShipTagState {
  */
 export type FcdGameSelectorState = Partial<SelectorTables>
 
+/**
+ * ★ improvement bonuses, shipped over fcd because they are measured rather than
+ * announced — see views/utils/improvement/table. Partial: any (stat, context)
+ * list omitted keeps its built-in default.
+ */
+export type FcdImprovementState = ImprovementTable
+
 export interface FcdState {
   version: Record<string, string>
   map?: FcdMapState
   shipavatar?: FcdShipAvatarState
   shiptag?: FcdShipTagState
   gameselector?: FcdGameSelectorState
+  improvement?: FcdImprovementState
 }
 
 export interface FcdValue<K extends keyof FcdState = keyof FcdState> {

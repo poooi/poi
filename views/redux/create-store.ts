@@ -8,6 +8,7 @@ import { createStore, applyMiddleware, compose, type Store } from 'redux'
 import { observer, observe } from 'redux-observers'
 import { thunk } from 'redux-thunk'
 import { isMain } from 'views/env'
+import { setImprovementTable } from 'views/utils/improvement'
 
 import type { FcdState, FcdValue } from './fcd'
 
@@ -118,6 +119,10 @@ getStore.cache = undefined as RootState | undefined
 getStore.cache = store.getState()
 export const dispatch = store.dispatch
 
+// The store starts out hydrated from localStorage, and the observer below only
+// fires on a change, so seed the module-level ★ table from what is already here.
+setImprovementTable(getStore('fcd.improvement'))
+
 // Listen to config.set event
 const solveConfSet = <P extends ConfigStringPath>(path: P, value: ConfigValue<P>): void => {
   const details = {
@@ -176,6 +181,15 @@ observe(
     // observe on docking status and send an action to update info.ships
     // when docking is done.
     dockingCompleteObserver,
+
+    // ★ bonus tables reach code with no store access (getTyku and friends)
+    // through a module-level copy, so hand fcd's payload over as it lands.
+    observer(
+      (state: RootState) => state.fcd?.improvement,
+      (_dispatch, current) => {
+        setImprovementTable(current)
+      },
+    ),
   ]),
 )
 

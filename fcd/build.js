@@ -83,5 +83,11 @@ const validateShipTag = async () => {
     buildData('shiptag.cson'),
   ])
 
-  await buildMeta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
+  // gameselector.json and improvement.json have no source here: they mirror
+  // tables that live in the app (views/utils/game-selector/tables,
+  // views/utils/improvement/table), and a test asserts the two stay equal.
+  // They still belong in the manifest, or an update would stop shipping them.
+  await buildMeta(
+    ['gameselector.json', 'improvement.json', 'map.json', 'shipavatar.json', 'shiptag.json'].sort(),
+  )
 })()

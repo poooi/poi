@@ -4,8 +4,11 @@
  * The game never announces these: improving a piece of equipment changes what
  * it contributes to a stat or an attack, but `api_mst_slotitem` keeps printing
  * the ★0 values and the ship's own stat line folds the result in silently. The
- * numbers below are the community's measured modifiers, so they move whenever a
- * new category is tested.
+ * numbers below are the community's measured modifiers, so they move whenever
+ * a new category is tested — which is why they ride on fcd
+ * (`assets/data/fcd/improvement.json`) and can be corrected without a poi
+ * release. The values here are the built-in fallback used until fcd delivers a
+ * newer copy.
  *
  * Primary source is wikiwiki, per-mechanic rather than one page:
  * 改修工廠 https://wikiwiki.jp/kancolle/%E6%94%B9%E4%BF%AE%E5%B7%A5%E5%BB%A0
