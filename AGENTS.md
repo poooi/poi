@@ -23,16 +23,17 @@ ln -s ../skills .claude/skills              # macOS / Linux
 
 Reading `skills/<name>/SKILL.md` directly works regardless of whether the junction exists.
 
-| Skill                 | Load it when                                                                                                                                                                                                             |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `combat-mechanics`    | editing `views/utils/combat/**` or `views/utils/{aaci,oasw,aapb,sp_attack}.ts`; validating ship/equipment eligibility; "check game data", "new ships were added", "update combat conditions"                             |
-| `quest-goal-data`     | editing `assets/data/quest_goal.cson`, `views/redux/info/quests/**`, `views/redux/actions/quest.ts`, `views/redux/middlewares/quests-cross-slice.ts`; asking which quests are untracked                                  |
-| `redux-api-testing`   | editing `views/redux/**` or any `__tests__`; adding an API response action; needing a real API payload or `api_start2` master data                                                                                       |
-| `game-webview`        | editing `views/kan-game-wrapper.tsx`, `assets/js/{webview-preload,resource-hack,kcs-resource-path}.js`, `lib/kcs-resource.ts`, `lib/webcontent-utils.ts`; debugging game asset loading, screenshots, or renderer crashes |
-| `build-and-run`       | editing `babel.config.js`, `babel-hook.js`, `babel-register.config.js`, `gulpfile.js`, `build/**`, `app.ts`, `index.html`; running `gulp build`; launching Electron; a build/plugin/i18n load silently producing nothing |
-| `visual-verification` | screenshotting poi; confirming a CSS/layout/theme change actually renders                                                                                                                                                |
-| `ui-patterns`         | editing `views/components/**`, `assets/css/**`, `assets/svg/ui/**`; optimizing hidden panes; CSS transitions; blur/vibrancy                                                                                              |
-| `fcd-assets`          | editing `fcd/**`; regenerating ship avatars                                                                                                                                                                              |
+| Skill                   | Load it when                                                                                                                                                                                                             |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `combat-mechanics`      | editing `views/utils/combat/**` or `views/utils/{aaci,oasw,aapb,sp_attack}.ts`; validating ship/equipment eligibility; "check game data", "new ships were added", "update combat conditions"                             |
+| `equipment-improvement` | editing `views/utils/improvement/**`, `getTyku` / 制空値 in `views/utils/game-utils.ts`, or anything reading a ★ bonus; asking what a ★ adds to a stat                                                                   |
+| `quest-goal-data`       | editing `assets/data/quest_goal.cson`, `views/redux/info/quests/**`, `views/redux/actions/quest.ts`, `views/redux/middlewares/quests-cross-slice.ts`; asking which quests are untracked                                  |
+| `redux-api-testing`     | editing `views/redux/**` or any `__tests__`; adding an API response action; needing a real API payload or `api_start2` master data                                                                                       |
+| `game-webview`          | editing `views/kan-game-wrapper.tsx`, `assets/js/{webview-preload,resource-hack,kcs-resource-path}.js`, `lib/kcs-resource.ts`, `lib/webcontent-utils.ts`; debugging game asset loading, screenshots, or renderer crashes |
+| `build-and-run`         | editing `babel.config.js`, `babel-hook.js`, `babel-register.config.js`, `gulpfile.js`, `build/**`, `app.ts`, `index.html`; running `gulp build`; launching Electron; a build/plugin/i18n load silently producing nothing |
+| `visual-verification`   | screenshotting poi; confirming a CSS/layout/theme change actually renders                                                                                                                                                |
+| `ui-patterns`           | editing `views/components/**`, `assets/css/**`, `assets/svg/ui/**`; optimizing hidden panes; CSS transitions; blur/vibrancy                                                                                              |
+| `fcd-assets`            | editing `fcd/**` or `assets/data/fcd/**`; adding an fcd payload; regenerating ship avatars                                                                                                                               |
 
 ## Repository Overview
 
@@ -283,6 +284,16 @@ const payload: GameResponsePayload<APIReqNyukyoStartResponse, APIReqNyukyoStartR
 ### Avoiding `any`
 
 - Avoid `any` as much as possible; prefer precise types, `unknown` + narrowing, or small `*Compat` types when payloads are partial/variant.
+
+### Third-Party Material
+
+- Porting code, transcribing measured values, or lifting an id list from another project
+  requires **two** records: a comment at the site in the code naming the project (and the
+  file or commit), and an entry in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) with
+  the licence it is published under.
+- Check the licence before using a source, not after. A repository with no `LICENSE` file
+  grants no permission — say so in the entry rather than assuming it is free to use.
+- npm dependencies are out of scope for that file; they carry their own metadata.
 
 ### Privacy / Redaction
 

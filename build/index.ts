@@ -21,6 +21,8 @@ const TARGET_LIST = [
   'index-plugin.html',
   'index.js',
   'LICENSE',
+  // ships with LICENSE: the MIT notices it carries have to travel with the build
+  'THIRD_PARTY_NOTICES.md',
   'package.json',
   'babel.config.js',
   'babel-register.config.js',

@@ -12,9 +12,7 @@ Key features include:
 - Notification
 - Plugin support for extensive functionalities, [see plugin List](https://github.com/poooi/poi/wiki/List-of-available-plugins)
 
-
 [![Dependencies](https://img.shields.io/librariesio/github/poooi/poi)](https://libraries.io/github/poooi/poi)
-
 
 [![Backers on Open Collective](https://opencollective.com/poi/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/poi/sponsors/badge.svg)](#sponsors)
@@ -116,3 +114,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 NOTE: THE SOFTWARE ICON AND SVG ICONS IS NOT LICENSED BY MIT AND COULD NOT BE USED
 IN PROJECTS NOT ASSOCIATED WITH POI.
+
+Code and data poi derives from other projects is recorded in
+[THIRD_PARTY_NOTICES.md](https://github.com/poooi/poi/blob/master/THIRD_PARTY_NOTICES.md).

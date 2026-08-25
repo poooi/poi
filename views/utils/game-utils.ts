@@ -6,6 +6,7 @@ import { Intent } from '@blueprintjs/core'
 import _ from 'lodash'
 
 import { shipAvatarColor } from './color'
+import { getImprovementBonus } from './improvement'
 import { between } from './tools'
 
 const aircraftExpTable = [0, 10, 25, 40, 55, 70, 85, 100, 121]
@@ -43,28 +44,12 @@ const airPowerTypes = [6, 7, 8, 11, 26, 45, 47, 48, 53, 56, 57, 58]
 const reconTypes = [9, 10, 41, 49]
 
 /**
- * ★ improvement bonus to 対空, by category. 陸上攻撃機 and 大型陸上機 scale with
- * √★ rather than ★ — see {@link getImprovementAABonus}.
+ * ★ improvement bonus to 対空 — what improving a plane adds to 制空値. The table
+ * itself lives in {@link ../improvement}, alongside every other stat's, where
+ * fcd can correct it without a poi release.
  */
-const improvementAAFactor: Record<number, number> = {
-  6: 0.2, // 艦上戦闘機
-  45: 0.2, // 水上戦闘機
-  47: 0.5, // 陸上攻撃機
-  48: 0.2, // 局地戦闘機
-  53: 0.5, // 大型陸上機
-}
-const sqrtImprovementTypes = [47, 53]
-
-const getImprovementAABonus = ($equip: APIMstSlotitem, level: number): number => {
-  const type = $equip.api_type[2]
-  const factor = improvementAAFactor[type]
-  if (factor != null) {
-    return factor * (sqrtImprovementTypes.includes(type) ? Math.sqrt(level) : level)
-  }
-  // 艦上爆撃機 and the jets have no category-wide rule: only 爆戦 (dive bombers
-  // carrying a fighter's 対空) benefit, so fall back to reading the stat line.
-  return $equip.api_tyku > 3 ? ($equip.api_baku > 0 ? 0.25 : 0.2) * level : 0
-}
+const getImprovementAABonus = ($equip: APIMstSlotitem, level: number): number =>
+  getImprovementBonus($equip, level, 'aa')
 
 /**
  * 局地戦闘機 spend their 迎撃 (`api_houk`) / 対爆 (`api_houm`) only on a land base.

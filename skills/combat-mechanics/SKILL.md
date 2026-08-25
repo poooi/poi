@@ -71,12 +71,21 @@ the modules, so there is one place to update.
 ## Sourcing and validation
 
 - Primary source: wikiwiki.jp/kancolle (per-mechanic pages; links live in the file comments).
-- **WebFetch summaries of the wikiwiki anti-air cut-in table are unreliable** — row numbering
-  drifted by ±1 across calls. Always cross-check a claimed type number against the individual
-  ship's own wiki page. Asking the fetch prompt to _quote the eligibility column verbatim_
-  (rather than infer from row order) works well.
+  KC3Kai is the fallback for what the wiki leaves unstated or marks 要検証 — label such
+  values in the code as coming from KC3, and prefer the wiki's per-equipment name lists over
+  a KC3 stat heuristic that approximates them.
+- **WebFetch summaries of wikiwiki are unreliable, for numbers as well as tables** — anti-air
+  cut-in row numbering drifted by ±1 across calls, and a 改修 modifier came back as "2/3"
+  where the page said 0.75. Always ask the fetch prompt to _quote verbatim_ rather than infer
+  or convert, and cross-check a suspicious value against the individual ship's or equipment's
+  own wiki page.
 - Good cross-check when a wiki summary is doubtful — KC3Kai upstream source:
   `https://raw.githubusercontent.com/KC3Kai/KC3Kai/develop/src/library/modules/AntiAir.js`
+  (`objects/Gear.js` for equipment stats and ★ bonuses). When porting a whole table from
+  there, diff the two implementations over every master slotitem rather than spot-checking —
+  see the `equipment-improvement` skill for a harness that does it. KC3Kai is MIT and is
+  recorded in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md); add an entry there for
+  any new source you port from.
 - `en.kancollewiki.net` returns 403 and `kancolle.fandom.com` returns 402 to WebFetch — do not
   retry those.
 

@@ -54,6 +54,14 @@ describe('isOASW', () => {
     expect(isOASW({ ...dd, api_taisen: [99, 100] }, [sonar])).toBe(false)
   })
 
+  it('ignores 改修, which does not count toward the threshold', () => {
+    // "ただし、改修はこの条件に影響しない" — a ★max sonar is worth ⅔√10 ≈ 2.1 of
+    // 対潜 elsewhere, but a DD one short of 100 stays ineligible
+    const almost: GameShip = { ...baseShip, api_taisen: [99, 100] }
+    expect(isOASW(almost, [{ ...sonar, api_level: 10 }])).toBe(false)
+    expect(isOASW({ ...almost, api_taisen: [100, 100] }, [{ ...sonar, api_level: 0 }])).toBe(true)
+  })
+
   it('triggers for a DE with ASW >= 60 and a sonar', () => {
     const de: GameShip = { ...baseShip, api_stype: 1, api_taisen: [60, 60] }
     expect(isOASW(de, [sonar])).toBe(true)
