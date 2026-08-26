@@ -283,7 +283,12 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       extWindow?.addEventListener(
         'resize',
         debounce(() => {
-          if (process.platform !== 'darwin') {
+          // setAspectRatio above already constrains native resizes on Windows.
+          // Electron 41.2.1+ can subtract the frameless thick-frame insets when
+          // setContentSize is called, so feeding innerWidth back into it starts a
+          // resize loop that repeatedly shrinks the window at high DPI.
+          // https://github.com/electron/electron/issues/51679
+          if (process.platform === 'linux') {
             curWindow?.setContentSize(
               Math.round(extWindow.innerWidth * latestZoom.current),
               Math.round(((extWindow.innerWidth / 1200) * 720 + getYOffset()) * latestZoom.current),
