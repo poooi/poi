@@ -19,6 +19,11 @@ import {
   createLayoutWebviewWindowUseFixedResolutionAction,
   createLayoutWebviewSizeAction,
 } from 'views/redux/actions/layout'
+import {
+  calculateCompensatedContentSize,
+  calculateKangameContentSize,
+  type ContentSize,
+} from 'views/utils/kangame-window-size'
 import { fileUrl, loadScript } from 'views/utils/tools'
 
 import { loadStyle } from './env-parts/theme'
@@ -39,6 +44,15 @@ interface WindowRect {
   width: number
   height: number
 }
+
+interface WindowsResizeCorrection {
+  attempts: number
+  requested: ContentSize
+  target: ContentSize
+}
+
+const WINDOWS_RESIZE_CORRECTION_LIMIT = 2
+const WINDOWS_RESIZE_STATE_TIMEOUT = 2000
 
 const getPluginWindowRect = (): WindowRect => {
   const defaultRect: WindowRect = { width: 1200, height: 780 }
@@ -151,6 +165,28 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   const currentWindowRef = useRef<Electron.BrowserWindow | null>(null)
   const unwatchBoundsRef = useRef<(() => void) | undefined>(undefined)
   const kangameContainerRef = useRef<HTMLDivElement>(null)
+  const windowsManualResizePendingRef = useRef(false)
+  const windowsResizeCorrectionRef = useRef<WindowsResizeCorrection | null>(null)
+  const windowsResizeStateTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>()
+
+  const clearWindowsResizeState = useCallback(() => {
+    windowsManualResizePendingRef.current = false
+    windowsResizeCorrectionRef.current = null
+    if (windowsResizeStateTimeoutRef.current) {
+      clearTimeout(windowsResizeStateTimeoutRef.current)
+      windowsResizeStateTimeoutRef.current = undefined
+    }
+  }, [])
+
+  const expireWindowsResizeState = useCallback(() => {
+    if (windowsResizeStateTimeoutRef.current) {
+      clearTimeout(windowsResizeStateTimeoutRef.current)
+    }
+    windowsResizeStateTimeoutRef.current = setTimeout(
+      clearWindowsResizeState,
+      WINDOWS_RESIZE_STATE_TIMEOUT,
+    )
+  }, [clearWindowsResizeState])
 
   // Latest-value refs: allow effects to read current values without becoming
   // reactive to them (avoids unintended cross-effect triggers).
@@ -207,6 +243,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         checkBrowserWindowExistence() &&
         currentWindowRef.current?.webContents
       ) {
+        clearWindowsResizeState()
         const [width, height] = currentWindowRef.current.getContentSize()
         currentWindowRef.current.setContentSize(width - 10, height - 10)
         currentWindowRef.current.setContentSize(width, height)
@@ -214,7 +251,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         forceSyncZoom()
       }
     },
-    [checkBrowserWindowExistence, forceSyncZoom],
+    [checkBrowserWindowExistence, clearWindowsResizeState, forceSyncZoom],
   )
 
   // Keep a ref so the mount effect below can read the initial value at open time
@@ -255,6 +292,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     externalWindowRef.current = extWindow
     windowRefsRef.current.externalWindow = extWindow
 
+    let cleanupResizeHandlers: (() => void) | undefined
     extWindow?.addEventListener('DOMContentLoaded', () => {
       const curWindow =
         BrowserWindow.getAllWindows().find((a) =>
@@ -280,30 +318,85 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
         height: Math.round(getYOffset() * latestZoom.current),
       })
 
-      extWindow?.addEventListener(
-        'resize',
-        debounce(() => {
-          // setAspectRatio above already constrains native resizes on Windows.
-          // Electron 41.2.1+ can subtract the frameless thick-frame insets when
-          // setContentSize is called, so feeding innerWidth back into it starts a
-          // resize loop that repeatedly shrinks the window at high DPI.
-          // https://github.com/electron/electron/issues/51679
-          if (process.platform === 'linux') {
-            curWindow?.setContentSize(
-              Math.round(extWindow.innerWidth * latestZoom.current),
-              Math.round(((extWindow.innerWidth / 1200) * 720 + getYOffset()) * latestZoom.current),
+      // `will-resize` is emitted only for manual resizes. Programmatic
+      // setContentSize calls do not reopen this gate, which prevents the
+      // frameless Windows inset from feeding a resize back into itself.
+      // https://github.com/electron/electron/issues/51679
+      const handleWillResize = () => {
+        windowsResizeCorrectionRef.current = null
+        windowsManualResizePendingRef.current = true
+        expireWindowsResizeState()
+      }
+      if (process.platform === 'win32') {
+        curWindow?.on('will-resize', handleWillResize)
+      }
+
+      const handleResize = debounce(() => {
+        if (process.platform === 'linux') {
+          const target = calculateKangameContentSize(
+            extWindow!.innerWidth,
+            latestZoom.current,
+            getYOffset(),
+          )
+          curWindow?.setContentSize(target.width, target.height)
+        } else if (process.platform === 'win32' && curWindow && extWindow) {
+          if (windowsManualResizePendingRef.current) {
+            const target = calculateKangameContentSize(
+              extWindow.innerWidth,
+              latestZoom.current,
+              getYOffset(),
             )
-          }
-          getStore('layout.webview.ref')?.executeJavaScript('window.align()')
-          const wv = extWindow.document.querySelector('webview')
-          if (wv) {
-            const { width: wvWidth, height: wvHeight } = wv.getBoundingClientRect()
-            dispatch(
-              createLayoutWebviewSizeAction({ windowWidth: wvWidth, windowHeight: wvHeight }),
+            windowsManualResizePendingRef.current = false
+            windowsResizeCorrectionRef.current = {
+              attempts: 0,
+              requested: target,
+              target,
+            }
+            curWindow.setContentSize(target.width, target.height)
+            expireWindowsResizeState()
+          } else if (windowsResizeCorrectionRef.current) {
+            // Keep the original manual-resize target immutable. Electron may
+            // subtract a DPI-scaled frame inset from the resulting viewport,
+            // so compensate the measured error without turning that smaller
+            // viewport into the next target. The retry cap guarantees that an
+            // unexpected platform response can never recreate the old loop.
+            const correction = windowsResizeCorrectionRef.current
+            const actual = {
+              width: Math.round(extWindow.innerWidth * latestZoom.current),
+              height: Math.round(extWindow.innerHeight * latestZoom.current),
+            }
+            const compensated = calculateCompensatedContentSize(
+              correction.target,
+              actual,
+              correction.requested,
             )
+            if (!compensated || correction.attempts >= WINDOWS_RESIZE_CORRECTION_LIMIT) {
+              clearWindowsResizeState()
+            } else {
+              windowsResizeCorrectionRef.current = {
+                ...correction,
+                attempts: correction.attempts + 1,
+                requested: compensated,
+              }
+              curWindow.setContentSize(compensated.width, compensated.height)
+              expireWindowsResizeState()
+            }
           }
-        }, 200),
-      )
+        }
+        getStore('layout.webview.ref')?.executeJavaScript('window.align()')
+        const wv = extWindow?.document.querySelector('webview')
+        if (wv) {
+          const { width: wvWidth, height: wvHeight } = wv.getBoundingClientRect()
+          dispatch(createLayoutWebviewSizeAction({ windowWidth: wvWidth, windowHeight: wvHeight }))
+        }
+      }, 200)
+
+      extWindow?.addEventListener('resize', handleResize)
+      cleanupResizeHandlers = () => {
+        curWindow?.off('will-resize', handleWillResize)
+        extWindow.removeEventListener('resize', handleResize)
+        handleResize.cancel()
+      }
 
       extWindow!.document.head.innerHTML = `<meta charset="utf-8">
 <meta http-equiv="Content-Security-Policy" content="script-src https://www.google-analytics.com 'self' file://* 'unsafe-inline'">
@@ -366,6 +459,8 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
     })
 
     return () => {
+      clearWindowsResizeState()
+      cleanupResizeHandlers?.()
       unwatchBoundsRef.current?.()
       unwatchBoundsRef.current = undefined
       try {
@@ -394,6 +489,7 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
   // Effect: apply windowUseFixedResolution changes after window is open
   useEffect(() => {
     if (!loaded || !currentWindowRef.current) return
+    clearWindowsResizeState()
     currentWindowRef.current.setResizable(!windowUseFixedResolution)
     if (windowUseFixedResolution) {
       const w = latestWindowWidth.current
@@ -403,16 +499,17 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       )
     }
     dispatch(createLayoutWebviewWindowUseFixedResolutionAction(windowUseFixedResolution))
-  }, [windowUseFixedResolution, loaded, getYOffset])
+  }, [windowUseFixedResolution, loaded, getYOffset, clearWindowsResizeState])
 
   // Effect: apply windowWidth changes after window is open
   useEffect(() => {
     if (!loaded || !currentWindowRef.current) return
+    clearWindowsResizeState()
     currentWindowRef.current.setContentSize(
       windowWidth,
       Math.round((windowWidth / 1200) * 720 + getYOffset() * latestZoom.current),
     )
-  }, [windowWidth, loaded, getYOffset])
+  }, [windowWidth, loaded, getYOffset, clearWindowsResizeState])
 
   // eslint-disable-next-line react-hooks/refs
   if (!loaded || !externalWindowRef.current || !checkBrowserWindowExistence()) return null
