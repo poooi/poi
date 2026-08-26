@@ -313,10 +313,15 @@ const KanGameWindowWrapperInner = ({ titleExtra, pinned, windowRefsRef }: InnerP
       )
       curWindow?.setClosable(false)
       curWindow?.setResizable(!initialWindowUseFixedResolution)
-      curWindow?.setAspectRatio(1200 / 720, {
-        width: 0,
-        height: Math.round(getYOffset() * latestZoom.current),
-      })
+      // Windows frameless thick-frame windows have DPI-dependent native insets
+      // that make Electron's aspect-ratio constraint visually inaccurate while
+      // dragging. Linux already uses the explicit resize correction below.
+      if (process.platform === 'darwin') {
+        curWindow?.setAspectRatio(1200 / 720, {
+          width: 0,
+          height: Math.round(getYOffset() * latestZoom.current),
+        })
+      }
 
       // `will-resize` is emitted only for manual resizes. Programmatic
       // setContentSize calls do not reopen this gate, which prevents the
