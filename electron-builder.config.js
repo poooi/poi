@@ -49,10 +49,8 @@ module.exports = {
     publish: [],
     icon: 'assets/icons/poi.ico',
     verifyUpdateCodeSignature: false,
-    target: [
-      ...createTargets(isFullTarget ? ['nsis', '7z'] : ['7z']),
-      { target: '7z', arch: 'ia32' },
-    ],
+    // Electron dropped Windows 32-bit builds after 36, so no ia32 target here.
+    target: createTargets(isFullTarget ? ['nsis', '7z'] : ['7z']),
   },
   linux: {
     publish: [],
