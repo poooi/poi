@@ -11,6 +11,27 @@
   <link rel="stylesheet" id="fontawesome-css">
   <script>
     window.isMain = true
+    /*
+      install before babel-hook so it covers the earliest possible failures
+      (e.g. views/env's own top-level requires).
+      This exists because:
+      - Chromium's default console forwarding truncates uncaught errors
+        to message + source line with no stack
+      -  and lib/sentry's init() runs too late in views/env to catch a crash in its own import chain.
+      console.error here flows into stderr to help with troubleshooting.
+     */
+    window.addEventListener('error', (e) => {
+      console.error(
+        '[poi] uncaught error during startup:',
+        e.error && e.error.stack ? e.error.stack : e.message,
+      )
+    })
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error(
+        '[poi] unhandled rejection during startup:',
+        e.reason && e.reason.stack ? e.reason.stack : e.reason,
+      )
+    })
     require('./babel-hook')(require('./babel-register.config'));
     require('./views/env');
   </script>
