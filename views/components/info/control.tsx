@@ -140,12 +140,16 @@ export const PoiControl = () => {
       if (toClipboard) {
         // Writing a NativeImage from the renderer leaves the clipboard empty,
         // so let the main process build the image and write it.
-        const copied = await ipcRenderer.invoke('screenshot::copy', dataURL)
-        if (!copied) {
-          handleScreenshotFailure(new Error('Failed to write the screenshot to the clipboard'))
-          return
+        try {
+          const copied = await ipcRenderer.invoke('screenshot::copy', dataURL)
+          if (!copied) {
+            handleScreenshotFailure(new Error('Failed to write the screenshot to the clipboard'))
+            return
+          }
+          success(propsRef.current.t('screenshot saved to clipboard'))
+        } catch (error) {
+          handleScreenshotFailure(error)
         }
-        success(propsRef.current.t('screenshot saved to clipboard'))
       } else {
         const image = nativeImage.createFromDataURL(dataURL)
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
