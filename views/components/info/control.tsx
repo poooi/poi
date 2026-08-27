@@ -16,6 +16,7 @@ import { getStore } from 'views/create-store'
 import { config } from 'views/env'
 import { toggleModal } from 'views/env-parts/modal'
 import { error, success } from 'views/services/alert'
+import { writeClipboardImage } from 'views/services/clipboard'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 const { openExternal } = shell
@@ -138,10 +139,10 @@ export const PoiControl = () => {
       )!
       const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
       if (toClipboard) {
-        // Writing a NativeImage from the renderer leaves the clipboard empty,
-        // so let the main process build the image and write it.
+        // The renderer has no clipboard module in Electron 44, so the main
+        // process builds the image and writes it.
         try {
-          const copied = await ipcRenderer.invoke('screenshot::copy', dataURL)
+          const copied = await writeClipboardImage(dataURL)
           if (!copied) {
             handleScreenshotFailure(new Error('Failed to write the screenshot to the clipboard'))
             return
