@@ -43,6 +43,7 @@ const shortcut: typeof shortcutType = require('./lib/shortcut')
 require('./lib/updater')
 require('./lib/tray')
 require('./lib/screenshot')
+require('./lib/clipboard')
 require('./lib/native-theme-helper')
 
 // Register the poi-cache:// scheme before app `ready` (required for privileged schemes).

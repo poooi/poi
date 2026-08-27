@@ -3,7 +3,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Position, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { shell, clipboard, nativeImage, ipcRenderer, type IpcRendererEvent } from 'electron'
+import { shell, nativeImage, ipcRenderer, type IpcRendererEvent } from 'electron'
 import fs from 'fs-extra'
 import { padStart } from 'lodash'
 import path from 'path'
@@ -16,6 +16,7 @@ import { getStore } from 'views/create-store'
 import { config } from 'views/env'
 import { toggleModal } from 'views/env-parts/modal'
 import { error, success } from 'views/services/alert'
+import { writeClipboardImage } from 'views/services/clipboard'
 import { gameRefreshPage, gameReload } from 'views/services/utils'
 
 const { openExternal } = shell
@@ -137,11 +138,21 @@ export const PoiControl = () => {
         `${remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}`,
       )!
       const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
-      const image = nativeImage.createFromDataURL(dataURL)
       if (toClipboard) {
-        clipboard.writeImage(image)
-        success(propsRef.current.t('screenshot saved to clipboard'))
+        // The renderer has no clipboard module in Electron 44, so the main
+        // process builds the image and writes it.
+        try {
+          const copied = await writeClipboardImage(dataURL)
+          if (!copied) {
+            handleScreenshotFailure(new Error('Failed to write the screenshot to the clipboard'))
+            return
+          }
+          success(propsRef.current.t('screenshot saved to clipboard'))
+        } catch (error) {
+          handleScreenshotFailure(error)
+        }
       } else {
+        const image = nativeImage.createFromDataURL(dataURL)
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
         const date = formatDate(new Date())
         const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)

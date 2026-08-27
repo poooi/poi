@@ -3,9 +3,9 @@ import type { Plugin } from 'views/services/plugin-manager'
 
 import { TextArea, Button, Intent } from '@blueprintjs/core'
 import * as Sentry from '@sentry/electron/renderer'
-import { clipboard } from 'electron'
 import React, { Component } from 'react'
 import { useTranslation } from 'react-i18next'
+import { copyText } from 'views/services/clipboard'
 
 interface Props {
   plugin: Plugin
@@ -46,7 +46,7 @@ class PluginSettingWrapperInner extends Component<InnerProps, State> {
   handleCopy = (): void => {
     const { error, info } = this.state
     if (!error || !info) return
-    clipboard.writeText([error.stack, info.componentStack].join('\n'))
+    copyText([error.stack, info.componentStack].join('\n'))
   }
 
   render(): React.ReactNode {
