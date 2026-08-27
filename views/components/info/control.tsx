@@ -3,7 +3,7 @@ import type { RootState } from 'views/redux/reducer-factory'
 
 import { Button, Position, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
-import { shell, clipboard, nativeImage, ipcRenderer, type IpcRendererEvent } from 'electron'
+import { shell, nativeImage, ipcRenderer, type IpcRendererEvent } from 'electron'
 import fs from 'fs-extra'
 import { padStart } from 'lodash'
 import path from 'path'
@@ -137,11 +137,17 @@ export const PoiControl = () => {
         `${remote.getGlobal('DEFAULT_SCREENSHOT_PATH')}`,
       )!
       const usePNG = config.get('poi.misc.screenshot.format', 'png') === 'png'
-      const image = nativeImage.createFromDataURL(dataURL)
       if (toClipboard) {
-        clipboard.writeImage(image)
+        // Writing a NativeImage from the renderer leaves the clipboard empty,
+        // so let the main process build the image and write it.
+        const copied = await ipcRenderer.invoke('screenshot::copy', dataURL)
+        if (!copied) {
+          handleScreenshotFailure(new Error('Failed to write the screenshot to the clipboard'))
+          return
+        }
         success(propsRef.current.t('screenshot saved to clipboard'))
       } else {
+        const image = nativeImage.createFromDataURL(dataURL)
         const buf = usePNG ? image.toPNG() : image.toJPEG(80)
         const date = formatDate(new Date())
         const filename = path.join(screenshotPath, `${date}.${usePNG ? 'png' : 'jpg'}`)
