@@ -11,6 +11,35 @@
   <link rel="stylesheet" id="fontawesome-css">
   <script>
     window.isMain = true
+    /*
+      install before babel-hook so it covers the earliest possible failures
+      (e.g. views/env's own top-level requires), taging `[init]` as listeners installed during init
+
+      This exists because:
+      - Chromium's default console forwarding truncates uncaught errors
+        to message + source line with no stack
+      -  and lib/sentry's init() runs too late in views/env to catch a crash in its own import chain.
+
+      console.error here flows into stderr to help with troubleshooting.
+
+     */
+    window.addEventListener('error', (e) => {
+      console.error(
+        '[init] uncaught error:',
+        e.error && e.error.stack ? e.error.stack : e.message,
+      )
+    })
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error(
+        '[init] unhandled rejection:',
+        e.reason && e.reason.stack ? e.reason.stack : e.reason,
+      )
+    })
+    /*
+      the lack of listener removal is intentional, as:
+      - this meant to last lifespan in case uncaught issues fallthough.
+      - no tangible benefit bookkeeping function refs as this file **is** the entry and exit.
+     */
     require('./babel-hook')(require('./babel-register.config'));
     require('./views/env');
   </script>
