@@ -20,7 +20,13 @@ import { getStore } from 'views/create-store'
 import { ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { recoveryEndTime } from 'views/redux/timers/cond'
-import { getFleetSpeed, getSaku33, getSpeedLabel, getTyku } from 'views/utils/game-utils'
+import {
+  getFleetSpeed,
+  getSaku33,
+  getCombinedSaku33,
+  getSpeedLabel,
+  getTyku,
+} from 'views/utils/game-utils'
 import { CountdownNotifier } from 'views/utils/notifiers'
 import {
   basicSelector,
@@ -261,15 +267,47 @@ const combinedSakuSelector = createSelector(
     mainSlotCount,
     escortSlotCount,
   ) => {
-    const shipsData = [...mainShips, ...escortShips]
-    const equipsData = [...mainEquips, ...escortEquips]
-    // the admiral term is subtracted once, empty slots are counted over both fleets
-    const slotCount = mainSlotCount + escortSlotCount
     return {
-      saku33: getSaku33(shipsData, equipsData, admiralLevel, 1.0, slotCount),
-      saku33x2: getSaku33(shipsData, equipsData, admiralLevel, 2.0, slotCount),
-      saku33x3: getSaku33(shipsData, equipsData, admiralLevel, 3.0, slotCount),
-      saku33x4: getSaku33(shipsData, equipsData, admiralLevel, 4.0, slotCount),
+      saku33: getCombinedSaku33(
+        mainShips,
+        mainEquips,
+        escortShips,
+        escortEquips,
+        admiralLevel,
+        1.0,
+        mainSlotCount,
+        escortSlotCount,
+      ),
+      saku33x2: getCombinedSaku33(
+        mainShips,
+        mainEquips,
+        escortShips,
+        escortEquips,
+        admiralLevel,
+        2.0,
+        mainSlotCount,
+        escortSlotCount,
+      ),
+      saku33x3: getCombinedSaku33(
+        mainShips,
+        mainEquips,
+        escortShips,
+        escortEquips,
+        admiralLevel,
+        3.0,
+        mainSlotCount,
+        escortSlotCount,
+      ),
+      saku33x4: getCombinedSaku33(
+        mainShips,
+        mainEquips,
+        escortShips,
+        escortEquips,
+        admiralLevel,
+        4.0,
+        mainSlotCount,
+        escortSlotCount,
+      ),
     }
   },
 )
