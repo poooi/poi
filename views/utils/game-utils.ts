@@ -720,7 +720,7 @@ export function getSaku33(
           equipSaku += $equip.api_saku * 0.8
           break
         case 9:
-          equipSaku += $equip.api_saku * 1.0
+          equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.0
           break
         case 10:
           equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 1.2
@@ -732,7 +732,13 @@ export function getSaku33(
           equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
           break
         case 13:
-          equipSaku += ($equip.api_saku + 1.25 * Math.sqrt(_equip.api_level || 0)) * 0.6
+          equipSaku += ($equip.api_saku + 1.4 * Math.sqrt(_equip.api_level || 0)) * 0.6
+          break
+        case 26:
+          equipSaku += ($equip.api_saku + 1.0 * Math.sqrt(_equip.api_level || 0)) * 0.6
+          break
+        case 41:
+          equipSaku += ($equip.api_saku + 1.2 * Math.sqrt(_equip.api_level || 0)) * 0.6
           break
         default:
           equipSaku += $equip.api_saku * 0.6
@@ -750,6 +756,32 @@ export function getSaku33(
     item: parseFloat(equipSaku.toFixed(2)),
     teitoku: parseFloat(teitokuSaku.toFixed(2)),
     total: parseFloat(totalSaku.toFixed(2)),
+  }
+}
+
+export function getCombinedSaku33(
+  mainShipsData: [APIShip, APIMstShip][],
+  mainEquipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
+  escortShipsData: [APIShip, APIMstShip][],
+  escortEquipsData: ([Equip, APIMstSlotitem, number | undefined] | undefined)[][],
+  teitokuLv: number,
+  mapModifier: number | undefined,
+  mainSlotCount = 6,
+  escortSlotCount = 6,
+) {
+  const mainSaku33 = getSaku33(mainShipsData, mainEquipsData, teitokuLv, mapModifier, mainSlotCount)
+  const escortSaku33 = getSaku33(
+    escortShipsData,
+    escortEquipsData,
+    teitokuLv,
+    mapModifier,
+    escortSlotCount,
+  )
+  return {
+    ship: mainSaku33.ship + escortSaku33.ship,
+    item: mainSaku33.item + escortSaku33.item,
+    teitoku: mainSaku33.teitoku + escortSaku33.teitoku,
+    total: mainSaku33.total + escortSaku33.total,
   }
 }
 
