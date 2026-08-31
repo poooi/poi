@@ -302,7 +302,7 @@ const mapReminderSelector = createSelector(
 
 export const PoiMapReminder = () => {
   const { t } = useTranslation()
-  const { mapHp, mapData, nextEnemy, currentNode, mapId, maps, pinminimap } = useSelector(
+  const { mapHp, mapData, nextEnemy, currentNode, mapId, maps, pinminimap, rank } = useSelector(
     (state: RootState) => mapReminderSelector(state),
   )
 
@@ -400,7 +400,7 @@ export const PoiMapReminder = () => {
           )}
           <Alert>
             <span id="map-reminder-area">
-              {getMapText(mapData, ['', t('丁'), t('丙'), t('乙'), t('甲')], undefined)}
+              {getMapText(mapData, ['', t('丁'), t('丙'), t('乙'), t('甲')], rank)}
             </span>
           </Alert>
         </MapReminder>
