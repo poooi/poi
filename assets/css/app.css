@@ -68,6 +68,31 @@ poi-main {
   transform: translateX(4px);
 }
 
+/* The toolbar's alternate-action button slides out of the button it belongs to
+   instead of fading in, so it reads as coming from that button. */
+.poi-control-alt-portal .bp6-popover-transition-container.bp6-popover-appear,
+.poi-control-alt-portal .bp6-popover-transition-container.bp6-popover-enter,
+.poi-control-alt-portal .bp6-popover-transition-container.bp6-popover-exit-active {
+  opacity: 1;
+}
+
+.poi-control-alt-portal .bp6-popover-appear .bp6-popover,
+.poi-control-alt-portal .bp6-popover-enter .bp6-popover,
+.poi-control-alt-portal .bp6-popover-exit-active .bp6-popover {
+  transform: translateY(100%);
+}
+
+.poi-control-alt-portal .bp6-popover-appear-active .bp6-popover,
+.poi-control-alt-portal .bp6-popover-enter-active .bp6-popover {
+  transform: translateY(0);
+}
+
+.poi-control-alt-portal .bp6-popover-appear-active .bp6-popover,
+.poi-control-alt-portal .bp6-popover-enter-active .bp6-popover,
+.poi-control-alt-portal .bp6-popover-exit-active .bp6-popover {
+  transition: transform 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
+}
+
 .bp6-html-select select,
 .bp6-select select {
   background-image: none;
