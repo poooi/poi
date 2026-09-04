@@ -1,7 +1,7 @@
 import type * as TouchBarUtil from 'lib/touchbar'
 import type { RootState } from 'views/redux/reducer-factory'
 
-import { Button, Position, Tooltip } from '@blueprintjs/core'
+import { Button, Icon, type IconName, Popover, Position, Tooltip } from '@blueprintjs/core'
 import * as remote from '@electron/remote'
 import { shell, nativeImage, ipcRenderer, type IpcRendererEvent } from 'electron'
 import fs from 'fs-extra'
@@ -52,6 +52,141 @@ const PoiControlInner = styled.div`
   flex: 1;
 `
 
+const ContextIcon = styled.span`
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .context-icon-badge {
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    display: flex;
+    padding: 1px;
+    border-radius: 50%;
+    background-color: var(--bp-intent-primary-rest);
+    color: var(--bp-intent-primary-foreground);
+  }
+`
+
+/**
+ * The alternate action of a toolbar button is bound to right click, which is
+ * undiscoverable and unreachable on a touchpad-only setup. Reuse the base icon
+ * so the popped-up button still reads as "the same button", and badge it with
+ * the icon of what the alternate action actually does.
+ */
+const AlternateIcon = ({ icon, badge }: { icon: IconName; badge: IconName }) => (
+  <ContextIcon>
+    <Icon icon={icon} />
+    <Icon className="context-icon-badge" icon={badge} size={10} />
+  </ContextIcon>
+)
+
+interface ControlItem {
+  onClick: (event: React.MouseEvent) => void
+  onContextMenu?: (event: React.MouseEvent) => void
+  label: string
+  icon: IconName
+  /** Label of the right-click action, shown on the popped-up alternate button. */
+  altLabel?: string
+  /** Badge overlaid on the alternate button's icon. */
+  altIcon?: IconName
+}
+
+/**
+ * Both overlays open on the same delay, so the alternate button arrives with
+ * the tooltip rather than trailing behind it.
+ */
+const HOVER_OPEN_DELAY = 100
+
+/** Slide duration of the alternate popup; mirrored in `.poi-control-alt-portal`. */
+const TRANSITION_DURATION = 100
+
+/**
+ * Distance from the button to its tooltip. A column with an alternate action
+ * clears the popup that occupies the space right above the button; the popup
+ * opens on the same delay as the tooltip, so this stays constant instead of
+ * following the popup's open state and moving the tooltip mid-hover.
+ */
+const offsetModifiers = (distance: number) => ({
+  offset: { options: { offset: [0, distance] as [number, number] } },
+})
+const alternateOffset = offsetModifiers(42)
+const plainOffset = offsetModifiers(8)
+
+const ControlButton = ({
+  item: { onClick, onContextMenu, label, icon, altLabel, altIcon },
+  disabled,
+  activeLabel,
+  onLabel,
+  onLabelEnd,
+}: {
+  item: ControlItem
+  /** Suppress both overlays while the toolbar is sliding open or shut. */
+  disabled: boolean
+  /** Label this column is currently showing, or null when another column is. */
+  activeLabel: string | null
+  onLabel: (column: string, text: string) => void
+  onLabelEnd: () => void
+}) => {
+  const alternate = onContextMenu && altIcon && (
+    <Button
+      aria-label={altLabel ?? label}
+      icon={<AlternateIcon icon={icon} badge={altIcon} />}
+      onClick={onContextMenu}
+      onMouseEnter={() => onLabel(label, altLabel ?? label)}
+      onMouseLeave={onLabelEnd}
+      onFocus={() => onLabel(label, altLabel ?? label)}
+      onBlur={onLabelEnd}
+      minimal
+    />
+  )
+
+  // The tooltip has to sit outside the popover, not inside it: Popover
+  // force-disables a Tooltip child of its own while it is open, which would
+  // kill the label the moment the alternate button appears. Both wrap the
+  // button in a target element of their own, so the tooltip still anchors to
+  // the button's column, and neither clones away the handlers below.
+  return (
+    <Tooltip
+      // never empty: an empty content makes Popover skip the overlay entirely
+      content={activeLabel ?? label}
+      isOpen={!disabled && activeLabel != null}
+      position={Position.TOP}
+      modifiers={alternate ? alternateOffset : plainOffset}
+    >
+      <Popover
+        content={alternate || undefined}
+        disabled={disabled || !alternate}
+        interactionKind="hover"
+        placement="top"
+        minimal
+        portalClassName="poi-control-alt-portal"
+        hoverOpenDelay={HOVER_OPEN_DELAY}
+        // leaves with the tooltip; travel between the button and the popup is
+        // already covered by Popover's own event-queue flush, not by this delay
+        hoverCloseDelay={0}
+        // the outgoing popup has to be gone before the next column's opens,
+        // otherwise two alternate buttons are on screen at once
+        transitionDuration={TRANSITION_DURATION}
+      >
+        <Button
+          aria-label={label}
+          icon={icon}
+          onClick={onClick}
+          onContextMenu={onContextMenu}
+          onMouseEnter={() => onLabel(label, label)}
+          onMouseLeave={onLabelEnd}
+          onFocus={() => onLabel(label, label)}
+          onBlur={onLabelEnd}
+          minimal
+        />
+      </Popover>
+    </Tooltip>
+  )
+}
+
 const formatDate = (date: Date): string => {
   const pad2 = (x: number) => padStart(String(x), 2, '0')
   const yyyy = date.getFullYear()
@@ -81,10 +216,30 @@ export const PoiControl = () => {
 
   const [extend, setExtend] = useState(false)
   const [transition, setTransition] = useState(false)
+  // Which column owns the tooltip, and what it reads. Held for the whole row so
+  // that claiming it for one column drops it from the previous one in the same
+  // update -- per-column state let both linger on screen together.
+  const [activeColumn, setActiveColumn] = useState<[string, string] | null>(null)
+  const labelTimeoutRef = useRef(0)
   const editableTimeoutRef = useRef(0)
   const propsRef = useRef({ muted, editable, t })
   // eslint-disable-next-line react-hooks/refs
   propsRef.current = { muted, editable, t }
+
+  const handleLabel = useCallback((column: string, text: string) => {
+    clearTimeout(labelTimeoutRef.current)
+    labelTimeoutRef.current = window.setTimeout(
+      () => setActiveColumn([column, text]),
+      HOVER_OPEN_DELAY,
+    )
+  }, [])
+
+  // Reaching the alternate button means leaving the main one. Hold the label
+  // across that gap so it hands over instead of closing and reopening.
+  const handleLabelEnd = useCallback(() => {
+    clearTimeout(labelTimeoutRef.current)
+    labelTimeoutRef.current = window.setTimeout(() => setActiveColumn(null), HOVER_OPEN_DELAY)
+  }, [])
 
   const disableEditableMsg = useCallback(() => {
     clearTimeout(editableTimeoutRef.current)
@@ -407,6 +562,7 @@ export const PoiControl = () => {
       ipcRenderer.addListener('touchbar', touchbarListener)
     }
     return () => {
+      clearTimeout(labelTimeoutRef.current)
       config.removeListener('config.set', handleConfigChange)
       if (process.platform === 'darwin') {
         ipcRenderer.removeListener('touchbar', touchbarListener)
@@ -425,34 +581,35 @@ export const PoiControl = () => {
   }, [muted, editable])
 
   const listItems = useMemo(() => {
-    const list = [
+    const list: ControlItem[] = [
       {
         onClick: handleOpenDevTools,
         onContextMenu: handleOpenWebviewDevTools,
         label: t('Developer Tools'),
         icon: 'console',
+        altLabel: t('Game view developer tools'),
+        altIcon: 'application',
       },
       {
         onClick: () => handleCapturePage(false),
         onContextMenu: () => handleCapturePage(true),
         label: t('Take a screenshot'),
         icon: 'camera',
+        altLabel: t('Copy screenshot to clipboard'),
+        altIcon: 'clipboard',
       },
       {
         onClick: handleSetMuted,
-        onContextMenu: null,
         label: muted ? t('Volume on') : t('Volume off'),
         icon: muted ? 'volume-off' : 'volume-up',
       },
       {
         onClick: handleOpenCacheFolder,
-        onContextMenu: null,
         label: t('Open cache dir'),
         icon: 'social-media',
       },
       {
         onClick: handleOpenScreenshotFolder,
-        onContextMenu: null,
         label: t('Open screenshot dir'),
         icon: 'media',
       },
@@ -461,10 +618,11 @@ export const PoiControl = () => {
         onContextMenu: handleUnlockWebview,
         label: t('Auto adjust'),
         icon: 'fullscreen',
+        altLabel: t('Unlock game view'),
+        altIcon: 'unlock',
       },
       {
         onClick: handleSetEditable,
-        onContextMenu: null,
         label: editable ? t('Lock panel') : t('Unlock panel'),
         icon: editable ? 'unlock' : 'lock',
       },
@@ -473,19 +631,29 @@ export const PoiControl = () => {
         onContextMenu: gameReload,
         label: t('Refresh game'),
         icon: 'refresh',
+        altLabel: t('Reload game'),
+        altIcon: 'application',
       },
     ]
     // eslint-disable-next-line react-hooks/refs -- handlers read propsRef in events only, not during render
-    return list.map(({ label, ...props }) => (
-      <Tooltip key={label} position={Position.TOP_LEFT} content={label} disabled={transition}>
-        <Button {...(props as object)} minimal />
-      </Tooltip>
+    return list.map((item) => (
+      <ControlButton
+        key={item.label}
+        item={item}
+        disabled={transition}
+        activeLabel={activeColumn?.[0] === item.label ? activeColumn[1] : null}
+        onLabel={handleLabel}
+        onLabelEnd={handleLabelEnd}
+      />
     ))
   }, [
     t,
     muted,
     editable,
     transition,
+    activeColumn,
+    handleLabel,
+    handleLabelEnd,
     handleOpenDevTools,
     handleOpenWebviewDevTools,
     handleCapturePage,
