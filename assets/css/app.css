@@ -93,6 +93,18 @@ poi-main {
   transition: transform 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
 }
 
+/* Mid-slide the popup lies over the button it came from, so a click landing in
+   that window would fire the alternate action instead of the primary one. Let
+   it through until the popup has settled. */
+.poi-control-alt-portal .bp6-popover-appear .bp6-popover,
+.poi-control-alt-portal .bp6-popover-appear-active .bp6-popover,
+.poi-control-alt-portal .bp6-popover-enter .bp6-popover,
+.poi-control-alt-portal .bp6-popover-enter-active .bp6-popover,
+.poi-control-alt-portal .bp6-popover-exit .bp6-popover,
+.poi-control-alt-portal .bp6-popover-exit-active .bp6-popover {
+  pointer-events: none;
+}
+
 .bp6-html-select select,
 .bp6-select select {
   background-image: none;

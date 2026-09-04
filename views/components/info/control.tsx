@@ -132,6 +132,7 @@ const ControlButton = ({
 }) => {
   const alternate = onContextMenu && altIcon && (
     <Button
+      aria-label={altLabel ?? label}
       icon={<AlternateIcon icon={icon} badge={altIcon} />}
       onClick={onContextMenu}
       onMouseEnter={() => onLabel(label, altLabel ?? label)}
@@ -171,6 +172,7 @@ const ControlButton = ({
         transitionDuration={TRANSITION_DURATION}
       >
         <Button
+          aria-label={label}
           icon={icon}
           onClick={onClick}
           onContextMenu={onContextMenu}
