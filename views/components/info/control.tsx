@@ -130,11 +130,30 @@ const ControlButton = ({
   onLabel: (column: string, text: string) => void
   onLabelEnd: () => void
 }) => {
+  // While it slides, the popup lies over the button it came from, so a click
+  // landing in that window would fire the alternate action when the primary
+  // one was aimed at (or the reverse on the way out). Ignore clicks until it
+  // settles -- blanking the popup's pointer events instead would also blank
+  // the hover tracking that keeps it open and hands the label over.
+  const settledAtRef = useRef(0)
+
+  const handleAlternateClick = useCallback(
+    (event: React.MouseEvent) => {
+      if (Date.now() < settledAtRef.current) return
+      onContextMenu?.(event)
+    },
+    [onContextMenu],
+  )
+
+  const holdClicks = useCallback(() => {
+    settledAtRef.current = Date.now() + TRANSITION_DURATION
+  }, [])
+
   const alternate = onContextMenu && altIcon && (
     <Button
       aria-label={altLabel ?? label}
       icon={<AlternateIcon icon={icon} badge={altIcon} />}
-      onClick={onContextMenu}
+      onClick={handleAlternateClick}
       onMouseEnter={() => onLabel(label, altLabel ?? label)}
       onMouseLeave={onLabelEnd}
       onFocus={() => onLabel(label, altLabel ?? label)}
@@ -170,6 +189,8 @@ const ControlButton = ({
         // the outgoing popup has to be gone before the next column's opens,
         // otherwise two alternate buttons are on screen at once
         transitionDuration={TRANSITION_DURATION}
+        onOpening={holdClicks}
+        onClosing={holdClicks}
       >
         <Button
           aria-label={label}
