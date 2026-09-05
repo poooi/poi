@@ -778,10 +778,10 @@ export function getCombinedSaku33(
     escortSlotCount,
   )
   return {
-    ship: mainSaku33.ship + escortSaku33.ship,
-    item: mainSaku33.item + escortSaku33.item,
-    teitoku: mainSaku33.teitoku + escortSaku33.teitoku,
-    total: mainSaku33.total + escortSaku33.total,
+    ship: parseFloat((mainSaku33.ship + escortSaku33.ship).toFixed(2)),
+    item: parseFloat((mainSaku33.item + escortSaku33.item).toFixed(2)),
+    teitoku: parseFloat((mainSaku33.teitoku + escortSaku33.teitoku).toFixed(2)),
+    total: parseFloat((mainSaku33.total + escortSaku33.total).toFixed(2)),
   }
 }
 
