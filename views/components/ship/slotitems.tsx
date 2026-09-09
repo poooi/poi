@@ -87,7 +87,13 @@ export const Slotitems = memo(({ shipId }: SlotitemsProps) => {
               {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
                 <ALevel
                   className="alv-img"
-                  src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
+                  src={path.join(
+                    'assets',
+                    'svg',
+                    'reconstructed',
+                    'airplane',
+                    `alv${equip.api_alv}.svg`,
+                  )}
                 />
               )}
             </div>
@@ -177,7 +183,13 @@ export const LandbaseSlotitems = memo(
                 {equip.api_alv != null && equip.api_alv >= 1 && equip.api_alv <= 7 && (
                   <ALevel
                     className="alv-img"
-                    src={path.join('assets', 'img', 'airplane', `alv${equip.api_alv}.png`)}
+                    src={path.join(
+                      'assets',
+                      'svg',
+                      'reconstructed',
+                      'airplane',
+                      `alv${equip.api_alv}.svg`,
+                    )}
                   />
                 )}
                 {isMini && (

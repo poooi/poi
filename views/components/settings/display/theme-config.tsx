@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { FolderPickerConfig } from 'views/components/settings/components/folder-picker'
+import { RadioConfig } from 'views/components/settings/components/radio'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
 import { SwitchConfig } from 'views/components/settings/components/switch'
 import { EXROOT } from 'views/env'
@@ -37,7 +38,6 @@ const WrappedLabel = styled(Label)`
 `
 
 const SWITCHES = [
-  { label: 'Use SVG Icon', configName: 'poi.appearance.svgicon', defaultValue: false },
   { label: 'Enable Smooth Transition', configName: 'poi.transition.enable', defaultValue: true },
   {
     label: 'Display detailed fleet info in main panel',
@@ -160,6 +160,22 @@ export const ThemeConfig = () => {
             </FormGroup>
           </FillAvailable>
         )}
+
+        {(['equipmentIcons', 'resourceIcons'] as const).map((key) => (
+          <FillAvailable key={key}>
+            <FormGroup label={t(key === 'equipmentIcons' ? 'Equipment icons' : 'Resource icons')}>
+              <RadioConfig
+                configName={`poi.appearance.${key}`}
+                defaultValue="reconstructed"
+                availableVal={[
+                  { name: t('Original game icons'), value: 'game' },
+                  { name: t('Classic vector icons'), value: 'classic' },
+                  { name: t('Reconstructed vector icons'), value: 'reconstructed' },
+                ]}
+              />
+            </FormGroup>
+          </FillAvailable>
+        ))}
 
         {map(SWITCHES, ({ label, configName, defaultValue }) => (
           <FillAvailable key={configName}>

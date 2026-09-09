@@ -50,7 +50,8 @@ Object.defineProperty(window, 'zoomLevel', {
 })
 Object.defineProperty(window, 'useSVGIcon', {
   get: () => {
-    return config.get('poi.appearance.svgicon', false)
+    // Legacy plugin getter refers to equipment; resources now have a separate choice.
+    return config.get('poi.appearance.equipmentIcons') !== 'game'
   },
 })
 Object.defineProperty(window, 'screenshotPath', {

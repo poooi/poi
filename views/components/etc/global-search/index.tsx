@@ -174,7 +174,9 @@ const ListModeTag = ({ mode }: { mode: EquipListMode }) => {
  */
 const Proficiency = ({ alv }: { alv: number | undefined }) => {
   if (alv == null || alv < 1 || alv > 7) return null
-  return <RowALevel className="alv-img" src={`assets/img/airplane/alv${alv}.png`} alt="" />
+  return (
+    <RowALevel className="alv-img" src={`assets/svg/reconstructed/airplane/alv${alv}.svg`} alt="" />
+  )
 }
 
 /**

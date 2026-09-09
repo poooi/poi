@@ -31,7 +31,7 @@ import {
 } from './styled-components'
 
 const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
-  ${SlotItemContainer} .png {
+  ${SlotItemContainer} .png, ${SlotItemContainer} .reconstructed {
     height: 32px;
     margin-bottom: -3px;
     margin-left: -5px;
@@ -39,7 +39,7 @@ const MiniLandbaseSlotitems = styled(LandbaseSlotitems)`
     width: 32px;
   }
 
-  ${SlotItemContainer} .svg {
+  ${SlotItemContainer} .svg:not(.reconstructed) {
     height: 23px;
     margin-right: 2px;
     width: 26px;

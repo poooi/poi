@@ -1,7 +1,10 @@
+import type { IconSet } from 'lib/icon-set'
+
 import classnames from 'classnames'
 import fs from 'fs-extra'
 import { memoize } from 'lodash'
-import React, { memo, useEffect, useRef, useState, useSyncExternalStore } from 'react'
+import React, { memo, useSyncExternalStore } from 'react'
+import { pathToFileURL } from 'url'
 import { getStore, store } from 'views/create-store'
 import { ROOT } from 'views/env'
 import {
@@ -14,10 +17,9 @@ import {
 let slotitemIconServerIp: string | undefined
 
 const initializeSlotitemIcons = () => {
-  // Only the PNG path reads the atlas, and building it costs a game-server fetch plus a
-  // crop and a base64 encode per icon on the renderer thread. Skip all of it while SVG
-  // icons are on; `setIcon` below re-runs this if the setting is turned off later.
-  if (config.get('poi.appearance.svgicon', false)) {
+  // Only the game equipment set needs a server atlas fetch and crop. Resource
+  // preferences do not trigger equipment work.
+  if (config.get('poi.appearance.equipmentIcons') !== 'game') {
     return
   }
 
@@ -38,47 +40,38 @@ const getClassName = (props: string | undefined, isSVG: boolean) => {
   return classnames(type, props)
 }
 
-class IconConf {
-  private callbacks = new Map<number, (val: boolean) => void>()
-  private unassignedKey = 1
+type IconSetting = 'poi.appearance.equipmentIcons' | 'poi.appearance.resourceIcons'
 
-  setConf = (val: boolean) => this.callbacks.forEach((f) => f(val))
-
-  reg = (func: (val: boolean) => void): number => {
-    const key = this.unassignedKey
-    ++this.unassignedKey
-    this.callbacks.set(key, func)
-    return key
+const subscribeIcons = (onChange: () => void) => {
+  const listener = (path: string) => {
+    if (path === 'poi.appearance.equipmentIcons') initializeSlotitemIcons()
+    if (path === 'poi.appearance.equipmentIcons' || path === 'poi.appearance.resourceIcons')
+      onChange()
   }
-
-  unreg = (key: number) => this.callbacks.delete(key)
-}
-
-const iconConfSetter = new IconConf()
-
-const setIcon = (path: string, val: unknown) => {
-  if (path === 'poi.appearance.svgicon' && typeof val === 'boolean') {
-    iconConfSetter.setConf(val)
-    // Switching to PNG icons is the first point at which the atlas is worth building.
-    initializeSlotitemIcons()
+  config.addListener('config.set', listener)
+  config.addListener('config.delete', listener)
+  return () => {
+    config.removeListener('config.set', listener)
+    config.removeListener('config.delete', listener)
   }
 }
 
-config.addListener('config.set', setIcon)
+const useIconSet = (setting: IconSetting) =>
+  useSyncExternalStore(
+    subscribeIcons,
+    () => config.get(setting),
+    () => config.get(setting),
+  )
 
-window.addEventListener('unload', () => {
-  config.removeListener('config.set', setIcon)
-})
+const availableFile = memoize((iconPath: string) => fs.existsSync(iconPath))
 
-const getAvailableSlotitemSVGPath = memoize((slotitemId: number) => {
-  const iconPath = `${ROOT}/assets/svg/slotitem/${slotitemId}.svg`
-  try {
-    fs.statSync(iconPath)
-    return iconPath
-  } catch (_e) {
-    return null
-  }
-})
+const getSVGPath = (category: 'slotitem' | 'material', id: number, iconSet: IconSet) => {
+  if (iconSet === 'game') return undefined
+  const classic = `${ROOT}/assets/svg/${category}/${id}.svg`
+  const reconstructed = `${ROOT}/assets/svg/reconstructed/${category}/${id}.svg`
+  if (iconSet === 'reconstructed' && availableFile(reconstructed)) return reconstructed
+  return availableFile(classic) ? classic : undefined
+}
 
 interface SlotitemIconProps {
   slotitemId?: number
@@ -87,22 +80,21 @@ interface SlotitemIconProps {
 }
 
 export const SlotitemIcon = memo(({ alt, slotitemId = 0, className }: SlotitemIconProps) => {
-  const [useSVGIcon, setUseSVGIcon] = useState(() => config.get('poi.appearance.svgicon', false))
-  const keyRef = useRef(0)
+  const iconSet = useIconSet('poi.appearance.equipmentIcons')
   useSyncExternalStore(subscribeSlotitemIconMap, getSlotitemIconRevision, getSlotitemIconRevision)
-
-  useEffect(() => {
-    keyRef.current = iconConfSetter.reg(setUseSVGIcon)
-    return () => {
-      iconConfSetter.unreg(keyRef.current)
-    }
-  }, [])
-
-  const src = useSVGIcon
-    ? `file://${getAvailableSlotitemSVGPath(slotitemId) ?? `${ROOT}/assets/svg/slotitem/-1.svg`}`
-    : (getSlotitemIcon(slotitemId)?.src ?? `file://${ROOT}/assets/img/slotitem/-1.png`)
-
-  return <img alt={alt} src={src} className={getClassName(className, useSVGIcon)} />
+  const svgPath = getSVGPath('slotitem', slotitemId, iconSet)
+  const src = svgPath
+    ? pathToFileURL(svgPath).href
+    : (getSlotitemIcon(slotitemId)?.src ?? pathToFileURL(`${ROOT}/assets/img/slotitem/-1.png`).href)
+  return (
+    <img
+      alt={alt}
+      src={src}
+      className={classnames(getClassName(className, Boolean(svgPath)), {
+        reconstructed: svgPath?.includes('/reconstructed/'),
+      })}
+    />
+  )
 })
 SlotitemIcon.displayName = 'SlotitemIcon'
 
@@ -113,25 +105,13 @@ interface MaterialIconProps {
 }
 
 export const MaterialIcon = memo(({ className, alt, materialId = 0 }: MaterialIconProps) => {
-  const [useSVGIcon, setUseSVGIcon] = useState(() => config.get('poi.appearance.svgicon', false))
-  const keyRef = useRef(0)
-
-  useEffect(() => {
-    keyRef.current = iconConfSetter.reg(setUseSVGIcon)
-    return () => {
-      iconConfSetter.unreg(keyRef.current)
-    }
-  }, [])
-
+  const iconSet = useIconSet('poi.appearance.resourceIcons')
+  const svgPath = getSVGPath('material', materialId, iconSet)
   return (
     <img
       alt={alt}
-      src={
-        useSVGIcon
-          ? `file://${ROOT}/assets/svg/material/${materialId}.svg`
-          : `file://${ROOT}/assets/img/material/0${materialId}.png`
-      }
-      className={getClassName(className, useSVGIcon)}
+      src={pathToFileURL(svgPath ?? `${ROOT}/assets/img/material/0${materialId}.png`).href}
+      className={getClassName(className, Boolean(svgPath))}
     />
   )
 })

@@ -84,7 +84,6 @@
   "Editing DMM Cookie Region Flag": "DMM 지역 쿠키 설정",
   "Bypass Google login restriction": "Google 로그인 제한 우회 (권장하지 않습니다. 사용에 따른 책임은 본인에게 있습니다!)",
   "Prevent DMM Network Change Popup": "DMM 네트워크 변경 알림 차단",
-  "Use SVG Icon": "SVG 아이콘 사용",
   "Enable Smooth Transition": "탭을 전환할 때 컨텐츠를 부드럽게 표시",
   "Display detailed fleet info in main panel": "주 패널에 상세한 함대 정보 표시",
   "Plugin update": "플러그인 업데이트",
@@ -242,5 +241,10 @@
   "Open in window": "창에서 열기",
   "Pin": "고정",
   "Unpin": "고정 해제",
-  "Search ships and equipment": "함선・장비 검색"
+  "Search ships and equipment": "함선・장비 검색",
+  "Equipment icons": "장비 아이콘",
+  "Resource icons": "자원 아이콘",
+  "Original game icons": "게임 원본",
+  "Classic vector icons": "기존 벡터",
+  "Reconstructed vector icons": "새로 그린 벡터"
 }

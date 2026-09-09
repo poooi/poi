@@ -84,7 +84,6 @@
   "Editing DMM Cookie Region Flag": "DMMリージョンクッキーを設定する",
   "Bypass Google login restriction": "Googleのログイン制限を回避する（推奨しません、自己責任でお願いします）",
   "Prevent DMM Network Change Popup": "DMMネットワーク変更アラートを阻止する",
-  "Use SVG Icon": "SVGアイコンを使用する",
   "Enable Smooth Transition": "タブの切り替えをスムースに表示する",
   "Display detailed fleet info in main panel": "一覧に詳細な艦隊情報を表示する",
   "Plugin update": "プラグイン更新",
@@ -250,5 +249,10 @@
   "Open in window": "ウィンドウで開く",
   "Pin": "ピン留め",
   "Unpin": "ピン留め解除",
-  "Search ships and equipment": "艦娘・装備を検索"
+  "Search ships and equipment": "艦娘・装備を検索",
+  "Equipment icons": "装備アイコン",
+  "Resource icons": "資源アイコン",
+  "Original game icons": "ゲームオリジナル",
+  "Classic vector icons": "従来のベクター",
+  "Reconstructed vector icons": "再描画ベクター"
 }

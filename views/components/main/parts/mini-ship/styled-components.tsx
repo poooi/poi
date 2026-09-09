@@ -9,14 +9,15 @@ export const SlotItemContainerMini = styled.div`
   flex-flow: row;
   margin-top: 4px;
 
-  .png {
+  .png,
+  .reconstructed {
     height: 32px;
     margin-bottom: -8px;
     margin-top: -8px;
     width: 32px;
   }
 
-  .svg {
+  .svg:not(.reconstructed) {
     height: 20px;
     width: 20px;
   }

@@ -1,5 +1,6 @@
 import type { ResponsiveLayouts as Layouts } from 'react-grid-layout'
 
+import type { IconSet } from './icon-set'
 import type { PluginID } from './utils'
 
 interface LimitFps {
@@ -57,7 +58,8 @@ interface PoiAppearance {
   zoom: number
   theme: string
   colorblindFilter: string
-  svgicon: boolean
+  equipmentIcons: IconSet
+  resourceIcons: IconSet
   textspacingcjk: boolean
   vibrant: number
   customtitlebar: boolean
@@ -339,7 +341,8 @@ const defaultConfig: Config = {
       zoom: 1,
       theme: 'dark',
       colorblindFilter: 'null',
-      svgicon: false,
+      equipmentIcons: 'reconstructed',
+      resourceIcons: 'reconstructed',
       textspacingcjk: true,
       vibrant: 0,
       customtitlebar: process.platform === 'win32' || process.platform === 'linux',
