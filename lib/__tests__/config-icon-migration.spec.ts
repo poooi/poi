@@ -13,9 +13,11 @@ import fs from 'fs-extra'
 describe('stored icon settings at startup', () => {
   it.each([
     [{ svgicon: true }, 'classic', 'classic'],
-    [{ svgicon: false }, 'game', 'game'],
+    [{ svgicon: false }, 'reconstructed', 'reconstructed'],
     [{}, 'reconstructed', 'reconstructed'],
     [{ svgicon: true, resourceIcons: 'game' }, 'classic', 'game'],
+    [{ svgicon: false, resourceIcons: 'game' }, 'reconstructed', 'game'],
+    [{ svgicon: false, equipmentIcons: 'game' }, 'game', 'reconstructed'],
     [{ equipmentIcons: 'classic', resourceIcons: 'reconstructed' }, 'classic', 'reconstructed'],
   ])('loads %j before applying defaults', (appearance, equipment, resource) => {
     jest.mocked(CSON.parseCSONFile).mockReturnValue({ poi: { appearance } })

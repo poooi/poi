@@ -14,11 +14,8 @@ export function migrateIconSettings(stored: unknown): boolean {
     const path = `poi.appearance.${key}`
     const value: unknown = get(stored, path)
     if (!isIconSet(value) && (value !== undefined || typeof legacy === 'boolean')) {
-      set(
-        stored,
-        path,
-        typeof legacy === 'boolean' ? (legacy ? 'classic' : 'game') : 'reconstructed',
-      )
+      // Upgrade game-style icons to HD; retain the old simplified style.
+      set(stored, path, legacy === true ? 'classic' : 'reconstructed')
       changed = true
     }
   }

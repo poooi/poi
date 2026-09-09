@@ -17,7 +17,8 @@ Equipment and resource icons have independent appearance settings:
 `equipmentIcons` and `resourceIcons`. Each accepts `game`, `classic`, or
 `reconstructed`. Both default to `reconstructed` on a new installation.
 Before loading defaults, an existing `svgicon` boolean migrates to both settings:
-`false` becomes `game`, and `true` becomes `classic`. Explicit new selections
+`false` becomes `reconstructed` (upgrading game-style icons to HD), and `true`
+becomes `classic` (keeping the simplified style). Explicit new selections
 survive migration, and the obsolete boolean is removed from the saved config.
 The legacy `window.useSVGIcon` getter follows the equipment selection.
 
