@@ -23,7 +23,9 @@ icon falls back to the classic SVG, then the game PNG. Equipment with no availab
 image uses the existing unknown-item PNG. Reconstructed equipment uses the game
 icon display box because its canvas includes similar whitespace.
 
-Proficiency consumers use SVG directly. Status SVGs replace unused legacy status
+Core proficiency consumers use SVG directly. The original `assets/img/airplane/alv1.png`
+through `alv7.png` remain available for plugins that use those paths, with unchanged
+dimensions and pixels. Status SVGs replace unused legacy status
 PNGs; no core status-image consumer currently exists. Operation notifications
 retain PNGs under `assets/img/operation`, rasterized at 256 px from these SVGs:
 Electron's `nativeImage.createFromPath` rejected the SVGs in the Windows smoke
@@ -38,6 +40,9 @@ The four notification PNGs were generated using resvg and losslessly optimized
 with OxiPNG 10.2.1 (`-o 4 --strip safe`): 292,077 to 180,753 bytes. Decoded pixels
 were checked for equality. These higher-resolution PNGs are larger than the
 previous low-resolution files.
+
+The seven legacy proficiency PNGs also passed through OxiPNG with the same options
+(13,781 to 13,775 bytes); their dimensions and decoded RGBA pixels match the originals.
 
 Maintain artwork in the upstream icon repository. Check equipment and resources
 at 16–24 px and enlarged sizes on light and dark backgrounds. Check other
