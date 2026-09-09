@@ -169,8 +169,8 @@ export const ThemeConfig = () => {
                 defaultValue="reconstructed"
                 availableVal={[
                   { name: t('Original game icons'), value: 'game' },
-                  { name: t('Classic vector icons'), value: 'classic' },
-                  { name: t('Reconstructed vector icons'), value: 'reconstructed' },
+                  { name: t('Simplified icons'), value: 'classic' },
+                  { name: t('HD game-style icons'), value: 'reconstructed' },
                 ]}
               />
             </FormGroup>
