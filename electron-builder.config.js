@@ -36,7 +36,14 @@ module.exports = {
   // app.asar on their own. poi's own code ships compiled .js and has no maps, so these
   // only ever match inside node_modules. Sentry symbols are uploaded separately by
   // build/sentry-symbols.js and do not rely on shipped maps.
-  files: ['**/*', '!**/*.{map,tsbuildinfo,flow}', '!**/node_modules/**/*.md'],
+  files: [
+    '**/*',
+    '!**/*.{map,tsbuildinfo,flow}',
+    '!**/node_modules/**/*.md',
+    // Installer resources are consumed from the source tree, not at runtime.
+    '!assets/icons/poi.icns',
+    '!assets/icons/linux/**',
+  ],
   copyright: `Copyright ©${new Date().getFullYear()} poi Contributors`,
   mac: {
     publish: [],
