@@ -25,7 +25,9 @@ icon display box because its canvas includes similar whitespace.
 
 Core proficiency consumers use SVG directly. The paths `assets/img/airplane/alv1.png`
 through `alv7.png` remain available for plugins. These PNGs are rasterized from the
-new proficiency SVGs at the original 31 × 39 px dimensions. Status SVGs replace unused legacy status
+new proficiency SVGs at 124 × 156 px, retaining the original aspect ratio. The
+[consumer audit](../../../docs/proficiency-icon-consumers.md) confirms that all five
+referencing plugins set an explicit image height. Status SVGs replace unused legacy status
 PNGs; no core status-image consumer currently exists. Operation notifications
 retain PNGs under `assets/img/operation`, rasterized at 256 px from these SVGs:
 Electron's `nativeImage.createFromPath` rejected the SVGs in the Windows smoke
@@ -42,9 +44,8 @@ were checked for equality. These higher-resolution PNGs are larger than the
 previous low-resolution files.
 
 The seven proficiency PNG rasterizations also passed through OxiPNG with the same
-options (6,355 to 3,991 bytes); their decoded RGBA pixels match the unoptimized
-rasterizations. Original-size, 14 px-high, and enlarged previews were inspected
-on light and dark backgrounds.
+options (19,984 to 7,603 bytes); their decoded RGBA pixels match the unoptimized
+rasterizations.
 
 Maintain artwork in the upstream icon repository. Check equipment and resources
 at 16–24 px and enlarged sizes on light and dark backgrounds. Check other
