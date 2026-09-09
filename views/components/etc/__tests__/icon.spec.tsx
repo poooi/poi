@@ -1,3 +1,4 @@
+import fs from 'fs-extra'
 import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 
@@ -52,10 +53,30 @@ describe('icon set resolution', () => {
 
   it('uses the actual fallback format and canvas class for missing vector artwork', () => {
     config.set('poi.appearance.equipmentIcons', 'reconstructed')
-    expect(renderToStaticMarkup(<SlotitemIcon slotitemId={0} />)).toContain('svg/slotitem/0.svg')
-    expect(renderToStaticMarkup(<SlotitemIcon slotitemId={0} />)).toContain('class="svg"')
+    // The classic set has icon 0, but a missing reconstructed icon goes directly to PNG.
+    expect(renderToStaticMarkup(<SlotitemIcon slotitemId={0} />)).toContain('game-icon-0.png')
+    expect(renderToStaticMarkup(<SlotitemIcon slotitemId={0} />)).toContain('class="png"')
     expect(renderToStaticMarkup(<SlotitemIcon slotitemId={998} />)).toContain('game-icon-998.png')
     expect(renderToStaticMarkup(<SlotitemIcon slotitemId={998} />)).toContain('class="png"')
     expect(renderToStaticMarkup(<SlotitemIcon slotitemId={999} />)).toContain('img/slotitem/-1.png')
+  })
+
+  it('falls back to the resource PNG even when the classic SVG exists', () => {
+    const existsSync = fs.existsSync
+    const spy = jest
+      .spyOn(fs, 'existsSync')
+      .mockImplementation((path) =>
+        String(path).endsWith('/reconstructed/material/7.svg') ? false : existsSync(path),
+      )
+    try {
+      config.set('poi.appearance.resourceIcons', 'reconstructed')
+      const material = renderToStaticMarkup(<MaterialIcon materialId={7} />)
+      expect(material).toContain('img/material/07.png')
+      expect(material).toContain('class="png"')
+      config.set('poi.appearance.resourceIcons', 'classic')
+      expect(renderToStaticMarkup(<MaterialIcon materialId={7} />)).toContain('svg/material/7.svg')
+    } finally {
+      spy.mockRestore()
+    }
   })
 })

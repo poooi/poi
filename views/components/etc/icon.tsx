@@ -3,7 +3,7 @@ import type { IconSet } from 'lib/icon-set'
 import classnames from 'classnames'
 import fs from 'fs-extra'
 import { memoize } from 'lodash'
-import React, { memo, useSyncExternalStore } from 'react'
+import React, { memo, useEffect, useSyncExternalStore } from 'react'
 import { pathToFileURL } from 'url'
 import { getStore, store } from 'views/create-store'
 import { ROOT } from 'views/env'
@@ -17,12 +17,6 @@ import {
 let slotitemIconServerIp: string | undefined
 
 const initializeSlotitemIcons = () => {
-  // Only the game equipment set needs a server atlas fetch and crop. Resource
-  // preferences do not trigger equipment work.
-  if (config.get('poi.appearance.equipmentIcons') !== 'game') {
-    return
-  }
-
   const serverIp = getStore('info.server.ip')
   if (!serverIp || serverIp === slotitemIconServerIp) {
     return
@@ -31,9 +25,6 @@ const initializeSlotitemIcons = () => {
   slotitemIconServerIp = serverIp
   void initSlotitemIconMap(serverIp)
 }
-
-store.subscribe(initializeSlotitemIcons)
-initializeSlotitemIcons()
 
 const getClassName = (props: string | undefined, isSVG: boolean) => {
   const type = isSVG ? 'svg' : 'png'
@@ -44,7 +35,6 @@ type IconSetting = 'poi.appearance.equipmentIcons' | 'poi.appearance.resourceIco
 
 const subscribeIcons = (onChange: () => void) => {
   const listener = (path: string) => {
-    if (path === 'poi.appearance.equipmentIcons') initializeSlotitemIcons()
     if (path === 'poi.appearance.equipmentIcons' || path === 'poi.appearance.resourceIcons')
       onChange()
   }
@@ -67,10 +57,9 @@ const availableFile = memoize((iconPath: string) => fs.existsSync(iconPath))
 
 const getSVGPath = (category: 'slotitem' | 'material', id: number, iconSet: IconSet) => {
   if (iconSet === 'game') return undefined
-  const classic = `${ROOT}/assets/svg/${category}/${id}.svg`
-  const reconstructed = `${ROOT}/assets/svg/reconstructed/${category}/${id}.svg`
-  if (iconSet === 'reconstructed' && availableFile(reconstructed)) return reconstructed
-  return availableFile(classic) ? classic : undefined
+  const directory = iconSet === 'reconstructed' ? 'svg/reconstructed' : 'svg'
+  const iconPath = `${ROOT}/assets/${directory}/${category}/${id}.svg`
+  return availableFile(iconPath) ? iconPath : undefined
 }
 
 interface SlotitemIconProps {
@@ -83,6 +72,14 @@ export const SlotitemIcon = memo(({ alt, slotitemId = 0, className }: SlotitemIc
   const iconSet = useIconSet('poi.appearance.equipmentIcons')
   useSyncExternalStore(subscribeSlotitemIconMap, getSlotitemIconRevision, getSlotitemIconRevision)
   const svgPath = getSVGPath('slotitem', slotitemId, iconSet)
+  useEffect(() => {
+    // A missing vector uses the same online atlas as the game icon set. Wait for
+    // server discovery too; the atlas subscription above refreshes the image.
+    if (svgPath || slotitemId <= 0) return
+    const unsubscribe = store.subscribe(initializeSlotitemIcons)
+    initializeSlotitemIcons()
+    return unsubscribe
+  }, [svgPath, slotitemId])
   const src = svgPath
     ? pathToFileURL(svgPath).href
     : (getSlotitemIcon(slotitemId)?.src ?? pathToFileURL(`${ROOT}/assets/img/slotitem/-1.png`).href)

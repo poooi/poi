@@ -22,8 +22,11 @@ survive migration, and the obsolete boolean is removed from the saved config.
 The legacy `window.useSVGIcon` getter follows the equipment selection.
 
 The original PNG and classic SVG sets remain available. A missing reconstructed
-icon falls back to the classic SVG, then the game PNG. Equipment with no available
-image uses the existing unknown-item PNG. Reconstructed equipment uses the game
+icon falls directly back to the game PNG. Missing equipment vectors trigger the
+same online atlas fetch and crop as the game icon set, including when the server
+is discovered after the icon mounts. Bundled PNGs are used while the atlas loads;
+equipment with no available image uses the existing unknown-item PNG. Resource
+fallbacks use the bundled game PNGs. Reconstructed equipment uses the game
 icon display box because its canvas includes similar whitespace.
 
 Core proficiency consumers use SVG directly. The paths `assets/img/airplane/alv1.png`
