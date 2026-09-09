@@ -63,6 +63,8 @@ jobs:
   create-release:
     name: Create GitHub Release
     needs: [linux, macos, windows]
+    # Publish successful platforms even if another platform failed to build.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -75,6 +77,13 @@ jobs:
         with:
           path: artifacts
           merge-multiple: true
+
+      - name: Check for build artifacts
+        run: |
+          if [[ ! -d artifacts ]] || [[ -z "$(find artifacts -type f -print -quit)" ]]; then
+            echo "No successful build artifacts to publish."
+            exit 1
+          fi
 
       - name: Create GitHub Release
         env:
