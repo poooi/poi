@@ -7,6 +7,9 @@ The original game artwork remains the property of its respective rights holders.
 Lettering is outlined; no fonts are required at runtime. See the upstream
 [reconstruction notes](https://github.com/poooi/icons/tree/7230fbb0140cbb7d15e8337481190b82b41c3f4c/docs)
 for references, typography, shared geometry, and review criteria.
+For future artwork, follow the maintained
+[reconstruction guide](https://github.com/poooi/icons/blob/gh-pages/docs/reconstruction-guide.md),
+which consolidates the session's final decisions and supersedes earlier experiments.
 
 ## Integration
 
