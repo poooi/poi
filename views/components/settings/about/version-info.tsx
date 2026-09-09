@@ -137,7 +137,7 @@ export const VersionInfo = () => {
   return (
     <Section>
       <Wrapper>
-        <PoiLogo src={`file://${ROOT}/assets/icons/poi.png`} onClick={playPoiAudio} />
+        <PoiLogo src={`file://${ROOT}/assets/icons/poi.svg`} onClick={playPoiAudio} />
         <Versions>
           <Title>
             <PoiName>{aprilFirst ? 'chiba' : 'poi'}</PoiName> {window.POI_VERSION}

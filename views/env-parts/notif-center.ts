@@ -7,7 +7,7 @@ import { join } from 'path'
 import { config } from './config'
 import { ROOT } from './const'
 
-const NOTIFY_DEFAULT_ICON = join(ROOT, 'assets', 'icons', 'icon.png')
+const NOTIFY_DEFAULT_ICON = join(ROOT, 'assets', 'icons', 'poi.png')
 
 function maybeFunctionString<T>(func: string | ((args: T | T[]) => string), args: T | T[]): string {
   if (typeof func === 'function') return func(args)
