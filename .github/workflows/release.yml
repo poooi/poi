@@ -88,9 +88,15 @@ jobs:
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          BUILD_STATUS: |
+            Initial build results: Linux — ${{ needs.linux.result }}, macOS — ${{ needs.macos.result }}, Windows — ${{ needs.windows.result }}.
+
+            Artifacts from successful builds are published independently; reruns may add remaining platform artifacts.
+            [Build details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         run: |
           gh release create ${{ github.ref_name }} \
             --title "${{ github.ref_name }}" \
             --generate-notes \
+            --notes "$BUILD_STATUS" \
             artifacts/* || \
           gh release upload ${{ github.ref_name }} artifacts/* --clobber
