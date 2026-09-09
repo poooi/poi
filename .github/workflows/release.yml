@@ -63,6 +63,8 @@ jobs:
   create-release:
     name: Create GitHub Release
     needs: [linux, macos, windows]
+    # Publish successful platforms even if another platform failed to build.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,12 +78,25 @@ jobs:
           path: artifacts
           merge-multiple: true
 
+      - name: Check for build artifacts
+        run: |
+          if [[ ! -d artifacts ]] || [[ -z "$(find artifacts -type f -print -quit)" ]]; then
+            echo "No successful build artifacts to publish."
+            exit 1
+          fi
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
+          BUILD_STATUS: |
+            Initial build results: Linux — ${{ needs.linux.result }}, macOS — ${{ needs.macos.result }}, Windows — ${{ needs.windows.result }}.
+
+            Artifacts from successful builds are published independently; reruns may add remaining platform artifacts.
+            [Build details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
         run: |
           gh release create ${{ github.ref_name }} \
             --title "${{ github.ref_name }}" \
             --generate-notes \
+            --notes "$BUILD_STATUS" \
             artifacts/* || \
           gh release upload ${{ github.ref_name }} artifacts/* --clobber

@@ -12,6 +12,7 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         buildType: [x64, arm64]
     steps:
@@ -34,6 +35,7 @@ jobs:
   macos:
     runs-on: macos-latest
     strategy:
+      fail-fast: false
       matrix:
         buildType: [x64, arm64]
     steps:
@@ -66,6 +68,8 @@ jobs:
   upload-to-r2:
     name: Upload to Cloudflare R2
     needs: [linux, macos, windows]
+    # A failed matrix job can still have successful builds with uploaded artifacts.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -74,8 +78,13 @@ jobs:
           path: artifacts
           merge-multiple: true
 
-      - name: List artifacts
-        run: ls -lh artifacts/
+      - name: Check and list build artifacts
+        run: |
+          if [[ ! -d artifacts ]] || [[ -z "$(find artifacts -type f -print -quit)" ]]; then
+            echo "No successful build artifacts to publish."
+            exit 1
+          fi
+          ls -lh artifacts/
 
       - name: Generate SHA256 checksums
         working-directory: artifacts
