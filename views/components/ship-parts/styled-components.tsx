@@ -427,7 +427,8 @@ export const SlotItemContainer = styled.div<{ showOnslot?: boolean; warning?: bo
 
   color: ${(props) => props.warning && props.theme.ORANGE1};
 
-  .png {
+  .png,
+  .reconstructed {
     height: 32px;
     margin-bottom: -3px;
     margin-left: -5px;
@@ -435,7 +436,7 @@ export const SlotItemContainer = styled.div<{ showOnslot?: boolean; warning?: bo
     width: 32px;
   }
 
-  .svg {
+  .svg:not(.reconstructed) {
     transform: scale(1.25);
     transform-origin: bottom left;
     height: 23px;

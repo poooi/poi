@@ -84,7 +84,6 @@
   "Editing DMM Cookie Region Flag": "設定 DMM 地區 Cookie",
   "Bypass Google login restriction": "繞過谷歌登入限制（不建議使用，請自擔風險！）",
   "Prevent DMM Network Change Popup": "遮蔽 DMM 網路變更警告",
-  "Use SVG Icon": "使用 SVG 圖示",
   "Enable Smooth Transition": "啟用平滑切換動畫",
   "Display detailed fleet info in main panel": "在主面板顯示詳細的艦隊資訊",
   "Plugin update": "擴展程式更新",
@@ -250,5 +249,10 @@
   "Open in window": "在新視窗中開啟",
   "Pin": "固定",
   "Unpin": "取消固定",
-  "Search ships and equipment": "搜尋艦娘・裝備"
+  "Search ships and equipment": "搜尋艦娘・裝備",
+  "Equipment icons": "裝備圖示",
+  "Resource icons": "資源圖示",
+  "Original game icons": "遊戲原版",
+  "Simplified icons": "簡潔風格",
+  "HD game-style icons": "原版風格（高清）"
 }

@@ -7,6 +7,7 @@ import path from 'path'
 
 import dbg from './debug'
 import defaultConfig, { type Config } from './default-config'
+import { migrateIconSettings } from './icon-set'
 import { mergeConfig, warn } from './utils'
 
 const { EXROOT } = global
@@ -49,7 +50,10 @@ class PoiConfig {
     this.configData = defaultConfig
     try {
       fs.accessSync(configPath, fs.constants.R_OK | fs.constants.W_OK)
-      this.configData = mergeConfig(defaultConfig, CSON.parseCSONFile(configPath) satisfies Config)
+      const stored: unknown = CSON.parseCSONFile(configPath)
+      const migrated = migrateIconSettings(stored)
+      this.configData = mergeConfig(defaultConfig, stored)
+      if (migrated) this.save()
       dbg.log(`Config loaded from: ${configPath}`)
     } catch (e) {
       dbg.log(e)

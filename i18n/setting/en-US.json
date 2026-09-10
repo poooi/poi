@@ -63,7 +63,6 @@
   "Cache Folder": "Cache Folder",
   "Advanced": "Advanced",
   "Advanced functionalities": "Advanced functionalities",
-  "Use SVG Icon": "Use SVG Icon",
   "Enable Smooth Transition": "Enable Smooth Transition",
   "Other settings": "Other settings",
   "Boss key": "Boss key",
@@ -205,5 +204,10 @@
   "Open in window": "Open in window",
   "Pin": "Pin",
   "Unpin": "Unpin",
-  "Search ships and equipment": "Search ships and equipment"
+  "Search ships and equipment": "Search ships and equipment",
+  "Equipment icons": "Equipment icons",
+  "Resource icons": "Resource icons",
+  "Original game icons": "Original game icons",
+  "Simplified icons": "Simplified icons",
+  "HD game-style icons": "HD game-style icons"
 }

@@ -49,7 +49,13 @@ export const MiniSlotitems = ({ shipId }: { shipId: number }) => {
             {proficiency && (
               <ALevel
                 className="alv-img"
-                src={path.join('assets', 'img', 'airplane', `alv${proficiency}.png`)}
+                src={path.join(
+                  'assets',
+                  'svg',
+                  'reconstructed',
+                  'airplane',
+                  `alv${proficiency}.svg`,
+                )}
               />
             )}
             <OnSlot
