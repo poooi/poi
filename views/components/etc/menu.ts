@@ -133,12 +133,10 @@ if (process.platform !== 'darwin') {
         {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Ctrl+Shift+I',
-          click: (_item, focusedWindow) => {
-            // the titlebar menu invokes click without a window; fall back to the poi window
-            const win =
-              focusedWindow instanceof remote.BrowserWindow
-                ? focusedWindow
-                : remote.getCurrentWindow()
+          click: () => {
+            // remote proxies never pass `instanceof remote.BrowserWindow`, and the titlebar menu
+            // invokes click without a window, so ask for the focused window (e.g. a plugin window)
+            const win = remote.BrowserWindow.getFocusedWindow() ?? remote.getCurrentWindow()
             win.webContents.openDevTools({ mode: 'detach' })
           },
         },
@@ -310,12 +308,10 @@ if (process.platform !== 'darwin') {
         {
           label: i18next.t('menu:Developer Tools'),
           accelerator: 'Alt+CmdOrCtrl+I',
-          click: (_item, focusedWindow) => {
-            // the titlebar menu invokes click without a window; fall back to the poi window
-            const win =
-              focusedWindow instanceof remote.BrowserWindow
-                ? focusedWindow
-                : remote.getCurrentWindow()
+          click: () => {
+            // remote proxies never pass `instanceof remote.BrowserWindow`, and the titlebar menu
+            // invokes click without a window, so ask for the focused window (e.g. a plugin window)
+            const win = remote.BrowserWindow.getFocusedWindow() ?? remote.getCurrentWindow()
             win.webContents.openDevTools({ mode: 'detach' })
           },
         },
