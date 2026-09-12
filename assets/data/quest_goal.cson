@@ -413,7 +413,9 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s":
     description: "2-5 S"
     maparea: [25]
-    escortship: [[['妙高', '那智', '羽黒'], 3]]
+    escortshipId: [
+      [[62, 63, 65], 3] #妙高/那智/羽黒
+    ]
     required: 1
     init: 0
 257: #「水雷戦隊」南西へ！
@@ -527,7 +529,9 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 4
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [[['霰', '霞', '陽炎', '不知火'], 4]]
+    escortshipId: [
+      [[48, 49, 17, 18], 4] #霰/霞/陽炎/不知火
+    ]
     required: 3
     init: 0
 
@@ -535,7 +539,9 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 4
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [[['磯波', '浦波', '綾波', '敷波'], 4]]
+    escortshipId: [
+      [[12, 486, 13, 14], 4] #磯波/浦波/綾波/敷波
+    ]
     required: 3
     init: 0
 
@@ -725,19 +731,25 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@51":
     description: "5-1 S"
     maparea: [51]
-    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
     description: "5-3 S"
     maparea: [53]
-    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
-    escortship: [[['鳥海', '青葉', '衣笠', '加古', '古鷹', '天龍', '夕張'], 4]]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
     required: 1
     init: 0
 
@@ -803,40 +815,44 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@51":
     description: "5-1 S"
     maparea: [51]
-    flagship: ['夕張改二']
-    escortship: [
-      [['由良改二'], 1],
-      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    flagshipId: [622] #夕張改二
+    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
-    flagship: ['夕張改二']
-    escortship: [
-      [['由良改二'], 1],
-      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    flagshipId: [622] #夕張改二
+    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@64":
     description: "6-4 S"
     maparea: [64]
-    flagship: ['夕張改二']
-    escortship: [
-      [['由良改二'], 1],
-      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    flagshipId: [622] #夕張改二
+    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@65":
     description: "6-5 S"
     maparea: [65]
-    flagship: ['夕張改二']
-    escortship: [
-      [['由良改二'], 1],
-      [['睦月','如月', '弥生', '望月', '菊月', '卯月'], 2]
+    flagshipId: [622] #夕張改二
+    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
     required: 1
     init: 0
@@ -879,10 +895,11 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
-    escortship: [
-      [['長波改二', '高波改'], 2]
-      [['長波改二', '沖波改'], 2]
-      [['長波改二', '朝霜改'], 2]
+    # 長波改二 + 高波改/沖波改/朝霜改 のいずれか1隻。AND エントリでそのまま書ける
+    # （旧 escortship では OR を使ってペアを3通り並べる必要があった）
+    escortshipId: [
+      [[543], 1] #長波改二
+      [[345, 359, 344], 1] #高波改/沖波改/朝霜改
     ]
     required: 2
     init: 0
@@ -929,32 +946,32 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@12":
     description: "1-2 A"
     maparea: [12]
-    escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_a@13":
     description: "1-3 A"
     maparea: [13]
-    escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_a@15":
     description: "1-5 A"
     maparea: [15]
-    escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_a@32":
     description: "3-2 A"
     maparea: [32]
-    escortship: [
-      [['朧改', '漣改', '曙改', '潮改'], 4]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
     ]
     required: 1
     init: 0
@@ -1029,32 +1046,32 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@25":
     description: "2-5 S"
     maparea: [25]
-    escortship: [
-      [['綾波改二', '敷波改二'], 2]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@34":
     description: "3-4 S"
     maparea: [34]
-    escortship: [
-      [['綾波改二', '敷波改二'], 2]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@45":
     description: "4-5 S"
     maparea: [45]
-    escortship: [
-      [['綾波改二', '敷波改二'], 2]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
     description: "5-3 S"
     maparea: [53]
-    escortship: [
-      [['綾波改二', '敷波改二'], 2]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
     ]
     required: 1
     init: 0
@@ -1144,7 +1161,7 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@13":
     description: "1-3 A"
     maparea: [13]
-    flagship: ['明石']
+    flagshipId: [182] #明石
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
@@ -1154,7 +1171,7 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "1-6"
     maparea: [16]
     mapcell: [14, 17]
-    flagship: ['明石']
+    flagshipId: [182] #明石
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
@@ -1163,7 +1180,7 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@21":
     description: "2-1 A"
     maparea: [21]
-    flagship: ['明石']
+    flagshipId: [182] #明石
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
@@ -1172,7 +1189,7 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@22":
     description: "2-2 A"
     maparea: [22]
-    flagship: ['明石']
+    flagshipId: [182] #明石
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
@@ -1181,7 +1198,7 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@23":
     description: "2-3 A"
     maparea: [23]
-    flagship: ['明石']
+    flagshipId: [182] #明石
     escortshiptype: [
       [[2], 3] #駆逐3
     ]
@@ -1230,7 +1247,10 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 103
   "practice_win_a":
     description: "演習勝利 A"
-    escortship: [[['朧', '漣', '曙', '潮'], 4]]
+    # 朧・漣・曙・潮（どの改装段階でも可）
+    escortshipId: [
+      [[93, 94, 15, 16], 4] #朧/漣/曙/潮
+    ]
     required: 3
     init: 0
 436: #練習航海及び警備任務を実施せよ！
@@ -1298,28 +1318,28 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@51":
     description: "5-1 S"
     maparea: [51]
-    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    flagshipId: [1035] #吹雪改三（改三護も id 展開で含まれる）
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
     description: "5-3 S"
     maparea: [53]
-    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
-    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@55":
     description: "5-5 S"
     maparea: [55]
-    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
@@ -1327,7 +1347,7 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "7-5-3 S"
     maparea: [75]
     mapcell: [24, 25] #第三ゲージボス Tマス
-    flagship: ['吹雪改三'] #吹雪改三/吹雪改三護(六式)
+    flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
@@ -1335,15 +1355,19 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 104
   "practice_win_a":
     description: "演習勝利 A"
-    escortship: [[['吹雪', '白雪', '初雪', '深雪'], 4]]
+    escortshipId: [
+      [[9, 10, 32, 11], 4] #吹雪/白雪/初雪/深雪
+    ]
     required: 4
     init: 0
 371: #春です！「春雨」、演習しますっ！
   type: 104
   "practice_win_a":
     description: "演習勝利 A"
-    flagship: ['春雨']
-    escortship: [[['村雨', '夕立', '五月雨', '白露', '時雨'], 3]]
+    flagshipId: [405] #春雨
+    escortshipId: [
+      [[44, 45, 46, 42, 43], 3] #村雨/夕立/五月雨/白露/時雨
+    ]
     required: 4
     init: 0
 ###
@@ -1355,32 +1379,32 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@15":
     description: "1-5 S"
     maparea: [15]
-    escortship: [
-      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
     description: "2-3 S"
     maparea: [23]
-    escortship: [
-      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@32":
     description: "3-2 S"
     maparea: [32]
-    escortship: [
-      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
     description: "5-3 S"
     maparea: [53]
-    escortship: [
-      [['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4],
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
     ]
     required: 1
     init: 0
@@ -1466,7 +1490,9 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 105
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [[['綾波改二', '敷波改二', '磯波改二', '浦波改二'], 4]]
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
     required: 3
     init: 0
 437: #小笠原沖哨戒線の強化を実施せよ！
@@ -1663,7 +1689,9 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 106
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [[['大和', '武蔵'], 2]]
+    escortshipId: [
+      [[131, 143], 2] #大和/武蔵
+    ]
     escortshiptype: [
       [[3], 1] #軽巡1隻
       [[2], 2] #駆逐2隻
@@ -1702,7 +1730,7 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 107
   "practice_win_s":
     description: "演習勝利 S"
-    flagship: ['Gambier Bay Mk.II']
+    flagshipId: [707] #Gambier Bay Mk.II
     escortshipclass: [
       [[91, 87], 2] #Fletcher級駆逐艦/John C.Butler級駆逐艦2隻
     ]
@@ -1712,20 +1740,23 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 107
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [
-      [['天津風', '雪風', '丹陽', '時津風', '初風'], 2]
+    escortshipId: [
+      [[181, 20, 186, 190], 2] #天津風/雪風/丹陽/時津風/初風
     ]
     required: 3
     init: 0
 373: #「フランス艦隊」演習！
   # NOTE: nationality-based (フランス艦); list covers all French ships implemented so far
-  # (Richelieu Deux matches 'Richelieu' by substring) — extend when new French ships are added
+  # (ids cover later remodels, so Richelieu Deux comes with Richelieu) — extend when new
+  # French ships are added
   # 2026-07-19: added Algérie (CA), Vautour (DD), Béarn (CV) from 2026 summer event backend ops
   type: 107
   "practice_win_a":
     description: "演習勝利 A"
-    flagship: ['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste', 'Algérie', 'Vautour', 'Béarn']
-    escortship: [[['Richelieu', 'Jean Bart', 'Gloire', 'Mogador', 'Commandant Teste', 'Algérie', 'Vautour', 'Béarn'], 2]]
+    flagshipId: [492, 935, 965, 962, 491, 1051, 1053, 1055] #Richelieu/Jean Bart/Gloire/Mogador/Commandant Teste/Algérie/Vautour/Béarn
+    escortshipId: [
+      [[492, 935, 965, 962, 491, 1051, 1053, 1055], 2] #Richelieu/Jean Bart/Gloire/Mogador/Commandant Teste/Algérie/Vautour/Béarn
+    ]
     required: 4
     init: 0
 ###
@@ -1760,10 +1791,12 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@15":
     description: "1-5 S"
     maparea: [15]
-    flagship: ['山城改二補']
-    # 扶桑 or 時雨1 + 最上/満潮/朝雲/山雲2 (escortship entries are OR-ed, so require 3 of the 6)
-    escortship: [
-      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    flagshipId: [749] #山城改二補
+    # escortshipId のエントリは AND なので、扶桑/時雨1隻 + 最上/満潮/朝雲/山雲2隻を
+    # そのまま表現できる（escortship では OR になってしまう）
+    escortshipId: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
     required: 1
     init: 0
@@ -1771,36 +1804,40 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "1-6"
     maparea: [16]
     mapcell: [14, 17]
-    flagship: ['山城改二補']
-    escortship: [
-      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    flagshipId: [749] #山城改二補
+    escortshipId: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
     description: "2-3 S"
     maparea: [23]
-    flagship: ['山城改二補']
-    escortship: [
-      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    flagshipId: [749] #山城改二補
+    escortshipId: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@25":
     description: "2-5 S"
     maparea: [25]
-    flagship: ['山城改二補']
-    escortship: [
-      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    flagshipId: [749] #山城改二補
+    escortshipId: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
     required: 1
     init: 0
   "battle_boss_win_rank_s@43":
     description: "4-3 S"
     maparea: [43]
-    flagship: ['山城改二補']
-    escortship: [
-      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    flagshipId: [749] #山城改二補
+    escortshipId: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
     required: 1
     init: 0
@@ -1813,10 +1850,10 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@14":
     description: "1-4 S"
     maparea: [14]
-    # 北上改二/改三 + 大井改二（いずれかが旗艦）
-    flagship: ['北上改二', '北上改三', '大井改二']
-    escortship: [
-      [['北上改二', '北上改三', '大井改二'], 2]
+    # 北上改二/改三 + 大井改二（いずれかが旗艦）。改二以降だけを数えたいので id 指定
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1826,9 +1863,9 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@21":
     description: "2-1 S"
     maparea: [21]
-    flagship: ['北上改二', '北上改三', '大井改二']
-    escortship: [
-      [['北上改二', '北上改三', '大井改二'], 2]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1838,9 +1875,9 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@22":
     description: "2-2 S"
     maparea: [22]
-    flagship: ['北上改二', '北上改三', '大井改二']
-    escortship: [
-      [['北上改二', '北上改三', '大井改二'], 2]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1850,9 +1887,9 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@23":
     description: "2-3 S"
     maparea: [23]
-    flagship: ['北上改二', '北上改三', '大井改二']
-    escortship: [
-      [['北上改二', '北上改三', '大井改二'], 2]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1866,8 +1903,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "7-2-2 S"
     maparea: [72]
     mapcell: [15]
-    escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
     ]
     required: 2
     init: 0
@@ -1875,16 +1912,16 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "7-3-2 S"
     maparea: [73]
     mapcell: [18, 23, 24, 25]
-    escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
     ]
     required: 2
     init: 0
   "battle_boss_win_rank_s@42":
     description: "4-2 S"
     maparea: [42]
-    escortship: [
-      [['羽黒', '足柄', '妙高', '高雄', '神風'], 2]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
     ]
     required: 2
     init: 0
@@ -1894,8 +1931,8 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@51":
     description: "5-1 A"
     maparea: [51]
-    escortship: [
-      [['比叡', '霧島'], 2],
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1905,8 +1942,8 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@53":
     description: "5-3 A"
     maparea: [53]
-    escortship: [
-      [['比叡', '霧島'], 2]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1916,8 +1953,8 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@54":
     description: "5-4 A"
     maparea: [54]
-    escortship: [
-      [['比叡', '霧島'], 2]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1927,8 +1964,8 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_a@55":
     description: "5-5 A"
     maparea: [55]
-    escortship: [
-      [['比叡', '霧島'], 2]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -1939,8 +1976,8 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 109
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [
-      [['比叡', '霧島'], 2]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
     ]
     escortshiptype: [
       [[2], 2] #駆逐2
@@ -2037,8 +2074,8 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 110
   "practice_win_s":
     description: "演習勝利 S"
-    escortship: [
-      [['夕雲改二', '巻雲改二', '風雲改二', '秋雲改二'], 4]
+    escortshipId: [
+      [[542, 563, 564, 648], 4] #夕雲改二/巻雲改二/風雲改二/秋雲改二
     ]
     required: 4
     init: 0
@@ -2046,8 +2083,8 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 110
   "practice_win_a":
     description: "演習勝利 A"
-    escortship: [
-      [['Warspite', '金剛', 'Ark Royal', 'Nelson', 'Jervis', 'Janus', 'Javelin'], 4]
+    escortshipId: [
+      [[439, 78, 515, 571, 519, 520, 901], 4] #Warspite/金剛/Ark Royal/Nelson/Jervis/Janus/Javelin
     ]
     required: 4
     init: 0
@@ -2055,17 +2092,17 @@ Quest guides (となはざな): https://tonahazana.com/
   type: 110
   "practice_win_s":
     description: "演習勝利 S"
-    flagship: ['黒潮改二', '親潮改二']
-    secondship: ['黒潮改二', '親潮改二']
+    flagshipId: [568, 670] #黒潮改二/親潮改二
+    secondshipId: [568, 670] #黒潮改二/親潮改二
     required: 4
     init: 0
 377: #「第二駆逐隊(後期編成)」、練度向上！
   type: 110
   "practice_win_s":
     description: "演習勝利 S"
-    flagship: ['早霜', '秋霜', '清霜']
-    escortship: [
-      [['早霜', '秋霜', '清霜', '朝霜'], 3]
+    flagshipId: [409, 625, 410] #早霜/秋霜/清霜
+    escortshipId: [
+      [[409, 625, 410, 425], 3] #早霜/秋霜/清霜/朝霜
     ]
     required: 4
     init: 0
@@ -2150,30 +2187,28 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@13":
     description: "1-3 S"
     maparea: [13]
-    flagship: ['北上改三']
-    # 花月/潮/響/竹/桐/榧/杉/樫 から2隻以上。響改二は「Верный」に改名されるので
-    # substring 一致しない（明示して並べる）。'潮' は逆に満潮・大潮・荒潮にも
-    # 一致する（既存の朧・漣・曙・潮の扱いと同じ）
-    escortship: [
-      [['花月', '潮', '響', 'Верный', '竹', '桐', '榧', '杉', '樫'], 2]
+    flagshipId: [1071] #北上改三
+    # 花月/潮/響/竹/桐/榧/杉/樫 から2隻以上（どの改装段階でも可）
+    escortshipId: [
+      [[1041, 16, 35, 642, 1044, 994, 992, 993], 2] #花月/潮/響/竹/桐/榧/杉/樫
     ]
     required: 2
     init: 0
   "battle_boss_win_rank_s@24":
     description: "2-4 S"
     maparea: [24]
-    flagship: ['北上改三']
-    escortship: [
-      [['花月', '潮', '響', 'Верный', '竹', '桐', '榧', '杉', '樫'], 2]
+    flagshipId: [1071] #北上改三
+    escortshipId: [
+      [[1041, 16, 35, 642, 1044, 994, 992, 993], 2] #花月/潮/響/竹/桐/榧/杉/樫
     ]
     required: 2
     init: 0
   "battle_boss_win_rank_s@45":
     description: "4-5 S"
     maparea: [45]
-    flagship: ['北上改三']
-    escortship: [
-      [['花月', '潮', '響', 'Верный', '竹', '桐', '榧', '杉', '樫'], 2]
+    flagshipId: [1071] #北上改三
+    escortshipId: [
+      [[1041, 16, 35, 642, 1044, 994, 992, 993], 2] #花月/潮/響/竹/桐/榧/杉/樫
     ]
     required: 2
     init: 0
@@ -2196,11 +2231,10 @@ Quest guides (となはざな): https://tonahazana.com/
   resetInterval: 1
   "practice_win_a":
     description: "演習勝利 A"
-    # 花月/桐/榧/杉/樫/竹/潮/響 から5隻以上。響改二は「Верный」に改名されるので
-    # substring 一致しない（明示して並べる）。'潮' は逆に満潮・大潮・荒潮にも
-    # 一致する（既存の朧・漣・曙・潮の扱いと同じ）
-    escortship: [
-      [['花月', '桐', '榧', '杉', '樫', '竹', '潮', '響', 'Верный'], 5]
+    # 花月/桐/榧/杉/樫/竹/潮/響 から5隻以上（どの改装段階でも可）。
+    # id 指定なので響改二「Верный」も拾え、満潮・大潮・荒潮は拾わない
+    escortshipId: [
+      [[1041, 1044, 994, 992, 993, 642, 16, 35], 5] #花月/桐/榧/杉/樫/竹/潮/響
     ]
     required: 3
     init: 0
@@ -2210,8 +2244,8 @@ Quest guides (となはざな): https://tonahazana.com/
   "practice_win":
     description: "演習勝利"
     # 指定17隻から4隻以上、B勝利以上を同日中に4回
-    escortship: [
-      [['秋雲', '秋月', '綾波', '敷波', '白露', '浦風', '浜風', '長波', '藤波', '朝霜', '白雲', '朧', '漣', '迅鯨', '長鯨', '大淀', '神通'], 4]
+    escortshipId: [
+      [[132, 421, 13, 14, 42, 168, 170, 135, 485, 425, 964, 93, 94, 634, 635, 183, 55], 4] #秋雲/秋月/綾波/敷波/白露/浦風/浜風/長波/藤波/朝霜/白雲/朧/漣/迅鯨/長鯨/大淀/神通
     ]
     required: 4
     init: 0

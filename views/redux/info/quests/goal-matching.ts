@@ -14,7 +14,34 @@ export function satisfyGoal(
   return !unsatisfy
 }
 
+/**
+ * Ship constraints come in two flavours. The `*Id` fields match on master ship id
+ * expanded through the remodel line (see `shipRemodelSources`), which is what quest
+ * data should use. The name fields are **deprecated**: they match by substring, so
+ * they both over-match (`'潮'` catches 満潮) and miss renamed remodels (響改二 is
+ * Верный). They are still honoured for goals that predate the id fields.
+ */
+
+/** Whether one fleet ship, given the ids it counts as, matches any of the goal's ids. */
+const countsAsAny = (shipIds: number[] | undefined, goalIds: number[]): boolean =>
+  (shipIds ?? []).some((id) => goalIds.includes(id))
+
 export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): boolean {
+  if (goal.flagshipId && !countsAsAny(options.shipIds?.[0], goal.flagshipId)) {
+    return false
+  }
+  if (goal.secondshipId && !countsAsAny(options.shipIds?.[1], goal.secondshipId)) {
+    return false
+  }
+  if (goal.escortshipId && goal.escortshipId.length > 0) {
+    for (const [goalIds, goalCount, ignoreFlagShip] of goal.escortshipId) {
+      const shipIds = ignoreFlagShip ? options.shipIds?.slice(1) : options.shipIds
+      const count = (shipIds ?? []).filter((ids) => countsAsAny(ids, goalIds)).length
+      if (count < goalCount) {
+        return false
+      }
+    }
+  }
   if (
     goal.flagship &&
     ((options?.shipname?.length ?? 0) < 1 ||

@@ -49,6 +49,8 @@ export interface QuestOptions {
   shipname?: string[]
   shiptype?: number[]
   shipclass?: number[]
+  /** Parallel to `shipname`: every master id each ship counts as, remodels included. */
+  shipIds?: number[][]
   mission?: string
   maparea?: number
   mapcell?: number

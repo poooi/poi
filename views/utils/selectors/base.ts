@@ -72,28 +72,95 @@ export function getMapHp(
   return [nowHp, maxCount, undefined]
 }
 
+/**
+ * Per `$ships` object: the reverse of the remodel graph, plus a memo of the
+ * expansions taken from it. Keyed on identity so it is rebuilt only when master
+ * data is replaced.
+ */
+const remodelGraphs = new WeakMap<
+  object,
+  { incoming: Map<number, number[]>; sources: Map<number, number[]> }
+>()
+
+/** The only fields the remodel walk reads, so a caller can pass a partial roster. */
+export type RemodelRoster = Record<string, Pick<APIMstShip, 'api_id' | 'api_aftershipid'>>
+
+function remodelGraph($ships: RemodelRoster) {
+  const cached = remodelGraphs.get($ships)
+  if (cached) return cached
+  // after-id -> the ids that remodel into it. Not a plain chain: some ships are
+  // reachable from more than one remodel, and switchable variants (最上改二 <->
+  // 最上改二特) form cycles, which is why the walk below carries a seen set.
+  const incoming = new Map<number, number[]>()
+  Object.values($ships).forEach((ship) => {
+    const after = Number(ship.api_aftershipid)
+    if (!after || !ship.api_id) return
+    const list = incoming.get(after)
+    if (list) {
+      list.push(ship.api_id)
+    } else {
+      incoming.set(after, [ship.api_id])
+    }
+  })
+  const graph = { incoming, sources: new Map<number, number[]>() }
+  remodelGraphs.set($ships, graph)
+  return graph
+}
+
+/**
+ * Every master id a ship counts as: its own, plus every id it can have been
+ * remodelled from. A quest goal names the id where a ship *starts* counting — 響
+ * for the ship in any state, 潮改 for 改 and later — so `satisfyShip` only has to
+ * intersect the goal's ids with this list.
+ */
+export function shipRemodelSources(shipId: number, $ships: RemodelRoster | undefined): number[] {
+  if (!$ships) return [shipId]
+  const { incoming, sources } = remodelGraph($ships)
+  const memo = sources.get(shipId)
+  if (memo) return memo
+  const out: number[] = []
+  const seen = new Set<number>()
+  const queue = [shipId]
+  while (queue.length > 0) {
+    const current = queue.shift()
+    if (current == null || seen.has(current)) continue
+    seen.add(current)
+    out.push(current)
+    for (const source of incoming.get(current) ?? []) queue.push(source)
+  }
+  sources.set(shipId, out)
+  return out
+}
+
+export interface FleetShipInfo {
+  shipname: string[]
+  shiptype: number[]
+  shipclass: number[]
+  /** Parallel to `shipname`: the master ids each ship counts as. */
+  shipIds: number[][]
+}
+
 export function getFleetInfoFromSlices(
   deckShipId: number[],
   ships: ShipsState | undefined,
   $ships: Record<string, APIMstShip> | undefined,
-): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
+): FleetShipInfo {
   const shipname: string[] = []
   const shiptype: number[] = []
   const shipclass: number[] = []
+  const shipIds: number[][] = []
   deckShipId.forEach((id) => {
     const $ship = $ships?.[ships?.[id]?.api_ship_id ?? -1]
     if (!$ship) return
     if (($ship.api_name ?? '').length > 0) shipname.push($ship.api_name)
     if (($ship.api_stype ?? -1) > 0) shiptype.push($ship.api_stype)
     if (($ship.api_ctype ?? -1) > 0) shipclass.push($ship.api_ctype)
+    shipIds.push($ship.api_id ? shipRemodelSources($ship.api_id, $ships) : [])
   })
-  return { shipname, shiptype, shipclass }
+  return { shipname, shiptype, shipclass, shipIds }
 }
 
-export function getFleetInfo(
-  deckShipId: number[],
-  state: RootState,
-): { shipname: string[]; shiptype: number[]; shipclass: number[] } {
+export function getFleetInfo(deckShipId: number[], state: RootState): FleetShipInfo {
   return getFleetInfoFromSlices(deckShipId, state.info?.ships, state.const?.$ships)
 }
 

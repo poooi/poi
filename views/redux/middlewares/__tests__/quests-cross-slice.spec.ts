@@ -57,7 +57,7 @@ describe('questsCrossSliceMiddleware', () => {
         ships: { 1: { api_ship_id: 1 } },
       },
       const: {
-        $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } },
+        $ships: { 1: { api_id: 1, api_name: 'A', api_stype: 1, api_ctype: 1 } },
       },
     })
 
@@ -78,6 +78,8 @@ describe('questsCrossSliceMiddleware', () => {
         shipname: ['A'],
         shiptype: [1],
         shipclass: [1],
+        // the ids this ship counts as; no remodels in this fixture
+        shipIds: [[1]],
       })
     })
   })
@@ -179,7 +181,7 @@ describe('questsCrossSliceMiddleware', () => {
         ships: { 1: { api_ship_id: 1 } },
       },
       const: {
-        $ships: { 1: { api_name: 'A', api_stype: 1, api_ctype: 1 } },
+        $ships: { 1: { api_id: 1, api_name: 'A', api_stype: 1, api_ctype: 1 } },
       },
     })
 
@@ -200,6 +202,7 @@ describe('questsCrossSliceMiddleware', () => {
         shipname: ['A'],
         shiptype: [1],
         shipclass: [1],
+        shipIds: [[1]],
       },
       delta: 1,
     })

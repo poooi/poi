@@ -15,10 +15,16 @@ import {
 } from 'views/redux/actions'
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 import Scheduler from 'views/services/scheduler'
+import { shipRemodelSources, type RemodelRoster } from 'views/utils/selectors'
 
 import type { ActiveQuest, GoalKey, QuestRecord, SubgoalRecord, QuestsState } from '../quests'
 
-import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
+import {
+  getTanakalendarQuarterMonth,
+  satisfyShip,
+  saveQuestTracking,
+  reducer as questsReducer,
+} from '../quests'
 import { outdateRecords } from '../quests/records'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
@@ -710,5 +716,92 @@ describe('outdateRecords', () => {
     expect(outdated[1052]).toEqual(records[1052])
     expect(outdated[854]).toEqual(records[854])
     expect(outdated[313]?.practice_win).toEqual({ count: 0, required: 8 })
+  })
+})
+
+describe('satisfyShip — id-based ship constraints', () => {
+  // What the middleware passes: for each fleet ship, every master id it counts as
+  // (its own plus every id it can have been remodelled from).
+  const VERNY = [147, 235, 35] // Верный <- 響改 <- 響
+  const MICHISHIO = [489, 250, 97] // 満潮改二 <- 満潮改 <- 満潮
+  const USHIO_BASE = [16] // 潮, unremodelled
+  const USHIO_KAI2 = [407, 233, 16] // 潮改二 <- 潮改 <- 潮
+
+  spec('matches a renamed remodel through its base id', () => {
+    // 響 = 35; Верный is the same ship two remodels on, and shares no substring
+    expect(satisfyShip({ required: 1, escortshipId: [[[35], 1]] }, { shipIds: [VERNY] })).toBe(true)
+  })
+
+  spec('does not match a different ship whose name merely contains the same characters', () => {
+    // the substring bug this replaces: '潮' used to count 満潮 as well
+    expect(satisfyShip({ required: 1, escortshipId: [[[16], 1]] }, { shipIds: [MICHISHIO] })).toBe(
+      false,
+    )
+  })
+
+  spec('counts a remodel at or after the named id, and nothing before it', () => {
+    const kaiOrLater: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [[[233], 1]], // 潮改
+    }
+    expect(satisfyShip(kaiOrLater, { shipIds: [USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(kaiOrLater, { shipIds: [USHIO_BASE] })).toBe(false)
+  })
+
+  spec('requires every escortshipId entry, unlike the OR-ed escortship', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [
+        [[35], 1], // 響
+        [[16], 1], // 潮
+      ],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(false)
+  })
+
+  spec('gates flagship and second ship by position', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      flagshipId: [35],
+      secondshipId: [16],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [USHIO_KAI2, VERNY] })).toBe(false)
+  })
+
+  spec('ignores the flagship when an entry says so', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [[[35], 1, true]],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(false)
+    expect(satisfyShip(goal, { shipIds: [USHIO_KAI2, VERNY] })).toBe(true)
+  })
+})
+
+describe('shipRemodelSources', () => {
+  // 潮 -> 潮改 -> 潮改二, and a switchable pair that points back at itself
+  const $ships: RemodelRoster = {
+    16: { api_id: 16, api_aftershipid: '233' }, // 潮
+    233: { api_id: 233, api_aftershipid: '407' }, // 潮改
+    407: { api_id: 407, api_aftershipid: '0' }, // 潮改二
+    501: { api_id: 501, api_aftershipid: '506' }, // 最上改二
+    506: { api_id: 506, api_aftershipid: '501' }, // 最上改二特
+    97: { api_id: 97, api_aftershipid: '0' }, // 満潮
+  }
+
+  spec('lists the ship itself and everything it was remodelled from', () => {
+    expect(shipRemodelSources(407, $ships).sort()).toEqual([16, 233, 407])
+    expect(shipRemodelSources(16, $ships)).toEqual([16])
+  })
+
+  spec('keeps a ship with a similar name out of it', () => {
+    expect(shipRemodelSources(97, $ships)).toEqual([97])
+  })
+
+  spec('terminates on switchable remodels that cycle', () => {
+    expect(shipRemodelSources(501, $ships).sort()).toEqual([501, 506])
+    expect(shipRemodelSources(506, $ships).sort()).toEqual([501, 506])
   })
 })

@@ -28,6 +28,7 @@ export type QuestType =
   | 112
 
 // [shipNames[], minCount, exclusive?]
+/** @deprecated see `QuestGoalSubgoal.escortship` */
 type EscortShipConstraint = [string[], number, boolean?]
 
 // [shipTypeIds[], minCount, exclusive?]
@@ -35,6 +36,9 @@ type EscortShipTypeConstraint = [number[], number, boolean?]
 
 // [shipClassIds[], minCount, exclusive?]
 type EscortShipClassConstraint = [number[], number, boolean?]
+
+// [shipMasterIds[], minCount, exclusive?]
+type EscortShipIdConstraint = [number[], number, boolean?]
 
 export type GoalKey = QuestEvent | `${QuestEvent}@${string}`
 
@@ -46,13 +50,27 @@ export interface QuestGoalSubgoal {
   maparea?: number[]
   mapcell?: number[]
   // Flagship constraints
+  /** @deprecated substring-matched by name; use `flagshipId`. */
   flagship?: string[]
   flagshiptype?: number[]
   flagshipclass?: number[]
+  /**
+   * Master ship ids the flagship must be at or after in its remodel line — the id
+   * names where the ship *starts* counting, and every later remodel counts too.
+   */
+  flagshipId?: number[]
   // Escort ship constraints
+  /** @deprecated substring-matched by name; use `secondshipId`. */
   secondship?: string[]
   secondshipclass?: number[]
+  secondshipId?: number[]
+  /** @deprecated substring-matched by name, and its entries are OR-ed; use `escortshipId`. */
   escortship?: EscortShipConstraint[]
+  /**
+   * Like `escortship` but by master id, and — unlike `escortship`, whose entries
+   * are OR-ed — every entry must hold, matching `escortshiptype`.
+   */
+  escortshipId?: EscortShipIdConstraint[]
   escortshiptype?: EscortShipTypeConstraint[]
   escortshipclass?: EscortShipClassConstraint[]
   banshiptype?: number[]

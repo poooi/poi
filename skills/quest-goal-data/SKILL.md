@@ -61,7 +61,10 @@ How the two combine at runtime (`views/redux/info/quests/goals.ts`):
   one starts at `init`.
 
 Adding a _new subgoal filter field_ still needs a release — the payload only carries data, and
-an old build will ignore a field its `satisfyShip`/`satisfyGoal` does not know.
+an old build **silently ignores** a field its `satisfyShip`/`satisfyGoal` does not know, which
+makes that constraint vanish rather than fail. So data that will reach older builds has to keep
+expressing the constraint in fields they already understand, or move to a new fcd name so those
+builds keep their bundled copy.
 
 ## `type`, and what the game's own fields mean
 
@@ -136,32 +139,41 @@ Quests 702/703 are unconstrained: they carry **no** `times: [1]` filter and simp
 
 Mirrors `flagshipclass` but checks `shipclass[1]` — the second ship's ctype. Added for quest 1045. Note `flagship: ['吹雪改三']` substring-matches 改三護 too.
 
-### Ship names are matched by **substring**, which cuts both ways
+### Ships are named by master id, expanded through the remodel line
 
-`satisfyShip` uses `shipName.includes(goalName)`, so a bare `'潮'` also matches 満潮・大潮・荒潮,
-and — the dangerous direction — a remodel that is **renamed** stops matching its base name
-entirely. Every such rename in the player roster (from `api_mst_ship`, following
-`api_aftershipid`):
+`flagshipId` / `secondshipId` / `escortshipId` take **master ship ids** (`api_mst_ship.api_id`).
+An id names where a ship _starts_ counting: the middleware sends, per fleet ship, every id it
+counts as — its own plus every id it can have been remodelled from (`shipRemodelSources` in
+`views/utils/selectors/base.ts`) — and the matcher intersects that with the goal's ids. So:
 
-| base          | renamed remodel           |
-| ------------- | ------------------------- |
-| 響            | Верный                    |
-| 雪風          | 丹陽                      |
-| 大鯨          | 龍鳳 (改 / 改二 / 改二戊) |
-| 春日丸        | 大鷹 (改 / 改二)          |
-| 八幡丸        | 雲鷹 (改 / 改二)          |
-| U-511         | 呂500                     |
-| Littorio      | Italia                    |
-| Гангут        | Октябрьская революция     |
-| Luigi Torelli | UIT-25 / 伊504            |
-| C.Cappellini  | UIT-24 / 伊503            |
-| Phoenix       | General Belgrano          |
-| Dace          | Leonardo da Vinci         |
-| 南海          | 野埼 (改)                 |
+- `[35]` (響) counts the ship in **any** state, renames included — 響改二 is 「Верный」 and
+  shares no substring with 響;
+- `[233]` (潮改) counts 改 **and later** only, which is how 「〜改以降」 quests are expressed
+  exactly;
+- nothing else creeps in: 満潮 is a different line, so it never counts toward 潮.
 
-List both names when a quest accepts the ship in any state (e.g. quests 382 and 1052 carry
-`'響', 'Верный'`). To re-check the whole file, walk each listed name's remodel chain in
-`api_start2` master data and flag any successor whose name no name in the same list matches.
+`escortshipId` entries are **AND**-ed (like `escortshiptype`), so
+「扶桑 or 時雨 ×1 + 最上/満潮/朝雲/山雲 ×2」 is two entries. The third element still means
+"ignore the flagship".
+
+The remodel graph is not a plain chain — switchable variants (最上改二 ⇄ 最上改二特) form
+cycles and 24 ships are reachable from more than one remodel — so the expansion is a
+reachability walk with a seen set, not a pointer chase. A consequence of the cycles: for a
+switchable pair, either id also counts the other.
+
+To find an id, look it up by exact name in an `api_start2` capture (`api_mst_ship`, player ships
+are `api_id < 1500`); see the `redux-api-testing` skill for where captures live.
+
+**The name fields (`flagship`, `secondship`, `escortship`) are deprecated.** They match by
+substring, which over-matches (`'潮'` also counted 満潮・大潮・荒潮・黒潮…) and silently misses
+renamed remodels; `escortship` also OR-es its entries, which several quests had to exploit to
+express an AND. All quest data was migrated to ids in the same change that added them; the
+matcher still honours them, but do not add new ones.
+
+Renamed remodels, for reading quest text and old data: 響→Верный, 雪風→丹陽, 大鯨→龍鳳,
+春日丸→大鷹, 八幡丸→雲鷹, U-511→呂500, Littorio→Italia, Гангут→Октябрьская революция,
+Luigi Torelli→UIT-25/伊504, C.Cappellini→UIT-24/伊503, Phoenix→General Belgrano,
+Dace→Leonardo da Vinci, 南海→野埼. With ids none of these need special handling.
 
 ### Nationality / class-based quests
 
