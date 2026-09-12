@@ -90,6 +90,28 @@ A one-time quest must carry **no** `type`: a reset type deletes the record at th
 boundary and throws away progress on a quest that is still open. `resetInterval` works without
 a `type`, for a one-time quest whose counter is per-day.
 
+What that means at a date change, for a type-less goal:
+
+- **its record** is never touched by `outdateRecords` — `parseInt(String(undefined))` is `NaN`,
+  so it matches none of the delete sets (day/week/month/quarter, and each of the 12 yearly
+  resets). With `resetInterval: 1` only the counts go back to `init`, the record stays;
+- **its active-quest entry** survives too, because `outdateActiveQuests` keys off the _game's_
+  `api_type` in the quest detail (not the cson `type`), and one-time quests report `api_type 4`,
+  which matches none of its expiry branches;
+- the record is removed when the quest is **cleared** (`api_req_quest/clearitemget` drops both
+  the record and the active entry).
+
+Nothing else resets a count on a date change. The only other path that can _lower_ one is
+`updateRecordProgress`, which reconciles a **single-subgoal** record against the game's own
+`api_progress_flag` on each questlist response (flag 0 caps it below 50% of `required`, and so
+on). That is game-driven, not date-driven, and it skips multi-subgoal quests entirely.
+
+The consequence is that a one-time record is never garbage-collected if the quest vanishes
+without being cleared — a seasonal quest at the end of its season, say. That is deliberate: a
+quest can sit outside the five active slots for weeks and must keep its count, so there is no
+safe age at which to sweep it. `views/redux/info/__tests__/quests.spec.ts` covers both the
+record and the active-quest side.
+
 `fcd/build.js` asserts that each quest's `type` matches the section header it sits under
 (Daily/Weekly/Monthly/Quarterly/Yearly (Month)/One-time), so a quest cannot sit in Weekly with a
 monthly type — which is exactly how 242 reset its record on the wrong boundary for years. A

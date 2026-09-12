@@ -25,7 +25,8 @@ import {
   saveQuestTracking,
   reducer as questsReducer,
 } from '../quests'
-import { outdateRecords } from '../quests/records'
+import { outdateActiveQuests, outdateRecords } from '../quests/records'
+import { ONE_DAY } from '../quests/time'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
@@ -681,41 +682,129 @@ describe('quests reducer - questTrackingReducer paths', () => {
 })
 
 describe('outdateRecords', () => {
+  // The shapes that actually ship in quest_goal.cson: a one-time (単発) quest carries
+  // no type, one with a same-day count adds resetInterval, and periodic quests carry
+  // the type of their period.
   const goals: QuestsState['questGoals'] = {
-    // One-time (単発) quests carry no type on purpose, so their record has to
-    // survive every period rollover — see the section in quest_goal.cson.
-    1052: { battle_boss_win_rank_s: { required: 2 } },
-    854: { type: 4, battle_boss_win_rank_s: { required: 2 } },
-    313: { type: 4, resetInterval: 1, practice_win: { required: 8 } },
+    1052: { battle_boss_win_rank_s: { required: 2 } }, // one-time
+    313: { resetInterval: 1, practice_win: { required: 8 } }, // one-time, daily count
+    854: { type: 4, battle_boss_win_rank_s: { required: 2 } }, // quarterly
+    1167: { type: 2, resetInterval: 1, remodel_item: { required: 3 } }, // weekly, daily count
   }
   const records: Record<string | number, QuestRecord> = {
     1052: { id: 1052, battle_boss_win_rank_s: { count: 1, required: 2 } },
-    854: { id: 854, battle_boss_win_rank_s: { count: 1, required: 2 } },
     313: { id: 313, practice_win: { count: 5, required: 8 } },
+    854: { id: 854, battle_boss_win_rank_s: { count: 1, required: 2 } },
+    1167: { id: 1167, remodel_item: { count: 2, required: 3 } },
   }
+  const at = (date: string) => +moment.tz(`${date} 06:00`, 'Asia/Tokyo')
 
-  spec('keeps a type-less record across a year rollover, resets the typed ones', () => {
-    const then = +moment.tz('2026-09-12 06:00', 'Asia/Tokyo')
-    const now = +moment.tz('2027-09-12 06:00', 'Asia/Tokyo')
-    const outdated = outdateRecords(goals, records, then, now)
+  spec('keeps one-time records across every rollover, resets the periodic ones', () => {
+    // a year on: a different day, week, month, quarter and every yearly boundary
+    const outdated = outdateRecords(goals, records, at('2026-09-12'), at('2027-09-12'))
 
-    // no type: never reset
+    // no type: the progress of a quest that is still open is never thrown away
     expect(outdated[1052]).toEqual(records[1052])
-    // quarterly: record dropped entirely. A reset type wins over resetInterval,
-    // so the daily-counter quest is dropped at the quarter boundary too; the next
-    // questlist response re-creates both from the goals.
+    // ...and a one-time quest with a daily count keeps its record, count zeroed
+    expect(outdated[313]).toEqual({ id: '313', practice_win: { count: 0, required: 8 } })
+    // a reset type wins over resetInterval, so these are dropped outright and the
+    // next questlist response re-creates them from the goals
     expect(outdated[854]).toBeUndefined()
-    expect(outdated[313]).toBeUndefined()
+    expect(outdated[1167]).toBeUndefined()
   })
 
-  spec('resets only the daily counter when the day changes', () => {
-    const then = +moment.tz('2026-09-12 06:00', 'Asia/Tokyo')
-    const now = +moment.tz('2026-09-13 06:00', 'Asia/Tokyo')
-    const outdated = outdateRecords(goals, records, then, now)
+  spec('resets only the daily counters when the day changes', () => {
+    const outdated = outdateRecords(goals, records, at('2026-09-12'), at('2026-09-13'))
 
     expect(outdated[1052]).toEqual(records[1052])
     expect(outdated[854]).toEqual(records[854])
     expect(outdated[313]?.practice_win).toEqual({ count: 0, required: 8 })
+    expect(outdated[1167]?.remodel_item).toEqual({ count: 0, required: 3 })
+  })
+
+  spec('never resets a one-time record, stepped day by day across a whole year', () => {
+    // brute force rather than sampled boundaries: every day, week, month, Tanaka
+    // quarter and all 12 yearly resets are crossed somewhere in this loop
+    let carried = records
+    let previous = at('2026-09-12')
+    for (let day = 1; day <= 400; day += 1) {
+      const next = previous + ONE_DAY
+      carried = outdateRecords(goals, carried, previous, next)
+      previous = next
+      // the one-time record is still there, with its count intact
+      expect(carried[1052]).toEqual(records[1052])
+      // ...and the one with a daily count keeps its record too
+      expect(carried[313]?.practice_win).toEqual({ count: 0, required: 8 })
+    }
+  })
+
+  spec('leaves everything alone within the same quest day', () => {
+    // 05:00 JST is the boundary, so 06:00 and 23:00 are the same quest day
+    const outdated = outdateRecords(
+      goals,
+      records,
+      at('2026-09-12'),
+      +moment.tz('2026-09-12 23:00', 'Asia/Tokyo'),
+    )
+    expect(outdated).toEqual(records)
+  })
+})
+
+describe('outdateActiveQuests', () => {
+  // Expiry keys off the *game's* api_type in the quest detail, not the cson type; the
+  // rest of the payload is filler so the fixture is a real APIList.
+  const active = (
+    api_no: number,
+    api_type: number,
+    api_label_type: number,
+    time: number,
+  ): ActiveQuest => ({
+    detail: {
+      api_no,
+      api_type,
+      api_label_type,
+      api_state: 2,
+      api_progress_flag: 0,
+      api_title: `quest ${api_no}`,
+      api_detail: '',
+      api_category: 1,
+      api_bonus_flag: 1,
+      api_invalid_flag: 0,
+      api_get_material: [0, 0, 0, 0],
+      api_voice_id: 0,
+    },
+    time,
+  })
+  const at = (date: string) => +moment.tz(`${date} 06:00`, 'Asia/Tokyo')
+  const then = at('2026-09-12')
+  const quests = {
+    1052: active(1052, 4, 1, then), // one-time
+    201: active(201, 1, 2, then), // daily
+    242: active(242, 2, 3, then), // weekly
+    249: active(249, 3, 6, then), // monthly
+    854: active(854, 5, 7, then), // quarterly
+    1050: active(1050, 5, 109, then), // yearly (September)
+  }
+
+  spec('keeps a one-time quest active through every date change', () => {
+    for (const date of ['2026-09-13', '2026-09-20', '2026-10-12', '2027-09-12']) {
+      expect(outdateActiveQuests(quests, at(date))[1052]).toEqual(quests[1052])
+    }
+  })
+
+  spec('drops a daily on the next day and a weekly on the next week', () => {
+    const nextDay = outdateActiveQuests(quests, at('2026-09-13'))
+    expect(nextDay[201]).toBeUndefined()
+    expect(nextDay[242]).toEqual(quests[242])
+
+    const nextWeek = outdateActiveQuests(quests, at('2026-09-20'))
+    expect(nextWeek[242]).toBeUndefined()
+    expect(nextWeek[249]).toEqual(quests[249])
+  })
+
+  spec('drops a monthly next month and a yearly after its reset month', () => {
+    expect(outdateActiveQuests(quests, at('2026-10-12'))[249]).toBeUndefined()
+    expect(outdateActiveQuests(quests, at('2027-09-12'))[1050]).toBeUndefined()
   })
 })
 

@@ -18,11 +18,22 @@ import { bundledQuestGoalsVersion, resetBundledQuestGoals } from '../quests/goal
 const BUNDLED: QuestGoalTable = {
   201: { type: 1, battle_win: { description: '勝利', required: 1, init: 0 } },
   303: { type: 3, practice: { description: '演習', required: 3, init: 0 } },
+  // one-time (単発): no type, so no period reset may ever touch its record
+  1052: { battle_boss_win_rank_s: { description: '1-3 S', required: 2, init: 0 } },
+}
+
+/** A quest_tracking file saved a year before the require_info below.
+ * (jest only lets a mock factory reach out-of-scope names prefixed with `mock`.) */
+const mockSavedTracking = {
+  time: +new Date('2025-09-13T00:00:00+09:00'),
+  1052: { id: 1052, battle_boss_win_rank_s: { count: 1, required: 2, description: '1-3 S' } },
+  303: { id: 303, practice: { count: 2, required: 3, description: '演習' } },
 }
 
 jest.mock('cson', () => ({
   parseCSONFile: jest.fn((file: string) => {
     if (String(file).includes('quest_goal')) return BUNDLED
+    if (String(file).includes('quest_tracking')) return mockSavedTracking
     throw new Error('no such file')
   }),
   stringify: (value: unknown) => JSON.stringify(value),
@@ -68,10 +79,11 @@ describe('mergeQuestGoals', () => {
   })
 
   spec('adds a quest that only fcd knows about', () => {
-    const merged = mergeQuestGoals({
-      313: { type: 4, resetInterval: 1, practice_win: { required: 8, init: 0 } },
-    })
-    expect(Object.keys(merged).sort()).toEqual(['201', '303', '313'])
+    const merged = mergeQuestGoals(
+      { 313: { resetInterval: 1, practice_win: { required: 8, init: 0 } } },
+      '2999/01/01/01',
+    )
+    expect(Object.keys(merged).sort()).toEqual(['1052', '201', '303', '313'])
   })
 
   spec('ignores a payload at the same version as the bundle', () => {
@@ -203,6 +215,22 @@ describe('questGoalsFcdMiddleware', () => {
 
     expect(questGoalsOf(store)[313]).toEqual(deliveredPayload.data[313])
     expect(questGoalsOf(store)[201]).toEqual(BUNDLED[201])
+  })
+
+  spec('keeps one-time progress when tracking is loaded a year later', () => {
+    // require_info re-reads quest_tracking and runs it through outdateRecords with the
+    // file's own timestamp, so this is the path that would drop stale progress
+    const store = createTestStore()
+    // @ts-expect-error a minimal require_info body is enough for the quests slice
+    store.dispatch(createAPIGetMemberRequireInfoAction(requireInfoPayload))
+
+    const { records } = store.getState().info.quests
+    // one-time: still 1 of 2, a year on
+    expect(records[1052]).toEqual(mockSavedTracking[1052])
+    // monthly: swept, and re-created from the goals on the next questlist response
+    expect(records[303]).toBeUndefined()
+    // the ad-hoc save timestamp never becomes a record
+    expect(records.time).toBeUndefined()
   })
 
   spec('applies goals that arrive after require_info', () => {
