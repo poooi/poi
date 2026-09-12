@@ -33,7 +33,8 @@ build and is the **fallback**; `fcd/build.js` mirrors it into `assets/data/fcd/q
 so a new or corrected quest reaches existing installs without a poi release.
 
 **After editing the cson, run `node fcd/build.js`** and commit the regenerated
-`assets/data/fcd/questgoal.json` and `meta.json` alongside it. The script resolves its inputs
+`assets/data/fcd/questgoal.json` and `meta.json` alongside it — `npm test` fails if you forget
+(`fcd/__tests__/payloads.spec.ts`). The script resolves its inputs
 from `__dirname`, so either working directory works. The build validates the cson first (every
 id numeric, every quest has at least one subgoal, every subgoal a positive `required`), so a
 broken edit fails there rather than shipping to everyone.
@@ -48,14 +49,18 @@ How the two combine at runtime (`views/redux/info/quests/goals.ts`):
   can drop a subgoal or fix a `required`), while ids the payload omits keep their bundled
   definition — an fcd copy cached before a quest existed must not blank it out. So fcd can
   correct a quest but never delete one;
-- a payload **older than the build is discarded entirely**. The fcd slice is restored from
+- a payload that is **not strictly newer than the build is discarded entirely**. The fcd slice is restored from
   localStorage, so after an app update the copy cached by the previous release is still there,
   and it carries nearly every quest id — per-id merging alone would let it shadow every bundled
   correction. `mergeQuestGoals` compares the delivered version against `meta.version` of the
   bundled `assets/data/fcd/questgoal.json`, which is generated from the same cson and so stands
   in for the bundled table's own version. (The updater in Settings → About does refresh the
   local payload at startup — Blueprint renders every settings panel, so that component is
-  mounted even unseen — but the floor keeps the guarantee from resting on that.);
+  mounted even unseen — but the floor keeps the guarantee from resting on that.) Equal counts as
+  "nothing new" on purpose: the bundled payload is generated from the bundled cson, so a
+  `questgoal.json` that was not regenerated after a cson edit cannot shadow that edit. The
+  `fcd/__tests__/payloads.spec.ts` test catches that drift at the source, by comparing every
+  committed payload against the file it is built from;
 - `resyncQuestRecords` then carries existing progress across the change: a count survives a
   `required` correction (clamped to the new value), a dropped subgoal's record goes away, a new
   one starts at `init`.

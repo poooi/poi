@@ -11,7 +11,7 @@ import Scheduler from 'views/services/scheduler'
 import type { QuestGoalTable, QuestRecord, QuestsState } from '../quests'
 
 import { mergeQuestGoals, reducer as questsReducer, resyncQuestRecords } from '../quests'
-import { resetBundledQuestGoals } from '../quests/goals'
+import { bundledQuestGoalsVersion, resetBundledQuestGoals } from '../quests/goals'
 
 // The bundled quest_goal.cson is read through CSON; a small table stands in for
 // it so the assertions do not track the real data file.
@@ -72,6 +72,16 @@ describe('mergeQuestGoals', () => {
       313: { type: 4, resetInterval: 1, practice_win: { required: 8, init: 0 } },
     })
     expect(Object.keys(merged).sort()).toEqual(['201', '303', '313'])
+  })
+
+  spec('ignores a payload at the same version as the bundle', () => {
+    // the bundled payload is generated from the bundled cson, so an equal version
+    // carries nothing new — and a questgoal.json that was not regenerated after a
+    // cson edit would otherwise shadow that edit
+    const bundledVersion = bundledQuestGoalsVersion()
+    expect(bundledVersion).toEqual(expect.any(String))
+    const stale = { 303: { type: 3 as const, practice: { description: '演習', required: 99 } } }
+    expect(mergeQuestGoals(stale, bundledVersion)).toEqual(BUNDLED)
   })
 
   spec('ignores a payload older than the bundled one', () => {

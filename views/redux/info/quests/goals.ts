@@ -97,12 +97,19 @@ export function bundledQuestGoalsVersion(): string | undefined {
  * quest but never delete one — is the right way round here, since the payload is
  * generated from the bundled file: a missing id means the payload predates it.
  *
- * A payload *older* than this build is ignored outright. fcd state is restored from
- * localStorage, so after an app update the copy cached by the previous release is
- * still around, and since it carries nearly every quest id it would otherwise
- * shadow every bundled correction — not just fill the gaps. Versions sort
- * lexicographically (`YYYY/MM/DD/NN`), the same comparison the fcd updater uses. An
- * unknown delivered version cannot be compared, so it is applied.
+ * A payload that is not *strictly newer* than this build is ignored outright, for
+ * two reasons:
+ *
+ * - fcd state is restored from localStorage, so after an app update the copy cached
+ *   by the previous release is still around, and since it carries nearly every quest
+ *   id it would otherwise shadow every bundled correction — not just fill the gaps;
+ * - a payload at the *same* version as the build carries nothing the bundled cson
+ *   does not already have, because it is generated from it. Treating equal as
+ *   "nothing new" also means a `questgoal.json` that was not regenerated after a
+ *   cson edit cannot shadow that edit, which is otherwise invisible in development.
+ *
+ * Versions sort lexicographically (`YYYY/MM/DD/NN`), the same comparison the fcd
+ * updater uses. An unknown delivered version cannot be compared, so it is applied.
  */
 export function mergeQuestGoals(
   delivered?: QuestGoalTable,
@@ -111,7 +118,7 @@ export function mergeQuestGoals(
   const merged = loadBundledQuestGoals()
   if (!delivered || typeof delivered !== 'object') return merged
   const bundled = bundledQuestGoalsVersion()
-  if (deliveredVersion && bundled && deliveredVersion < bundled) return merged
+  if (deliveredVersion && bundled && deliveredVersion <= bundled) return merged
   for (const [id, goal] of Object.entries(delivered)) {
     if (goal && typeof goal === 'object') {
       merged[id] = cloneDeep(goal)
