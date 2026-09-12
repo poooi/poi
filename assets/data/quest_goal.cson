@@ -464,6 +464,13 @@ Quest guides (となはざな): https://tonahazana.com/
 ###
 # Quarterly
 ###
+313: # 秋季大演習 秋の一日中に「演習」で8回以上「勝利」をおさめ、艦隊のさらなる練度に努めよ！
+  type: 4
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 8
+    init: 0
 426: #海上通商航路の警戒を厳とせよ
   type: 4
   fuzzy: true
@@ -1747,9 +1754,111 @@ Quest guides (となはざな): https://tonahazana.com/
     required: 1
     mission: ['南西諸島捜索撃滅戦']
     init: 0
+1051: #改装「1YB3H」旗艦、敵中を突破せよ！
+  type: 108
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    flagship: ['山城改二補']
+    # 扶桑 or 時雨1 + 最上/満潮/朝雲/山雲2 (escortship entries are OR-ed, so require 3 of the 6)
+    escortship: [
+      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagship: ['山城改二補']
+    escortship: [
+      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagship: ['山城改二補']
+    escortship: [
+      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagship: ['山城改二補']
+    escortship: [
+      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    flagship: ['山城改二補']
+    escortship: [
+      [['扶桑', '時雨', '最上', '満潮', '朝雲', '山雲'], 3]
+    ]
+    required: 1
+    init: 0
 ###
 # Yearly (September)
 ###
+1050: #「第九戦隊」抜錨！前線展開せよッ！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    # 北上改二/改三 + 大井改二（いずれかが旗艦）
+    flagship: ['北上改二', '北上改三', '大井改二']
+    escortship: [
+      [['北上改二', '北上改三', '大井改二'], 2]
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    flagship: ['北上改二', '北上改三', '大井改二']
+    escortship: [
+      [['北上改二', '北上改三', '大井改二'], 2]
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagship: ['北上改二', '北上改三', '大井改二']
+    escortship: [
+      [['北上改二', '北上改三', '大井改二'], 2]
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagship: ['北上改二', '北上改三', '大井改二']
+    escortship: [
+      [['北上改二', '北上改三', '大井改二'], 2]
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
 928: #歴戦「第十方面艦隊」、全力出撃！
   type: 109
   fuzzy: true

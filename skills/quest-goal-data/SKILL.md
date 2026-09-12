@@ -93,11 +93,11 @@ Collect `api_no` across all `api_get_member/questlist/*.json` response-saver cap
 `/^'?(\d+)'?:/m` in `assets/data/quest_goal.cson`.
 
 Expect arsenal (工廠) equipment-preparation quests to show up as untracked — **that is by
-design**, not a gap: 626, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129. Quest 637 has no
+design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129. Quest 637 has no
 progress counter at all and is not trackable.
 
-Limited-time (期間限定) quests are out of scope unless the user says otherwise. Untracked but
-trackable ids seen in captures: 382, 383, 1048.
+Limited-time (期間限定) quests are out of scope unless the user says otherwise. Untracked
+limited-time ids seen in captures: 199, 382, 383, 384, 1048, 1049.
 
 ## Existing test coverage
 
