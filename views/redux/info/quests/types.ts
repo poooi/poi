@@ -71,6 +71,11 @@ export interface QuestGoalSubgoal {
    * are OR-ed — every entry must hold, matching `escortshiptype`.
    */
   escortshipId?: EscortShipIdConstraint[]
+  /**
+   * The OR of `escortshipId`: at least one entry must hold. For a quest that takes
+   * either of two escort groups, e.g. 903's 睦月型2隻 *or* 由良改二.
+   */
+  escortshipIdAny?: EscortShipIdConstraint[]
   escortshiptype?: EscortShipTypeConstraint[]
   escortshipclass?: EscortShipClassConstraint[]
   banshiptype?: number[]

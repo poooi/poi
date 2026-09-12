@@ -760,6 +760,36 @@ describe('satisfyShip — id-based ship constraints', () => {
     expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(false)
   })
 
+  spec('escortshipIdAny needs only one entry — the OR quest 903 relies on', () => {
+    // 夕張改二 flagship + (由良改二 ×1 OR 睦月型 ×2)
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      flagshipId: [622],
+      escortshipIdAny: [
+        [[488], 1], // 由良改二
+        [[1, 2], 2], // 睦月/如月
+      ],
+    }
+    const YUBARI = [622] // 夕張改二
+    const YURA = [488] // 由良改二
+    const MUTSUKI = [434, 254, 1] // 睦月改二 <- 睦月改 <- 睦月
+    const KISARAGI = [435, 255, 2]
+    expect(satisfyShip(goal, { shipIds: [YUBARI, YURA] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [YUBARI, MUTSUKI, KISARAGI] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [YUBARI, MUTSUKI] })).toBe(false)
+  })
+
+  spec('accepts a switchable variant of the named remodel, but never a pre-改 ship', () => {
+    // 夕張(115) -> 夕張改(293) -> 夕張改二(622) -> 改二特(623) -> 改二丁(624) -> 622
+    const goal: QuestsState['questGoals'][number][GoalKey] = { required: 1, flagshipId: [622] }
+    const KAI_NI_TOKU = [623, 622, 624, 293, 115] // what 夕張改二特 counts as
+    const KAI = [293, 115] // 夕張改
+    const BASE = [115] // 夕張
+    expect(satisfyShip(goal, { shipIds: [KAI_NI_TOKU] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [KAI] })).toBe(false)
+    expect(satisfyShip(goal, { shipIds: [BASE] })).toBe(false)
+  })
+
   spec('gates flagship and second ship by position', () => {
     const goal: QuestsState['questGoals'][number][GoalKey] = {
       required: 1,

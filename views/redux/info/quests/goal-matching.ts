@@ -26,6 +26,16 @@ export function satisfyGoal(
 const countsAsAny = (shipIds: number[] | undefined, goalIds: number[]): boolean =>
   (shipIds ?? []).some((id) => goalIds.includes(id))
 
+/** Whether the fleet holds enough ships matching one `escortshipId` entry. */
+function satisfyEscortIdEntry(
+  [goalIds, goalCount, ignoreFlagShip]: [number[], number, boolean?],
+  options: QuestOptions,
+): boolean {
+  const shipIds = ignoreFlagShip ? options.shipIds?.slice(1) : options.shipIds
+  const count = (shipIds ?? []).filter((ids) => countsAsAny(ids, goalIds)).length
+  return count >= goalCount
+}
+
 export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): boolean {
   if (goal.flagshipId && !countsAsAny(options.shipIds?.[0], goal.flagshipId)) {
     return false
@@ -34,12 +44,17 @@ export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): bool
     return false
   }
   if (goal.escortshipId && goal.escortshipId.length > 0) {
-    for (const [goalIds, goalCount, ignoreFlagShip] of goal.escortshipId) {
-      const shipIds = ignoreFlagShip ? options.shipIds?.slice(1) : options.shipIds
-      const count = (shipIds ?? []).filter((ids) => countsAsAny(ids, goalIds)).length
-      if (count < goalCount) {
+    // every entry must hold
+    for (const entry of goal.escortshipId) {
+      if (!satisfyEscortIdEntry(entry, options)) {
         return false
       }
+    }
+  }
+  if (goal.escortshipIdAny && goal.escortshipIdAny.length > 0) {
+    // ...whereas one of these is enough
+    if (!goal.escortshipIdAny.some((entry) => satisfyEscortIdEntry(entry, options))) {
+      return false
     }
   }
   if (

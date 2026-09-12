@@ -816,8 +816,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "5-1 S"
     maparea: [51]
     flagshipId: [622] #夕張改二
-    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
-    escortshipId: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
+    escortshipIdAny: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -827,8 +827,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "5-4 S"
     maparea: [54]
     flagshipId: [622] #夕張改二
-    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
-    escortshipId: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
+    escortshipIdAny: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -838,8 +838,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "6-4 S"
     maparea: [64]
     flagshipId: [622] #夕張改二
-    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
-    escortshipId: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
+    escortshipIdAny: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -849,8 +849,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "6-5 S"
     maparea: [65]
     flagshipId: [622] #夕張改二
-    # escortshipId のエントリは AND（escortship は OR だったので片方だけで通っていた）
-    escortshipId: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
+    escortshipIdAny: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]

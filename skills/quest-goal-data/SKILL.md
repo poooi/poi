@@ -153,8 +153,16 @@ counts as — its own plus every id it can have been remodelled from (`shipRemod
 - nothing else creeps in: 満潮 is a different line, so it never counts toward 潮.
 
 `escortshipId` entries are **AND**-ed (like `escortshiptype`), so
-「扶桑 or 時雨 ×1 + 最上/満潮/朝雲/山雲 ×2」 is two entries. The third element still means
-"ignore the flagship".
+「扶桑 or 時雨 ×1 + 最上/満潮/朝雲/山雲 ×2」 is two entries. `escortshipIdAny` is the OR of the
+same thing — one entry is enough — for a quest that takes either of two escort groups (903:
+由良改二 ×1 **or** 睦月型 ×2). Check which one a quest means against a guide; the two read
+almost identically in the quest text. The third element of an entry still means "ignore the
+flagship".
+
+Because an id names a stage, a 改-or-later quest simply cannot accept the base ship: 94 of the
+migrated goal ids name a remodelled stage, and none of them accepts an unremodelled ship. The
+one nuance is switchable variants — `[622]` (夕張改二) also accepts 改二特 and 改二丁, which is
+what quest 903 asks for anyway.
 
 The remodel graph is not a plain chain — switchable variants (最上改二 ⇄ 最上改二特) form
 cycles and 24 ships are reachable from more than one remodel — so the expansion is a
