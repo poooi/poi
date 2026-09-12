@@ -195,6 +195,7 @@ export function updateQuestRecordFactory(
           shipname: options?.shipname || [],
           shiptype: options?.shiptype || [],
           shipclass: options?.shipclass || [],
+          shipIds: options?.shipIds || [],
         }
         if (!satisfyShip(subgoal, { ...options, ...shipOptions })) return
         const existing = record[_event]

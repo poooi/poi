@@ -1,5 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 
+import type { QuestGoalTable } from '../info/quests/types'
+
 export const createInfoResourcesApplyDeltaAction = createAction<{ delta: number[] }>(
   '@@info.resources@ApplyDelta',
 )
@@ -47,6 +49,8 @@ export interface QuestOptions {
   shipname?: string[]
   shiptype?: number[]
   shipclass?: number[]
+  /** Parallel to `shipname`: every master id each ship counts as, remodels included. */
+  shipIds?: number[][]
   mission?: string
   maparea?: number
   mapcell?: number
@@ -67,5 +71,16 @@ export const createInfoQuestsApplyProgressAction = createAction<{
   delta: number
 }>('@@info.quests@ApplyProgress')
 
+/**
+ * A new quest goal table is in force — dispatched when fcd delivers
+ * `questgoal` data, which is layered over the bundled quest_goal.cson.
+ */
+export const createInfoQuestsGoalsUpdatedAction = createAction<{
+  delivered: QuestGoalTable
+  /** fcd version of `delivered`, so a payload older than this build can be ignored */
+  version?: string
+}>('@@info.quests@GoalsUpdated')
+
 export type InfoQuestsDailyRefreshAction = ReturnType<typeof createInfoQuestsDailyRefreshAction>
 export type InfoQuestsApplyProgressAction = ReturnType<typeof createInfoQuestsApplyProgressAction>
+export type InfoQuestsGoalsUpdatedAction = ReturnType<typeof createInfoQuestsGoalsUpdatedAction>

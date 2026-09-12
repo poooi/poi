@@ -8,3 +8,5 @@ process.env.FORCE_COLOR = 1
 // to make path related results consistent across different OS
 global.ROOT = __dirname
 global.EXROOT = path.join(__dirname, 'exroot')
+// only has to be a valid path: tests that read from it stub the file access
+global.APPDATA_PATH = path.join(__dirname, 'appdata')

@@ -35,12 +35,12 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
 
       const fleetId = state?.sortie?.sortieStatus?.findIndex((x) => x)
       const deckShipId = state.info?.fleets?.[fleetId ?? 0]?.api_ship || []
-      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
+      const { shipname, shiptype, shipclass, shipIds } = getFleetInfo(deckShipId, state)
 
       store.dispatch(
         createInfoQuestsApplyProgressAction({
           event: 'practice',
-          options: { shipname, shiptype, shipclass },
+          options: { shipname, shiptype, shipclass, shipIds },
           delta: 1,
         }),
       )
@@ -48,7 +48,7 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
         store.dispatch(
           createInfoQuestsApplyProgressAction({
             event: 'practice_win',
-            options: { shipname, shiptype, shipclass },
+            options: { shipname, shiptype, shipclass, shipIds },
             delta: 1,
           }),
         )
@@ -57,7 +57,7 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
         store.dispatch(
           createInfoQuestsApplyProgressAction({
             event: 'practice_win_a',
-            options: { shipname, shiptype, shipclass },
+            options: { shipname, shiptype, shipclass, shipIds },
             delta: 1,
           }),
         )
@@ -66,7 +66,7 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
         store.dispatch(
           createInfoQuestsApplyProgressAction({
             event: 'practice_win_s',
-            options: { shipname, shiptype, shipclass },
+            options: { shipname, shiptype, shipclass, shipIds },
             delta: 1,
           }),
         )
@@ -181,11 +181,11 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
       const { api_no: mapcell, api_maparea_id, api_mapinfo_no } = action.payload.body
       const maparea = api_maparea_id * 10 + api_mapinfo_no
       const deckShipId = state.battle?.result?.deckShipId || []
-      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
+      const { shipname, shiptype, shipclass, shipIds } = getFleetInfo(deckShipId, state)
       store.dispatch(
         createInfoQuestsApplyProgressAction({
           event: 'reach_mapcell',
-          options: { mapcell, maparea, shipname, shiptype, shipclass },
+          options: { mapcell, maparea, shipname, shiptype, shipclass, shipIds },
           delta: 1,
         }),
       )
@@ -199,8 +199,8 @@ export const questsCrossSliceMiddleware: Middleware<unknown, RootState> =
       const enemyShipId = result.enemyShipId || []
       const deckShipId = result.deckShipId || []
 
-      const { shipname, shiptype, shipclass } = getFleetInfo(deckShipId, state)
-      const battleMeta = { shipname, shiptype, shipclass, mapcell, maparea }
+      const { shipname, shiptype, shipclass, shipIds } = getFleetInfo(deckShipId, state)
+      const battleMeta = { shipname, shiptype, shipclass, shipIds, mapcell, maparea }
 
       store.dispatch(
         createInfoQuestsApplyProgressAction({ event: 'battle', options: battleMeta, delta: 1 }),

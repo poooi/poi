@@ -2,13 +2,11 @@ import type { Dispatch } from 'redux'
 
 import { createSlice } from '@reduxjs/toolkit'
 import CSON from 'cson'
-import { cloneDeep } from 'lodash'
-import path from 'path'
 import Scheduler from 'views/services/scheduler'
 import { QuestState } from 'views/utils/game-utils'
 import { copyIfSame } from 'views/utils/tools'
 
-import type { QuestGoal, QuestRecord, QuestsState } from './types'
+import type { QuestGoalTable, QuestRecord, QuestsState } from './types'
 
 import {
   createAPIPortPortResponseAction,
@@ -17,7 +15,9 @@ import {
   createAPIReqQuestClearitemgetResponseAction,
   createInfoQuestsApplyProgressAction,
   createInfoQuestsDailyRefreshAction,
+  createInfoQuestsGoalsUpdatedAction,
 } from '../../actions'
+import { loadBundledQuestGoals, mergeQuestGoals, resyncQuestRecords } from './goals'
 import { questTrackingPath } from './persistence'
 import {
   limitActiveQuests,
@@ -34,6 +34,7 @@ export type {
   GoalKey,
   QuestGoalSubgoal,
   QuestGoal,
+  QuestGoalTable,
   SubgoalRecord,
   QuestRecord,
   ActiveQuest,
@@ -41,9 +42,8 @@ export type {
 } from './types'
 export { ARMENIA_TIMEZONE, getTanakalendarQuarterMonth } from './time'
 export { satisfyShip } from './goal-matching'
+export { loadBundledQuestGoals, mergeQuestGoals, resyncQuestRecords } from './goals'
 export { saveQuestTracking } from './persistence'
-
-const questGoalsPath = path.join(ROOT, 'assets', 'data', 'quest_goal.cson')
 
 const initState: QuestsState = {
   records: {}, // {<questId>: {<subgoalName>: {count:, required:, description: }}}
@@ -64,13 +64,9 @@ const questsSlice = createSlice({
         if (admiralIdRaw == null) return
         const admiralId = String(admiralIdRaw)
 
-        // Load static quest goal data
-        let questGoals: Record<string | number, QuestGoal> = {}
-        try {
-          questGoals = cloneDeep(CSON.parseCSONFile(questGoalsPath))
-        } catch (_e) {
-          console.warn('No quest goal data!')
-        }
+        // Bundled quest goal data. Anything fcd has delivered is layered back on
+        // top right after this, by questGoalsFcdMiddleware.
+        const questGoals: QuestGoalTable = loadBundledQuestGoals()
 
         // Load quest tracking of this account
         let records: Record<string | number, QuestRecord> & { time?: number } = {}
@@ -171,6 +167,19 @@ const questsSlice = createSlice({
           const activeQuests = { ...state.activeQuests }
           delete activeQuests[api_quest_id]
           state.activeQuests = activeQuests
+        }
+      })
+      .addCase(createInfoQuestsGoalsUpdatedAction, (state, action) => {
+        state.questGoals = mergeQuestGoals(action.payload.delivered, action.payload.version)
+        state.records = resyncQuestRecords(state.records, state.questGoals)
+        // Quests already in progress whose goal only just arrived start tracking
+        // now instead of waiting for the next questlist response.
+        for (const key of Object.keys(state.activeQuests)) {
+          // Records elsewhere carry the numeric api_no as their id; keep that.
+          const id = Number(key)
+          if (!Number.isFinite(id) || state.records[id] || !state.questGoals[id]) continue
+          const created = newQuestRecord(id, state.questGoals)
+          if (created) state.records[id] = created
         }
       })
       .addCase(createInfoQuestsApplyProgressAction, (state, action) => {

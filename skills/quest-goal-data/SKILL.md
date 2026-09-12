@@ -7,21 +7,119 @@ description: Quest tracking — the assets/data/quest_goal.cson schema and the e
 
 ## Where things live
 
-| Concern                                                 | File                                            |
-| ------------------------------------------------------- | ----------------------------------------------- |
-| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                   |
-| `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                  |
-| `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`              |
-| Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`      |
-| Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`            |
-| API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts` |
-| Tests                                                   | `views/redux/info/__tests__/quests.spec.ts`     |
+| Concern                                                 | File                                                                   |
+| ------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                                          |
+| fcd payload generated from that data                    | `assets/data/fcd/questgoal.json` (via `fcd/build.js`)                  |
+| Bundled/delivered merge and record re-sync              | `views/redux/info/quests/goals.ts`                                     |
+| `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                                         |
+| `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`                                     |
+| Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`                             |
+| Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`                                   |
+| API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts`                        |
+| fcd delivery -> quest goals                             | `views/redux/middlewares/quest-goals-fcd.ts`                           |
+| Tests                                                   | `views/redux/info/__tests__/quests.spec.ts`, `quest-goals-fcd.spec.ts` |
 
 The engine is a directory of focused modules (`views/redux/info/quests/`), not a single
 `quests.ts` — it was split in commit `2fe7bf01`.
 
 Adding a new filter is a three-file change: a field on `QuestOptions`, a field on
 `QuestGoalSubgoal` plus its check, and a dispatch in the middleware.
+
+## The data ships twice: bundled cson + fcd
+
+`assets/data/quest_goal.cson` is the single source developers edit. It is bundled with the
+build and is the **fallback**; `fcd/build.js` mirrors it into `assets/data/fcd/questgoal.json`
+so a new or corrected quest reaches existing installs without a poi release.
+
+**After editing the cson, run `node fcd/build.js`** and commit the regenerated
+`assets/data/fcd/questgoal.json` and `meta.json` alongside it — `npm test` fails if you forget
+(`fcd/__tests__/payloads.spec.ts`). The script resolves its inputs
+from `__dirname`, so either working directory works. The build validates the cson first (every
+id numeric, every quest has at least one subgoal, every subgoal a positive `required`), so a
+broken edit fails there rather than shipping to everyone.
+
+How the two combine at runtime (`views/redux/info/quests/goals.ts`):
+
+- the bundled table is parsed once at `api_get_member/require_info`;
+- `questGoalsFcdMiddleware` then layers the delivered table over it, on `@@updateFCD` /
+  `@@replaceFCD` **and** after every `require_info` (either can come first, and require_info
+  reloads the bundled table, so the merge has to be re-applied);
+- the merge is **per quest id**: a delivered quest replaces the bundled one wholesale (so fcd
+  can drop a subgoal or fix a `required`), while ids the payload omits keep their bundled
+  definition — an fcd copy cached before a quest existed must not blank it out. So fcd can
+  correct a quest but never delete one;
+- a payload that is **not strictly newer than the build is discarded entirely**. The fcd slice is restored from
+  localStorage, so after an app update the copy cached by the previous release is still there,
+  and it carries nearly every quest id — per-id merging alone would let it shadow every bundled
+  correction. `mergeQuestGoals` compares the delivered version against `meta.version` of the
+  bundled `assets/data/fcd/questgoal.json`, which is generated from the same cson and so stands
+  in for the bundled table's own version. (The updater in Settings → About does refresh the
+  local payload at startup — Blueprint renders every settings panel, so that component is
+  mounted even unseen — but the floor keeps the guarantee from resting on that.) Equal counts as
+  "nothing new" on purpose: the bundled payload is generated from the bundled cson, so a
+  `questgoal.json` that was not regenerated after a cson edit cannot shadow that edit. The
+  `fcd/__tests__/payloads.spec.ts` test catches that drift at the source, by comparing every
+  committed payload against the file it is built from;
+- `resyncQuestRecords` then carries existing progress across the change: a count survives a
+  `required` correction (clamped to the new value), a dropped subgoal's record goes away, a new
+  one starts at `init`.
+
+Adding a _new subgoal filter field_ still needs a release — the payload only carries data, and
+an old build **silently ignores** a field its `satisfyShip`/`satisfyGoal` does not know, which
+makes that constraint vanish rather than fail. So data that will reach older builds has to keep
+expressing the constraint in fields they already understand, or move to a new fcd name so those
+builds keep their bundled copy.
+
+## `type`, and what the game's own fields mean
+
+`type` exists only to drive record resets (`outdateRecords` in
+`views/redux/info/quests/records.ts`) — nothing else reads it. Mapping from what the game
+sends in `questlist`:
+
+| `api_type` | `api_label_type` | meaning         | cson `type`                         |
+| ---------- | ---------------- | --------------- | ----------------------------------- |
+| 1          | 2                | daily           | 1 (8/9 for the two special dailies) |
+| 2          | 3                | weekly          | 2                                   |
+| 3          | 6                | monthly         | 3                                   |
+| 5          | 7                | quarterly       | 4                                   |
+| 5          | 100+month        | yearly          | 101–112                             |
+| 4          | 1                | one-time (単発) | **omit `type`**                     |
+
+A one-time quest must carry **no** `type`: a reset type deletes the record at the next period
+boundary and throws away progress on a quest that is still open. `resetInterval` works without
+a `type`, for a one-time quest whose counter is per-day.
+
+What that means at a date change, for a type-less goal:
+
+- **its record** is never touched by `outdateRecords` — `parseInt(String(undefined))` is `NaN`,
+  so it matches none of the delete sets (day/week/month/quarter, and each of the 12 yearly
+  resets). With `resetInterval: 1` only the counts go back to `init`, the record stays;
+- **its active-quest entry** survives too, because `outdateActiveQuests` keys off the _game's_
+  `api_type` in the quest detail (not the cson `type`), and one-time quests report `api_type 4`,
+  which matches none of its expiry branches;
+- the record is removed when the quest is **cleared** (`api_req_quest/clearitemget` drops both
+  the record and the active entry).
+
+Nothing else resets a count on a date change. The only other path that can _lower_ one is
+`updateRecordProgress`, which reconciles a **single-subgoal** record against the game's own
+`api_progress_flag` on each questlist response (flag 0 caps it below 50% of `required`, and so
+on). That is game-driven, not date-driven, and it skips multi-subgoal quests entirely.
+
+The consequence is that a one-time record is never garbage-collected if the quest vanishes
+without being cleared — a seasonal quest at the end of its season, say. That is deliberate: a
+quest can sit outside the five active slots for weeks and must keep its count, so there is no
+safe age at which to sweep it. `views/redux/info/__tests__/quests.spec.ts` covers both the
+record and the active-quest side.
+
+`fcd/build.js` asserts that each quest's `type` matches the section header it sits under
+(Daily/Weekly/Monthly/Quarterly/Yearly (Month)/One-time), so a quest cannot sit in Weekly with a
+monthly type — which is exactly how 242 reset its record on the wrong boundary for years. A
+quest whose game period changes therefore has to **move sections**, not just change `type`.
+
+A reset `type` also _wins over_ `resetInterval` — at a quarter boundary a `type: 4` record is
+deleted outright rather than zeroed, and re-created from the goals on the next questlist
+response. Covered by the `outdateRecords` tests in `quests.spec.ts`.
 
 ## Subgoal filter fields worth knowing
 
@@ -73,6 +171,52 @@ Quests 702/703 are unconstrained: they carry **no** `times: [1]` filter and simp
 
 Mirrors `flagshipclass` but checks `shipclass[1]` — the second ship's ctype. Added for quest 1045. Note `flagship: ['吹雪改三']` substring-matches 改三護 too.
 
+### Ships are named by master id, expanded through the remodel line
+
+`flagshipId` / `secondshipId` / `escortshipId` take **master ship ids** (`api_mst_ship.api_id`).
+An id names where a ship _starts_ counting: the middleware sends, per fleet ship, every id it
+counts as — its own plus every id it can have been remodelled from (`shipRemodelSources` in
+`views/utils/selectors/base.ts`) — and the matcher intersects that with the goal's ids. So:
+
+- `[35]` (響) counts the ship in **any** state, renames included — 響改二 is 「Верный」 and
+  shares no substring with 響;
+- `[233]` (潮改) counts 改 **and later** only, which is how 「〜改以降」 quests are expressed
+  exactly;
+- nothing else creeps in: 満潮 is a different line, so it never counts toward 潮.
+
+`escortshipId` entries are **OR**-ed, exactly as `escortship`'s were: one entry is enough. That
+is the common case — 903 takes 由良改二 ×1 **or** 睦月型 ×2. When a quest wants two groups
+**together**, use `escortshipIdAll`, whose entries must all hold (like `escortshiptype`): 1051
+asks for 扶桑/時雨 ×1 **and** 最上/満潮/朝雲/山雲 ×2, 875 for 長波改二 **and** one of
+高波改/沖波改/朝霜改. Only those two quests need `All`; 45 subgoals carry a single entry, where
+the distinction does not arise. Check which one a quest means against a guide — the two read
+almost identically in the quest text. The third element of an entry still means "ignore the
+flagship".
+
+Because an id names a stage, a 改-or-later quest simply cannot accept the base ship: 94 of the
+migrated goal ids name a remodelled stage, and none of them accepts an unremodelled ship. The
+one nuance is switchable variants — `[622]` (夕張改二) also accepts 改二特 and 改二丁, which is
+what quest 903 asks for anyway.
+
+The remodel graph is not a plain chain — switchable variants (最上改二 ⇄ 最上改二特) form
+cycles and 24 ships are reachable from more than one remodel — so the expansion is a
+reachability walk with a seen set, not a pointer chase. A consequence of the cycles: for a
+switchable pair, either id also counts the other.
+
+To find an id, look it up by exact name in an `api_start2` capture (`api_mst_ship`, player ships
+are `api_id < 1500`); see the `redux-api-testing` skill for where captures live.
+
+**The name fields (`flagship`, `secondship`, `escortship`) are deprecated.** They match by
+substring, which over-matches (`'潮'` also counted 満潮・大潮・荒潮・黒潮…) and silently misses
+renamed remodels; `escortship` also OR-es its entries, which several quests had to exploit to
+express an AND. All quest data was migrated to ids in the same change that added them; the
+matcher still honours them, but do not add new ones.
+
+Renamed remodels, for reading quest text and old data: 響→Верный, 雪風→丹陽, 大鯨→龍鳳,
+春日丸→大鷹, 八幡丸→雲鷹, U-511→呂500, Littorio→Italia, Гангут→Октябрьская революция,
+Luigi Torelli→UIT-25/伊504, C.Cappellini→UIT-24/伊503, Phoenix→General Belgrano,
+Dace→Leonardo da Vinci, 南海→野埼. With ids none of these need special handling.
+
 ### Nationality / class-based quests
 
 Some quests select ships by nationality via name-substring arrays on `flagship` /
@@ -93,11 +237,33 @@ Collect `api_no` across all `api_get_member/questlist/*.json` response-saver cap
 `/^'?(\d+)'?:/m` in `assets/data/quest_goal.cson`.
 
 Expect arsenal (工廠) equipment-preparation quests to show up as untracked — **that is by
-design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129. Quest 637 has no
+design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129, 1170.
+Several of them (1170, for one) _could_ have their scrap counters tracked, but only if
+`destory_item` dispatches carried the first fleet's flagship, which the quest requires and
+the event currently does not pass. Quest 637 has no
 progress counter at all and is not trackable.
 
-Limited-time (期間限定) quests are out of scope unless the user says otherwise. Untracked
-limited-time ids seen in captures: 199, 382, 383, 384, 1048, 1049.
+Composition-only quests (「…を編成せよ！」, e.g. 199) are **not trackable at all**: the engine
+matches events, and organising a fleet is not one — see the `QuestEvent` union in
+`views/redux/actions/quest.ts`.
+
+## Limited-time (期間限定) quests
+
+These live in their own section at the end of `quest_goal.cson`. Two rules:
+
+1. **Never add an expired one, and delete one whose period has ended.** The game reuses
+   limited-time ids for later campaigns, so a stale entry tracks the wrong quest.
+2. A capture proves a quest is _live_ but never proves it is _gone_ — a quest also disappears
+   from `questlist` once cleared (tab 0 lists only uncleared quests). So confirm the period
+   against the maintenance notes (ととねこ / ぜかましねっと) rather than from absence alone;
+   presence in a capture taken _after_ the last maintenance is the reliable positive signal.
+
+Tracked as of the 2026-09-10 maintenance: 382, 384, 1048, 1049. Deliberately not tracked from
+the same batch: 199 (composition only), 383 (フランス艦隊、特別演習 — period ended at that
+maintenance), 秋祭り拡張演習 (id not yet seen in any capture).
+
+The resource-preparation half of a quest (「弾薬 x2,200 を準備」) carries no event and cannot be
+tracked; 1048/1049 track only their sortie subgoals, with a comment saying so.
 
 ## Existing test coverage
 

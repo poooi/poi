@@ -15,10 +15,18 @@ import {
 } from 'views/redux/actions'
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 import Scheduler from 'views/services/scheduler'
+import { shipRemodelSources, type RemodelRoster } from 'views/utils/selectors'
 
-import type { ActiveQuest, GoalKey, SubgoalRecord, QuestsState } from '../quests'
+import type { ActiveQuest, GoalKey, QuestRecord, SubgoalRecord, QuestsState } from '../quests'
 
-import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
+import {
+  getTanakalendarQuarterMonth,
+  satisfyShip,
+  saveQuestTracking,
+  reducer as questsReducer,
+} from '../quests'
+import { outdateActiveQuests, outdateRecords } from '../quests/records'
+import { ONE_DAY } from '../quests/time'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
@@ -670,5 +678,263 @@ describe('quests reducer - questTrackingReducer paths', () => {
       }),
     )
     expect(getSubgoal(store.getState().info.quests, 9, 'remodel_ship').count).toBe(2)
+  })
+})
+
+describe('outdateRecords', () => {
+  // The shapes that actually ship in quest_goal.cson: a one-time (単発) quest carries
+  // no type, one with a same-day count adds resetInterval, and periodic quests carry
+  // the type of their period.
+  const goals: QuestsState['questGoals'] = {
+    1052: { battle_boss_win_rank_s: { required: 2 } }, // one-time
+    313: { resetInterval: 1, practice_win: { required: 8 } }, // one-time, daily count
+    854: { type: 4, battle_boss_win_rank_s: { required: 2 } }, // quarterly
+    1167: { type: 2, resetInterval: 1, remodel_item: { required: 3 } }, // weekly, daily count
+  }
+  const records: Record<string | number, QuestRecord> = {
+    1052: { id: 1052, battle_boss_win_rank_s: { count: 1, required: 2 } },
+    313: { id: 313, practice_win: { count: 5, required: 8 } },
+    854: { id: 854, battle_boss_win_rank_s: { count: 1, required: 2 } },
+    1167: { id: 1167, remodel_item: { count: 2, required: 3 } },
+  }
+  const at = (date: string) => +moment.tz(`${date} 06:00`, 'Asia/Tokyo')
+
+  spec('keeps one-time records across every rollover, resets the periodic ones', () => {
+    // a year on: a different day, week, month, quarter and every yearly boundary
+    const outdated = outdateRecords(goals, records, at('2026-09-12'), at('2027-09-12'))
+
+    // no type: the progress of a quest that is still open is never thrown away
+    expect(outdated[1052]).toEqual(records[1052])
+    // ...and a one-time quest with a daily count keeps its record, count zeroed
+    expect(outdated[313]).toEqual({ id: '313', practice_win: { count: 0, required: 8 } })
+    // a reset type wins over resetInterval, so these are dropped outright and the
+    // next questlist response re-creates them from the goals
+    expect(outdated[854]).toBeUndefined()
+    expect(outdated[1167]).toBeUndefined()
+  })
+
+  spec('resets only the daily counters when the day changes', () => {
+    const outdated = outdateRecords(goals, records, at('2026-09-12'), at('2026-09-13'))
+
+    expect(outdated[1052]).toEqual(records[1052])
+    expect(outdated[854]).toEqual(records[854])
+    expect(outdated[313]?.practice_win).toEqual({ count: 0, required: 8 })
+    expect(outdated[1167]?.remodel_item).toEqual({ count: 0, required: 3 })
+  })
+
+  spec('never resets a one-time record, stepped day by day across a whole year', () => {
+    // brute force rather than sampled boundaries: every day, week, month, Tanaka
+    // quarter and all 12 yearly resets are crossed somewhere in this loop
+    let carried = records
+    let previous = at('2026-09-12')
+    for (let day = 1; day <= 400; day += 1) {
+      const next = previous + ONE_DAY
+      carried = outdateRecords(goals, carried, previous, next)
+      previous = next
+      // the one-time record is still there, with its count intact
+      expect(carried[1052]).toEqual(records[1052])
+      // ...and the one with a daily count keeps its record too
+      expect(carried[313]?.practice_win).toEqual({ count: 0, required: 8 })
+    }
+  })
+
+  spec('leaves everything alone within the same quest day', () => {
+    // 05:00 JST is the boundary, so 06:00 and 23:00 are the same quest day
+    const outdated = outdateRecords(
+      goals,
+      records,
+      at('2026-09-12'),
+      +moment.tz('2026-09-12 23:00', 'Asia/Tokyo'),
+    )
+    expect(outdated).toEqual(records)
+  })
+})
+
+describe('outdateActiveQuests', () => {
+  // Expiry keys off the *game's* api_type in the quest detail, not the cson type; the
+  // rest of the payload is filler so the fixture is a real APIList.
+  const active = (
+    api_no: number,
+    api_type: number,
+    api_label_type: number,
+    time: number,
+  ): ActiveQuest => ({
+    detail: {
+      api_no,
+      api_type,
+      api_label_type,
+      api_state: 2,
+      api_progress_flag: 0,
+      api_title: `quest ${api_no}`,
+      api_detail: '',
+      api_category: 1,
+      api_bonus_flag: 1,
+      api_invalid_flag: 0,
+      api_get_material: [0, 0, 0, 0],
+      api_voice_id: 0,
+    },
+    time,
+  })
+  const at = (date: string) => +moment.tz(`${date} 06:00`, 'Asia/Tokyo')
+  const then = at('2026-09-12')
+  const quests = {
+    1052: active(1052, 4, 1, then), // one-time
+    201: active(201, 1, 2, then), // daily
+    242: active(242, 2, 3, then), // weekly
+    249: active(249, 3, 6, then), // monthly
+    854: active(854, 5, 7, then), // quarterly
+    1050: active(1050, 5, 109, then), // yearly (September)
+  }
+
+  spec('keeps a one-time quest active through every date change', () => {
+    for (const date of ['2026-09-13', '2026-09-20', '2026-10-12', '2027-09-12']) {
+      expect(outdateActiveQuests(quests, at(date))[1052]).toEqual(quests[1052])
+    }
+  })
+
+  spec('drops a daily on the next day and a weekly on the next week', () => {
+    const nextDay = outdateActiveQuests(quests, at('2026-09-13'))
+    expect(nextDay[201]).toBeUndefined()
+    expect(nextDay[242]).toEqual(quests[242])
+
+    const nextWeek = outdateActiveQuests(quests, at('2026-09-20'))
+    expect(nextWeek[242]).toBeUndefined()
+    expect(nextWeek[249]).toEqual(quests[249])
+  })
+
+  spec('drops a monthly next month and a yearly after its reset month', () => {
+    expect(outdateActiveQuests(quests, at('2026-10-12'))[249]).toBeUndefined()
+    expect(outdateActiveQuests(quests, at('2027-09-12'))[1050]).toBeUndefined()
+  })
+})
+
+describe('satisfyShip — id-based ship constraints', () => {
+  // What the middleware passes: for each fleet ship, every master id it counts as
+  // (its own plus every id it can have been remodelled from).
+  const VERNY = [147, 235, 35] // Верный <- 響改 <- 響
+  const MICHISHIO = [489, 250, 97] // 満潮改二 <- 満潮改 <- 満潮
+  const USHIO_BASE = [16] // 潮, unremodelled
+  const USHIO_KAI2 = [407, 233, 16] // 潮改二 <- 潮改 <- 潮
+
+  spec('matches a renamed remodel through its base id', () => {
+    // 響 = 35; Верный is the same ship two remodels on, and shares no substring
+    expect(satisfyShip({ required: 1, escortshipId: [[[35], 1]] }, { shipIds: [VERNY] })).toBe(true)
+  })
+
+  spec('does not match a different ship whose name merely contains the same characters', () => {
+    // the substring bug this replaces: '潮' used to count 満潮 as well
+    expect(satisfyShip({ required: 1, escortshipId: [[[16], 1]] }, { shipIds: [MICHISHIO] })).toBe(
+      false,
+    )
+  })
+
+  spec('counts a remodel at or after the named id, and nothing before it', () => {
+    const kaiOrLater: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [[[233], 1]], // 潮改
+    }
+    expect(satisfyShip(kaiOrLater, { shipIds: [USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(kaiOrLater, { shipIds: [USHIO_BASE] })).toBe(false)
+  })
+
+  spec('escortshipId entries are OR-ed, like escortship', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [
+        [[35], 1], // 響
+        [[16], 1], // 潮
+      ],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    // one entry is enough: 響 alone passes, 満潮 alone does not
+    expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [MICHISHIO] })).toBe(false)
+  })
+
+  spec('escortshipIdAll entries must all hold, like escortshiptype', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipIdAll: [
+        [[35], 1], // 響
+        [[16], 1], // 潮
+      ],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(false)
+  })
+
+  spec('takes either escort group — the OR quest 903 relies on', () => {
+    // 夕張改二 flagship + (由良改二 ×1 OR 睦月型 ×2)
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      flagshipId: [622],
+      escortshipId: [
+        [[488], 1], // 由良改二
+        [[1, 2], 2], // 睦月/如月
+      ],
+    }
+    const YUBARI = [622] // 夕張改二
+    const YURA = [488] // 由良改二
+    const MUTSUKI = [434, 254, 1] // 睦月改二 <- 睦月改 <- 睦月
+    const KISARAGI = [435, 255, 2]
+    expect(satisfyShip(goal, { shipIds: [YUBARI, YURA] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [YUBARI, MUTSUKI, KISARAGI] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [YUBARI, MUTSUKI] })).toBe(false)
+  })
+
+  spec('accepts a switchable variant of the named remodel, but never a pre-改 ship', () => {
+    // 夕張(115) -> 夕張改(293) -> 夕張改二(622) -> 改二特(623) -> 改二丁(624) -> 622
+    const goal: QuestsState['questGoals'][number][GoalKey] = { required: 1, flagshipId: [622] }
+    const KAI_NI_TOKU = [623, 622, 624, 293, 115] // what 夕張改二特 counts as
+    const KAI = [293, 115] // 夕張改
+    const BASE = [115] // 夕張
+    expect(satisfyShip(goal, { shipIds: [KAI_NI_TOKU] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [KAI] })).toBe(false)
+    expect(satisfyShip(goal, { shipIds: [BASE] })).toBe(false)
+  })
+
+  spec('gates flagship and second ship by position', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      flagshipId: [35],
+      secondshipId: [16],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [USHIO_KAI2, VERNY] })).toBe(false)
+  })
+
+  spec('ignores the flagship when an entry says so', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipId: [[[35], 1, true]],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(false)
+    expect(satisfyShip(goal, { shipIds: [USHIO_KAI2, VERNY] })).toBe(true)
+  })
+})
+
+describe('shipRemodelSources', () => {
+  // 潮 -> 潮改 -> 潮改二, and a switchable pair that points back at itself
+  const $ships: RemodelRoster = {
+    16: { api_id: 16, api_aftershipid: '233' }, // 潮
+    233: { api_id: 233, api_aftershipid: '407' }, // 潮改
+    407: { api_id: 407, api_aftershipid: '0' }, // 潮改二
+    501: { api_id: 501, api_aftershipid: '506' }, // 最上改二
+    506: { api_id: 506, api_aftershipid: '501' }, // 最上改二特
+    97: { api_id: 97, api_aftershipid: '0' }, // 満潮
+  }
+
+  spec('lists the ship itself and everything it was remodelled from', () => {
+    expect(shipRemodelSources(407, $ships).sort()).toEqual([16, 233, 407])
+    expect(shipRemodelSources(16, $ships)).toEqual([16])
+  })
+
+  spec('keeps a ship with a similar name out of it', () => {
+    expect(shipRemodelSources(97, $ships)).toEqual([97])
+  })
+
+  spec('terminates on switchable remodels that cycle', () => {
+    expect(shipRemodelSources(501, $ships).sort()).toEqual([501, 506])
+    expect(shipRemodelSources(506, $ships).sort()).toEqual([501, 506])
   })
 })

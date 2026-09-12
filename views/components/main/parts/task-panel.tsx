@@ -324,6 +324,10 @@ const makeQualifyingFleetsSelector = (questNo: number) =>
             sg.escortshiptype ||
             sg.flagshipclass ||
             sg.escortshipclass ||
+            sg.flagshipId ||
+            sg.secondshipId ||
+            sg.escortshipId ||
+            sg.escortshipIdAll ||
             sg.banshiptype ||
             sg.fleetlimit
           ),

@@ -8,6 +8,7 @@ export {
   createInfoShipsRepairCompletedAction,
   createInfoQuestsDailyRefreshAction,
   createInfoQuestsApplyProgressAction,
+  createInfoQuestsGoalsUpdatedAction,
 } from './quest'
 
 export type {
@@ -16,6 +17,7 @@ export type {
   InfoShipsRepairCompletedAction,
   InfoQuestsDailyRefreshAction,
   InfoQuestsApplyProgressAction,
+  InfoQuestsGoalsUpdatedAction,
   QuestEvent,
   QuestOptions,
 } from './quest'

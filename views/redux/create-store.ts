@@ -17,6 +17,7 @@ import { dispatchBattleResult } from './battle'
 import { saveQuestTracking, schedualDailyRefresh } from './info/quests'
 import { dockingCompleteObserver } from './info/repairs'
 import { equipsCrossSliceMiddleware } from './middlewares/equips-cross-slice'
+import { questGoalsFcdMiddleware } from './middlewares/quest-goals-fcd'
 import { questsCrossSliceMiddleware } from './middlewares/quests-cross-slice'
 import { resourcesCrossSliceMiddleware } from './middlewares/resources-cross-slice'
 import { shipsCrossSliceMiddleware } from './middlewares/ships-cross-slice'
@@ -90,6 +91,7 @@ export const store: Store<RootState> = createStore(
       equipsCrossSliceMiddleware,
       shipsCrossSliceMiddleware,
       questsCrossSliceMiddleware,
+      questGoalsFcdMiddleware,
     ),
   ),
 )
