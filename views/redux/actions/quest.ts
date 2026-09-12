@@ -75,6 +75,8 @@ export const createInfoQuestsApplyProgressAction = createAction<{
  */
 export const createInfoQuestsGoalsUpdatedAction = createAction<{
   delivered: QuestGoalTable
+  /** fcd version of `delivered`, so a payload older than this build can be ignored */
+  version?: string
 }>('@@info.quests@GoalsUpdated')
 
 export type InfoQuestsDailyRefreshAction = ReturnType<typeof createInfoQuestsDailyRefreshAction>

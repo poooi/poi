@@ -170,7 +170,7 @@ const questsSlice = createSlice({
         }
       })
       .addCase(createInfoQuestsGoalsUpdatedAction, (state, action) => {
-        state.questGoals = mergeQuestGoals(action.payload.delivered)
+        state.questGoals = mergeQuestGoals(action.payload.delivered, action.payload.version)
         state.records = resyncQuestRecords(state.records, state.questGoals)
         // Quests already in progress whose goal only just arrived start tracking
         // now instead of waiting for the next questlist response.

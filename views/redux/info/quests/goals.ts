@@ -1,4 +1,5 @@
 import CSON from 'cson'
+import fs from 'fs'
 import { cloneDeep } from 'lodash'
 import path from 'path'
 
@@ -17,8 +18,10 @@ import type { GoalKey, QuestGoalTable, QuestRecord, SubgoalRecord } from './type
  * `mergeQuestGoals` for why it merges rather than replaces.
  */
 const questGoalsPath = path.join(ROOT, 'assets', 'data', 'quest_goal.cson')
+const bundledPayloadPath = path.join(ROOT, 'assets', 'data', 'fcd', 'questgoal.json')
 
 let bundledQuestGoals: QuestGoalTable | undefined
+let bundledVersion: string | undefined | null
 
 /**
  * The bundled quest goal table. Parsed once; an unreadable or broken file
@@ -48,9 +51,38 @@ export function loadBundledQuestGoals(): QuestGoalTable {
   return cloneDeep(bundledQuestGoals)
 }
 
-/** Only for tests — drops the parsed copy so the next load re-reads the file. */
+/** Only for tests — drops the parsed copies so the next load re-reads the files. */
 export function resetBundledQuestGoals(): void {
   bundledQuestGoals = undefined
+  bundledVersion = undefined
+}
+
+/**
+ * `meta.version` of the fcd payload shipped with this build. Since that payload is
+ * generated from the bundled cson, it doubles as the version of the bundled table
+ * itself, which is what makes it a usable floor in `mergeQuestGoals`.
+ */
+export function bundledQuestGoalsVersion(): string | undefined {
+  if (bundledVersion === undefined) {
+    bundledVersion = null
+    try {
+      const parsed: unknown = JSON.parse(fs.readFileSync(bundledPayloadPath, 'utf-8'))
+      if (parsed && typeof parsed === 'object' && 'meta' in parsed) {
+        const meta = parsed.meta
+        if (
+          meta &&
+          typeof meta === 'object' &&
+          'version' in meta &&
+          typeof meta.version === 'string'
+        ) {
+          bundledVersion = meta.version
+        }
+      }
+    } catch (e) {
+      console.warn('No bundled questgoal payload!', e instanceof Error ? e.message : String(e))
+    }
+  }
+  return bundledVersion ?? undefined
 }
 
 /**
@@ -64,10 +96,22 @@ export function resetBundledQuestGoals(): void {
  * quest was added must not blank that quest out. The cost — fcd can correct a
  * quest but never delete one — is the right way round here, since the payload is
  * generated from the bundled file: a missing id means the payload predates it.
+ *
+ * A payload *older* than this build is ignored outright. fcd state is restored from
+ * localStorage, so after an app update the copy cached by the previous release is
+ * still around, and since it carries nearly every quest id it would otherwise
+ * shadow every bundled correction — not just fill the gaps. Versions sort
+ * lexicographically (`YYYY/MM/DD/NN`), the same comparison the fcd updater uses. An
+ * unknown delivered version cannot be compared, so it is applied.
  */
-export function mergeQuestGoals(delivered?: QuestGoalTable): QuestGoalTable {
+export function mergeQuestGoals(
+  delivered?: QuestGoalTable,
+  deliveredVersion?: string,
+): QuestGoalTable {
   const merged = loadBundledQuestGoals()
   if (!delivered || typeof delivered !== 'object') return merged
+  const bundled = bundledQuestGoalsVersion()
+  if (deliveredVersion && bundled && deliveredVersion < bundled) return merged
   for (const [id, goal] of Object.entries(delivered)) {
     if (goal && typeof goal === 'object') {
       merged[id] = cloneDeep(goal)

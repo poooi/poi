@@ -74,6 +74,16 @@ describe('mergeQuestGoals', () => {
     expect(Object.keys(merged).sort()).toEqual(['201', '303', '313'])
   })
 
+  spec('ignores a payload older than the bundled one', () => {
+    // fcd state survives in localStorage across app updates, so the copy cached by a
+    // previous release would otherwise shadow every bundled correction it has an id for.
+    const stale = { 303: { type: 3 as const, practice: { description: '演習', required: 99 } } }
+    expect(mergeQuestGoals(stale, '1970/01/01/01')).toEqual(BUNDLED)
+    // ...but an unknown version cannot be compared, so it is applied
+    expect(mergeQuestGoals(stale)[303]).toEqual(stale[303])
+    expect(mergeQuestGoals(stale, '2999/01/01/01')[303]).toEqual(stale[303])
+  })
+
   spec('does not hand out the cached bundled table', () => {
     const first = mergeQuestGoals()
     first[201] = { type: 1, battle_win: { required: 99 } }
@@ -132,7 +142,8 @@ describe('resyncQuestRecords', () => {
 
 describe('questGoalsFcdMiddleware', () => {
   const deliveredPayload = {
-    meta: { name: 'questgoal', version: '2026/09/12/01' },
+    // Newer than the payload bundled with this build, so the floor lets it through.
+    meta: { name: 'questgoal', version: '2999/01/01/01' },
     path: 'questgoal' as const,
     data: {
       303: { type: 3 as const, practice: { description: '演習', required: 6, init: 0 } },
@@ -199,6 +210,21 @@ describe('questGoalsFcdMiddleware', () => {
     store.dispatch(createReplaceFCDAction({ path: 'questgoal', data: deliveredPayload.data }))
 
     expect(questGoalsOf(store)[313]).toEqual(deliveredPayload.data[313])
+  })
+
+  spec('ignores a stale cached payload after an app update', () => {
+    const store = createTestStore()
+    store.dispatch(
+      createUpdateFCDAction({
+        ...deliveredPayload,
+        meta: { name: 'questgoal', version: '1970/01/01/01' },
+      }),
+    )
+
+    // the stale payload reached the fcd slice, but not the quest goals
+    expect(store.getState().fcd.questgoal).toEqual(deliveredPayload.data)
+    expect(questGoalsOf(store)[313]).toBeUndefined()
+    expect(questGoalsOf(store)[303]).toEqual(BUNDLED[303])
   })
 
   spec('ignores fcd data for other paths', () => {

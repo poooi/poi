@@ -38,21 +38,25 @@ async function writeJSON(fname, data) {
   await fs.outputJSON(path.resolve(DEST, fname), data, JSON_OPTIONS)
 }
 
+// Inputs are resolved from this directory, not the process working directory, so
+// `node fcd/build.js` works from the repo root as well as from `fcd/`.
+const src = (name) => path.resolve(__dirname, name)
+
 async function readCSON(name) {
-  const data = await fs.readFile(name)
+  const data = await fs.readFile(src(name))
   return CSON.parse(data)
 }
 
-// `src` is read relative to this directory; `outName` is the file written into
+// `source` is resolved from this directory; `outName` is the file written into
 // assets/data/fcd, and defaults to the source's own name with a .json extension.
-async function buildData(src, outName = path.basename(src).replace('.cson', '.json')) {
+async function buildData(source, outName = path.basename(source).replace('.cson', '.json')) {
   const dest = path.resolve(DEST, outName)
   const name = outName.replace('.json', '')
   // A data file that has never been built yet has no version to bump from.
   const current = (await fs.readJSON(dest).catch(() => undefined)) || {
     meta: { name, version: '1970/01/01/01' },
   }
-  const data = src.endsWith('cson') ? await readCSON(src) : await fs.readJSON(src)
+  const data = source.endsWith('cson') ? await readCSON(source) : await fs.readJSON(src(source))
   const meta = getMeta(current, data)
   await writeJSON(outName, { meta, data })
 }
@@ -70,7 +74,7 @@ async function buildMeta() {
 }
 
 const validateShipTag = async () => {
-  const file = await fs.readFile('shiptag.cson', 'utf-8')
+  const file = await fs.readFile(src('shiptag.cson'), 'utf-8')
   const data = CSON.parse(file)
 
   const count = size(data.mapname)

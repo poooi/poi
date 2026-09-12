@@ -34,9 +34,14 @@ export const questGoalsFcdMiddleware: Middleware<unknown, RootState> =
       (createReplaceFCDAction.match(action) && action.payload.path === FCD_NAME)
 
     if (deliversQuestGoals || createAPIGetMemberRequireInfoAction.match(action)) {
-      const delivered = store.getState().fcd?.questgoal
+      const fcd = store.getState().fcd
+      const delivered = fcd?.questgoal
       if (delivered && Object.keys(delivered).length > 0) {
-        store.dispatch(createInfoQuestsGoalsUpdatedAction({ delivered }))
+        // The version lets mergeQuestGoals discard a payload older than this build,
+        // which the fcd slice may still be carrying from localStorage.
+        store.dispatch(
+          createInfoQuestsGoalsUpdatedAction({ delivered, version: fcd?.version?.[FCD_NAME] }),
+        )
       }
     }
 
