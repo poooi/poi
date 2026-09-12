@@ -16,9 +16,10 @@ import {
 import { questsCrossSliceMiddleware } from 'views/redux/middlewares/quests-cross-slice'
 import Scheduler from 'views/services/scheduler'
 
-import type { ActiveQuest, GoalKey, SubgoalRecord, QuestsState } from '../quests'
+import type { ActiveQuest, GoalKey, QuestRecord, SubgoalRecord, QuestsState } from '../quests'
 
 import { getTanakalendarQuarterMonth, saveQuestTracking, reducer as questsReducer } from '../quests'
+import { outdateRecords } from '../quests/records'
 import powerupFixture from './__fixtures__/api_req_kaisou_powerup_consumes_material_ships.json'
 import createItemFixture from './__fixtures__/api_req_kousyou_createitem_success.json'
 import destroyItemFixture from './__fixtures__/api_req_kousyou_destroyitem2_multiple_slots.json'
@@ -670,5 +671,44 @@ describe('quests reducer - questTrackingReducer paths', () => {
       }),
     )
     expect(getSubgoal(store.getState().info.quests, 9, 'remodel_ship').count).toBe(2)
+  })
+})
+
+describe('outdateRecords', () => {
+  const goals: QuestsState['questGoals'] = {
+    // One-time (単発) quests carry no type on purpose, so their record has to
+    // survive every period rollover — see the section in quest_goal.cson.
+    1052: { battle_boss_win_rank_s: { required: 2 } },
+    854: { type: 4, battle_boss_win_rank_s: { required: 2 } },
+    313: { type: 4, resetInterval: 1, practice_win: { required: 8 } },
+  }
+  const records: Record<string | number, QuestRecord> = {
+    1052: { id: 1052, battle_boss_win_rank_s: { count: 1, required: 2 } },
+    854: { id: 854, battle_boss_win_rank_s: { count: 1, required: 2 } },
+    313: { id: 313, practice_win: { count: 5, required: 8 } },
+  }
+
+  spec('keeps a type-less record across a year rollover, resets the typed ones', () => {
+    const then = +moment.tz('2026-09-12 06:00', 'Asia/Tokyo')
+    const now = +moment.tz('2027-09-12 06:00', 'Asia/Tokyo')
+    const outdated = outdateRecords(goals, records, then, now)
+
+    // no type: never reset
+    expect(outdated[1052]).toEqual(records[1052])
+    // quarterly: record dropped entirely. A reset type wins over resetInterval,
+    // so the daily-counter quest is dropped at the quarter boundary too; the next
+    // questlist response re-creates both from the goals.
+    expect(outdated[854]).toBeUndefined()
+    expect(outdated[313]).toBeUndefined()
+  })
+
+  spec('resets only the daily counter when the day changes', () => {
+    const then = +moment.tz('2026-09-12 06:00', 'Asia/Tokyo')
+    const now = +moment.tz('2026-09-13 06:00', 'Asia/Tokyo')
+    const outdated = outdateRecords(goals, records, then, now)
+
+    expect(outdated[1052]).toEqual(records[1052])
+    expect(outdated[854]).toEqual(records[854])
+    expect(outdated[313]?.practice_win).toEqual({ count: 0, required: 8 })
   })
 })

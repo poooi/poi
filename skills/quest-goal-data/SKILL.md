@@ -54,6 +54,29 @@ How the two combine at runtime (`views/redux/info/quests/goals.ts`):
 Adding a _new subgoal filter field_ still needs a release — the payload only carries data, and
 an old build will ignore a field its `satisfyShip`/`satisfyGoal` does not know.
 
+## `type`, and what the game's own fields mean
+
+`type` exists only to drive record resets (`outdateRecords` in
+`views/redux/info/quests/records.ts`) — nothing else reads it. Mapping from what the game
+sends in `questlist`:
+
+| `api_type` | `api_label_type` | meaning         | cson `type`                         |
+| ---------- | ---------------- | --------------- | ----------------------------------- |
+| 1          | 2                | daily           | 1 (8/9 for the two special dailies) |
+| 2          | 3                | weekly          | 2                                   |
+| 3          | 6                | monthly         | 3                                   |
+| 5          | 7                | quarterly       | 4                                   |
+| 5          | 100+month        | yearly          | 101–112                             |
+| 4          | 1                | one-time (単発) | **omit `type`**                     |
+
+A one-time quest must carry **no** `type`: a reset type deletes the record at the next period
+boundary and throws away progress on a quest that is still open. `resetInterval` works without
+a `type`, for a one-time quest whose counter is per-day.
+
+A reset `type` also _wins over_ `resetInterval` — at a quarter boundary a `type: 4` record is
+deleted outright rather than zeroed, and re-created from the goals on the next questlist
+response. Covered by the `outdateRecords` tests in `quests.spec.ts`.
+
 ## Subgoal filter fields worth knowing
 
 ### `slotitemId` — filter `destory_item` by equipment master id
@@ -124,7 +147,10 @@ Collect `api_no` across all `api_get_member/questlist/*.json` response-saver cap
 `/^'?(\d+)'?:/m` in `assets/data/quest_goal.cson`.
 
 Expect arsenal (工廠) equipment-preparation quests to show up as untracked — **that is by
-design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129. Quest 637 has no
+design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129, 1170.
+Several of them (1170, for one) _could_ have their scrap counters tracked, but only if
+`destory_item` dispatches carried the first fleet's flagship, which the quest requires and
+the event currently does not pass. Quest 637 has no
 progress counter at all and is not trackable.
 
 Composition-only quests (「…を編成せよ！」, e.g. 199) are **not trackable at all**: the engine

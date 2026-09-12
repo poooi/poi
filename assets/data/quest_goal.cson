@@ -2138,6 +2138,45 @@ Quest guides (となはざな): https://tonahazana.com/
     required: 4
     init: 0
 ###
+# One-time (単発)
+#
+# The game marks these api_type 4 with api_label_type 1. They never repeat, so
+# they deliberately carry no `type`: any reset type would delete the record at
+# the next period boundary and throw away the progress of a quest that is still
+# open. `resetInterval` still works without a `type` if a counter has to reset.
+###
+1052: #改装多目的搭載母艦「北上改三」、出撃ッ！ 2026-09-10 実装
+  fuzzy: true
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    flagship: ['北上改三']
+    # 花月/潮/響/竹/桐/榧/杉/樫 から2隻以上。'潮' は満潮・大潮・荒潮にも
+    # substring 一致する（既存の朧・漣・曙・潮の扱いと同じ）
+    escortship: [
+      [['花月', '潮', '響', '竹', '桐', '榧', '杉', '樫'], 2]
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagship: ['北上改三']
+    escortship: [
+      [['花月', '潮', '響', '竹', '桐', '榧', '杉', '樫'], 2]
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagship: ['北上改三']
+    escortship: [
+      [['花月', '潮', '響', '竹', '桐', '榧', '杉', '樫'], 2]
+    ]
+    required: 2
+    init: 0
+###
 # Limited-time (期間限定)
 #
 # Only quests whose period is still running belong here — an expired id must be
