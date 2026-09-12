@@ -127,6 +127,33 @@ Quests 702/703 are unconstrained: they carry **no** `times: [1]` filter and simp
 
 Mirrors `flagshipclass` but checks `shipclass[1]` — the second ship's ctype. Added for quest 1045. Note `flagship: ['吹雪改三']` substring-matches 改三護 too.
 
+### Ship names are matched by **substring**, which cuts both ways
+
+`satisfyShip` uses `shipName.includes(goalName)`, so a bare `'潮'` also matches 満潮・大潮・荒潮,
+and — the dangerous direction — a remodel that is **renamed** stops matching its base name
+entirely. Every such rename in the player roster (from `api_mst_ship`, following
+`api_aftershipid`):
+
+| base          | renamed remodel           |
+| ------------- | ------------------------- |
+| 響            | Верный                    |
+| 雪風          | 丹陽                      |
+| 大鯨          | 龍鳳 (改 / 改二 / 改二戊) |
+| 春日丸        | 大鷹 (改 / 改二)          |
+| 八幡丸        | 雲鷹 (改 / 改二)          |
+| U-511         | 呂500                     |
+| Littorio      | Italia                    |
+| Гангут        | Октябрьская революция     |
+| Luigi Torelli | UIT-25 / 伊504            |
+| C.Cappellini  | UIT-24 / 伊503            |
+| Phoenix       | General Belgrano          |
+| Dace          | Leonardo da Vinci         |
+| 南海          | 野埼 (改)                 |
+
+List both names when a quest accepts the ship in any state (e.g. quests 382 and 1052 carry
+`'響', 'Верный'`). To re-check the whole file, walk each listed name's remodel chain in
+`api_start2` master data and flag any successor whose name no name in the same list matches.
+
 ### Nationality / class-based quests
 
 Some quests select ships by nationality via name-substring arrays on `flagship` /
