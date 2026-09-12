@@ -151,13 +151,6 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "改修"
     required: 1
     init: 0
-1167: # 装備の改修集中強化
-  type: 1 # Weekly but the progress is reset daily, so we treat it as daily
-  "remodel_item":
-    description: "改修"
-    required: 3
-    init: 0
-
 ###
 # Someday
 ###
@@ -239,7 +232,7 @@ Quest guides (となはざな): https://tonahazana.com/
     required: 5
     init: 0
 242: # 敵東方中枢艦隊を撃破せよ！ 获得4-4 BOSS战胜利1次
-  type: 3
+  type: 2
   "battle_boss_win":
     description: "勝利"
     maparea: [44]
@@ -341,6 +334,14 @@ Quest guides (となはざな): https://tonahazana.com/
     slotitemType2: [5] # 5=魚雷
     required: 3
     init: 0
+1167: # 装備の改修集中強化 「本日中に…連続三回」
+  type: 2
+  resetInterval: 1 # weekly quest, but the count has to be reached within one day
+  "remodel_item":
+    description: "改修"
+    required: 3
+    init: 0
+
 ###
 # Monthly
 ###
@@ -466,13 +467,6 @@ Quest guides (となはざな): https://tonahazana.com/
 ###
 # Quarterly
 ###
-313: # 秋季大演習 秋の一日中に「演習」で8回以上「勝利」をおさめ、艦隊のさらなる練度に努めよ！
-  type: 4
-  resetInterval: 1
-  "practice_win":
-    description: "演習勝利"
-    required: 8
-    init: 0
 426: #海上通商航路の警戒を厳とせよ
   type: 4
   fuzzy: true
@@ -2182,6 +2176,14 @@ Quest guides (となはざな): https://tonahazana.com/
 # the next period boundary and throw away the progress of a quest that is still
 # open. `resetInterval` still works without a `type` if a counter has to reset.
 ###
+313: # 秋季大演習 秋の一日中に「演習」で8回以上「勝利」をおさめ、艦隊のさらなる練度に努めよ！
+  # 季節任務。ゲーム側は単発(api_type 4 / label 1)なので type は付けず、
+  # 同日中に8回という条件だけ resetInterval で扱う
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 8
+    init: 0
 1052: #改装多目的搭載母艦「北上改三」、出撃ッ！ 2026-09-10 実装
   fuzzy: true
   "battle_boss_win_rank_s@13":

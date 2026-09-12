@@ -85,6 +85,11 @@ A one-time quest must carry **no** `type`: a reset type deletes the record at th
 boundary and throws away progress on a quest that is still open. `resetInterval` works without
 a `type`, for a one-time quest whose counter is per-day.
 
+`fcd/build.js` asserts that each quest's `type` matches the section header it sits under
+(Daily/Weekly/Monthly/Quarterly/Yearly (Month)/One-time), so a quest cannot sit in Weekly with a
+monthly type — which is exactly how 242 reset its record on the wrong boundary for years. A
+quest whose game period changes therefore has to **move sections**, not just change `type`.
+
 A reset `type` also _wins over_ `resetInterval` — at a quarter boundary a `type: 4` record is
 deleted outright rather than zeroed, and re-created from the goals on the next questlist
 response. Covered by the `outdateRecords` tests in `quests.spec.ts`.

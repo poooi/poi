@@ -91,6 +91,73 @@ const validateShipTag = async () => {
 // used when fcd has nothing newer; this only mirrors it into the fcd payload.
 const QUEST_GOAL_SRC = '../assets/data/quest_goal.cson'
 
+// Each quest lives under a section header naming its period, so the header and the
+// `type` that drives record resets have to agree — quest 242 sat in Weekly with a
+// monthly type, which reset its record on the wrong boundary.
+const YEARLY_MONTHS = {
+  January: 101,
+  February: 102,
+  March: 103,
+  April: 104,
+  May: 105,
+  June: 106,
+  July: 107,
+  August: 108,
+  September: 109,
+  October: 110,
+  November: 111,
+  December: 112,
+}
+const SECTION_TYPES = {
+  Daily: [1, 8, 9],
+  Someday: [1, 8, 9],
+  Weekly: [2],
+  Monthly: [3],
+  Quarterly: [4],
+  // one-time quests never repeat, so they carry no type at all
+  'One-time': [undefined],
+  // limited-time quests keep whatever period the game gives them
+  'Limited-time': null,
+}
+
+const validateQuestGoalSections = async () => {
+  const lines = (await fs.readFile(src(QUEST_GOAL_SRC), 'utf-8')).split(/\r?\n/)
+  let section = null
+  let quest = null
+  const check = () => {
+    if (!quest) return
+    const expected = quest.section && SECTION_TYPES[quest.section]
+    if (expected === null || expected === undefined) return
+    assert(
+      expected.includes(quest.type),
+      `quest ${quest.id} (line ${quest.line}) is under "${quest.section}" but has type ${quest.type}`,
+    )
+  }
+  for (let i = 0; i < lines.length; i += 1) {
+    const header =
+      /^# (Daily|Someday|Weekly|Monthly|Quarterly|One-time|Limited-time|Yearly \((\w+)\))/.exec(
+        lines[i],
+      )
+    if (header) {
+      section = header[2] ? [YEARLY_MONTHS[header[2]]] : header[1]
+      if (Array.isArray(section)) {
+        SECTION_TYPES[`Yearly:${section[0]}`] = section
+        section = `Yearly:${section[0]}`
+      }
+      continue
+    }
+    const id = /^'?(\d+)'?:/.exec(lines[i])
+    if (id) {
+      check()
+      quest = { id: Number(id[1]), section, type: undefined, line: i + 1 }
+      continue
+    }
+    const type = /^\s+type:\s*(\d+)/.exec(lines[i])
+    if (type && quest && quest.type === undefined) quest.type = Number(type[1])
+  }
+  check()
+}
+
 const validateQuestGoal = async () => {
   const data = await readCSON(QUEST_GOAL_SRC)
 
@@ -112,6 +179,7 @@ const validateQuestGoal = async () => {
 ;(async () => {
   await validateShipTag()
   await validateQuestGoal()
+  await validateQuestGoalSections()
 
   await Promise.all([
     buildData('map.json'),
