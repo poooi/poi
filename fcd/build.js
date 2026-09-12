@@ -43,15 +43,24 @@ async function readCSON(name) {
   return CSON.parse(data)
 }
 
-async function buildData(name) {
-  const dest = path.resolve(DEST, name.replace('.cson', '.json'))
-  const current = await fs.readJSON(dest)
-  const data = name.endsWith('cson') ? await readCSON(name) : await fs.readJSON(name)
+// `src` is read relative to this directory; `outName` is the file written into
+// assets/data/fcd, and defaults to the source's own name with a .json extension.
+async function buildData(src, outName = path.basename(src).replace('.cson', '.json')) {
+  const dest = path.resolve(DEST, outName)
+  const name = outName.replace('.json', '')
+  // A data file that has never been built yet has no version to bump from.
+  const current = (await fs.readJSON(dest).catch(() => undefined)) || {
+    meta: { name, version: '1970/01/01/01' },
+  }
+  const data = src.endsWith('cson') ? await readCSON(src) : await fs.readJSON(src)
   const meta = getMeta(current, data)
-  await writeJSON(name.replace('.cson', '.json'), { meta, data })
+  await writeJSON(outName, { meta, data })
 }
 
-async function buildMeta(flist) {
+// Every built data file belongs in meta.json: it is the index poi and the CDN
+// mirrors read to decide what to fetch, so a file left out simply never updates.
+async function buildMeta() {
+  const flist = (await fs.readdir(DEST)).filter((fname) => fname !== 'meta.json').sort()
   const meta = await Promise.map(flist, async (fname) => {
     const fpath = path.resolve(DEST, fname)
     const data = JSON.parse(await fs.readFile(fpath))
@@ -74,14 +83,38 @@ const validateShipTag = async () => {
   assert(size(data.fleetname['en-US']) === count)
 }
 
+// quest_goal.cson lives in assets/ because the build bundles it as the fallback
+// used when fcd has nothing newer; this only mirrors it into the fcd payload.
+const QUEST_GOAL_SRC = '../assets/data/quest_goal.cson'
+
+const validateQuestGoal = async () => {
+  const data = await readCSON(QUEST_GOAL_SRC)
+
+  assert(size(data) > 0, 'quest_goal.cson parsed to nothing')
+
+  for (const [id, goal] of Object.entries(data)) {
+    assert(/^\d+$/.test(id), `quest id ${id} is not a number`)
+    const subgoals = Object.entries(goal).filter(([, value]) => typeof value === 'object')
+    assert(subgoals.length > 0, `quest ${id} has no subgoal`)
+    for (const [event, subgoal] of subgoals) {
+      assert(
+        typeof subgoal.required === 'number' && subgoal.required > 0,
+        `quest ${id} subgoal ${event} has no required count`,
+      )
+    }
+  }
+}
+
 ;(async () => {
   await validateShipTag()
+  await validateQuestGoal()
 
   await Promise.all([
     buildData('map.json'),
     buildData('shipavatar.json'),
     buildData('shiptag.cson'),
+    buildData(QUEST_GOAL_SRC, 'questgoal.json'),
   ])
 
-  await buildMeta(['map.json', 'shipavatar.json', 'shiptag.json'].sort())
+  await buildMeta()
 })()

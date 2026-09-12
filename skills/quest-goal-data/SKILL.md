@@ -7,21 +7,52 @@ description: Quest tracking — the assets/data/quest_goal.cson schema and the e
 
 ## Where things live
 
-| Concern                                                 | File                                            |
-| ------------------------------------------------------- | ----------------------------------------------- |
-| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                   |
-| `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                  |
-| `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`              |
-| Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`      |
-| Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`            |
-| API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts` |
-| Tests                                                   | `views/redux/info/__tests__/quests.spec.ts`     |
+| Concern                                                 | File                                                                   |
+| ------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                                          |
+| fcd payload generated from that data                    | `assets/data/fcd/questgoal.json` (via `fcd/build.js`)                  |
+| Bundled/delivered merge and record re-sync              | `views/redux/info/quests/goals.ts`                                     |
+| `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                                         |
+| `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`                                     |
+| Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`                             |
+| Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`                                   |
+| API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts`                        |
+| fcd delivery -> quest goals                             | `views/redux/middlewares/quest-goals-fcd.ts`                           |
+| Tests                                                   | `views/redux/info/__tests__/quests.spec.ts`, `quest-goals-fcd.spec.ts` |
 
 The engine is a directory of focused modules (`views/redux/info/quests/`), not a single
 `quests.ts` — it was split in commit `2fe7bf01`.
 
 Adding a new filter is a three-file change: a field on `QuestOptions`, a field on
 `QuestGoalSubgoal` plus its check, and a dispatch in the middleware.
+
+## The data ships twice: bundled cson + fcd
+
+`assets/data/quest_goal.cson` is the single source developers edit. It is bundled with the
+build and is the **fallback**; `fcd/build.js` mirrors it into `assets/data/fcd/questgoal.json`
+so a new or corrected quest reaches existing installs without a poi release.
+
+**After editing the cson, run `node fcd/build.js`** (from the repo root or `fcd/`) and commit
+the regenerated `assets/data/fcd/questgoal.json` and `meta.json` alongside it. The build
+validates the cson first (every id numeric, every quest has at least one subgoal, every subgoal
+a positive `required`), so a broken edit fails there rather than shipping to everyone.
+
+How the two combine at runtime (`views/redux/info/quests/goals.ts`):
+
+- the bundled table is parsed once at `api_get_member/require_info`;
+- `questGoalsFcdMiddleware` then layers the delivered table over it, on `@@updateFCD` /
+  `@@replaceFCD` **and** after every `require_info` (either can come first, and require_info
+  reloads the bundled table, so the merge has to be re-applied);
+- the merge is **per quest id**: a delivered quest replaces the bundled one wholesale (so fcd
+  can drop a subgoal or fix a `required`), while ids the payload omits keep their bundled
+  definition — an fcd copy cached before a quest existed must not blank it out. So fcd can
+  correct a quest but never delete one;
+- `resyncQuestRecords` then carries existing progress across the change: a count survives a
+  `required` correction (clamped to the new value), a dropped subgoal's record goes away, a new
+  one starts at `init`.
+
+Adding a _new subgoal filter field_ still needs a release — the payload only carries data, and
+an old build will ignore a field its `satisfyShip`/`satisfyGoal` does not know.
 
 ## Subgoal filter fields worth knowing
 
@@ -96,8 +127,27 @@ Expect arsenal (工廠) equipment-preparation quests to show up as untracked —
 design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129. Quest 637 has no
 progress counter at all and is not trackable.
 
-Limited-time (期間限定) quests are out of scope unless the user says otherwise. Untracked
-limited-time ids seen in captures: 199, 382, 383, 384, 1048, 1049.
+Composition-only quests (「…を編成せよ！」, e.g. 199) are **not trackable at all**: the engine
+matches events, and organising a fleet is not one — see the `QuestEvent` union in
+`views/redux/actions/quest.ts`.
+
+## Limited-time (期間限定) quests
+
+These live in their own section at the end of `quest_goal.cson`. Two rules:
+
+1. **Never add an expired one, and delete one whose period has ended.** The game reuses
+   limited-time ids for later campaigns, so a stale entry tracks the wrong quest.
+2. A capture proves a quest is _live_ but never proves it is _gone_ — a quest also disappears
+   from `questlist` once cleared (tab 0 lists only uncleared quests). So confirm the period
+   against the maintenance notes (ととねこ / ぜかましねっと) rather than from absence alone;
+   presence in a capture taken _after_ the last maintenance is the reliable positive signal.
+
+Tracked as of the 2026-09-10 maintenance: 382, 384, 1048, 1049. Deliberately not tracked from
+the same batch: 199 (composition only), 383 (フランス艦隊、特別演習 — period ended at that
+maintenance), 秋祭り拡張演習 (id not yet seen in any capture).
+
+The resource-preparation half of a quest (「弾薬 x2,200 を準備」) carries no event and cannot be
+tracked; 1048/1049 track only their sortie subgoals, with a comment saying so.
 
 ## Existing test coverage
 

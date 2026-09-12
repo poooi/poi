@@ -78,6 +78,9 @@ export type QuestGoal = {
   resetInterval?: number
 } & Partial<Record<GoalKey, QuestGoalSubgoal>>
 
+/** The whole goal table, keyed by quest id. */
+export type QuestGoalTable = Record<string | number, QuestGoal>
+
 // quest_tracking.cson type declaration
 export interface SubgoalRecord {
   count: number

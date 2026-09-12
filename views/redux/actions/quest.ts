@@ -1,5 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 
+import type { QuestGoalTable } from '../info/quests/types'
+
 export const createInfoResourcesApplyDeltaAction = createAction<{ delta: number[] }>(
   '@@info.resources@ApplyDelta',
 )
@@ -67,5 +69,14 @@ export const createInfoQuestsApplyProgressAction = createAction<{
   delta: number
 }>('@@info.quests@ApplyProgress')
 
+/**
+ * A new quest goal table is in force — dispatched when fcd delivers
+ * `questgoal` data, which is layered over the bundled quest_goal.cson.
+ */
+export const createInfoQuestsGoalsUpdatedAction = createAction<{
+  delivered: QuestGoalTable
+}>('@@info.quests@GoalsUpdated')
+
 export type InfoQuestsDailyRefreshAction = ReturnType<typeof createInfoQuestsDailyRefreshAction>
 export type InfoQuestsApplyProgressAction = ReturnType<typeof createInfoQuestsApplyProgressAction>
+export type InfoQuestsGoalsUpdatedAction = ReturnType<typeof createInfoQuestsGoalsUpdatedAction>

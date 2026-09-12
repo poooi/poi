@@ -2,6 +2,8 @@ import type { SelectorTables } from 'views/utils/game-selector/tables'
 
 import { createSlice } from '@reduxjs/toolkit'
 
+import type { QuestGoalTable } from './info/quests/types'
+
 import { createReplaceFCDAction, createUpdateFCDAction } from './actions/app'
 
 // Route entry: [fromNode | null (start), toNode]
@@ -41,12 +43,21 @@ export interface FcdShipTagState {
  */
 export type FcdGameSelectorState = Partial<SelectorTables>
 
+/**
+ * Quest goal definitions, shipped over fcd so a new or corrected quest can be
+ * tracked without a poi release. Partial: quest ids omitted here keep the
+ * definition bundled in `assets/data/quest_goal.cson`, which stays the fallback
+ * and the source this payload is generated from.
+ */
+export type FcdQuestGoalState = QuestGoalTable
+
 export interface FcdState {
   version: Record<string, string>
   map?: FcdMapState
   shipavatar?: FcdShipAvatarState
   shiptag?: FcdShipTagState
   gameselector?: FcdGameSelectorState
+  questgoal?: FcdQuestGoalState
 }
 
 export interface FcdValue<K extends keyof FcdState = keyof FcdState> {
