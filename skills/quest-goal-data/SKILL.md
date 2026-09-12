@@ -152,10 +152,12 @@ counts as — its own plus every id it can have been remodelled from (`shipRemod
   exactly;
 - nothing else creeps in: 満潮 is a different line, so it never counts toward 潮.
 
-`escortshipId` entries are **AND**-ed (like `escortshiptype`), so
-「扶桑 or 時雨 ×1 + 最上/満潮/朝雲/山雲 ×2」 is two entries. `escortshipIdAny` is the OR of the
-same thing — one entry is enough — for a quest that takes either of two escort groups (903:
-由良改二 ×1 **or** 睦月型 ×2). Check which one a quest means against a guide; the two read
+`escortshipId` entries are **OR**-ed, exactly as `escortship`'s were: one entry is enough. That
+is the common case — 903 takes 由良改二 ×1 **or** 睦月型 ×2. When a quest wants two groups
+**together**, use `escortshipIdAll`, whose entries must all hold (like `escortshiptype`): 1051
+asks for 扶桑/時雨 ×1 **and** 最上/満潮/朝雲/山雲 ×2, 875 for 長波改二 **and** one of
+高波改/沖波改/朝霜改. Only those two quests need `All`; 45 subgoals carry a single entry, where
+the distinction does not arise. Check which one a quest means against a guide — the two read
 almost identically in the quest text. The third element of an entry still means "ignore the
 flagship".
 

@@ -44,17 +44,17 @@ export function satisfyShip(goal: QuestGoalSubgoal, options: QuestOptions): bool
     return false
   }
   if (goal.escortshipId && goal.escortshipId.length > 0) {
-    // every entry must hold
-    for (const entry of goal.escortshipId) {
+    // one entry is enough, as with escortship
+    if (!goal.escortshipId.some((entry) => satisfyEscortIdEntry(entry, options))) {
+      return false
+    }
+  }
+  if (goal.escortshipIdAll && goal.escortshipIdAll.length > 0) {
+    // ...whereas every one of these must hold
+    for (const entry of goal.escortshipIdAll) {
       if (!satisfyEscortIdEntry(entry, options)) {
         return false
       }
-    }
-  }
-  if (goal.escortshipIdAny && goal.escortshipIdAny.length > 0) {
-    // ...whereas one of these is enough
-    if (!goal.escortshipIdAny.some((entry) => satisfyEscortIdEntry(entry, options))) {
-      return false
     }
   }
   if (

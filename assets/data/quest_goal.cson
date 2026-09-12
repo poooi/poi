@@ -816,8 +816,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "5-1 S"
     maparea: [51]
     flagshipId: [622] #夕張改二
-    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
-    escortshipIdAny: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -827,8 +827,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "5-4 S"
     maparea: [54]
     flagshipId: [622] #夕張改二
-    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
-    escortshipIdAny: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -838,8 +838,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "6-4 S"
     maparea: [64]
     flagshipId: [622] #夕張改二
-    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
-    escortshipIdAny: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -849,8 +849,8 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "6-5 S"
     maparea: [65]
     flagshipId: [622] #夕張改二
-    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよいので Any（OR）側を使う
-    escortshipIdAny: [
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
       [[488], 1] #由良改二
       [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
     ]
@@ -895,9 +895,9 @@ Quest guides (となはざな): https://tonahazana.com/
   "battle_boss_win_rank_s@54":
     description: "5-4 S"
     maparea: [54]
-    # 長波改二 + 高波改/沖波改/朝霜改 のいずれか1隻。AND エントリでそのまま書ける
-    # （旧 escortship では OR を使ってペアを3通り並べる必要があった）
-    escortshipId: [
+    # 長波改二 + 高波改/沖波改/朝霜改 のいずれか1隻。両方必要なので All（AND）を使う
+    # （旧 escortship では OR しかなく、ペアを3通り並べる必要があった）
+    escortshipIdAll: [
       [[543], 1] #長波改二
       [[345, 359, 344], 1] #高波改/沖波改/朝霜改
     ]
@@ -1792,9 +1792,9 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "1-5 S"
     maparea: [15]
     flagshipId: [749] #山城改二補
-    # escortshipId のエントリは AND なので、扶桑/時雨1隻 + 最上/満潮/朝雲/山雲2隻を
-    # そのまま表現できる（escortship では OR になってしまう）
-    escortshipId: [
+    # 扶桑/時雨1隻 + 最上/満潮/朝雲/山雲2隻 の両方が必要なので All（AND）を使う
+    # （旧 escortship は OR だったので「6隻から3隻」と近似するしかなかった）
+    escortshipIdAll: [
       [[26, 43], 1] #扶桑 or 時雨
       [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
@@ -1805,7 +1805,7 @@ Quest guides (となはざな): https://tonahazana.com/
     maparea: [16]
     mapcell: [14, 17]
     flagshipId: [749] #山城改二補
-    escortshipId: [
+    escortshipIdAll: [
       [[26, 43], 1] #扶桑 or 時雨
       [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
@@ -1815,7 +1815,7 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "2-3 S"
     maparea: [23]
     flagshipId: [749] #山城改二補
-    escortshipId: [
+    escortshipIdAll: [
       [[26, 43], 1] #扶桑 or 時雨
       [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
@@ -1825,7 +1825,7 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "2-5 S"
     maparea: [25]
     flagshipId: [749] #山城改二補
-    escortshipId: [
+    escortshipIdAll: [
       [[26, 43], 1] #扶桑 or 時雨
       [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]
@@ -1835,7 +1835,7 @@ Quest guides (となはざな): https://tonahazana.com/
     description: "4-3 S"
     maparea: [43]
     flagshipId: [749] #山城改二補
-    escortshipId: [
+    escortshipIdAll: [
       [[26, 43], 1] #扶桑 or 時雨
       [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
     ]

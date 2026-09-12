@@ -748,7 +748,7 @@ describe('satisfyShip — id-based ship constraints', () => {
     expect(satisfyShip(kaiOrLater, { shipIds: [USHIO_BASE] })).toBe(false)
   })
 
-  spec('requires every escortshipId entry, unlike the OR-ed escortship', () => {
+  spec('escortshipId entries are OR-ed, like escortship', () => {
     const goal: QuestsState['questGoals'][number][GoalKey] = {
       required: 1,
       escortshipId: [
@@ -757,15 +757,29 @@ describe('satisfyShip — id-based ship constraints', () => {
       ],
     }
     expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
+    // one entry is enough: 響 alone passes, 満潮 alone does not
+    expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(true)
+    expect(satisfyShip(goal, { shipIds: [MICHISHIO] })).toBe(false)
+  })
+
+  spec('escortshipIdAll entries must all hold, like escortshiptype', () => {
+    const goal: QuestsState['questGoals'][number][GoalKey] = {
+      required: 1,
+      escortshipIdAll: [
+        [[35], 1], // 響
+        [[16], 1], // 潮
+      ],
+    }
+    expect(satisfyShip(goal, { shipIds: [VERNY, USHIO_KAI2] })).toBe(true)
     expect(satisfyShip(goal, { shipIds: [VERNY, MICHISHIO] })).toBe(false)
   })
 
-  spec('escortshipIdAny needs only one entry — the OR quest 903 relies on', () => {
+  spec('takes either escort group — the OR quest 903 relies on', () => {
     // 夕張改二 flagship + (由良改二 ×1 OR 睦月型 ×2)
     const goal: QuestsState['questGoals'][number][GoalKey] = {
       required: 1,
       flagshipId: [622],
-      escortshipIdAny: [
+      escortshipId: [
         [[488], 1], // 由良改二
         [[1, 2], 2], // 睦月/如月
       ],

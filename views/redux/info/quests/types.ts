@@ -67,15 +67,17 @@ export interface QuestGoalSubgoal {
   /** @deprecated substring-matched by name, and its entries are OR-ed; use `escortshipId`. */
   escortship?: EscortShipConstraint[]
   /**
-   * Like `escortship` but by master id, and — unlike `escortship`, whose entries
-   * are OR-ed — every entry must hold, matching `escortshiptype`.
+   * `escortship` by master id: at least one entry must hold, as with `escortship`.
+   * For a quest that takes either of two escort groups — 903 asks for 由良改二 ×1
+   * *or* 睦月型 ×2.
    */
   escortshipId?: EscortShipIdConstraint[]
   /**
-   * The OR of `escortshipId`: at least one entry must hold. For a quest that takes
-   * either of two escort groups, e.g. 903's 睦月型2隻 *or* 由良改二.
+   * The AND of `escortshipId`: every entry must hold, as with `escortshiptype`. For
+   * a quest that asks for two groups together — 1051 wants 扶桑/時雨 ×1 *and*
+   * 最上/満潮/朝雲/山雲 ×2.
    */
-  escortshipIdAny?: EscortShipIdConstraint[]
+  escortshipIdAll?: EscortShipIdConstraint[]
   escortshiptype?: EscortShipTypeConstraint[]
   escortshipclass?: EscortShipClassConstraint[]
   banshiptype?: number[]
