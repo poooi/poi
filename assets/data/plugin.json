@@ -4,7 +4,7 @@
       "zh-CN": "航海日志",
       "zh-TW": "航海日誌",
       "ja-JP": "航海日誌",
-      "en-US": "Akashic Records",
+      "en-US": "Logbook",
       "ko-KR": "항해 일지"
     },
     "version": "v0.0.0",
@@ -33,7 +33,7 @@
     "link": "https://github.com/yukixz",
     "description": {
       "zh-CN": "保存详细的战斗日志",
-      "zh-TW": "儲存詳細的戰鬥記錄",
+      "zh-TW": "保存詳細的戰鬥日誌",
       "ja-JP": "戦闘の詳細ログをセーブする",
       "en-US": "Save detailed battle log",
       "ko-KR": "전투 세부 기록 저장"
@@ -64,7 +64,7 @@
       "zh-CN": "编成日记",
       "zh-TW": "編成日記",
       "ja-JP": "編成日記",
-      "en-US": "Organization Records",
+      "en-US": "Composition record",
       "ko-KR": "편성 일기"
     },
     "version": "v0.0.0",
@@ -72,8 +72,8 @@
     "author": "Rui",
     "link": "https://github.com/ruiii",
     "description": {
-      "zh-CN": "记录编成信息",
-      "zh-TW": "記錄編成信息",
+      "zh-CN": "记录、导入、导出编成信息",
+      "zh-TW": "記錄、匯入、匯出編成信息",
       "ja-JP": "編成を記録します",
       "en-US": "Record and share fleet compositions",
       "ko-KR": "편성 정보 기록"
@@ -165,7 +165,7 @@
       "zh-TW": "未卜先知",
       "ja-JP": "予知能力",
       "en-US": "Prophet",
-      "ko-KR": "전투 예보"
+      "ko-KR": "전투 예측"
     },
     "version": "v0.0.0",
     "icon": "compass",
@@ -176,15 +176,15 @@
       "zh-TW": "戰況預知",
       "ja-JP": "戦况予知",
       "en-US": "Battle result prediction",
-      "ko-KR": "전투 예보"
+      "ko-KR": "전투 예측"
     }
   },
   "poi-plugin-quest-info-2": {
     "name": {
       "zh-CN": "任务信息 2",
       "zh-TW": "任務信息 2",
-      "ja-JP": "任务信息 2",
-      "en-US": "Quest Info 2",
+      "ja-JP": "任務信息 2",
+      "en-US": "Quest Information 2",
       "ko-KR": "임무 정보 2"
     },
     "version": "v0.0.0",
@@ -195,7 +195,7 @@
       "zh-CN": "任务信息查询 & 任务面板强化，感谢 [舰娘百科](https://zh.kcwiki.cn/wiki/%E8%88%B0%E5%A8%98%E7%99%BE%E7%A7%91) & [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3改](https://github.com/KC3Kai/kc3-translations) 维护数据。",
       "zh-TW": "任務信息查詢 & 任務面板強化，感謝 [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3改](https://github.com/KC3Kai/kc3-translations) 維護數據。",
       "ja-JP": "任務攻略データや任務パネルの強化、データは [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations) によって提供されている。",
-      "en-US": "Show task infomation & enhance task panel, Data maintained by [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations).",
+      "en-US": "Show task information & enhance task panel, Data maintained by [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations).",
       "ko-KR": "임무 공략 데이터와 임무 패널 강화. 데이터는 [kcanotify](https://github.com/antest1/kcanotify-gamedata) & [KC3Kai](https://github.com/KC3Kai/kc3-translations) 에서 제공되고 있습니다."
     }
   },
@@ -214,9 +214,9 @@
     "description": {
       "zh-CN": "汇报建造数据、海域掉落数据、开发数据",
       "zh-TW": "匯報建造數據、海域掉落數據、開發數據",
-      "ja-JP": "統計データベース(http://db.kcwiki.org)登録用ツール",
-      "en-US": "Report data to database(http://db.kcwiki.org)",
-      "ko-KR": "통계 DB(http://db.kcwiki.org) 데이터 보고용"
+      "ja-JP": "統計データベース(http://db.kcwiki.moe)登録用ツール",
+      "en-US": "Report data to database(http://db.kcwiki.moe)",
+      "ko-KR": "통계 DB(http://db.kcwiki.moe) 데이터 보고용"
     }
   },
   "poi-plugin-kcwiki-report": {
@@ -281,10 +281,10 @@
   },
   "poi-plugin-senka-calc": {
     "name": {
-      "zh-CN": "我变强了",
-      "zh-TW": "戦果計算",
+      "zh-CN": "战果计算",
+      "zh-TW": "戰果計算",
       "ja-JP": "戦果計算",
-      "en-US": "Senka Calc",
+      "en-US": "Ranking Calc",
       "ko-KR": "전과 계산"
     },
     "version": "v0.0.0",
@@ -293,9 +293,9 @@
     "link": "https://github.com/ruiii",
     "description": {
       "zh-CN": "战果计算器",
-      "zh-TW": "戦果計算器",
-      "ja-JP": "戦果計算器",
-      "en-US": "Senka calculator",
+      "zh-TW": "戰果計算器",
+      "ja-JP": "戦果計算機",
+      "en-US": "Ranking point calculator",
       "ko-KR": "전과 계산기"
     }
   },
@@ -321,8 +321,8 @@
   },
   "poi-plugin-translator": {
     "name": {
-      "zh-CN": "英语翻译",
-      "zh-TW": "英語翻譯",
+      "zh-CN": "资源翻译",
+      "zh-TW": "資源翻譯",
       "ja-JP": "翻訳者",
       "en-US": "Translator",
       "ko-KR": "번역기"
@@ -332,10 +332,10 @@
     "author": "KochiyaOcean",
     "link": "https://github.com/kochiyaocean",
     "description": {
-      "zh-CN": "将舰娘名和装备名翻译为英文",
-      "zh-TW": "將艦娘名和裝備名翻譯爲英文",
-      "ja-JP": "艦娘と装備の名前を英訳します",
-      "en-US": "Translate ships' & equipments' name into English",
+      "zh-CN": "将舰娘名和装备名翻译为英文或韩文",
+      "zh-TW": "將艦娘名和裝備名翻譯爲英文或韓文",
+      "ja-JP": "艦娘と装備の名前を英語または韓国語に翻訳します",
+      "en-US": "Translate ships' & equipments' name into English or Korean",
       "ko-KR": "칸무스와 장비 이름 번역"
     }
   },
@@ -352,10 +352,10 @@
     "author": "DKWings",
     "link": "https://github.com/dkwingsmt",
     "description": {
-      "zh-CN": "记录出击资源消耗，筛选，统计",
-      "zh-TW": "記錄出擊資源消耗，篩選，統計",
-      "ja-JP": "資材消費を記録して分析する",
-      "en-US": "Record, filter and analyse your resource consumption",
+      "zh-CN": "记录每次出击的资材损耗",
+      "zh-TW": "記錄每次出擊的資材損耗",
+      "ja-JP": "出撃で消費された資材を記録します",
+      "en-US": "Record your resources spent in sorties",
       "ko-KR": "자원 소비 기록을 저장하고 분석해줍니다"
     }
   },
@@ -363,8 +363,8 @@
     "name": {
       "zh-CN": "kcwiki语音字幕",
       "zh-TW": "kcwiki語音字幕",
-      "ja-JP": "KCwiki セリフ",
-      "en-US": "KCwiki Quotes Subtitle",
+      "ja-JP": "kcwikizh音声字幕",
+      "en-US": "Subtitle",
       "ko-KR": "KCwiki 중국어 자막"
     },
     "version": "v0.0.0",
@@ -372,10 +372,10 @@
     "author": "grzhan",
     "link": "https://github.com/grzhan",
     "description": {
-      "zh-CN": "在舰娘说话时显示语音字幕。由 [舰娘百科](http://zh.kcwiki.org) 开发维护。",
-      "zh-TW": "在艦娘說話時顯示語音字幕。由 [艦娘百科](http://zh.kcwiki.org) 開發維護。",
-      "ja-JP": "艦娘セリフの字幕。[kcwiki](http://zh.kcwiki.org) によって開発された。",
-      "en-US": "Subtitle of ship girls' quotes, developed by [kcwiki](http://zh.kcwiki.org)",
+      "zh-CN": "语音字幕插件（舰娘百科支持）",
+      "zh-TW": "語音字幕插件（艦娘百科支持）",
+      "ja-JP": "ヴォイスサブタイトル・プラグイン　kcwikizh運営チームから内容サポート",
+      "en-US": "Subtitle of fleet girls (from kancolle wikia)",
       "ko-KR": "중국어 자막. [kcwiki](http://zh.kcwiki.org) 에서 제공"
     }
   },
@@ -392,31 +392,31 @@
     "author": "KochiyaOcean",
     "link": "https://github.com/KochiyaOcean",
     "description": {
-      "zh-CN": "自动生成来自 [Sanya.moe](http://www.sanya.moe/kcbadge) 的舰娘签名，包含改二进度和图鉴列表。",
-      "zh-TW": "自動生成來自 [Sanya.moe](http://www.sanya.moe/kcbadge) 的艦娘簽名，包含改二進度和圖鑑列表。",
-      "ja-JP": "自動的に改二と図鑑が含ま [Sanya.moe](http://www.sanya.moe/kcbadge) バッジを生成。",
-      "en-US": "Automatically generates [Sanya.moe](http://www.sanya.moe/kcbadge) badge that shows your kaini progress and colletion progress.",
+      "zh-CN": "传输舰娘数据至 http://www.sanya.moe/kcbadge 以生成舰娘签名",
+      "zh-TW": "傳輸艦娘資料至 http://www.sanya.moe/kcbadge 以生成艦娘簽名",
+      "ja-JP": "艦娘のデータを http://www.sanya.moe/kcbadge へ転送し、バッジを作成する",
+      "en-US": "Export data to http://www.sanya.moe/kcbadge so that you can make a badge for yourself!",
       "ko-KR": "데이터를 [Sanya.moe](http://www.sanya.moe/kcbadge) 로 전송해서 배지를 생성합니다"
     }
   },
   "poi-plugin-anchorage-repair": {
     "name": {
-      "zh-CN": "泊地修理",
-      "zh-TW": "泊地修理",
-      "ja-JP": "泊地修理",
-      "en-US": "Anchorage repair",
-      "ko-KR": "아카시 타이머"
+      "zh-CN": "泊地支援",
+      "zh-TW": "泊地支援",
+      "ja-JP": "泊地支援",
+      "en-US": "Anchorage support",
+      "ko-KR": "정박지 지원"
     },
     "version": "v0.0.0",
     "icon": "anchor",
     "author": "かがみ",
     "link": "https://github.com/kagamichan",
     "description": {
-      "zh-CN": "明石泊地修理助手",
-      "zh-TW": "明石泊地修理助手",
-      "ja-JP": "明石の泊地修理の助手ちゃん",
-      "en-US": "A plugin to help in Akashi's anchorage repair arrangement",
-      "ko-KR": "아카시의 정박 수리를 도와주는 플러그인"
+      "zh-CN": "明石HP修理和野埼士气提升助手",
+      "zh-TW": "明石HP修理和野埼士氣提升助手",
+      "ja-JP": "明石HP修理・野埼士気向上支援",
+      "en-US": "A plugin to help with Akashi's HP repair and Nosaki's morale boost",
+      "ko-KR": "아카시 HP 수리 및 노사키 사기 증진 도우미"
     }
   },
   "poi-plugin-ezexped": {
@@ -443,7 +443,7 @@
     "name": {
       "zh-CN": "舰步如飞",
       "zh-TW": "艦步如飛",
-      "ja-JP": "Leveling",
+      "ja-JP": "レベリング",
       "en-US": "Leveling",
       "ko-KR": "Leveling"
     },
@@ -454,7 +454,7 @@
     "description": {
       "zh-CN": "舰娘练级规划管理（舰娘属性信息来自[是谁呼叫舰队](https://github.com/Diablohu/WhoCallsTheFleet)）",
       "zh-TW": "艦娘練級規劃管理（艦娘屬性信息來自[是誰呼叫艦隊](https://github.com/Diablohu/WhoCallsTheFleet)）",
-      "ja-JP": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
+      "ja-JP": "艦娘レベリングプランナー(艦娘の情報は[WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet)から取得しています)",
       "en-US": "Ship Leveling Planner (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
       "ko-KR": "레벨링 플래너 (함선 정보는 [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet) 에서 제공)"
     }
@@ -463,7 +463,7 @@
     "name": {
       "zh-CN": "海色相簿",
       "zh-TW": "海色相簿",
-      "ja-JP": "海色アルバム",
+      "ja-JP": "艦隊図鑑",
       "en-US": "Navy Album",
       "ko-KR": "Navy Album"
     },
@@ -472,11 +472,11 @@
     "author": "Javran",
     "link": "https://github.com/Javran",
     "description": {
-      "zh-CN": "舰娘与装备资料库（舰娘属性信息来自[是谁呼叫舰队](https://github.com/Diablohu/WhoCallsTheFleet)）",
-      "zh-TW": "艦娘與裝備資料庫（艦娘屬性信息來自[是誰呼叫艦隊](https://github.com/Diablohu/WhoCallsTheFleet)）",
-      "ja-JP": "艦娘と装備のデータベース（データは [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet) によって提供されている）",
-      "en-US": "Ship & Equipment database (ship stat info extracted from [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet))",
-      "ko-KR": "함선 & 장비 데이터베이스 (함선 정보는 [WhoCallsTheFleet](https://github.com/Diablohu/WhoCallsTheFleet) 에서 제공)"
+      "zh-CN": "舰娘与装备资料库",
+      "zh-TW": "艦娘與裝備資料庫",
+      "ja-JP": "艦娘・装備図鑑",
+      "en-US": "Show illustration album of ships and items.",
+      "ko-KR": "함선 & 장비 데이터베이스"
     }
   },
   "poi-plugin-mo2": {
@@ -512,9 +512,9 @@
     "author": "SoraYama",
     "link": "https://github.com/SoraYama",
     "description": {
-      "zh-CN": "新舰上锁提醒",
-      "zh-TW": "新艦上鎖提醒",
-      "ja-JP": "新艦娘がロックされない場合に通知する",
+      "zh-CN": "提示新舰娘上锁，防止一日成侠",
+      "zh-TW": "提示新船上鎖",
+      "ja-JP": "誤解体防止のために、新艦娘を入手した時に通知する",
       "en-US": "Reminder for locking new ship",
       "ko-KR": "신 함선이 잠금되지 않은 경우 알림"
     }
