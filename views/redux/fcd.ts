@@ -46,7 +46,7 @@ export type FcdGameSelectorState = Partial<SelectorTables>
 /**
  * Quest goal definitions, shipped over fcd so a new or corrected quest can be
  * tracked without a poi release. Partial: quest ids omitted here keep the
- * definition bundled in `assets/data/quest_goal.cson`, which stays the fallback
+ * definition bundled in `assets/data/quest_goal/*.cson`, which stay the fallback
  * and the source this payload is generated from.
  */
 export type FcdQuestGoalState = QuestGoalTable

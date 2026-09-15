@@ -19,7 +19,7 @@ const FCD_NAME = 'questgoal'
  * - fcd delivers the data (`@@updateFCD` on startup or a manual update,
  *   `@@replaceFCD` when a plugin window picks it up from localStorage), and
  * - `api_get_member/require_info`, where the quests slice (re)loads the bundled
- *   `quest_goal.cson` and so drops whatever was layered on it.
+ *   `assets/data/quest_goal/` and so drops whatever was layered on it.
  *
  * Unlike questsCrossSliceMiddleware, this one acts on the state *after* the
  * action: the fcd slice must have stored the payload, and the quests slice must

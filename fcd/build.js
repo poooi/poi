@@ -47,18 +47,21 @@ async function readCSON(name) {
   return CSON.parse(data)
 }
 
-// `source` is resolved from this directory; `outName` is the file written into
-// assets/data/fcd, and defaults to the source's own name with a .json extension.
-async function buildData(source, outName = path.basename(source).replace('.cson', '.json')) {
+// Writes `data` as assets/data/fcd/<outName>, bumping the version only when it changed.
+async function buildPayload(outName, data) {
   const dest = path.resolve(DEST, outName)
   const name = outName.replace('.json', '')
   // A data file that has never been built yet has no version to bump from.
   const current = (await fs.readJSON(dest).catch(() => undefined)) || {
     meta: { name, version: '1970/01/01/01' },
   }
+  await writeJSON(outName, { meta: getMeta(current, data), data })
+}
+
+// `source` is resolved from this directory; `outName` defaults to its own name as .json.
+async function buildData(source, outName = path.basename(source).replace('.cson', '.json')) {
   const data = source.endsWith('cson') ? await readCSON(source) : await fs.readJSON(src(source))
-  const meta = getMeta(current, data)
-  await writeJSON(outName, { meta, data })
+  await buildPayload(outName, data)
 }
 
 // Every built data file belongs in meta.json: it is the index poi and the CDN
@@ -87,82 +90,48 @@ const validateShipTag = async () => {
   assert(size(data.fleetname['en-US']) === count)
 }
 
-// quest_goal.cson lives in assets/ because the build bundles it as the fallback
-// used when fcd has nothing newer; this only mirrors it into the fcd payload.
-const QUEST_GOAL_SRC = '../assets/data/quest_goal.cson'
+// Quest goals are edited as one file per period in assets/data/quest_goal/ and merged
+// here, so the fcd payload stays a single questgoal.json.
+const QUEST_GOAL_DIR = '../assets/data/quest_goal'
 
-// Each quest lives under a section header naming its period, so the header and the
-// `type` that drives record resets have to agree — quest 242 sat in Weekly with a
-// monthly type, which reset its record on the wrong boundary.
-const YEARLY_MONTHS = {
-  January: 101,
-  February: 102,
-  March: 103,
-  April: 104,
-  May: 105,
-  June: 106,
-  July: 107,
-  August: 108,
-  September: 109,
-  October: 110,
-  November: 111,
-  December: 112,
-}
-const SECTION_TYPES = {
-  Daily: [1, 8, 9],
-  Someday: [1, 8, 9],
-  Weekly: [2],
-  Monthly: [3],
-  Quarterly: [4],
+// The file a quest sits in names its period, so it has to agree with the `type` that
+// drives record resets — quest 242 once sat among the weeklies with a monthly type.
+// `null` accepts any type; `false` rejects the name, so new files are added on purpose.
+const expectedTypes = (file) => {
+  const fixed = { 'daily.cson': [1, 8, 9], 'weekly.cson': [2], 'monthly.cson': [3] }
+  if (fixed[file]) return fixed[file]
+  if (file === 'quarterly.cson') return [4]
+  const yearly = /^yearly-(0[1-9]|1[0-2])\.cson$/.exec(file)
+  if (yearly) return [100 + Number(yearly[1])]
   // one-time quests never repeat, so they carry no type at all
-  'One-time': [undefined],
+  if (/^one-time(-[a-z0-9-]+)?\.cson$/.test(file)) return [undefined]
   // limited-time quests keep whatever period the game gives them
-  'Limited-time': null,
+  if (file === 'limited-time.cson') return null
+  return false
 }
 
-const validateQuestGoalSections = async () => {
-  const lines = (await fs.readFile(src(QUEST_GOAL_SRC), 'utf-8')).split(/\r?\n/)
-  let section = null
-  let quest = null
-  const check = () => {
-    if (!quest) return
-    const expected = quest.section && SECTION_TYPES[quest.section]
-    if (expected === null || expected === undefined) return
-    assert(
-      expected.includes(quest.type),
-      `quest ${quest.id} (line ${quest.line}) is under "${quest.section}" but has type ${quest.type}`,
-    )
-  }
-  for (let i = 0; i < lines.length; i += 1) {
-    const header =
-      /^# (Daily|Someday|Weekly|Monthly|Quarterly|One-time|Limited-time|Yearly \((\w+)\))/.exec(
-        lines[i],
-      )
-    if (header) {
-      section = header[2] ? [YEARLY_MONTHS[header[2]]] : header[1]
-      if (Array.isArray(section)) {
-        SECTION_TYPES[`Yearly:${section[0]}`] = section
-        section = `Yearly:${section[0]}`
+const readQuestGoals = async () => {
+  const files = (await fs.readdir(src(QUEST_GOAL_DIR))).filter((f) => f.endsWith('.cson')).sort()
+  assert(files.length > 0, `no quest goal files in ${QUEST_GOAL_DIR}`)
+  const merged = {}
+  for (const file of files) {
+    const expected = expectedTypes(file)
+    assert(expected !== false, `${file}: not a recognised quest goal file name`)
+    const data = await readCSON(path.join(QUEST_GOAL_DIR, file))
+    assert(data && !(data instanceof Error) && typeof data === 'object', `${file} did not parse`)
+    for (const [id, goal] of Object.entries(data)) {
+      assert(!(id in merged), `quest ${id} is defined twice (again in ${file})`)
+      if (expected) {
+        assert(expected.includes(goal.type), `quest ${id} in ${file} has type ${goal.type}`)
       }
-      continue
+      merged[id] = goal
     }
-    const id = /^'?(\d+)'?:/.exec(lines[i])
-    if (id) {
-      check()
-      quest = { id: Number(id[1]), section, type: undefined, line: i + 1 }
-      continue
-    }
-    const type = /^\s+type:\s*(\d+)/.exec(lines[i])
-    if (type && quest && quest.type === undefined) quest.type = Number(type[1])
   }
-  check()
+  return merged
 }
 
-const validateQuestGoal = async () => {
-  const data = await readCSON(QUEST_GOAL_SRC)
-
-  assert(size(data) > 0, 'quest_goal.cson parsed to nothing')
-
+const validateQuestGoal = (data) => {
+  assert(size(data) > 0, 'quest goals parsed to nothing')
   for (const [id, goal] of Object.entries(data)) {
     assert(/^\d+$/.test(id), `quest id ${id} is not a number`)
     const subgoals = Object.entries(goal).filter(([, value]) => typeof value === 'object')
@@ -178,14 +147,14 @@ const validateQuestGoal = async () => {
 
 ;(async () => {
   await validateShipTag()
-  await validateQuestGoal()
-  await validateQuestGoalSections()
+  const questGoals = await readQuestGoals()
+  validateQuestGoal(questGoals)
 
   await Promise.all([
     buildData('map.json'),
     buildData('shipavatar.json'),
     buildData('shiptag.cson'),
-    buildData(QUEST_GOAL_SRC, 'questgoal.json'),
+    buildPayload('questgoal.json', questGoals),
   ])
 
   await buildMeta()

@@ -1,0 +1,95 @@
+# Quest goals: Limited-time (期間限定).
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Limited-time (期間限定)
+#
+# Only quests whose period is still running belong here — an expired id must be
+# deleted, because the game reuses limited-time ids for later campaigns and a
+# stale entry would then track the wrong quest. Each entry records when it was
+# implemented; check it against the latest maintenance notes before a release.
+# Verified live as of the 2026-09-10 maintenance (ととねこ / ぜかましねっと).
+#
+# Not tracked from the same batch: 199 第三十一戦隊 特務編成 (fleet composition
+# only — the engine has no such event), 383 フランス艦隊、特別演習 (period ended
+# at the 2026-09-10 maintenance).
+###
+382: #【期間限定任務】第三十一戦隊 緊急演習！ 2026-08 実装
+  type: 3
+  resetInterval: 1
+  "practice_win_a":
+    description: "演習勝利 A"
+    # 花月/桐/榧/杉/樫/竹/潮/響 から5隻以上（どの改装段階でも可）。
+    # id 指定なので響改二「Верный」も拾え、満潮・大潮・荒潮は拾わない
+    escortshipId: [
+      [[1041, 1044, 994, 992, 993, 642, 16, 35], 5] #花月/桐/榧/杉/樫/竹/潮/響
+    ]
+    required: 3
+    init: 0
+384: #【期間限定任務】提督との秋祭り演習！ 2026-09-10 実装
+  type: 2
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    # 指定17隻から4隻以上、B勝利以上を同日中に4回
+    escortshipId: [
+      [[132, 421, 13, 14, 42, 168, 170, 135, 485, 425, 964, 93, 94, 634, 635, 183, 55], 4] #秋雲/秋月/綾波/敷波/白露/浦風/浜風/長波/藤波/朝霜/白雲/朧/漣/迅鯨/長鯨/大淀/神通
+    ]
+    required: 4
+    init: 0
+385: #【期間限定拡張任務】秋祭り拡張演習！ 2026-09-10 実装（384 の後続）
+  type: 2
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    # 指定10隻から3隻以上、S勝利を同日中に4回（A勝利は不可）
+    escortshipId: [
+      [[1051, 1053, 962, 1055, 1065, 944, 995, 81, 602, 885], 3] #Algérie/Vautour/Mogador/Béarn/日枝丸/平安丸/大泊/陸奥/South Dakota/Victorious
+    ]
+    required: 4
+    init: 0
+1048: #【期間限定任務】戦略兵站物資、緊急輸送！ 2026-06-26 実装
+  # 弾薬2,200・ボーキ1,800の準備は追跡できない（イベントを伴わない）ので出撃分のみ
+  type: 3
+  fuzzy: true
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    flagshiptype: [22, 17, 16, 10] #補給・揚陸・水母・航戦
+    escortshiptype: [
+      [[1, 2], 4] #駆逐+海防 計4
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    flagshiptype: [22, 17, 16, 10] #補給・揚陸・水母・航戦
+    escortshiptype: [
+      [[1, 2], 4] #駆逐+海防 計4
+    ]
+    required: 1
+    init: 0
+1049: #【期間限定拡張作戦】戦略兵站物資、拡張輸送！ 2026-06-26 実装
+  # 弾薬2,400・ボーキ2,400の準備は追跡できない（イベントを伴わない）ので出撃分のみ
+  type: 3
+  fuzzy: true
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    flagshiptype: [22, 17] #補給・揚陸
+    escortshiptype: [
+      [[1, 2], 3] #駆逐+海防 計3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@752":
+    description: "7-5-2 A"
+    maparea: [75]
+    mapcell: [19] #第二ゲージボス Qマス
+    flagshiptype: [22, 17] #補給・揚陸
+    escortshiptype: [
+      [[1, 2], 3] #駆逐+海防 計3
+    ]
+    required: 1
+    init: 0

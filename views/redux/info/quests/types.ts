@@ -3,7 +3,7 @@ import type { APIList } from 'kcsapi/api_get_member/questlist/response'
 import type { QuestOptions, QuestEvent } from '../../actions'
 
 // Type declarations
-// quest_goal.cson type declaration
+// assets/data/quest_goal/*.cson type declaration
 
 // 1=daily, 2=weekly, 3=monthly, 4=quarterly, 8/9=special daily
 // 101-112 = yearly by month (101=Jan, 102=Feb, ...)

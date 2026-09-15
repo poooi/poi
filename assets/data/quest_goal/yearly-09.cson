@@ -1,0 +1,229 @@
+# Quest goals: Yearly, reset in September.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (September)
+###
+1050: #「第九戦隊」抜錨！前線展開せよッ！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    # 北上改二/改三 + 大井改二（いずれかが旗艦）。改二以降だけを数えたいので id 指定
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
+    escortshipId: [
+      [[119, 118], 2] #北上改二(改三を含む)+大井改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+928: #歴戦「第十方面艦隊」、全力出撃！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    escortshipId: [
+      [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
+    ]
+    required: 2
+    init: 0
+1018: #「第三戦隊」第二小隊、鉄底海峡へ！
+  type: 109
+  fuzzy: true
+  "battle_boss_win_rank_a@51":
+    description: "5-1 A"
+    maparea: [51]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@53":
+    description: "5-3 A"
+    maparea: [53]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@54":
+    description: "5-4 A"
+    maparea: [54]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@55":
+    description: "5-5 A"
+    maparea: [55]
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+    ]
+    required: 1
+    init: 0
+375: #「第三戦隊」第二小隊、演習開始！
+  type: 109
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipId: [
+      [[86, 85], 2] #比叡/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐2
+      [[3], 1] #軽巡1
+    ]
+    required: 4
+    init: 0
+439: #兵站強化遠征任務【基本作戦】
+  type: 109
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@ボーキサイト輸送任務":
+    description: "11"
+    required: 1
+    mission: ['ボーキサイト輸送任務']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
+    init: 0
+440: #兵站強化遠征任務【拡張作戦】
+  type: 109
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@ブルネイ泊地沖哨戒":
+    description: "41"
+    required: 1
+    mission: ['ブルネイ泊地沖哨戒']
+    init: 0
+  "mission_success@水上機前線輸送":
+    description: "40"
+    required: 1
+    mission: ['水上機前線輸送']
+    init: 0
+  "mission_success@南西海域戦闘哨戒":
+    description: "46"
+    required: 1
+    mission: ['南西海域戦闘哨戒']
+    init: 0
+  "mission_success@強行鼠輸送作戦":
+    description: "E2"
+    required: 1
+    mission: ['強行鼠輸送作戦']
+    init: 0
+657: #新型兵装開発整備の強化
+  type: 109
+  fuzzy: true
+  "destory_item@小口径主砲":
+    description: "廃棄 - 小口径主砲"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 6
+    init: 0
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 5
+    init: 0
+  "destory_item@魚雷":
+    description: "廃棄 - 魚雷"
+    slotitemType2: [5] # 5=魚雷
+    required: 4
+    init: 0
+1107: #【鋼材輸出】基地航空兵力を増備せよ！
+  type: 109
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 2
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 2
+    init: 0

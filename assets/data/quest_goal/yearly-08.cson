@@ -1,0 +1,85 @@
+# Quest goals: Yearly, reset in August.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (August)
+###
+438: #南西諸島方面の海上護衛を強化せよ！
+  type: 108
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+  "mission_success@南西諸島捜索撃滅戦":
+    description: "B5"
+    required: 1
+    mission: ['南西諸島捜索撃滅戦']
+    init: 0
+1051: #改装「1YB3H」旗艦、敵中を突破せよ！
+  type: 108
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    flagshipId: [749] #山城改二補
+    # 扶桑/時雨1隻 + 最上/満潮/朝雲/山雲2隻 の両方が必要なので All（AND）を使う
+    # （旧 escortship は OR だったので「6隻から3隻」と近似するしかなかった）
+    escortshipIdAll: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshipId: [749] #山城改二補
+    escortshipIdAll: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [749] #山城改二補
+    escortshipIdAll: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [749] #山城改二補
+    escortshipIdAll: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    flagshipId: [749] #山城改二補
+    escortshipIdAll: [
+      [[26, 43], 1] #扶桑 or 時雨
+      [[70, 97, 413, 414], 2] #最上/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0

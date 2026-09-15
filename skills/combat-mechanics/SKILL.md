@@ -91,7 +91,7 @@ When asked to check for new game data:
    wiki directly.
 2. **Quests** — see the `quest-goal-data` skill.
 3. Most new ships get **no** unique combat mechanics — only marquee/anniversary ships do.
-   Check `assets/data/quest_goal.cson` first (grep for the nation name, for `escortshipclass` /
+   Check `assets/data/quest_goal/` first (grep for the nation name, for `escortshipclass` /
    `flagship:` name arrays, and for `# extend when ...` comments) before assuming OASW / AACI /
    sp-attack need touching. The 2026-07 French additions (Algérie 641, Vautour 643, Béarn 645)
    needed _only_ quest 373's name arrays.

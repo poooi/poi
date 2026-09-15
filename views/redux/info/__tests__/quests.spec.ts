@@ -682,7 +682,7 @@ describe('quests reducer - questTrackingReducer paths', () => {
 })
 
 describe('outdateRecords', () => {
-  // The shapes that actually ship in quest_goal.cson: a one-time (単発) quest carries
+  // The shapes that actually ship in assets/data/quest_goal/: a one-time (単発) quest carries
   // no type, one with a same-day count adds resetInterval, and periodic quests carry
   // the type of their period.
   const goals: QuestsState['questGoals'] = {

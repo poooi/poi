@@ -1,0 +1,167 @@
+# Quest goals: Yearly, reset in February.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (February)
+###
+905: #「海防艦」、海を護る！
+  type: 102
+  fuzzy: true
+  "battle_boss_win_rank_a@11":
+    description: "1-1 A"
+    maparea: [11]
+    escortshiptype: [
+      [[1], 3] #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    escortshiptype: [
+      [[1], 3] #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshiptype: [
+      [[1], 3] #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortshiptype: [
+      [[1], 3] #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshiptype: [
+      [[1], 3] #海防3+自由枠2
+    ]
+    fleetlimit: 5
+    required: 1
+    init: 0
+904: #精鋭「十九駆」、躍り出る！
+  type: 102
+  fuzzy: true
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipId: [
+      [[195, 627], 2] #綾波改二/敷波改二
+    ]
+    required: 1
+    init: 0
+348: #「精鋭軽巡」演習！
+  type: 102
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshiptype: [
+      [[3, 21], 3] # 軽巡級(軽巡・練巡)3隻
+      [[2], 2] # 駆逐2隻
+    ]
+    required: 4
+    init: 0
+434: #特設護衛船団司令部、活動開始！
+  type: 102
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    required: 1
+    mission: ['兵站強化任務']
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    required: 1
+    mission: ['海峡警備行動']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+442: #西方連絡作戦準備を実施せよ！
+  type: 102
+  fuzzy: true
+  "mission_success@西方海域偵察作戦":
+    description: "D1"
+    required: 1
+    mission: ['西方海域偵察作戦']
+    init: 0
+  "mission_success@欧州方面友軍との接触":
+    description: "D3"
+    required: 1
+    mission: ['欧州方面友軍との接触']
+    init: 0
+  "mission_success@潜水艦派遣演習":
+    description: "29"
+    required: 1
+    mission: ['潜水艦派遣演習']
+    init: 0
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    required: 1
+    mission: ['潜水艦派遣作戦']
+    init: 0
+716: #「軽巡」級の改修工事を実施せよ！
+  type: 102
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [3, 4, 21] # 軽巡級
+    materialShipMinCount: 3
+    required: 2
+    init: 0
+717: #続：「軽巡」級の改修工事を実施せよ！
+  type: 102
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [5, 6] # 重巡級
+    materialShipMinCount: 3
+    required: 2
+    init: 0

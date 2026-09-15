@@ -13,7 +13,7 @@ import type { QuestGoalTable, QuestRecord, QuestsState } from '../quests'
 import { mergeQuestGoals, reducer as questsReducer, resyncQuestRecords } from '../quests'
 import { bundledQuestGoalsVersion, resetBundledQuestGoals } from '../quests/goals'
 
-// The bundled quest_goal.cson is read through CSON; a small table stands in for
+// The bundled assets/data/quest_goal/*.cson are read through CSON; a small table stands in for
 // it so the assertions do not track the real data file.
 const BUNDLED: QuestGoalTable = {
   201: { type: 1, battle_win: { description: '勝利', required: 1, init: 0 } },
