@@ -1,0 +1,470 @@
+# Quest goals: Quarterly.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Quarterly
+###
+426: #海上通商航路の警戒を厳とせよ
+  type: 4
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "10"
+    required: 1
+    mission: ['強行偵察任務']
+    init: 0
+
+428: #近海に侵入する敵潜を制圧せよ！
+  type: 4
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 2
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    required: 2
+    mission: ['海峡警備行動']
+    init: 0
+  "mission_success@長時間対潜警戒":
+    description: "A3"
+    required: 2
+    mission: ['長時間対潜警戒']
+    init: 0
+
+330: #空母機動部隊、演習始め！
+  type: 4
+  fuzzy: true
+  "practice_win":
+    description: "演習勝利"
+    escortshiptype: [[[7, 11], 1]] #空母1隻以上
+    required: 4
+    init: 0
+
+337: #「十八駆」演習！
+  type: 4
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipId: [
+      [[48, 49, 17, 18], 4] #霰/霞/陽炎/不知火
+    ]
+    required: 3
+    init: 0
+
+339: #「十九駆」演習！
+  type: 4
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipId: [
+      [[12, 486, 13, 14], 4] #磯波/浦波/綾波/敷波
+    ]
+    required: 3
+    init: 0
+
+342: #小艦艇群演習強化任務
+  type: 4
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshiptype: [
+      [[1, 2, 3, 4, 21], 4] # 駆逐・海防・軽巡級(軽巡・雷巡・練巡)4隻
+      [[1, 2], 3] # 駆逐・海防3隻
+    ]
+    required: 4
+    init: 0
+
+663: #新型艤装の継続研究 (大口径主砲を10個廃棄)
+  type: 4
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [3] # 3=大口径主砲
+    required: 10
+    init: 0
+
+675: #運用装備の統合整備
+  type: 4
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 6
+    init: 0
+  "destory_item@対空機銃":
+    description: "廃棄 - 対空機銃"
+    slotitemType2: [21] # 21=対空機銃
+    required: 4
+    init: 0
+
+678: #主力艦上戦闘機の更新
+  type: 4
+  fuzzy: true
+  "destory_item@九六式艦戦":
+    description: "廃棄 - 九六式艦戦"
+    slotitemId: [19]
+    required: 3
+    init: 0
+  "destory_item@零式艦戦21型":
+    description: "廃棄 - 零式艦戦21型"
+    slotitemId: [20]
+    required: 5
+    init: 0
+
+680: #対空兵装の整備拡充
+  type: 4
+  fuzzy: true
+  "destory_item@対空機銃":
+    description: "廃棄 - 対空機銃"
+    slotitemType2: [21] # 21=対空機銃
+    required: 4
+    init: 0
+  "destory_item@電探":
+    description: "廃棄 - 電探"
+    slotitemType2: [12, 13] # 12=小型電探 13=大型電探
+    required: 4
+    init: 0
+
+688: #航空戦力の強化
+  type: 4
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 3
+    init: 0
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 3
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 3
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 3
+    init: 0
+
+822: #沖ノ島海域迎撃戦
+  type: 4
+  "battle_boss_win_rank_s":
+    description: "勝利"
+    maparea: [24]
+    required: 2
+    init: 0
+
+854: #戦果拡張任務！「Z作戦」前段作戦
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@24":
+    description: "2-4 A"
+    maparea: [24]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@61":
+    description: "6-1 A"
+    maparea: [61]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@63":
+    description: "6-3 A"
+    maparea: [63]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    required: 1
+    init: 0
+
+861: #強行輸送艦隊、抜錨！
+  type: 4
+  "reach_mapcell":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshiptype: [
+      [[10, 22], 2] # 航空戦艦 or 補給艦2
+    ]
+    required: 2
+    init: 0
+
+872: #戦果拡張任務！「Z作戦」後段作戦
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@62":
+    description: "6-2 S"
+    maparea: [62]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    required: 1
+    init: 0
+
+893: #泊地周辺海域の安全確保を徹底せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    required: 3
+    init: 0
+  "battle_boss_win_rank_s@71":
+    description: "7-1 S"
+    maparea: [71]
+    required: 3
+    init: 0
+  "battle_boss_win_rank_s@721":
+    description: "7-2-1 S"
+    maparea: [72]
+    mapcell: [7]
+    required: 3
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    required: 3
+    init: 0
+
+888: #新編成「三川艦隊」、鉄底海峡に突入せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipId: [
+      [[69, 61, 123, 60, 59, 51, 115], 4] #鳥海/青葉/衣笠/加古/古鷹/天龍/夕張
+    ]
+    required: 1
+    init: 0
+
+284: #南西諸島方面「海上警備行動」発令
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+
+845: #発令！「西方海域作戦」
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@41":
+    description: "4-1 S"
+    maparea: [41]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    description: "4-4 S"
+    maparea: [44]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    required: 1
+    init: 0
+903: #拡張「六水戦」、最前線へ
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [622] #夕張改二
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    flagshipId: [622] #夕張改二
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagshipId: [622] #夕張改二
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [622] #夕張改二
+    # 由良改二1隻 or 睦月型2隻 のどちらかを満たせばよい（escortshipId は OR）
+    escortshipId: [
+      [[488], 1] #由良改二
+      [[1, 2, 164, 31, 30, 165], 2] #睦月/如月/弥生/望月/菊月/卯月
+    ]
+    required: 1
+    init: 0
+
+862: #前線の航空偵察を実施せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@63":
+    description: "6-3 A"
+    maparea: [63]
+    escortshiptype: [[[16], 1], [[3], 2]] #水母1隻・軽巡2隻
+    required: 2
+    init: 0
+
+873: #北方海域警備を実施せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_a@31":
+    description: "3-1 A"
+    maparea: [31]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@33":
+    description: "3-3 A"
+    maparea: [33]
+    escortshiptype: [[[3], 1]] #軽巡1隻
+    required: 1
+    init: 0
+
+875: #精鋭「三一駆」、鉄底海域に突入せよ！
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    # 長波改二 + 高波改/沖波改/朝霜改 のいずれか1隻。両方必要なので All（AND）を使う
+    # （旧 escortship では OR しかなく、ペアを3通り並べる必要があった）
+    escortshipIdAll: [
+      [[543], 1] #長波改二
+      [[345, 359, 344], 1] #高波改/沖波改/朝霜改
+    ]
+    required: 2
+    init: 0
+
+894: #空母戦力の投入による兵站線戦闘哨戒
+  type: 4
+  fuzzy: true
+  "battle_boss_win_rank_s@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 A"
+    maparea: [14]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 A"
+    maparea: [21]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 A"
+    maparea: [22]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshiptype: [[[7, 11, 18], 1]] #空母1以上
+    required: 1
+    init: 0

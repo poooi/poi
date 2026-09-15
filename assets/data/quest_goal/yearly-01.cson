@@ -1,0 +1,54 @@
+# Quest goals: Yearly, reset in January.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (January)
+###
+1005: #精強「第七駆逐隊」緊急出動！
+  type: 101
+  fuzzy: true
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortshipId: [
+      [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
+    ]
+    required: 1
+    init: 0
+681: #航空戦力の再編増強準備
+  type: 101
+  fuzzy: true
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 4
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 4
+    init: 0

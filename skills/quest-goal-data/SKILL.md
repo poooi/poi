@@ -1,6 +1,6 @@
 ---
 name: quest-goal-data
-description: Quest tracking — the assets/data/quest_goal.cson schema and the engine that consumes it (views/redux/info/quests/**, views/redux/actions/quest.ts, views/redux/middlewares/quests-cross-slice.ts). Use when editing quest_goal.cson, adding or fixing quest tracking, adding a new subgoal filter, or when asked which quests are untracked.
+description: Quest tracking — the assets/data/quest_goal/*.cson schema and the engine that consumes it (views/redux/info/quests/**, views/redux/actions/quest.ts, views/redux/middlewares/quests-cross-slice.ts). Use when editing assets/data/quest_goal/, adding or fixing quest tracking, adding a new subgoal filter, or when asked which quests are untracked.
 ---
 
 # Quest Goal Data and Tracking
@@ -9,7 +9,7 @@ description: Quest tracking — the assets/data/quest_goal.cson schema and the e
 
 | Concern                                                 | File                                                                   |
 | ------------------------------------------------------- | ---------------------------------------------------------------------- |
-| Quest goal definitions (data)                           | `assets/data/quest_goal.cson`                                          |
+| Quest goal definitions (data)                           | `assets/data/quest_goal/*.cson` (one file per period; see its README)  |
 | fcd payload generated from that data                    | `assets/data/fcd/questgoal.json` (via `fcd/build.js`)                  |
 | Bundled/delivered merge and record re-sync              | `views/redux/info/quests/goals.ts`                                     |
 | `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                                         |
@@ -26,13 +26,15 @@ The engine is a directory of focused modules (`views/redux/info/quests/`), not a
 Adding a new filter is a three-file change: a field on `QuestOptions`, a field on
 `QuestGoalSubgoal` plus its check, and a dispatch in the middleware.
 
-## The data ships twice: bundled cson + fcd
+## The data ships twice: bundled goal files + fcd
 
-`assets/data/quest_goal.cson` is the single source developers edit. It is bundled with the
-build and is the **fallback**; `fcd/build.js` mirrors it into `assets/data/fcd/questgoal.json`
-so a new or corrected quest reaches existing installs without a poi release.
+The `*.cson` files in `assets/data/quest_goal/` — one per period, merged into one table — are the
+source developers edit. They are bundled with the build and are the **fallback**; `fcd/build.js`
+merges them into the single `assets/data/fcd/questgoal.json`, so a new or corrected quest reaches
+existing installs without a poi release. External tools should read that payload rather than the
+source files.
 
-**After editing the cson, run `node fcd/build.js`** and commit the regenerated
+**After editing a goal file, run `node fcd/build.js`** and commit the regenerated
 `assets/data/fcd/questgoal.json` and `meta.json` alongside it — `npm test` fails if you forget
 (`fcd/__tests__/payloads.spec.ts`). The script resolves its inputs
 from `__dirname`, so either working directory works. The build validates the cson first (every
@@ -112,10 +114,12 @@ quest can sit outside the five active slots for weeks and must keep its count, s
 safe age at which to sweep it. `views/redux/info/__tests__/quests.spec.ts` covers both the
 record and the active-quest side.
 
-`fcd/build.js` asserts that each quest's `type` matches the section header it sits under
-(Daily/Weekly/Monthly/Quarterly/Yearly (Month)/One-time), so a quest cannot sit in Weekly with a
-monthly type — which is exactly how 242 reset its record on the wrong boundary for years. A
-quest whose game period changes therefore has to **move sections**, not just change `type`.
+`fcd/build.js` asserts that each quest's `type` matches the file it sits in (`daily`, `weekly`,
+`monthly`, `quarterly`, `yearly-MM`, `one-time*`; `limited-time` accepts any), and that no quest id
+appears in two files. A quest cannot sit among the weeklies with a monthly type — which is exactly
+how 242 reset its record on the wrong boundary for years — so a quest whose game period changes has
+to **move files**, not just change `type`. An unrecognised file name fails the build, so a new file
+is added to `expectedTypes` on purpose.
 
 A reset `type` also _wins over_ `resetInterval` — at a quarter boundary a `type: 4` record is
 deleted outright rather than zeroed, and re-created from the goals on the next questlist
@@ -234,7 +238,7 @@ node ids. Verified against quest 928's 7-3-2 boss node.
 
 Collect `api_no` across all `api_get_member/questlist/*.json` response-saver captures (see the
 `redux-api-testing` skill for the capture location), then subtract the keys matching
-`/^'?(\d+)'?:/m` in `assets/data/quest_goal.cson`.
+`/^'?(\d+)'?:/m` across `assets/data/quest_goal/*.cson`.
 
 Expect arsenal (工廠) equipment-preparation quests to show up as untracked — **that is by
 design**, not a gap: 626, 628, 637, 643, 645, 653, 654, 686, 1105, 1123, 1129, 1170.
@@ -247,9 +251,37 @@ Composition-only quests (「…を編成せよ！」, e.g. 199) are **not tracka
 matches events, and organising a fleet is not one — see the `QuestEvent` union in
 `views/redux/actions/quest.ts`.
 
+## One-time (単発) quests
+
+Tracked in `one-time.cson` and `one-time-{sortie-1,sortie-2,sortie-3,sortie-4,exercise,expedition,other}.cson`. They
+were bulk-added from three sources, in this order of trust:
+
+1. **wikiwiki** 任務/出撃任務, 演習任務, 遠征任務, 工廠任務. The rendered pages truncate when fetched
+   (出撃任務 at about B139); the raw source form
+   `https://wikiwiki.jp/kancolle/?cmd=source&page=任務%2F出撃任務` is denser and reaches about B179.
+   Ask WebFetch for rows **verbatim** — its summaries have garbled map names.
+2. **kcwiki-quest-data** (`gh-pages/data.min.json`) — structured requirements, but last updated in
+   2024-06 and wrong often enough to need checking row by row: it had quest 905 at S (A), B45 at
+   B+ (A), B113/B139 at the wrong rank, B120 with base ids where the quest names 改二, B35/B36 as
+   four fixed ships instead of four of five, and `type: 1` on quest 330, which the game reports as
+   quarterly. Its `disallowed: 他の艦` is a fleet-size cap only when every group is a named ship,
+   and an expedition id array means _each_ for 434 but _either_ for 410.
+3. **KC3Kai kc3-translations** `data/jp/quests.json` — the `memo` field states conditions precisely
+   (`※出撃：…のボスマスを各1回ずつS勝利 ※編成：…`) and covers the newest quests. Entries that come
+   only from it (B180 onwards) say so in a comment.
+
+Where a quest's own text disagrees with a summary, the quest text wins: B40/B68/B102/B135 name
+ships that must be _in_ the fleet, not flagship.
+
+Not tracked, by design: fleet composition quests (A-series), equipment preparation and
+conversion (F-series `equipexchange`/`modelconversion`), sorties from a fleet other than the
+first (poi's `sally` event carries no fleet), gauge kills such as B176, and item consumption.
+Conditions poi cannot express — OR between different escort groups, speed, level, "no other
+ship types" — are tracked loosely, with a comment on the quest saying what is not checked.
+
 ## Limited-time (期間限定) quests
 
-These live in their own section at the end of `quest_goal.cson`. Two rules:
+These live in `assets/data/quest_goal/limited-time.cson`. Two rules:
 
 1. **Never add an expired one, and delete one whose period has ended.** The game reuses
    limited-time ids for later campaigns, so a stale entry tracks the wrong quest.

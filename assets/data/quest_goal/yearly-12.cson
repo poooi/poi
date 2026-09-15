@@ -1,0 +1,24 @@
+# Quest goals: Yearly, reset in December.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (December)
+###
+1120: #【機種整理統合】新型戦闘機の量産計画
+  type: 112
+  fuzzy: true
+  "destory_item@艦上戦闘機":
+    description: "廃棄 - 艦上戦闘機"
+    slotitemType2: [6] # 6=艦上戦闘機
+    required: 4
+    init: 0
+  "destory_item@艦上爆撃機":
+    description: "廃棄 - 艦上爆撃機"
+    slotitemType2: [7] # 7=艦上爆撃機
+    required: 4
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 4
+    init: 0

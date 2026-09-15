@@ -1,0 +1,176 @@
+# Quest goals: Weekly.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Weekly
+###
+214: # あ号作戦 获得S胜利6次, 获得BOSS战胜利12次, 进行BOSS战24次, 进行战斗36次
+  type: 2
+  "battle_rank_s":
+    description: "S勝利"
+    required: 6
+    init: 0
+  "battle_boss_win":
+    description: "BOSS戰勝利"
+    required: 12
+    init: 0
+  "battle_boss":
+    description: "BOSS戰"
+    required: 24
+    init: 0
+  "sally":
+    description: "出擊"
+    required: 36
+    init: 0
+220: # い号作戦 击沉空母/轻母20只
+  type: 2
+  "sinking":
+    description: "敵空母"
+    shipType: [7, 11]
+    required: 20
+    init: 0
+213: # 海上通商破壊作戦 击沉补给舰20只
+  type: 2
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 20
+    init: 0
+221: # ろ号作戦 击沉补给舰50只
+  type: 2
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 50
+    init: 0
+228: # 海上護衛戦 击沉潜水舰15只
+  type: 2
+  "sinking":
+    description: "敵潜水艦"
+    shipType: [13]
+    required: 15
+    init: 0
+229: # 敵東方艦隊を撃滅せよ！ 获得4-1～4-5 BOSS战胜利12次
+  type: 2
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [41, 42, 43, 44, 45]
+    required: 12
+    init: 0
+241: # 敵北方艦隊主力を撃滅せよ！ 获得3-3～3-5 BOSS战胜利5次
+  type: 2
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [33, 34, 35]
+    required: 5
+    init: 0
+242: # 敵東方中枢艦隊を撃破せよ！ 获得4-4 BOSS战胜利1次
+  type: 2
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [44]
+    required: 1
+    init: 0
+243: # 南方海域珊瑚諸島沖の制空権を握れ！ 获得5-2 BOSS战S胜利2次
+  type: 2
+  "battle_boss_win_rank_s":
+    description: "勝利"
+    maparea: [52]
+    required: 2
+    init: 0
+261: # 海上輸送路の安全確保に努めよ！ 获得1-5 BOSS战A胜利以上3次
+  type: 2
+  "battle_boss_win_rank_a":
+    description: "勝利"
+    maparea: [15]
+    required: 3
+    init: 0
+302: # 大規模演習 获得胜利20次
+  type: 2
+  "practice_win":
+    description: "演習勝利"
+    required: 20
+    init: 0
+404: # 大規模遠征作戦、発令！ 获得成功30次
+  type: 2
+  "mission_success":
+    description: "遠征"
+    required: 30
+    init: 0
+410: # 南方への輸送作戦を成功させよ！ 获得远征37/38成功1次
+  type: 2
+  "mission_success":
+    description: "遠征"
+    mission: ['東京急行', '東京急行(弐)']
+    required: 1
+    init: 0
+411: # 南方への鼠輸送を継続実施せよ！ 获得远征37/38成功6次
+  type: 2
+  "mission_success":
+    description: "遠征"
+    mission: ['東京急行', '東京急行(弐)']
+    required: 7
+    init: 1
+613: # 資源の再利用 进行废弃24次
+  type: 2
+  "destory_item":
+    description: "廃棄"
+    times: [1] # times req is to separate from 638, so 638 own update will not cause this quest update
+    required: 24
+    init: 0
+703: # 「近代化改修」を進め、戦備を整えよ！ 进行舰船近代化改修15次
+  type: 2
+  "remodel_ship":
+    description: "近代化改修"
+    required: 15
+    init: 0
+638: # 対空機銃量産
+  type: 2
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [21] # 21=対空機銃
+    required: 6
+    init: 0
+676: # 装備開発力の集中整備
+  type: 2
+  fuzzy: true
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 3
+    init: 0
+  "destory_item@副砲":
+    description: "廃棄 - 副砲"
+    slotitemType2: [4] # 4=副砲
+    required: 3
+    init: 0
+  "destory_item@ドラム缶(輸送用)":
+    description: "廃棄 - ドラム缶(輸送用)"
+    slotitemType2: [30] # 30=ドラム缶(輸送用)
+    required: 1
+    init: 0
+677: #継戦支援能力の整備
+  type: 2
+  fuzzy: true
+  "destory_item@大口径主砲":
+    description: "廃棄 - 大口径主砲"
+    slotitemType2: [3] # 3=大口径主砲
+    required: 4
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 2
+    init: 0
+  "destory_item@魚雷":
+    description: "廃棄 - 魚雷"
+    slotitemType2: [5] # 5=魚雷
+    required: 3
+    init: 0
+1167: # 装備の改修集中強化 「本日中に…連続三回」
+  type: 2
+  resetInterval: 1 # weekly quest, but the count has to be reached within one day
+  "remodel_item":
+    description: "改修"
+    required: 3
+    init: 0

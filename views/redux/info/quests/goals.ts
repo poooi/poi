@@ -8,38 +8,60 @@ import type { GoalKey, QuestGoalTable, QuestRecord, SubgoalRecord } from './type
 /**
  * Quest goals come from two places:
  *
- * - `assets/data/quest_goal.cson`, bundled with the build. It is the source of
- *   truth developers edit, and the fallback that is always available.
- * - fcd (`assets/data/fcd/questgoal.json`, generated from that same cson by
- *   `fcd/build.js`), which lets a new or corrected quest reach existing installs
- *   without a poi release.
+ * - `assets/data/quest_goal/*.cson`, bundled with the build — one file per period,
+ *   merged into one table. They are the source of truth developers edit, and the
+ *   fallback that is always available.
+ * - fcd (`assets/data/fcd/questgoal.json`, generated from those files by
+ *   `fcd/build.js` as a single payload), which lets a new or corrected quest reach
+ *   existing installs without a poi release.
  *
  * The delivered copy is layered over the bundled one per quest id — see
  * `mergeQuestGoals` for why it merges rather than replaces.
  */
-const questGoalsPath = path.join(ROOT, 'assets', 'data', 'quest_goal.cson')
+const questGoalsDir = path.join(ROOT, 'assets', 'data', 'quest_goal')
 const bundledPayloadPath = path.join(ROOT, 'assets', 'data', 'fcd', 'questgoal.json')
 
 let bundledQuestGoals: QuestGoalTable | undefined
 let bundledVersion: string | undefined | null
 
 /**
- * The bundled quest goal table. Parsed once; an unreadable or broken file
- * degrades to an empty table, exactly as it did before fcd delivery existed.
- * Note that CSON *returns* parse errors instead of throwing them.
+ * The bundled quest goal table: every `*.cson` in `assets/data/quest_goal/`, merged.
+ * An unreadable directory degrades to an empty table, as a missing file always did;
+ * a broken file is skipped on its own so it cannot take the rest of the table with
+ * it. CSON *returns* parse errors instead of throwing them. `fcd/build.js` rejects
+ * duplicate ids, so here the later file simply wins.
  */
 function parseBundledQuestGoals(): QuestGoalTable {
+  let files: string[]
   try {
-    const parsed = CSON.parseCSONFile(questGoalsPath)
-    if (parsed instanceof Error || !parsed || typeof parsed !== 'object') {
-      console.warn('No quest goal data!', parsed instanceof Error ? parsed.message : '')
-      return {}
-    }
-    return parsed
+    files = fs
+      .readdirSync(questGoalsDir)
+      .filter((file) => file.endsWith('.cson'))
+      .sort()
   } catch (e) {
     console.warn('No quest goal data!', e instanceof Error ? e.message : String(e))
     return {}
   }
+  const merged: QuestGoalTable = {}
+  for (const file of files) {
+    try {
+      const parsed = CSON.parseCSONFile(path.join(questGoalsDir, file))
+      // a list parses fine but is not a table: its entries would land under ids 0, 1, …
+      if (
+        parsed instanceof Error ||
+        !parsed ||
+        typeof parsed !== 'object' ||
+        Array.isArray(parsed)
+      ) {
+        console.warn('Broken quest goal file!', file, parsed instanceof Error ? parsed.message : '')
+        continue
+      }
+      Object.assign(merged, parsed)
+    } catch (e) {
+      console.warn('Broken quest goal file!', file, e instanceof Error ? e.message : String(e))
+    }
+  }
+  return merged
 }
 
 export function loadBundledQuestGoals(): QuestGoalTable {
@@ -106,7 +128,7 @@ export function bundledQuestGoalsVersion(): string | undefined {
  * - a payload at the *same* version as the build carries nothing the bundled cson
  *   does not already have, because it is generated from it. Treating equal as
  *   "nothing new" also means a `questgoal.json` that was not regenerated after a
- *   cson edit cannot shadow that edit, which is otherwise invisible in development.
+ *   goal-file edit cannot shadow that edit, which is otherwise invisible in development.
  *
  * Versions sort lexicographically (`YYYY/MM/DD/NN`), the same comparison the fcd
  * updater uses. An unknown delivered version cannot be compared, so it is applied.

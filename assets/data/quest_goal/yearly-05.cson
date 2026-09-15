@@ -1,0 +1,151 @@
+# Quest goals: Yearly, reset in May.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (May)
+###
+975: #精鋭「第十九駆逐隊」、全力出撃！
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
+    required: 1
+    init: 0
+973: #日英米合同水上艦隊、抜錨せよ！
+  # NOTE: 米英艦艇 = all US/UK ship classes (ctype), from kcanotify ships_nationality_data.json
+  # (nat2 = US, nat4 = UK); needs updating when new US/UK ship classes are implemented
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_a@31":
+    description: "3-1 A"
+    maparea: [31]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@33":
+    description: "3-3 A"
+    maparea: [33]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@43":
+    description: "4-3 A"
+    maparea: [43]
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@732":
+    description: "7-3-2 A"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25] #第二ゲージボス Pマス
+    escortshipclass: [
+      [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
+    ]
+    banshiptype: [7, 11, 18] #空母系を伴わない
+    required: 1
+    init: 0
+1012: #鵜来型海防艦、静かな海を防衛せよ！
+  type: 105
+  fuzzy: true
+  "battle_boss_win_rank_s@11":
+    description: "1-1 S"
+    maparea: [11]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1, true] #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 3
+    init: 0
+  "battle_boss_win_rank_a@12":
+    description: "1-2 A"
+    maparea: [12]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1, true] #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    flagshipclass: [117] #鵜来型
+    escortshiptype: [
+      [[1], 1, true] #海防1
+    ]
+    banshiptype: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40] #海防艦以外
+    fleetlimit: 4
+    required: 2
+    init: 0
+356: #精鋭「第十九駆逐隊」演習！
+  type: 105
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipId: [
+      [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
+    ]
+    required: 3
+    init: 0
+437: #小笠原沖哨戒線の強化を実施せよ！
+  type: 105
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@小笠原沖哨戒線":
+    description: "A5"
+    required: 1
+    mission: ['小笠原沖哨戒線']
+    init: 0
+  "mission_success@小笠原沖戦闘哨戒":
+    description: "A6"
+    required: 1
+    mission: ['小笠原沖戦闘哨戒']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
+    init: 0

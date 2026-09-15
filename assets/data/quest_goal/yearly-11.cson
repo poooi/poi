@@ -1,0 +1,50 @@
+# Quest goals: Yearly, reset in November.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (November)
+###
+655: #工廠フル稼働！新兵装を開発せよ！
+  type: 111
+  fuzzy: true
+  "destory_item@小口径主砲":
+    description: "廃棄 - 小口径主砲"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 5
+    init: 0
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 5
+    init: 0
+  "destory_item@大口径主砲":
+    description: "廃棄 - 大口径主砲"
+    slotitemType2: [3] # 3=大口径主砲
+    required: 5
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 5
+    init: 0
+  "destory_item@艦上攻撃機":
+    description: "廃棄 - 艦上攻撃機"
+    slotitemType2: [8] # 8=艦上攻撃機
+    required: 5
+    init: 0
+714: #「駆逐艦」の改修工事を実施せよ！
+  type: 111
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [2] # 駆逐艦
+    materialShipMinCount: 3
+    required: 2
+    init: 0
+715: #続：「駆逐艦」の改修工事を実施せよ！
+  type: 111
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [3] # 軽巡洋艦
+    materialShipMinCount: 3
+    required: 2
+    init: 0

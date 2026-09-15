@@ -1,0 +1,125 @@
+# Quest goals: Monthly.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Monthly
+###
+256: # 潜水艦隊」出撃せよ！ 获得6-1 BOSS战S胜利3次
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "6-1 S"
+    maparea: [61]
+    required: 3
+    init: 0
+265: # 海上護衛強化月間 获得1-5 BOSS战A胜利以上10次
+  type: 3
+  "battle_boss_win_rank_a":
+    description: "1-5 A"
+    maparea: [15]
+    required: 10
+    init: 0
+311: # 精鋭艦隊演習 同日中に「演習」で7回以上「勝利」をおさめ、我が精鋭艦隊の練度を示そう！
+  type: 3
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 7
+    init: 0
+318: # 給糧艦「伊良湖」の支援
+  type: 3
+  "practice_win":
+    description: "演習勝利"
+    escortshiptype: [
+      [[3], 2] # 軽巡2
+    ]
+    required: 3
+    init: 0
+424:
+  type: 3
+  "mission_success":
+    description: "遠征"
+    required: 4
+    mission: ['海上護衛任務']
+    init: 0
+280: #兵站線確保！海上警備を強化実施せよ！
+  type: 3
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [[[1, 2], 3], [[3, 4, 7, 21], 1]] #軽空母・軽巡級(軽巡・雷巡・練巡)1+駆逐・海防合計3
+    required: 1
+    init: 0
+249: #「第五戦隊」出撃せよ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "2-5 S"
+    maparea: [25]
+    escortshipId: [
+      [[62, 63, 65], 3] #妙高/那智/羽黒
+    ]
+    required: 1
+    init: 0
+257: #「水雷戦隊」南西へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "1-4 S"
+    maparea: [14]
+    flagshiptype: [3] #軽巡旗艦
+    required: 1
+    init: 0
+259: #「水上打撃部隊」南方へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipclass: [
+      [[37, 19, 2, 26], 3] # 大和型・長門型・伊勢型・扶桑型3隻
+    ]
+    escortshiptype: [
+      [[3, 4, 21], 1] # 軽巡1
+    ]
+    required: 1
+    init: 0
+264: #「空母機動部隊」西へ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "4-2 S"
+    maparea: [42]
+    escortshiptype: [
+      [[7, 11, 18], 2] # 空母2
+      [[2], 2] # 駆逐2
+    ]
+    required: 1
+    init: 0
+266: #「水上反撃部隊」突入せよ！
+  type: 3
+  "battle_boss_win_rank_s":
+    description: "2-5 S"
+    maparea: [25]
+    flagshiptype: [2] #駆逐旗艦
+    escortshiptype: [
+      [[5], 1] # 重巡1
+      [[3, 4, 21], 1] # 軽巡1
+      [[2], 3, true] # 駆逐3 (旗艦除く)
+    ]
+    required: 1
+    init: 0

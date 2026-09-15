@@ -1,0 +1,366 @@
+# Quest goals: One-time (単発) expedition quests.
+# Every *.cson in this directory is merged into one table; see README.md.
+#
+# One-time quests never repeat, so they carry no `type`: a reset type would delete the record
+# at the next period boundary and lose the progress of a quest that is still open.
+# Conditions come from wikiwiki (任務/出撃任務, 演習任務, 遠征任務, 工廠任務); an entry marked
+# KC3 comes only from KC3Kai kc3-translations, for quests wikiwiki could not be read for.
+
+401: #はじめての「遠征」！ (D1)
+  # 遠征の出発ではなく帰投（成功）で数える
+  "mission_success":
+    description: "遠征"
+    required: 1
+    init: 0
+405: #第一次潜水艦派遣作戦 (D5)
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 1
+    init: 0
+406: #第二次潜水艦派遣作戦 (D6)
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 1
+    init: 0
+408: #潜水艦派遣作戦による技術入手の継続！ (D7)
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 2
+    init: 0
+409: #潜水艦派遣による海外艦との接触作戦 (D8)
+  fuzzy: true
+  "mission_success@海外艦との接触":
+    description: "31"
+    mission: ['海外艦との接触']
+    required: 1
+    init: 0
+412: #航空火力艦の運用を強化せよ！ (D10)
+  fuzzy: true
+  "mission_success@航空戦艦運用演習":
+    description: "23"
+    mission: ['航空戦艦運用演習']
+    required: 1
+    init: 0
+413: #(続)航空火力艦の運用を強化せよ！ (D12)
+  fuzzy: true
+  "mission_success@航空戦艦運用演習":
+    description: "23"
+    mission: ['航空戦艦運用演習']
+    required: 3
+    init: 0
+414: #遠洋潜水艦作戦を実施せよ！ (D13)
+  fuzzy: true
+  "mission_success@遠洋潜水艦作戦":
+    description: "39"
+    mission: ['遠洋潜水艦作戦']
+    required: 1
+    init: 0
+415: #遠洋潜水艦作戦の成果を拡大せよ！ (D14)
+  fuzzy: true
+  "mission_success@遠洋潜水艦作戦":
+    description: "39"
+    mission: ['遠洋潜水艦作戦']
+    required: 2
+    init: 0
+416: #防空射撃演習を実施せよ！ (D15)
+  fuzzy: true
+  "mission_success@防空射撃演習":
+    description: "6"
+    mission: ['防空射撃演習']
+    required: 3
+    init: 0
+417: #囮機動部隊支援作戦を実施せよ！ (D16)
+  fuzzy: true
+  "mission_success@囮機動部隊支援作戦":
+    description: "15"
+    mission: ['囮機動部隊支援作戦']
+    required: 1
+    init: 0
+418: #観艦式予行を実施せよ！ (D17)
+  fuzzy: true
+  "mission_success@観艦式予行":
+    description: "7"
+    mission: ['観艦式予行']
+    required: 2
+    init: 0
+419: #観艦式を敢行せよ！ (D18)
+  fuzzy: true
+  "mission_success@観艦式":
+    description: "8"
+    mission: ['観艦式']
+    required: 1
+    init: 0
+420: #機動部隊の運用を強化せよ！ (D19)
+  fuzzy: true
+  "mission_success@敵母港空襲作戦":
+    description: "26"
+    mission: ['敵母港空襲作戦']
+    required: 1
+    init: 0
+  "mission_success@MO作戦":
+    description: "35"
+    mission: ['MO作戦']
+    required: 1
+    init: 0
+422: #潜水艦派遣作戦による航空機技術入手 (D20)
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 1
+    init: 0
+  "mission_success@海外艦との接触":
+    description: "31"
+    mission: ['海外艦との接触']
+    required: 1
+    init: 0
+423: #潜水艦派遣作戦による噴式技術の入手 (D21)
+  # 資源の準備は追跡不可
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 1
+    init: 0
+  "mission_success@海外艦との接触":
+    description: "31"
+    mission: ['海外艦との接触']
+    required: 1
+    init: 0
+425: #海上護衛総隊、遠征開始！ (D23)
+  # 遠征の編成条件は追跡不可
+  # 遠征の編成制限は追跡不可
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "4"
+    mission: ['対潜警戒任務']
+    required: 1
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    mission: ['海上護衛任務']
+    required: 1
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    mission: ['タンカー護衛任務']
+    required: 1
+    init: 0
+427: #遠征「補給」支援体制を強化せよ！ (D25)
+  # 資源の準備は追跡不可
+  fuzzy: true
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+429: #「捷一号作戦」、発動準備！ (D27)
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "3"
+    mission: ['警備任務']
+    required: 1
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    mission: ['南西方面航空偵察作戦']
+    required: 1
+    init: 0
+430: #「海防艦」、進発せよ！ (D28)
+  # 遠征の編成条件は追跡不可
+  fuzzy: true
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    mission: ['海峡警備行動']
+    required: 1
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "5"
+    mission: ['海上護衛任務']
+    required: 1
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    mission: ['タンカー護衛任務']
+    required: 1
+    init: 0
+431: #艦隊司令部の強化 【準備段階】 (D29)
+  fuzzy: true
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    mission: ['海峡警備行動']
+    required: 1
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    mission: ['南西方面航空偵察作戦']
+    required: 1
+    init: 0
+  "mission_success@敵地偵察作戦":
+    description: "17"
+    mission: ['敵地偵察作戦']
+    required: 1
+    init: 0
+432: #警備及び哨戒偵察を強化せよ！ (D30)
+  fuzzy: true
+  "mission_success@海峡警備行動":
+    description: "A2"
+    mission: ['海峡警備行動']
+    required: 1
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    mission: ['南西方面航空偵察作戦']
+    required: 1
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "10"
+    mission: ['強行偵察任務']
+    required: 1
+    init: 0
+433: #南方戦線遠征を実施せよ！ (D31)
+  fuzzy: true
+  "mission_success@MO作戦":
+    description: "35"
+    mission: ['MO作戦']
+    required: 1
+    init: 0
+  "mission_success@水上機基地建設":
+    description: "36"
+    mission: ['水上機基地建設']
+    required: 1
+    init: 0
+  "mission_success@東京急行":
+    description: "37"
+    mission: ['東京急行']
+    required: 1
+    init: 0
+  "mission_success@東京急行(弐)":
+    description: "38"
+    mission: ['東京急行(弐)']
+    required: 1
+    init: 0
+  "mission_success@水上機前線輸送":
+    description: "40"
+    mission: ['水上機前線輸送']
+    required: 1
+    init: 0
+443: #西方連絡作戦による航空技術獲得 (D39)
+  fuzzy: true
+  "mission_success@潜水艦派遣作戦":
+    description: "30"
+    mission: ['潜水艦派遣作戦']
+    required: 2
+    init: 0
+445: #航空基地を整備拡張せよ！ (D41)
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "05"
+    mission: ['海上護衛任務']
+    required: 1
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "09"
+    mission: ['タンカー護衛任務']
+    required: 1
+    init: 0
+  "mission_success@航空機輸送作戦":
+    description: "18"
+    mission: ['航空機輸送作戦']
+    required: 1
+    init: 0
+  "mission_success@水上機基地建設":
+    description: "36"
+    mission: ['水上機基地建設']
+    required: 1
+    init: 0
+  "mission_success@水上機前線輸送":
+    description: "40"
+    mission: ['水上機前線輸送']
+    required: 1
+    init: 0
+  "mission_success@ボーキサイト船団護衛":
+    description: "45"
+    mission: ['ボーキサイト船団護衛']
+    required: 1
+    init: 0
+446: #【作戦準備】第一段階任務(対潜整備) (D42)
+  fuzzy: true
+  "mission_success@警備任務":
+    description: "03"
+    mission: ['警備任務']
+    required: 1
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "04"
+    mission: ['対潜警戒任務']
+    required: 1
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "05"
+    mission: ['海上護衛任務']
+    required: 1
+    init: 0
+  "mission_success@海峡警備行動":
+    description: "A2"
+    mission: ['海峡警備行動']
+    required: 1
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+447: #海上輸送航路の護衛強化 (D43)
+  fuzzy: true
+  "mission_success@対潜警戒任務":
+    description: "04"
+    mission: ['対潜警戒任務']
+    required: 1
+    init: 0
+  "mission_success@海上護衛任務":
+    description: "05"
+    mission: ['海上護衛任務']
+    required: 1
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "09"
+    mission: ['タンカー護衛任務']
+    required: 1
+    init: 0
+  "mission_success@兵站強化任務":
+    description: "A1"
+    mission: ['兵站強化任務']
+    required: 1
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    mission: ['南西方面航空偵察作戦']
+    required: 1
+    init: 0

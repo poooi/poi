@@ -1,0 +1,1484 @@
+# Quest goals: One-time (単発) sortie quests, B140–B179.
+# Every *.cson in this directory is merged into one table; see README.md.
+#
+# One-time quests never repeat, so they carry no `type`: a reset type would delete the record
+# at the next period boundary and lose the progress of a quest that is still open.
+# Conditions come from wikiwiki (任務/出撃任務, 演習任務, 遠征任務, 工廠任務); an entry marked
+# KC3 comes only from KC3Kai kc3-translations, for quests wikiwiki could not be read for.
+
+901: #「夕張改二」試してみてもいいかしら？ (B140)
+  fuzzy: true
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@63":
+    description: "6-3 S"
+    maparea: [63]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    required: 1
+    init: 0
+902: #新編「六水戦」出撃！後で感想、聞かせてね！ (B141)
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    escortshipIdAll: [
+      [[1, 2, 164, 165, 30, 31], 3] #睦月/如月/弥生/卯月/菊月/望月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    escortshipIdAll: [
+      [[1, 2, 164, 165, 30, 31], 3] #睦月/如月/弥生/卯月/菊月/望月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    escortshipIdAll: [
+      [[1, 2, 164, 165, 30, 31], 3] #睦月/如月/弥生/卯月/菊月/望月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@71":
+    description: "7-1 S"
+    maparea: [71]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    escortshipIdAll: [
+      [[1, 2, 164, 165, 30, 31], 3] #睦月/如月/弥生/卯月/菊月/望月
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshipId: [622, 623, 624] #夕張改二/夕張改二特/夕張改二丁
+    escortshipIdAll: [
+      [[1, 2, 164, 165, 30, 31], 3] #睦月/如月/弥生/卯月/菊月/望月
+    ]
+    required: 1
+    init: 0
+911: #再編「第三一駆逐隊」、抜錨せよ！ (B142)
+  fuzzy: true
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    escortshipIdAll: [
+      [[569], 1] #沖波改二
+      [[135], 1] #長波
+      [[527], 1] #岸波
+      [[425], 1] #朝霜
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    escortshipIdAll: [
+      [[569], 1] #沖波改二
+      [[135], 1] #長波
+      [[527], 1] #岸波
+      [[425], 1] #朝霜
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortshipIdAll: [
+      [[569], 1] #沖波改二
+      [[135], 1] #長波
+      [[527], 1] #岸波
+      [[425], 1] #朝霜
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@22":
+    description: "2-2 A"
+    maparea: [22]
+    escortshipIdAll: [
+      [[569], 1] #沖波改二
+      [[135], 1] #長波
+      [[527], 1] #岸波
+      [[425], 1] #朝霜
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshipIdAll: [
+      [[569], 1] #沖波改二
+      [[135], 1] #長波
+      [[527], 1] #岸波
+      [[425], 1] #朝霜
+    ]
+    required: 1
+    init: 0
+913: #「第五航空戦隊」、縦横無尽！ (B143)
+  fuzzy: true
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    escortshipIdAll: [
+      [[110], 1] #翔鶴
+      [[111], 1] #瑞鶴
+      [[93], 1] #朧
+      [[132], 1] #秋雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    escortshipIdAll: [
+      [[110], 1] #翔鶴
+      [[111], 1] #瑞鶴
+      [[93], 1] #朧
+      [[132], 1] #秋雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipIdAll: [
+      [[110], 1] #翔鶴
+      [[111], 1] #瑞鶴
+      [[93], 1] #朧
+      [[132], 1] #秋雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    escortshipIdAll: [
+      [[110], 1] #翔鶴
+      [[111], 1] #瑞鶴
+      [[93], 1] #朧
+      [[132], 1] #秋雲
+    ]
+    required: 1
+    init: 0
+916: #「比叡改二丙」見参！第三戦隊、南方突入！ (B144)
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipIdAll: [
+      [[592], 1] #比叡改二丙
+      [[78, 79, 85], 1] #金剛/榛名/霧島
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    escortshipIdAll: [
+      [[592], 1] #比叡改二丙
+      [[78, 79, 85], 1] #金剛/榛名/霧島
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipIdAll: [
+      [[592], 1] #比叡改二丙
+      [[78, 79, 85], 1] #金剛/榛名/霧島
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[592], 1] #比叡改二丙
+      [[78, 79, 85], 1] #金剛/榛名/霧島
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[592], 1] #比叡改二丙
+      [[78, 79, 85], 1] #金剛/榛名/霧島
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+917: #改装航空軽巡「Gotland andra」、出撃！ (B145)
+  fuzzy: true
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    description: "4-4 S"
+    maparea: [44]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+918: #「Gotland」戦隊、進撃せよ！ (B146)
+  fuzzy: true
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@63":
+    description: "6-3 S"
+    maparea: [63]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [630] #Gotland andra
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+919: #南西諸島海域合同哨戒 (B147)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125], 2] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125], 2] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125], 2] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型
+    ]
+    required: 1
+    init: 0
+920: #合同艦隊旗艦、改装「Fletcher」、抜錨！ (B148)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    flagshipId: [628] #Fletcher改 Mod.2
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [628] #Fletcher改 Mod.2
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    flagshipId: [628] #Fletcher改 Mod.2
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 1
+    init: 0
+921: #改装護衛駆逐艦「Fletcher Mk.II」作戦開始！ (B149)
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    flagshipId: [629] #Fletcher Mk.II
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@71":
+    description: "7-1 S"
+    maparea: [71]
+    flagshipId: [629] #Fletcher Mk.II
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@62":
+    description: "6-2 S"
+    maparea: [62]
+    flagshipId: [629] #Fletcher Mk.II
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [629] #Fletcher Mk.II
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 2, true] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+922: #合同艦隊作戦任務【拡張作戦】 (B150)
+  # Fletcher Mk.II と米英豪蘭艦3隻 = 米英豪蘭艦4隻以上として判定
+  fuzzy: true
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshipIdAll: [
+      [[629], 1] #Fletcher Mk.II
+    ]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 4] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[629], 1] #Fletcher Mk.II
+    ]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 4] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    escortshipIdAll: [
+      [[629], 1] #Fletcher Mk.II
+    ]
+    escortshipclass: [
+      [[65, 69, 83, 84, 87, 91, 93, 95, 99, 102, 105, 106, 107, 110, 114, 116, 118, 121, 122, 125, 67, 78, 82, 88, 108, 112, 134, 135, 96, 98], 4] #Iowa型/Saratoga型/Gambier Bay型/Intrepid型/Samuel B.Roberts型/Johnston型/Colorado型/Houston型/Atlanta型/South Dakota型/Hornet型/Helena型/Washington型/Honolulu型/Scamp型/Langley型/Ranger型/Tuscaloosa型/Salmon型/Nevada型/Warspite型/Ark Royal型/Jervis型/Nelson型/Sheffield型/Victorious型/Glorious型/Glorious型/Perth型/De Ruyter型
+    ]
+    required: 2
+    init: 0
+923: #合同艦隊機動部隊、出撃せよ！ (B151)
+  fuzzy: true
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    escortshipclass: [
+      [[69, 83, 84, 105, 116, 118, 78, 112, 135], 1] #Saratoga型/Gambier Bay型/Intrepid型/Hornet型/Langley型/Ranger型/Ark Royal型/Victorious型/Glorious型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    escortshipclass: [
+      [[69, 83, 84, 105, 116, 118, 78, 112, 135], 1] #Saratoga型/Gambier Bay型/Intrepid型/Hornet型/Langley型/Ranger型/Ark Royal型/Victorious型/Glorious型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    escortshipclass: [
+      [[69, 83, 84, 105, 116, 118, 78, 112, 135], 1] #Saratoga型/Gambier Bay型/Intrepid型/Hornet型/Langley型/Ranger型/Ark Royal型/Victorious型/Glorious型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipclass: [
+      [[69, 83, 84, 105, 116, 118, 78, 112, 135], 1] #Saratoga型/Gambier Bay型/Intrepid型/Hornet型/Langley型/Ranger型/Ark Royal型/Victorious型/Glorious型
+    ]
+    required: 1
+    init: 0
+924: #【航空母艦特別任務】航空戦隊、精鋭無比！ (B152)
+  fuzzy: true
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    escortshiptype: [
+      [[11, 18], 2] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    escortshiptype: [
+      [[11, 18], 2] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@43":
+    description: "4-3 S"
+    maparea: [43]
+    escortshiptype: [
+      [[11, 18], 2] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+925: #改加賀型航空母艦「加賀改二」、抜錨！ (B153)
+  fuzzy: true
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    flagshipId: [698] #加賀改二
+    escortshiptype: [
+      [[11, 18], 1, true] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    description: "4-4 S"
+    maparea: [44]
+    flagshipId: [698] #加賀改二
+    escortshiptype: [
+      [[11, 18], 1, true] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [698] #加賀改二
+    escortshiptype: [
+      [[11, 18], 1, true] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    flagshipId: [698] #加賀改二
+    escortshiptype: [
+      [[11, 18], 1, true] #正規空母/装甲空母
+    ]
+    required: 1
+    init: 0
+926: #最精鋭「第一航空戦隊」、出撃！鎧袖一触！ (B154)
+  fuzzy: true
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[698], 1] #加賀改二
+      [[594], 1] #赤城改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipIdAll: [
+      [[698], 1] #加賀改二
+      [[594], 1] #赤城改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@62":
+    description: "6-2 S"
+    maparea: [62]
+    escortshipIdAll: [
+      [[698], 1] #加賀改二
+      [[594], 1] #赤城改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    escortshipIdAll: [
+      [[698], 1] #加賀改二
+      [[594], 1] #赤城改二
+    ]
+    required: 1
+    init: 0
+927: #重巡「羽黒」、出撃！ペナン沖海戦 (B155)
+  fuzzy: true
+  "battle_boss_win_rank_a@731":
+    description: "7-3-1 A"
+    maparea: [73]
+    mapcell: [5, 8]
+    flagshipId: [65] #羽黒
+    fleetlimit: 5
+    required: 4
+    init: 0
+929: #静かな海を護る「鯨」、動き出す！ (B156)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    flagshipclass: [50, 100] #大鯨型/迅鯨型
+    escortshiptype: [
+      [[13, 14], 2] #潜水艦/潜水空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    flagshipclass: [50, 100] #大鯨型/迅鯨型
+    escortshiptype: [
+      [[13, 14], 2] #潜水艦/潜水空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    flagshipclass: [50, 100] #大鯨型/迅鯨型
+    escortshiptype: [
+      [[13, 14], 2] #潜水艦/潜水空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipclass: [50, 100] #大鯨型/迅鯨型
+    escortshiptype: [
+      [[13, 14], 2] #潜水艦/潜水空母
+    ]
+    required: 1
+    init: 0
+930: #主力オブ主力、縦横無尽ッ！ (B157)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshipIdAll: [
+      [[648], 1] #秋雲改二
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+      [[564], 1] #風雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[648], 1] #秋雲改二
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+      [[564], 1] #風雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipIdAll: [
+      [[648], 1] #秋雲改二
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+      [[564], 1] #風雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@41":
+    description: "4-1 S"
+    maparea: [41]
+    escortshipIdAll: [
+      [[648], 1] #秋雲改二
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+      [[564], 1] #風雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    escortshipIdAll: [
+      [[648], 1] #秋雲改二
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+      [[564], 1] #風雲改二
+    ]
+    required: 1
+    init: 0
+931: #精鋭「二七駆」、回避運動は気をつけて！ (B158)
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@71":
+    description: "7-1 S"
+    maparea: [71]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@63":
+    description: "6-3 S"
+    maparea: [63]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+933: #【艦隊司令部強化】艦隊旗艦、出撃せよ！ (B159)
+  fuzzy: true
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    flagshipId: [183, 651] #大淀/丹陽
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    flagshipId: [183, 651] #大淀/丹陽
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    flagshipId: [183, 651] #大淀/丹陽
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [183, 651] #大淀/丹陽
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 2
+    init: 0
+934: #奇跡の駆逐艦「雪風」、再び出撃す！ (B160)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [651, 656] #丹陽/雪風改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [651, 656] #丹陽/雪風改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [651, 656] #丹陽/雪風改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    flagshipId: [651, 656] #丹陽/雪風改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    flagshipId: [651, 656] #丹陽/雪風改二
+    required: 1
+    init: 0
+935: #最精強！「呉の雪風」「佐世保の時雨」 (B161)
+  fuzzy: true
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshipIdAll: [
+      [[656], 1] #雪風改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipIdAll: [
+      [[656], 1] #雪風改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[656], 1] #雪風改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    escortshipIdAll: [
+      [[656], 1] #雪風改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    escortshipIdAll: [
+      [[656], 1] #雪風改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+898: #北の海から愛をこめて (B162)
+  fuzzy: true
+  "battle_boss_win_rank_a@31":
+    description: "3-1 A"
+    maparea: [31]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@33":
+    description: "3-3 A"
+    maparea: [33]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@34":
+    description: "3-4 A"
+    maparea: [34]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@35":
+    description: "3-5 A"
+    maparea: [35]
+    required: 1
+    init: 0
+847: #球磨型軽巡一番艦、出撃だクマ！ (B163)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [652] #球磨改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    flagshipId: [652] #球磨改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    flagshipId: [652] #球磨改二
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshipId: [652] #球磨改二
+    required: 1
+    init: 0
+936: #改装最新鋭軽巡「能代改二」、出撃せよ！ (B164)
+  fuzzy: true
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [662] #能代改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    flagshipId: [662] #能代改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [662] #能代改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@71":
+    description: "7-1 S"
+    maparea: [71]
+    flagshipId: [662] #能代改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    flagshipId: [662] #能代改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+937: #精鋭「第七駆逐隊」、出撃せよ！ (B165)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[665], 1] #曙改二
+      [[407], 1] #潮改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipIdAll: [
+      [[665], 1] #曙改二
+      [[407], 1] #潮改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    description: "4-4 S"
+    maparea: [44]
+    escortshipIdAll: [
+      [[665], 1] #曙改二
+      [[407], 1] #潮改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[665], 1] #曙改二
+      [[407], 1] #潮改二
+    ]
+    required: 1
+    init: 0
+938: #改装航空巡洋艦「最上」、抜錨せよ！ (B166)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [501] #最上改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [501] #最上改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [501] #最上改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [501] #最上改二
+    required: 1
+    init: 0
+939: #西村艦隊、精鋭先行掃討隊、前進せよ！ (B167)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [501] #最上改二
+    escortshipIdAll: [
+      [[43, 97, 413, 414], 2] #時雨/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagshipId: [501] #最上改二
+    escortshipIdAll: [
+      [[43, 97, 413, 414], 2] #時雨/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    flagshipId: [501] #最上改二
+    escortshipIdAll: [
+      [[43, 97, 413, 414], 2] #時雨/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    flagshipId: [501] #最上改二
+    escortshipIdAll: [
+      [[43, 97, 413, 414], 2] #時雨/満潮/朝雲/山雲
+    ]
+    required: 1
+    init: 0
+940: #二水戦旗艦、この「矢矧」が預かります！ (B168)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    flagshipId: [663] #矢矧改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [663] #矢矧改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [663] #矢矧改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagshipId: [663] #矢矧改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+943: #新しき翼。改装航空母艦「龍鳳」、出撃せよ！ (B169)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [888, 883] #龍鳳改二/龍鳳改二戊
+    escortshipIdAll: [
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [888, 883] #龍鳳改二/龍鳳改二戊
+    escortshipIdAll: [
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [888, 883] #龍鳳改二/龍鳳改二戊
+    escortshipIdAll: [
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [888, 883] #龍鳳改二/龍鳳改二戊
+    escortshipIdAll: [
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    flagshipId: [888, 883] #龍鳳改二/龍鳳改二戊
+    escortshipIdAll: [
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+949: #改装特務空母「Gambier Bay Mk.II」抜錨！ (B170)
+  fuzzy: true
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [707] #Gambier Bay Mk.II
+    escortshipclass: [
+      [[91], 1] #Johnston型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    flagshipId: [707] #Gambier Bay Mk.II
+    escortshipclass: [
+      [[91], 1] #Johnston型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_a@64":
+    description: "6-4 A"
+    maparea: [64]
+    flagshipId: [707] #Gambier Bay Mk.II
+    escortshipclass: [
+      [[91], 1] #Johnston型
+    ]
+    required: 2
+    init: 0
+952: #【作戦準備】第二段階任務(対地/対空整備) (B171)
+  fuzzy: true
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 1
+    init: 0
+957: #「山風改二」、抜錨せよ！ (B172)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    flagshipId: [588] #山風改二
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    flagshipId: [588] #山風改二
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    flagshipId: [588] #山風改二
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    flagshipId: [588] #山風改二
+    escortshiptype: [
+      [[1, 2], 3, true] #海防艦/駆逐艦
+    ]
+    required: 1
+    init: 0
+958: #改白露型駆逐艦「山風改二」、奮戦す！ (B173)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[588, 469, 587], 2] #山風改二/江風改二/海風改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipIdAll: [
+      [[588, 469, 587], 2] #山風改二/江風改二/海風改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipIdAll: [
+      [[588, 469, 587], 2] #山風改二/江風改二/海風改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    escortshipIdAll: [
+      [[588, 469, 587], 2] #山風改二/江風改二/海風改二
+    ]
+    required: 1
+    init: 0
+961: #奮戦！精鋭「第十五駆逐隊」第一小隊 (B174)
+  fuzzy: true
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    escortshipIdAll: [
+      [[670], 1] #親潮改二
+      [[568], 1] #黒潮改二
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[670], 1] #親潮改二
+      [[568], 1] #黒潮改二
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipIdAll: [
+      [[670], 1] #親潮改二
+      [[568], 1] #黒潮改二
+    ]
+    required: 2
+    init: 0
+966: #南西海域「基地航空隊」開設！ (B175)
+  # 設営隊の消費は追跡不可
+  fuzzy: true
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    required: 1
+    init: 0
+  "reach_mapcell@74O":
+    description: "7-4-O 到達"
+    maparea: [74]
+    mapcell: [15]
+    required: 1
+    init: 0
+968: #航空母艦「雲鷹」、抜錨せよ！ (B177)
+  fuzzy: true
+  "battle_boss_win_rank_a@74":
+    description: "7-4 A"
+    maparea: [74]
+    flagshipId: [522] #八幡丸
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@722":
+    description: "7-2-2 A"
+    maparea: [72]
+    mapcell: [15]
+    flagshipId: [522] #八幡丸
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@25":
+    description: "2-5 A"
+    maparea: [25]
+    flagshipId: [522] #八幡丸
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@64":
+    description: "6-4 A"
+    maparea: [64]
+    flagshipId: [522] #八幡丸
+    required: 1
+    init: 0
+969: #改特型駆逐艦「天霧改二」、出撃す！ (B178)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[903], 1] #天霧改二
+      [[61, 24, 480], 2] #青葉/大井/狭霧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@732":
+    description: "7-3-2 S"
+    maparea: [73]
+    mapcell: [18, 23, 24, 25]
+    escortshipIdAll: [
+      [[903], 1] #天霧改二
+      [[61, 24, 480], 2] #青葉/大井/狭霧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    escortshipIdAll: [
+      [[903], 1] #天霧改二
+      [[61, 24, 480], 2] #青葉/大井/狭霧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[903], 1] #天霧改二
+      [[61, 24, 480], 2] #青葉/大井/狭霧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    escortshipIdAll: [
+      [[903], 1] #天霧改二
+      [[61, 24, 480], 2] #青葉/大井/狭霧
+    ]
+    required: 1
+    init: 0
+970: #第十六戦隊、改装「浦波改二」出撃します！ (B179)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshipIdAll: [
+      [[647], 1] #浦波改二
+      [[61], 1] #青葉
+      [[113], 1] #鬼怒
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[647], 1] #浦波改二
+      [[61], 1] #青葉
+      [[113], 1] #鬼怒
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    escortshipIdAll: [
+      [[647], 1] #浦波改二
+      [[61], 1] #青葉
+      [[113], 1] #鬼怒
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@722":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshipIdAll: [
+      [[647], 1] #浦波改二
+      [[61], 1] #青葉
+      [[113], 1] #鬼怒
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@74":
+    description: "7-4 S"
+    maparea: [74]
+    escortshipIdAll: [
+      [[647], 1] #浦波改二
+      [[61], 1] #青葉
+      [[113], 1] #鬼怒
+    ]
+    required: 1
+    init: 0

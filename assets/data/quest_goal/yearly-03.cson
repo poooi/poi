@@ -1,0 +1,160 @@
+# Quest goals: Yearly, reset in March.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (March)
+###
+912: #工作艦「明石」護衛任務
+  type: 103
+  fuzzy: true
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    flagshipId: [182] #明石
+    escortshiptype: [
+      [[2], 3] #駆逐3
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshipId: [182] #明石
+    escortshiptype: [
+      [[2], 3] #駆逐3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@21":
+    description: "2-1 A"
+    maparea: [21]
+    flagshipId: [182] #明石
+    escortshiptype: [
+      [[2], 3] #駆逐3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@22":
+    description: "2-2 A"
+    maparea: [22]
+    flagshipId: [182] #明石
+    escortshiptype: [
+      [[2], 3] #駆逐3
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    flagshipId: [182] #明石
+    escortshiptype: [
+      [[2], 3] #駆逐3
+    ]
+    required: 1
+    init: 0
+914: #重巡戦隊、西へ！
+  type: 103
+  fuzzy: true
+  "battle_boss_win_rank_a@41":
+    description: "4-1 A"
+    maparea: [41]
+    escortshiptype: [
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@42":
+    description: "4-2 A"
+    maparea: [42]
+    escortshiptype: [
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@43":
+    description: "4-3 A"
+    maparea: [43]
+    escortshiptype: [
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@44":
+    description: "4-4 A"
+    maparea: [44]
+    escortshiptype: [
+      [[5], 3] #重巡3
+      [[2], 1] #駆逐1
+    ]
+    required: 1
+    init: 0
+350: #精鋭「第七駆逐隊」演習開始！
+  type: 103
+  "practice_win_a":
+    description: "演習勝利 A"
+    # 朧・漣・曙・潮（どの改装段階でも可）
+    escortshipId: [
+      [[93, 94, 15, 16], 4] #朧/漣/曙/潮
+    ]
+    required: 3
+    init: 0
+436: #練習航海及び警備任務を実施せよ！
+  type: 103
+  fuzzy: true
+  "mission_success@練習航海":
+    description: "1"
+    required: 1
+    mission: ['練習航海']
+    init: 0
+  "mission_success@長距離練習航海":
+    description: "2"
+    required: 1
+    mission: ['長距離練習航海']
+    init: 0
+  "mission_success@警備任務":
+    description: "3"
+    required: 1
+    mission: ['警備任務']
+    init: 0
+  "mission_success@対潜警戒任務":
+    description: "4"
+    required: 1
+    mission: ['対潜警戒任務']
+    init: 0
+  "mission_success@強行偵察任務":
+    description: "10"
+    required: 1
+    mission: ['強行偵察任務']
+    init: 0
+444: #新兵装開発資材輸送を船団護衛せよ！
+  type: 103
+  fuzzy: true
+  "mission_success@海上護衛任務":
+    description: "5"
+    required: 1
+    mission: ['海上護衛任務']
+    init: 0
+  "mission_success@タンカー護衛任務":
+    description: "9"
+    required: 1
+    mission: ['タンカー護衛任務']
+    init: 0
+  "mission_success@ボーキサイト輸送任務":
+    description: "11"
+    required: 1
+    mission: ['ボーキサイト輸送任務']
+    init: 0
+  "mission_success@資源輸送任務":
+    description: "12"
+    required: 1
+    mission: ['資源輸送任務']
+    init: 0
+  "mission_success@南西方面航空偵察作戦":
+    description: "B1"
+    required: 1
+    mission: ['南西方面航空偵察作戦']
+    init: 0

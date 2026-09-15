@@ -73,7 +73,7 @@ export const createInfoQuestsApplyProgressAction = createAction<{
 
 /**
  * A new quest goal table is in force — dispatched when fcd delivers
- * `questgoal` data, which is layered over the bundled quest_goal.cson.
+ * `questgoal` data, which is layered over the bundled assets/data/quest_goal/*.cson.
  */
 export const createInfoQuestsGoalsUpdatedAction = createAction<{
   delivered: QuestGoalTable

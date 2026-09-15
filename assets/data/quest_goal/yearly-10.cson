@@ -1,0 +1,42 @@
+# Quest goals: Yearly, reset in October.
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Yearly (October)
+###
+346: #最精鋭！主力オブ主力、演習開始！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipId: [
+      [[542, 563, 564, 648], 4] #夕雲改二/巻雲改二/風雲改二/秋雲改二
+    ]
+    required: 4
+    init: 0
+345: #演習ティータイム！
+  type: 110
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshipId: [
+      [[439, 78, 515, 571, 519, 520, 901], 4] #Warspite/金剛/Ark Royal/Nelson/Jervis/Janus/Javelin
+    ]
+    required: 4
+    init: 0
+355: #精鋭「第十五駆逐隊」第一小隊演習！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [568, 670] #黒潮改二/親潮改二
+    secondshipId: [568, 670] #黒潮改二/親潮改二
+    required: 4
+    init: 0
+377: #「第二駆逐隊(後期編成)」、練度向上！
+  type: 110
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [409, 625, 410] #早霜/秋霜/清霜
+    escortshipId: [
+      [[409, 625, 410, 425], 3] #早霜/秋霜/清霜/朝霜
+    ]
+    required: 4
+    init: 0

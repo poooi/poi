@@ -11,7 +11,7 @@ import path from 'path'
 const ROOT = path.resolve(__dirname, '..', '..')
 
 const PAYLOADS: Array<{ name: string; source: string }> = [
-  { name: 'questgoal', source: 'assets/data/quest_goal.cson' },
+  { name: 'questgoal', source: 'assets/data/quest_goal/' },
   { name: 'shiptag', source: 'fcd/shiptag.cson' },
   { name: 'map', source: 'fcd/map.json' },
   { name: 'shipavatar', source: 'fcd/shipavatar.json' },
@@ -29,12 +29,29 @@ interface Payload {
 const isPayload = (value: unknown): value is Payload =>
   typeof value === 'object' && value !== null && 'meta' in value && 'data' in value
 
-const read = (relative: string): unknown => {
+const readFile = (relative: string): unknown => {
   const text = fs.readFileSync(path.join(ROOT, relative), 'utf-8')
   // CSON returns parse errors instead of throwing them
   const parsed: unknown = relative.endsWith('.cson') ? CSON.parse(text) : JSON.parse(text)
   if (parsed instanceof Error) throw parsed
   return parsed
+}
+
+// A directory source (trailing slash) is merged file by file, as fcd/build.js does.
+const read = (relative: string): unknown => {
+  if (!relative.endsWith('/')) return readFile(relative)
+  const merged: Record<string, unknown> = {}
+  const files = fs
+    .readdirSync(path.join(ROOT, relative))
+    .filter((file) => file.endsWith('.cson'))
+    .sort()
+  for (const file of files) {
+    const table = readFile(relative + file)
+    if (typeof table !== 'object' || table === null)
+      throw new Error(`${relative}${file} is not a table`)
+    Object.assign(merged, table)
+  }
+  return merged
 }
 
 describe('assets/data/fcd payloads are in step with their sources', () => {

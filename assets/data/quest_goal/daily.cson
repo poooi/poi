@@ -1,0 +1,161 @@
+# Quest goals: Daily (and the two special dailies, type 8/9).
+# Every *.cson in this directory is merged into one table; see README.md.
+
+###
+# Daily
+###
+201: # 敵艦隊を撃破せよ！ 获得胜利1次
+  type: 1
+  "battle_win":
+    description: "勝利"
+    required: 1
+    init: 0
+216: # 敵艦隊主力を撃滅せよ！ 进行战斗1次
+  type: 1
+  "battle":
+    description: "作戰"
+    required: 1
+    init: 0
+210: # 敵艦隊を10回邀撃せよ！ 进行战斗10次
+  type: 1
+  "battle":
+    description: "作戰"
+    required: 10
+    init: 0
+218: # 敵補給艦を3隻撃沈せよ！ 击沉补给舰3只
+  type: 1
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 3
+    init: 0
+226: # 南西諸島海域の制海権を握れ！ 获得2-1～2-5 BOSS战胜利5次
+  type: 1
+  "battle_boss_win":
+    description: "勝利"
+    maparea: [21, 22, 23, 24, 25]
+    required: 5
+    init: 0
+230: # 敵潜水艦を制圧せよ！ 击沉潜水舰6只
+  type: 1
+  "sinking":
+    description: "敵潜水艦"
+    shipType: [13]
+    required: 6
+    init: 0
+303: # 「演習」で練度向上！ 进行演习3次
+  type: 1
+  "practice":
+    description: "演習"
+    required: 3
+    init: 0
+304: # 「演習」で他提督を圧倒せよ！ 演习获得胜利5次
+  type: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 5
+    init: 0
+402: # 「遠征」を３回成功させよう！ 远征成功3次
+  type: 1
+  "mission_success":
+    description: "遠征"
+    required: 3
+    init: 0
+403: # 「遠征」を１０回成功させよう！ 远征成功10次
+  type: 1
+  "mission_success":
+    description: "遠征"
+    required: 10
+    init: 0
+503: # 艦隊大整備！ 入渠5次
+  type: 1
+  "repair":
+    description: "入渠"
+    required: 5
+    init: 0
+504: # 艦隊酒保祭り！ 补给15次
+  type: 1
+  "supply":
+    description: "補給"
+    required: 15
+    init: 0
+605: # 新装備「開発」指令 开发1次
+  type: 1
+  "create_item":
+    description: "開発"
+    required: 1
+    init: 0
+606: # 新造艦「建造」指令 建造1次
+  type: 1
+  "create_ship":
+    description: "建造"
+    required: 1
+    init: 0
+607: # 装備「開発」集中強化！ 开发3次
+  type: 1
+  "create_item":
+    description: "開発"
+    required: 4
+    init: 1
+608: # 艦娘「建造」艦隊強化！ 建造3次
+  type: 1
+  "create_ship":
+    description: "建造"
+    required: 4
+    init: 1
+609: # 軍縮条約対応！ 解体2次
+  type: 1
+  "destroy_ship":
+    description: "解体"
+    required: 2
+    init: 0
+619: # 装備の改修強化 改修1次
+  type: 1
+  "remodel_item":
+    description: "改修"
+    required: 1
+    init: 0
+673: # 装備開発力の整備 (「小口径主砲」系装備x4を廃棄)
+  type: 1
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 4
+    init: 0
+674: # 工廠環境の整備 (「機銃」系装備x3を廃棄)
+  type: 1
+  "destory_item":
+    description: "廃棄"
+    slotitemType2: [21] # 21=対空機銃
+    required: 3
+    init: 0
+702: # 艦の「近代化改修」を実施せよ！ 近代化改修2次
+  type: 1
+  "remodel_ship":
+    description: "近代化改修"
+    required: 2
+    init: 0
+1166: # 続：装備の改修強化
+  type: 1
+  "remodel_item":
+    description: "改修"
+    required: 1
+    init: 0
+
+###
+# Someday
+###
+211: # 敵空母を３隻撃沈せよ！ 击沉轻母或空母2次
+  type: 8
+  "sinking":
+    description: "敵空母"
+    shipType: [7, 11]
+    required: 3
+    init: 0
+212: # 敵輸送船団を叩け！ 击沉补给舰5只
+  type: 9
+  "sinking":
+    description: "敵補給艦"
+    shipType: [15]
+    required: 5
+    init: 0
