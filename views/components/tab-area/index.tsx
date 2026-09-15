@@ -231,7 +231,7 @@ const ControlledTabAreaFC = (): React.ReactElement => {
     onTab: useCallback(() => handleSetTabOffset(1), [handleSetTabOffset]),
     onNumberKey: useCallback(
       (num: number): void => {
-        const keys = ['main-view', 'ship-view', ...plugins.map((p) => p.packageName)]
+        const keys = ['main-view', 'ship-view', ...plugins.map((p) => p.id)]
         selectTab(keys[num - 1] ?? '')
       },
       [plugins, selectTab],
@@ -356,7 +356,7 @@ const ControlledTabAreaFC = (): React.ReactElement => {
         plugins: allPlugins,
         selectTab: select,
       } = latestRef.current
-      const keys = ['main-view', 'ship-view', activePlugin || allPlugins[0]?.packageName]
+      const keys = ['main-view', 'ship-view', activePlugin || allPlugins[0]?.id]
       select(keys[message] ?? '')
     }
 
@@ -397,7 +397,7 @@ const ControlledTabAreaFC = (): React.ReactElement => {
   useEffect(() => {
     if (process.platform === 'darwin') {
       const activePlugin: Partial<Plugin> =
-        tabbedPlugins.find((p) => p.packageName === activePluginName) ?? tabbedPlugins[0] ?? {}
+        tabbedPlugins.find((p) => p.id === activePluginName) ?? tabbedPlugins[0] ?? {}
       const updateMainTouchbar: UpdateMainTouchbar =
         remote.require('./lib/touchbar').updateMainTouchbar
       updateMainTouchbar(
@@ -438,7 +438,7 @@ const ControlledTabAreaFC = (): React.ReactElement => {
   }, [tabbedPlugins, activePluginName, activeMainTab, dispatchTabChangeEvent])
 
   const activePlugin: Partial<Plugin> =
-    tabbedPlugins.find((p) => p.packageName === activePluginName) ?? tabbedPlugins[0] ?? {}
+    tabbedPlugins.find((p) => p.id === activePluginName) ?? tabbedPlugins[0] ?? {}
 
   const resizableAreaProps = getResizableAreaProps({
     editable,
