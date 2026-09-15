@@ -1,0 +1,75 @@
+{
+  "version": "fixture-version",
+  "schemaVersion": 1,
+  "cellSize": 96,
+  "displaySize": 48,
+  "pixelRatio": 2,
+  "sheets": [
+    {
+      "url": "avatars-0.018a0c0626d46f3c.webp",
+      "width": 1536,
+      "height": 1056
+    },
+    {
+      "url": "avatars-1.deadbeef00.webp",
+      "width": 960,
+      "height": 480
+    }
+  ],
+  "avatars": {
+    "github:edwardaaaa": {
+      "sheet": 0,
+      "x": 0,
+      "y": 0,
+      "width": 96,
+      "height": 96
+    },
+    "github:hanzhao": {
+      "sheet": 0,
+      "x": 96,
+      "y": 96,
+      "width": 96,
+      "height": 96
+    },
+    "github:myzwillmake": {
+      "sheet": 1,
+      "x": 192,
+      "y": 0,
+      "width": 96,
+      "height": 96
+    }
+  },
+  "contributors": [
+    {
+      "id": "github:edwardaaaa",
+      "login": "edwardaaaa",
+      "name": "edwardaaaa",
+      "profile": "https://github.com/edwardaaaa"
+    },
+    {
+      "id": "github:hanzhao",
+      "login": "hanzhao",
+      "name": "Maggie",
+      "profile": "https://github.com/hanzhao"
+    },
+    {
+      "id": "github:myzwillmake",
+      "login": "myzWILLmake",
+      "name": null,
+      "profile": "http://weibo.com/myzwillmake"
+    },
+    {
+      "id": "github:nobody",
+      "login": "nobody",
+      "name": null,
+      "profile": "https://github.com/nobody"
+    },
+    {
+      "id": "github:legacy",
+      "login": "legacy",
+      "name": null,
+      "profile": "ftp://example.com/legacy"
+    }
+  ],
+  "supporters": []
+}
