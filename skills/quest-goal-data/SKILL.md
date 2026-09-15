@@ -253,7 +253,7 @@ matches events, and organising a fleet is not one — see the `QuestEvent` union
 
 ## One-time (単発) quests
 
-Tracked in `one-time.cson` and `one-time-{sortie-1,sortie-2,exercise,expedition,other}.cson`. They
+Tracked in `one-time.cson` and `one-time-{sortie-1,sortie-2,sortie-3,sortie-4,exercise,expedition,other}.cson`. They
 were bulk-added from three sources, in this order of trust:
 
 1. **wikiwiki** 任務/出撃任務, 演習任務, 遠征任務, 工廠任務. The rendered pages truncate when fetched

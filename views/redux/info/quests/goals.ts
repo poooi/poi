@@ -46,7 +46,13 @@ function parseBundledQuestGoals(): QuestGoalTable {
   for (const file of files) {
     try {
       const parsed = CSON.parseCSONFile(path.join(questGoalsDir, file))
-      if (parsed instanceof Error || !parsed || typeof parsed !== 'object') {
+      // a list parses fine but is not a table: its entries would land under ids 0, 1, …
+      if (
+        parsed instanceof Error ||
+        !parsed ||
+        typeof parsed !== 'object' ||
+        Array.isArray(parsed)
+      ) {
         console.warn('Broken quest goal file!', file, parsed instanceof Error ? parsed.message : '')
         continue
       }

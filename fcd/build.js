@@ -118,7 +118,10 @@ const readQuestGoals = async () => {
     const expected = expectedTypes(file)
     assert(expected !== false, `${file}: not a recognised quest goal file name`)
     const data = await readCSON(path.join(QUEST_GOAL_DIR, file))
-    assert(data && !(data instanceof Error) && typeof data === 'object', `${file} did not parse`)
+    assert(
+      data && !(data instanceof Error) && typeof data === 'object' && !Array.isArray(data),
+      `${file} did not parse to a table of quests`,
+    )
     for (const [id, goal] of Object.entries(data)) {
       assert(!(id in merged), `quest ${id} is defined twice (again in ${file})`)
       if (expected) {
