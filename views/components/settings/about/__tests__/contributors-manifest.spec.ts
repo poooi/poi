@@ -10,14 +10,12 @@ describe('normalizeCreditsManifest', () => {
       'github:hanzhao',
       'github:myzwillmake',
       'github:nobody',
-      'github:legacy',
     ])
     expect(contributors.map((contributor) => contributor.label)).toEqual([
       'edwardaaaa',
       'Maggie',
       'myzWILLmake',
       'nobody',
-      'legacy',
     ])
   })
 
@@ -51,9 +49,9 @@ describe('normalizeCreditsManifest', () => {
     expect(contributors[3].avatar).toBeNull()
   })
 
-  it('keeps http(s) profile links and drops other schemes', () => {
+  it('keeps profile links from the manifest', () => {
     expect(contributors[0].profile).toBe('https://github.com/edwardaaaa')
-    expect(contributors[4].profile).toBeNull()
+    expect(contributors[2].profile).toBe('http://weibo.com/myzwillmake')
   })
 })
 
@@ -74,7 +72,7 @@ describe('loadContributors', () => {
     const contributors = await loadContributors()
 
     expect(fetchMock).toHaveBeenCalledTimes(1)
-    expect(contributors).toHaveLength(5)
+    expect(contributors).toHaveLength(4)
     expect(contributors[0].avatar?.url).toBe(
       'https://poi.moe/api/credits/avatars-0.018a0c0626d46f3c.webp',
     )
@@ -139,11 +137,5 @@ describe('loadContributors', () => {
     fetchMock.mockResolvedValue(new Response('{ not json'))
 
     await expect(loadContributors()).rejects.toThrow()
-  })
-
-  it('rejects on an unsupported manifest schema', async () => {
-    fetchMock.mockResolvedValue(new Response(JSON.stringify({ ...fixture, schemaVersion: 2 })))
-
-    await expect(loadContributors()).rejects.toThrow('Unsupported credits manifest schema')
   })
 })

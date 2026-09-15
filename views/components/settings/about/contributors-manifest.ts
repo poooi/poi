@@ -24,7 +24,6 @@ interface CreditsManifestContributor {
 }
 
 interface CreditsManifest {
-  schemaVersion: number
   cellSize: number
   sheets: CreditsManifestSheet[]
   avatars: Record<string, CreditsManifestAvatar>
@@ -42,17 +41,8 @@ export interface ContributorAvatarSprite {
 export interface Contributor {
   id: string
   label: string
-  profile: string | null
+  profile: string
   avatar: ContributorAvatarSprite | null
-}
-
-const toProfileUrl = (value: string): string | null => {
-  try {
-    const url = new URL(value)
-    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null
-  } catch {
-    return null
-  }
 }
 
 const toSprite = (
@@ -76,17 +66,14 @@ export const normalizeCreditsManifest = (
   raw: unknown,
   manifestUrl = CREDITS_MANIFEST_URL,
 ): Contributor[] => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- the API publishes this schema; only the version is checked here
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion -- the API publishes this schema and validates it upstream
   const manifest = raw as CreditsManifest
-  if (manifest.schemaVersion !== 1) {
-    throw new Error(`Unsupported credits manifest schema: ${String(manifest.schemaVersion)}`)
-  }
   return manifest.contributors.map(({ id, login, name, profile }) => {
     const avatar = manifest.avatars[id]
     return {
       id,
       label: name || login,
-      profile: toProfileUrl(profile),
+      profile,
       avatar: avatar ? toSprite(manifest, manifestUrl, avatar) : null,
     }
   })
