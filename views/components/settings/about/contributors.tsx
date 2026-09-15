@@ -33,13 +33,9 @@ const Avatar = styled.div`
   transition: 0.3s;
   overflow: hidden;
 
-  a,
-  > span {
+  a {
     display: block;
     height: 100%;
-  }
-
-  a {
     cursor: pointer;
   }
 
@@ -149,20 +145,14 @@ export const Contributors = ({ ready }: Props) => {
           status === 'ready' &&
           contributors?.map((contributor) => (
             <Avatar key={contributor.id} className="contributor-item">
-              {contributor.profile ? (
-                <a
-                  href={contributor.profile}
-                  title={contributor.label}
-                  aria-label={contributor.label}
-                  onClick={openLink(contributor.profile)}
-                >
-                  {renderAvatar(contributor)}
-                </a>
-              ) : (
-                <span title={contributor.label} aria-label={contributor.label}>
-                  {renderAvatar(contributor)}
-                </span>
-              )}
+              <a
+                href={contributor.profile}
+                title={contributor.label}
+                aria-label={contributor.label}
+                onClick={openLink(contributor.profile)}
+              >
+                {renderAvatar(contributor)}
+              </a>
             </Avatar>
           ))}
       </Wrapper>

@@ -63,12 +63,6 @@
       "login": "nobody",
       "name": null,
       "profile": "https://github.com/nobody"
-    },
-    {
-      "id": "github:legacy",
-      "login": "legacy",
-      "name": null,
-      "profile": "ftp://example.com/legacy"
     }
   ],
   "supporters": []
