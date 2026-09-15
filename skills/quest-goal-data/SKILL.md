@@ -258,9 +258,11 @@ These live in their own section at the end of `quest_goal.cson`. Two rules:
    against the maintenance notes (ととねこ / ぜかましねっと) rather than from absence alone;
    presence in a capture taken _after_ the last maintenance is the reliable positive signal.
 
-Tracked as of the 2026-09-10 maintenance: 382, 384, 1048, 1049. Deliberately not tracked from
-the same batch: 199 (composition only), 383 (フランス艦隊、特別演習 — period ended at that
-maintenance), 秋祭り拡張演習 (id not yet seen in any capture).
+Tracked as of the 2026-09-10 maintenance: 382, 384, 385 (秋祭り拡張演習, 384's follow-up — its id
+only showed up in a capture once 384 was cleared), 1048, 1049. Deliberately not tracked from the
+same batch: 199 (composition only), 383 (フランス艦隊、特別演習 — period ended at that
+maintenance). A follow-up quest does not appear in `questlist` until its prerequisite is cleared,
+so an unknown id is often just a locked chain rather than a missing quest.
 
 The resource-preparation half of a quest (「弾薬 x2,200 を準備」) carries no event and cannot be
 tracked; 1048/1049 track only their sortie subgoals, with a comment saying so.
