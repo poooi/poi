@@ -6,28 +6,28 @@ describe('normalizeCreditsManifest', () => {
 
   it('keeps contributor order and falls back to login when the name is missing', () => {
     expect(contributors.map((contributor) => contributor.id)).toEqual([
-      'github:edwardaaaa',
-      'github:hanzhao',
-      'github:myzwillmake',
-      'github:nobody',
+      'github:fixture-alpha',
+      'github:fixture-bravo',
+      'github:fixture-charlie',
+      'github:fixture-delta',
     ])
     expect(contributors.map((contributor) => contributor.label)).toEqual([
-      'edwardaaaa',
-      'Maggie',
-      'myzWILLmake',
-      'nobody',
+      'fixture-alpha',
+      'Fixture Bravo',
+      'fixture-charlie',
+      'fixture-delta',
     ])
   })
 
   it('resolves relative sheet urls against the manifest origin', () => {
     expect(contributors[0].avatar?.url).toBe(
-      'https://poi.moe/api/credits/avatars-0.018a0c0626d46f3c.webp',
+      'https://poi.moe/api/credits/avatars-0.9f8e7d6c5b4a3210.webp',
     )
   })
 
   it('scales nonzero sprite coordinates and sheet dimensions to a 40px avatar', () => {
     expect(contributors[1].avatar).toEqual({
-      url: 'https://poi.moe/api/credits/avatars-0.018a0c0626d46f3c.webp',
+      url: 'https://poi.moe/api/credits/avatars-0.9f8e7d6c5b4a3210.webp',
       sheetWidth: 640,
       sheetHeight: 440,
       offsetX: 40,
@@ -37,7 +37,7 @@ describe('normalizeCreditsManifest', () => {
 
   it('uses the referenced sheet for multi-sheet avatars', () => {
     expect(contributors[2].avatar).toEqual({
-      url: 'https://poi.moe/api/credits/avatars-1.deadbeef00.webp',
+      url: 'https://poi.moe/api/credits/avatars-1.0123456789abcdef.webp',
       sheetWidth: 400,
       sheetHeight: 200,
       offsetX: 80,
@@ -50,8 +50,8 @@ describe('normalizeCreditsManifest', () => {
   })
 
   it('keeps profile links from the manifest', () => {
-    expect(contributors[0].profile).toBe('https://github.com/edwardaaaa')
-    expect(contributors[2].profile).toBe('http://weibo.com/myzwillmake')
+    expect(contributors[0].profile).toBe('https://example.com/fixture-alpha')
+    expect(contributors[2].profile).toBe('http://example.com/fixture-charlie')
   })
 })
 
@@ -74,7 +74,7 @@ describe('loadContributors', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
     expect(contributors).toHaveLength(4)
     expect(contributors[0].avatar?.url).toBe(
-      'https://poi.moe/api/credits/avatars-0.018a0c0626d46f3c.webp',
+      'https://poi.moe/api/credits/avatars-0.9f8e7d6c5b4a3210.webp',
     )
   })
 
