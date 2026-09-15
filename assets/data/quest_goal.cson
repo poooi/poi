@@ -2225,8 +2225,7 @@ Quest guides (となはざな): https://tonahazana.com/
 #
 # Not tracked from the same batch: 199 第三十一戦隊 特務編成 (fleet composition
 # only — the engine has no such event), 383 フランス艦隊、特別演習 (period ended
-# at the 2026-09-10 maintenance), 秋祭り拡張演習 (id unknown — add it once a
-# questlist capture shows it).
+# at the 2026-09-10 maintenance).
 ###
 382: #【期間限定任務】第三十一戦隊 緊急演習！ 2026-08 実装
   type: 3
@@ -2248,6 +2247,17 @@ Quest guides (となはざな): https://tonahazana.com/
     # 指定17隻から4隻以上、B勝利以上を同日中に4回
     escortshipId: [
       [[132, 421, 13, 14, 42, 168, 170, 135, 485, 425, 964, 93, 94, 634, 635, 183, 55], 4] #秋雲/秋月/綾波/敷波/白露/浦風/浜風/長波/藤波/朝霜/白雲/朧/漣/迅鯨/長鯨/大淀/神通
+    ]
+    required: 4
+    init: 0
+385: #【期間限定拡張任務】秋祭り拡張演習！ 2026-09-10 実装（384 の後続）
+  type: 2
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    # 指定10隻から3隻以上、S勝利を同日中に4回（A勝利は不可）
+    escortshipId: [
+      [[1051, 1053, 962, 1055, 1065, 944, 995, 81, 602, 885], 3] #Algérie/Vautour/Mogador/Béarn/日枝丸/平安丸/大泊/陸奥/South Dakota/Victorious
     ]
     required: 4
     init: 0
