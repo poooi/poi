@@ -6,32 +6,32 @@
   "pixelRatio": 2,
   "sheets": [
     {
-      "url": "avatars-0.018a0c0626d46f3c.webp",
+      "url": "avatars-0.9f8e7d6c5b4a3210.webp",
       "width": 1536,
       "height": 1056
     },
     {
-      "url": "avatars-1.deadbeef00.webp",
+      "url": "avatars-1.0123456789abcdef.webp",
       "width": 960,
       "height": 480
     }
   ],
   "avatars": {
-    "github:edwardaaaa": {
+    "github:fixture-alpha": {
       "sheet": 0,
       "x": 0,
       "y": 0,
       "width": 96,
       "height": 96
     },
-    "github:hanzhao": {
+    "github:fixture-bravo": {
       "sheet": 0,
       "x": 96,
       "y": 96,
       "width": 96,
       "height": 96
     },
-    "github:myzwillmake": {
+    "github:fixture-charlie": {
       "sheet": 1,
       "x": 192,
       "y": 0,
@@ -41,28 +41,28 @@
   },
   "contributors": [
     {
-      "id": "github:edwardaaaa",
-      "login": "edwardaaaa",
-      "name": "edwardaaaa",
-      "profile": "https://github.com/edwardaaaa"
+      "id": "github:fixture-alpha",
+      "login": "fixture-alpha",
+      "name": "fixture-alpha",
+      "profile": "https://example.com/fixture-alpha"
     },
     {
-      "id": "github:hanzhao",
-      "login": "hanzhao",
-      "name": "Maggie",
-      "profile": "https://github.com/hanzhao"
+      "id": "github:fixture-bravo",
+      "login": "fixture-bravo",
+      "name": "Fixture Bravo",
+      "profile": "https://example.com/fixture-bravo"
     },
     {
-      "id": "github:myzwillmake",
-      "login": "myzWILLmake",
+      "id": "github:fixture-charlie",
+      "login": "fixture-charlie",
       "name": null,
-      "profile": "http://weibo.com/myzwillmake"
+      "profile": "http://example.com/fixture-charlie"
     },
     {
-      "id": "github:nobody",
-      "login": "nobody",
+      "id": "github:fixture-delta",
+      "login": "fixture-delta",
       "name": null,
-      "profile": "https://github.com/nobody"
+      "profile": "https://example.com/fixture-delta"
     }
   ],
   "supporters": []
