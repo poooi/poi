@@ -246,5 +246,8 @@
   "Resource icons": "자원 아이콘",
   "Original game icons": "게임 원본",
   "Simplified icons": "심플 스타일",
-  "HD game-style icons": "게임 스타일 (고화질)"
+  "HD game-style icons": "게임 스타일 (고화질)",
+  "contributors-loading": "기여자를 불러오는 중...",
+  "contributors-error": "기여자를 불러오지 못했습니다.",
+  "contributors-retry": "다시 시도"
 }
