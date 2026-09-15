@@ -41,8 +41,17 @@ export interface ContributorAvatarSprite {
 export interface Contributor {
   id: string
   label: string
-  profile: string
+  profile: string | null
   avatar: ContributorAvatarSprite | null
+}
+
+const toProfileUrl = (value: string): string | null => {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null
+  } catch {
+    return null
+  }
 }
 
 const toSprite = (
@@ -73,7 +82,7 @@ export const normalizeCreditsManifest = (
     return {
       id,
       label: name || login,
-      profile,
+      profile: toProfileUrl(profile),
       avatar: avatar ? toSprite(manifest, manifestUrl, avatar) : null,
     }
   })

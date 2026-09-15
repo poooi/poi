@@ -53,6 +53,30 @@ describe('normalizeCreditsManifest', () => {
     expect(contributors[0].profile).toBe('https://example.com/fixture-alpha')
     expect(contributors[2].profile).toBe('http://example.com/fixture-charlie')
   })
+
+  const manifestWithProfile = (profile: string) => ({
+    cellSize: 96,
+    sheets: [],
+    avatars: {},
+    contributors: [{ id: 'github:fixture', login: 'fixture', name: null, profile }],
+  })
+
+  it.each(['https://example.com/fixture', 'http://example.com/fixture'])(
+    'keeps allowed profile %s',
+    (profile) => {
+      expect(normalizeCreditsManifest(manifestWithProfile(profile))[0].profile).toBe(profile)
+    },
+  )
+
+  it.each([
+    'file:///etc/hosts',
+    'smb://host/share',
+    'my-app://open',
+    'javascript:alert(1)',
+    'not a url',
+  ])('drops disallowed profile %s', (profile) => {
+    expect(normalizeCreditsManifest(manifestWithProfile(profile))[0].profile).toBeNull()
+  })
 })
 
 describe('loadContributors', () => {
