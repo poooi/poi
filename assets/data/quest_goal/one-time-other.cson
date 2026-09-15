@@ -1,0 +1,81 @@
+# Quest goals: One-time (単発) supply, repair, arsenal and modernization quests.
+# Every *.cson in this directory is merged into one table; see README.md.
+#
+# One-time quests never repeat, so they carry no `type`: a reset type would delete the record
+# at the next period boundary and lose the progress of a quest that is still open.
+# Conditions come from wikiwiki (任務/出撃任務, 演習任務, 遠征任務, 工廠任務); an entry marked
+# KC3 comes only from KC3Kai kc3-translations, for quests wikiwiki could not be read for.
+
+501: #はじめての「補給」！ (E1)
+  "supply":
+    description: "補給"
+    required: 1
+    init: 0
+502: #はじめての「入渠」！ (E2)
+  "repair":
+    description: "入渠"
+    required: 1
+    init: 0
+601: #はじめての「建造」！ (F1)
+  "create_ship":
+    description: "建造"
+    required: 1
+    init: 0
+602: #はじめての「開発」！ (F2)
+  "create_item":
+    description: "開発"
+    required: 1
+    init: 0
+603: #はじめての「解体」！ (F3)
+  "destroy_ship":
+    description: "解体"
+    required: 1
+    init: 0
+604: #はじめての「廃棄」！ (F4)
+  "destory_item":
+    description: "廃棄"
+    times: [1]
+    required: 1
+    init: 0
+618: #はじめての「装備改修」！ (F17)
+  "remodel_item":
+    description: "改修"
+    required: 1
+    init: 0
+701: #はじめての「近代化改修」！ (G1)
+  "remodel_ship":
+    description: "近代化改修"
+    required: 1
+    init: 0
+704: #「大型艦建造」の準備！(その壱) (G4)
+  "remodel_ship":
+    description: "近代化改修"
+    required: 4
+    init: 0
+705: #航空艤装の近代化改修 (G5)
+  # 改修元が正規空母（装甲空母可）であることは追跡不可
+  # 鋼材5,500・ボーキサイト2,500の準備は追跡不可
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [7, 11, 18]
+    materialShipMinCount: 5
+    required: 2
+    init: 0
+718: #「最上型」改修工事を実施せよ！ (G10)
+  # 改修元が「最上型」であることは追跡不可
+  # 鋼材1,100・弾薬1,100の準備は追跡不可
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [3, 4, 21]
+    materialShipMinCount: 3
+    required: 2
+    init: 0
+719: #続：「最上型」改修工事を実施せよ！ (G11)
+  # 改修元が「最上型」であることは追跡不可
+  # 鋼材1,200・弾薬1,200の準備は追跡不可
+  "remodel_ship":
+    description: "近代化改修"
+    materialShipType: [5, 6]
+    materialShipMinCount: 4
+    required: 2
+    init: 0

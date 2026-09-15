@@ -251,6 +251,34 @@ Composition-only quests (「…を編成せよ！」, e.g. 199) are **not tracka
 matches events, and organising a fleet is not one — see the `QuestEvent` union in
 `views/redux/actions/quest.ts`.
 
+## One-time (単発) quests
+
+Tracked in `one-time.cson` and `one-time-{sortie-1,sortie-2,exercise,expedition,other}.cson`. They
+were bulk-added from three sources, in this order of trust:
+
+1. **wikiwiki** 任務/出撃任務, 演習任務, 遠征任務, 工廠任務. The rendered pages truncate when fetched
+   (出撃任務 at about B139); the raw source form
+   `https://wikiwiki.jp/kancolle/?cmd=source&page=任務%2F出撃任務` is denser and reaches about B179.
+   Ask WebFetch for rows **verbatim** — its summaries have garbled map names.
+2. **kcwiki-quest-data** (`gh-pages/data.min.json`) — structured requirements, but last updated in
+   2024-06 and wrong often enough to need checking row by row: it had quest 905 at S (A), B45 at
+   B+ (A), B113/B139 at the wrong rank, B120 with base ids where the quest names 改二, B35/B36 as
+   four fixed ships instead of four of five, and `type: 1` on quest 330, which the game reports as
+   quarterly. Its `disallowed: 他の艦` is a fleet-size cap only when every group is a named ship,
+   and an expedition id array means _each_ for 434 but _either_ for 410.
+3. **KC3Kai kc3-translations** `data/jp/quests.json` — the `memo` field states conditions precisely
+   (`※出撃：…のボスマスを各1回ずつS勝利 ※編成：…`) and covers the newest quests. Entries that come
+   only from it (B180 onwards) say so in a comment.
+
+Where a quest's own text disagrees with a summary, the quest text wins: B40/B68/B102/B135 name
+ships that must be _in_ the fleet, not flagship.
+
+Not tracked, by design: fleet composition quests (A-series), equipment preparation and
+conversion (F-series `equipexchange`/`modelconversion`), sorties from a fleet other than the
+first (poi's `sally` event carries no fleet), gauge kills such as B176, and item consumption.
+Conditions poi cannot express — OR between different escort groups, speed, level, "no other
+ship types" — are tracked loosely, with a comment on the quest saying what is not checked.
+
 ## Limited-time (期間限定) quests
 
 These live in `assets/data/quest_goal/limited-time.cson`. Two rules:

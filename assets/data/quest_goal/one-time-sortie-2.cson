@@ -1,0 +1,1160 @@
+# Quest goals: One-time (単発) sortie quests, B100–B139.
+# Every *.cson in this directory is merged into one table; see README.md.
+#
+# One-time quests never repeat, so they carry no `type`: a reset type would delete the record
+# at the next period boundary and lose the progress of a quest that is still open.
+# Conditions come from wikiwiki (任務/出撃任務, 演習任務, 遠征任務, 工廠任務); an entry marked
+# KC3 comes only from KC3Kai kc3-translations, for quests wikiwiki could not be read for.
+
+857: #増強海上護衛総隊、抜錨せよ！ (B100)
+  fuzzy: true
+  "battle_boss_win_rank_a@22":
+    description: "2-2 A"
+    maparea: [22]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2, 1], 2] #駆逐艦/海防艦
+      [[6, 7], 1] #航空巡洋艦/軽空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2, 1], 2] #駆逐艦/海防艦
+      [[6, 7], 1] #航空巡洋艦/軽空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@24":
+    description: "2-4 A"
+    maparea: [24]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2, 1], 2] #駆逐艦/海防艦
+      [[6, 7], 1] #航空巡洋艦/軽空母
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@25":
+    description: "2-5 A"
+    maparea: [25]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2, 1], 2] #駆逐艦/海防艦
+      [[6, 7], 1] #航空巡洋艦/軽空母
+    ]
+    required: 1
+    init: 0
+858: #新編「第七戦隊」、出撃せよ！ (B101)
+  fuzzy: true
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [504] #熊野改二
+    secondshipId: [503] #鈴谷改二
+    escortshipIdAll: [
+      [[73], 1] #最上改
+      [[121], 1] #三隈改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@62":
+    description: "6-2 S"
+    maparea: [62]
+    flagshipId: [504] #熊野改二
+    secondshipId: [503] #鈴谷改二
+    escortshipIdAll: [
+      [[73], 1] #最上改
+      [[121], 1] #三隈改
+    ]
+    required: 1
+    init: 0
+859: #精鋭「第四航空戦隊」、抜錨せよ！ (B102)
+  # 練度条件は追跡不可
+  fuzzy: true
+  "battle_boss_win_rank_a@25":
+    description: "2-5 A"
+    maparea: [25]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@35":
+    description: "3-5 A"
+    maparea: [35]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+860: #旗艦「由良」、抜錨！ (B103)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [488] #由良改二
+    escortshipIdAll: [
+      [[44, 45, 405, 46, 421], 2] #村雨/夕立/春雨/五月雨/秋月
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [488] #由良改二
+    escortshipIdAll: [
+      [[44, 45, 405, 46, 421], 2] #村雨/夕立/春雨/五月雨/秋月
+    ]
+    required: 1
+    init: 0
+863: #精鋭「第二二駆逐隊」出撃せよ！ (B104)
+  fuzzy: true
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipIdAll: [
+      [[548], 1] #文月改二
+      [[418], 1] #皐月改二
+      [[366], 1] #水無月改
+      [[258], 1] #長月改
+    ]
+    required: 1
+    init: 0
+864: #精強大型航空母艦、抜錨！ (B105)
+  fuzzy: true
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagshipId: [545, 550] #Saratoga Mk.II/Saratoga Mk.II Mod.2
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@62":
+    description: "6-2 S"
+    maparea: [62]
+    flagshipId: [545, 550] #Saratoga Mk.II/Saratoga Mk.II Mod.2
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+865: #夜間作戦空母、前線に出撃せよ！ (B106)
+  # Saratoga Mk.II Mod.2 は不可だが、改造先を含むid指定では区別できない
+  fuzzy: true
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [545] #Saratoga Mk.II
+    required: 1
+    init: 0
+869: #補給線の安全を確保せよ！ (B107)
+  fuzzy: true
+  "battle_boss_win_rank_a@13":
+    description: "1-3 A"
+    maparea: [13]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    fleetlimit: 4
+    required: 1
+    init: 0
+870: #「第八駆逐隊」、南西へ！ (B108)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    escortshipIdAll: [
+      [[95], 1] #朝潮
+      [[97], 1] #満潮
+      [[96], 1] #大潮
+      [[98], 1] #荒潮
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[95], 1] #朝潮
+      [[97], 1] #満潮
+      [[96], 1] #大潮
+      [[98], 1] #荒潮
+    ]
+    required: 1
+    init: 0
+871: #最精鋭「第八駆逐隊」、全力出撃！ (B109)
+  fuzzy: true
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipIdAll: [
+      [[463, 468], 1] #朝潮改二/朝潮改二丁
+      [[489], 1] #満潮改二
+      [[199], 1] #大潮改二
+      [[490], 1] #荒潮改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[463, 468], 1] #朝潮改二/朝潮改二丁
+      [[489], 1] #満潮改二
+      [[199], 1] #大潮改二
+      [[490], 1] #荒潮改二
+    ]
+    required: 1
+    init: 0
+874: #北方海域戦闘哨戒を実施せよ！ (B110)
+  fuzzy: true
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    escortshiptype: [
+      [[7], 1] #軽空母
+      [[16], 1] #水上機母艦
+      [[3], 1] #軽巡洋艦
+    ]
+    required: 2
+    init: 0
+876: #松輸送作戦、開始せよ！ (B111)
+  fuzzy: true
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    flagshipId: [214, 478] #龍田改/龍田改二
+    escortshiptype: [
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 2
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshipId: [214, 478] #龍田改/龍田改二
+    escortshiptype: [
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 2
+    init: 0
+877: #精鋭「四水戦」、南方海域に展開せよ！ (B112)
+  fuzzy: true
+  "battle_boss_win_rank_a@51":
+    description: "5-1 A"
+    maparea: [51]
+    flagshipId: [498] #村雨改二
+    escortshipIdAll: [
+      [[488, 144, 323, 246, 330], 3] #由良改二/夕立改二/春雨改/五月雨改/秋月改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@53":
+    description: "5-3 A"
+    maparea: [53]
+    flagshipId: [498] #村雨改二
+    escortshipIdAll: [
+      [[488, 144, 323, 246, 330], 3] #由良改二/夕立改二/春雨改/五月雨改/秋月改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@54":
+    description: "5-4 A"
+    maparea: [54]
+    flagshipId: [498] #村雨改二
+    escortshipIdAll: [
+      [[488, 144, 323, 246, 330], 3] #由良改二/夕立改二/春雨改/五月雨改/秋月改
+    ]
+    required: 1
+    init: 0
+878: #松輸送作戦、継続実施せよ！ (B113)
+  fuzzy: true
+  "battle_boss_win_rank_a@14":
+    description: "1-4 A"
+    maparea: [14]
+    flagshiptype: [3, 4, 21, 2] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦/駆逐艦
+    escortshiptype: [
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 3
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    flagshiptype: [3, 4, 21, 2] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦/駆逐艦
+    escortshiptype: [
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 3
+    init: 0
+879: #新編「四航戦」、全力出撃！ (B114)
+  fuzzy: true
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+      [[321], 1] #大淀改
+    ]
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@25":
+    description: "2-5 A"
+    maparea: [25]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+      [[321], 1] #大淀改
+    ]
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@35":
+    description: "3-5 A"
+    maparea: [35]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+      [[321], 1] #大淀改
+    ]
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@45":
+    description: "4-5 A"
+    maparea: [45]
+    escortshipIdAll: [
+      [[82], 1] #伊勢改
+      [[88], 1] #日向改
+      [[321], 1] #大淀改
+    ]
+    escortshiptype: [
+      [[2], 1] #駆逐艦
+    ]
+    required: 1
+    init: 0
+880: #精鋭駆逐隊、獅子奮迅！ (B115)
+  fuzzy: true
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@42":
+    description: "4-2 A"
+    maparea: [42]
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 1
+    init: 0
+881: #「十八駆」、北方海域キス島へ！ (B116)
+  fuzzy: true
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    escortshipIdAll: [
+      [[198], 1] #霰改二
+      [[464, 470], 1] #霞改二/霞改二乙
+      [[225], 1] #陽炎改
+      [[226], 1] #不知火改
+    ]
+    required: 2
+    init: 0
+884: #最精鋭甲型駆逐艦、突入！敵中突破！ (B117)
+  # 練度条件は追跡不可
+  fuzzy: true
+  "battle_boss_win_rank_s@32":
+    description: "3-2 S"
+    maparea: [32]
+    flagshipId: [566, 567, 568] #陽炎改二/不知火改二/黒潮改二
+    escortshipclass: [
+      [[30, 38], 2] #陽炎型/夕雲型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@42":
+    description: "4-2 S"
+    maparea: [42]
+    flagshipId: [566, 567, 568] #陽炎改二/不知火改二/黒潮改二
+    escortshipclass: [
+      [[30, 38], 2] #陽炎型/夕雲型
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [566, 567, 568] #陽炎改二/不知火改二/黒潮改二
+    escortshipclass: [
+      [[30, 38], 2] #陽炎型/夕雲型
+    ]
+    required: 2
+    init: 0
+885: #戦闘航空母艦、出撃せよ！ (B118)
+  fuzzy: true
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    flagshipId: [553] #伊勢改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [553] #伊勢改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagshipId: [553] #伊勢改二
+    required: 1
+    init: 0
+886: #「伊勢改二」、敵機動部隊を迎撃せよ！ (B119)
+  fuzzy: true
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [553] #伊勢改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 3
+    init: 0
+887: #精鋭「第十八戦隊」、展開せよ！ (B120)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    escortshipIdAll: [
+      [[477], 1] #天龍改二
+      [[478], 1] #龍田改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshipIdAll: [
+      [[477], 1] #天龍改二
+      [[478], 1] #龍田改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    escortshipIdAll: [
+      [[477], 1] #天龍改二
+      [[478], 1] #龍田改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshipIdAll: [
+      [[477], 1] #天龍改二
+      [[478], 1] #龍田改二
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 1
+    init: 0
+889: #精鋭「二七駆」第一小隊、出撃せよ！ (B121)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@41":
+    description: "4-1 S"
+    maparea: [41]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    escortshipIdAll: [
+      [[497], 1] #白露改二
+      [[145], 1] #時雨改二
+    ]
+    required: 1
+    init: 0
+890: #精鋭「四戦隊」第二小隊、抜錨せよ！ (B122)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshipIdAll: [
+      [[427], 1] #鳥海改二
+      [[428], 1] #摩耶改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[427], 1] #鳥海改二
+      [[428], 1] #摩耶改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    escortshipIdAll: [
+      [[427], 1] #鳥海改二
+      [[428], 1] #摩耶改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshipIdAll: [
+      [[427], 1] #鳥海改二
+      [[428], 1] #摩耶改二
+    ]
+    required: 1
+    init: 0
+891: #精強「十七駆」、北へ、南へ！ (B123)
+  fuzzy: true
+  "battle_boss_win_rank_a@15":
+    description: "1-5 A"
+    maparea: [15]
+    escortshipIdAll: [
+      [[557], 1] #磯風乙改
+      [[558], 1] #浜風乙改
+      [[556], 1] #浦風丁改
+      [[559], 1] #谷風丁改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@32":
+    description: "3-2 A"
+    maparea: [32]
+    escortshipIdAll: [
+      [[557], 1] #磯風乙改
+      [[558], 1] #浜風乙改
+      [[556], 1] #浦風丁改
+      [[559], 1] #谷風丁改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@71":
+    description: "7-1 A"
+    maparea: [71]
+    escortshipIdAll: [
+      [[557], 1] #磯風乙改
+      [[558], 1] #浜風乙改
+      [[556], 1] #浦風丁改
+      [[559], 1] #谷風丁改
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@51":
+    description: "5-1 A"
+    maparea: [51]
+    escortshipIdAll: [
+      [[557], 1] #磯風乙改
+      [[558], 1] #浜風乙改
+      [[556], 1] #浦風丁改
+      [[559], 1] #谷風丁改
+    ]
+    required: 1
+    init: 0
+298: #「第七駆逐隊」、南西諸島を駆ける！ (B124)
+  fuzzy: true
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshipIdAll: [
+      [[15, 16, 94, 93], 2] #曙/潮/漣/朧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[15, 16, 94, 93], 2] #曙/潮/漣/朧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[15, 16, 94, 93], 2] #曙/潮/漣/朧
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    escortshipIdAll: [
+      [[15, 16, 94, 93], 2] #曙/潮/漣/朧
+    ]
+    required: 1
+    init: 0
+299: #近海の警戒監視と哨戒活動を強化せよ！ (B125)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshiptype: [3] #軽巡洋艦
+    escortshiptype: [
+      [[2, 1], 2] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+892: #主力オブ主力、抜錨開始！ (B126)
+  fuzzy: true
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    escortshipIdAll: [
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    escortshipIdAll: [
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[542], 1] #夕雲改二
+      [[563], 1] #巻雲改二
+    ]
+    required: 1
+    init: 0
+895: #冬季北方海域作戦 (B127)
+  fuzzy: true
+  "battle_boss_win_rank_s@31":
+    description: "3-1 S"
+    maparea: [31]
+    flagshiptype: [3, 4, 21] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    flagshiptype: [3, 4, 21] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@34":
+    description: "3-4 S"
+    maparea: [34]
+    flagshiptype: [3, 4, 21] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    flagshiptype: [3, 4, 21] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+    required: 2
+    init: 0
+290: #「比叡」の出撃 (B128)
+  fuzzy: true
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [86] #比叡
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    flagshipId: [86] #比叡
+    required: 1
+    init: 0
+281: #精鋭無比「第一戦隊」まかり通る！ (B129)
+  fuzzy: true
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@35":
+    description: "3-5 S"
+    maparea: [35]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+282: #精鋭無比「第一艦隊」まかり通る！【拡張作戦】 (B130)
+  fuzzy: true
+  "battle_boss_win_rank_s@25":
+    description: "2-5 S"
+    maparea: [25]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    flagshipId: [541, 573] #長門改二/陸奥改二
+    secondshipId: [541, 573] #長門改二/陸奥改二
+    required: 1
+    init: 0
+896: #航空戦艦戦隊、戦闘哨戒！ (B131)
+  fuzzy: true
+  "battle_boss_win_rank_s@14":
+    description: "1-4 S"
+    maparea: [14]
+    escortshiptype: [
+      [[10], 2] #航空戦艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@15":
+    description: "1-5 S"
+    maparea: [15]
+    escortshiptype: [
+      [[10], 2] #航空戦艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshiptype: [
+      [[10], 2] #航空戦艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@72":
+    description: "7-2-2 S"
+    maparea: [72]
+    mapcell: [15]
+    escortshiptype: [
+      [[10], 2] #航空戦艦
+    ]
+    required: 1
+    init: 0
+897: #最新鋭｢第四航空戦隊｣、出撃せよ！ (B132)
+  fuzzy: true
+  "reach_mapcell@16":
+    description: "1-6"
+    maparea: [16]
+    mapcell: [14, 17]
+    escortshipIdAll: [
+      [[554], 1] #日向改二
+      [[553], 1] #伊勢改二
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshipIdAll: [
+      [[554], 1] #日向改二
+      [[553], 1] #伊勢改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    escortshipIdAll: [
+      [[554], 1] #日向改二
+      [[553], 1] #伊勢改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    escortshipIdAll: [
+      [[554], 1] #日向改二
+      [[553], 1] #伊勢改二
+    ]
+    required: 1
+    init: 0
+292: #重改装高速戦艦「金剛改二丙」、南方突入！ (B133)
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [591] #金剛改二丙
+    escortshipIdAll: [
+      [[86, 79, 85], 1] #比叡/榛名/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [591] #金剛改二丙
+    escortshipIdAll: [
+      [[86, 79, 85], 1] #比叡/榛名/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@54":
+    description: "5-4 S"
+    maparea: [54]
+    flagshipId: [591] #金剛改二丙
+    escortshipIdAll: [
+      [[86, 79, 85], 1] #比叡/榛名/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@55":
+    description: "5-5 S"
+    maparea: [55]
+    flagshipId: [591] #金剛改二丙
+    escortshipIdAll: [
+      [[86, 79, 85], 1] #比叡/榛名/霧島
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 2
+    init: 0
+291: #艦隊司令部の強化 【実施段階】 (B134)
+  # 随伴の「明石」または水母は追跡不可（旗艦大淀のみ判定）
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [183] #大淀
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@33":
+    description: "3-3 S"
+    maparea: [33]
+    flagshipId: [183] #大淀
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@41":
+    description: "4-1 S"
+    maparea: [41]
+    flagshipId: [183] #大淀
+    required: 2
+    init: 0
+235: #近海哨戒を実施せよ！ (B135)
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    description: "1-2 S"
+    maparea: [12]
+    escortshiptype: [
+      [[3, 4, 21], 1] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@13":
+    description: "1-3 S"
+    maparea: [13]
+    escortshiptype: [
+      [[3, 4, 21], 1] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshiptype: [
+      [[3, 4, 21], 1] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshiptype: [
+      [[3, 4, 21], 1] #軽巡洋艦/重雷装巡洋艦/練習巡洋艦
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 1
+    init: 0
+236: #精鋭「二四駆逐隊」出撃せよ！ (B136)
+  fuzzy: true
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    flagshipId: [587] #海風改二
+    escortshipIdAll: [
+      [[457, 459, 47], 2] #山風/江風/涼風
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@24":
+    description: "2-4 S"
+    maparea: [24]
+    flagshipId: [587] #海風改二
+    escortshipIdAll: [
+      [[457, 459, 47], 2] #山風/江風/涼風
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@51":
+    description: "5-1 S"
+    maparea: [51]
+    flagshipId: [587] #海風改二
+    escortshipIdAll: [
+      [[457, 459, 47], 2] #山風/江風/涼風
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    description: "5-3 S"
+    maparea: [53]
+    flagshipId: [587] #海風改二
+    escortshipIdAll: [
+      [[457, 459, 47], 2] #山風/江風/涼風
+    ]
+    required: 1
+    init: 0
+283: #精強！「第一航空戦隊」出撃せよ！ (B137)
+  fuzzy: true
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    flagshipId: [594, 599] #赤城改二/赤城改二戊
+    secondshipId: [84, 278] #加賀/加賀改
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@52":
+    description: "5-2 S"
+    maparea: [52]
+    flagshipId: [594, 599] #赤城改二/赤城改二戊
+    secondshipId: [84, 278] #加賀/加賀改
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@65":
+    description: "6-5 S"
+    maparea: [65]
+    flagshipId: [594, 599] #赤城改二/赤城改二戊
+    secondshipId: [84, 278] #加賀/加賀改
+    required: 2
+    init: 0
+237: #「羽黒」「神風」、出撃せよ！ (B138)
+  # 随伴（重巡級1隻+駆逐艦2隻 または 駆逐艦4隻）は追跡不可（羽黒・神風のみ判定）
+  fuzzy: true
+  "battle_boss_win_rank_s@21":
+    description: "2-1 S"
+    maparea: [21]
+    escortshipIdAll: [
+      [[65], 1] #羽黒
+      [[471], 1] #神風
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    description: "2-2 S"
+    maparea: [22]
+    escortshipIdAll: [
+      [[65], 1] #羽黒
+      [[471], 1] #神風
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    description: "2-3 S"
+    maparea: [23]
+    escortshipIdAll: [
+      [[65], 1] #羽黒
+      [[471], 1] #神風
+    ]
+    required: 1
+    init: 0
+833: #陸戦用装備の艦載運用実戦研究 (B139)
+  fuzzy: true
+  "battle_boss_win_rank_s@45":
+    description: "4-5 S"
+    maparea: [45]
+    escortshiptype: [
+      [[16, 17], 1] #水上機母艦/揚陸艦
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@64":
+    description: "6-4 S"
+    maparea: [64]
+    escortshiptype: [
+      [[16, 17], 1] #水上機母艦/揚陸艦
+    ]
+    required: 2
+    init: 0

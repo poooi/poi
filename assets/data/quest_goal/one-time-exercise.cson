@@ -1,0 +1,355 @@
+# Quest goals: One-time (単発) exercise quests.
+# Every *.cson in this directory is merged into one table; see README.md.
+#
+# One-time quests never repeat, so they carry no `type`: a reset type would delete the record
+# at the next period boundary and lose the progress of a quest that is still open.
+# Conditions come from wikiwiki (任務/出撃任務, 演習任務, 遠征任務, 工廠任務); an entry marked
+# KC3 comes only from KC3Kai kc3-translations, for quests wikiwiki could not be read for.
+
+301: #はじめての「演習」！ (C1)
+  "practice":
+    description: "演習"
+    required: 1
+    init: 0
+307: #艦隊の練度向上に努めよ！ (C5)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 3
+    init: 0
+308: #演習を強化、艦隊の練度向上に努めよ！ (C6)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 4
+    init: 0
+309: #北方再突入に備え、練度向上に努めよ！ (C7)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 4
+    init: 0
+312: #上陸部隊演習 (C9)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 4
+    init: 0
+316: #輸送部隊の練度向上に務めよ！ (C13)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    required: 4
+    init: 0
+317: #甲型駆逐艦の戦力整備計画 (C15)
+  # 順序条件は追跡不可（両方を数える）
+  fuzzy: true
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipclass: [
+      [[38, 30], 2] #夕雲型/陽炎型
+    ]
+    required: 3
+    init: 0
+  "battle_boss_win_rank_a@22":
+    description: "2-2 A"
+    maparea: [22]
+    escortshipclass: [
+      [[38, 30], 2] #夕雲型/陽炎型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@23":
+    description: "2-3 A"
+    maparea: [23]
+    escortshipclass: [
+      [[38, 30], 2] #夕雲型/陽炎型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@24":
+    description: "2-4 A"
+    maparea: [24]
+    escortshipclass: [
+      [[38, 30], 2] #夕雲型/陽炎型
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_a@25":
+    description: "2-5 A"
+    maparea: [25]
+    escortshipclass: [
+      [[38, 30], 2] #夕雲型/陽炎型
+    ]
+    required: 1
+    init: 0
+319: #精鋭「第二一駆」、猛特訓！ (C17)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipIdAll: [
+      [[240], 1] #若葉改
+      [[326], 1] #初春改二
+      [[419], 1] #初霜改二
+    ]
+    required: 4
+    init: 0
+320: #駆逐隊、特訓始め！ (C18)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 4
+    init: 0
+322: #海防艦、演習始め！ (C20)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    flagshiptype: [1] #海防艦
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 2
+    init: 0
+323: #最精鋭甲型駆逐艦、特訓始め！ (C21)
+  # 練度条件は追跡不可
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipclass: [
+      [[30, 38], 4] #陽炎型/夕雲型
+    ]
+    required: 4
+    init: 0
+324: #戦闘航空母艦一番艦、演習始め！ (C22)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    flagshipId: [553] #伊勢改二
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 3
+    init: 0
+325: #改夕雲型、演習始め！ (C23)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipIdAll: [
+      [[542], 1] #夕雲改二
+      [[543], 1] #長波改二
+    ]
+    required: 4
+    init: 0
+327: #朝潮型集合！特訓始め！ (C25)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipclass: [
+      [[18], 4] #霰型
+    ]
+    required: 4
+    init: 0
+328: #精強「十七駆」、猛特訓！ (C27)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipIdAll: [
+      [[557], 1] #磯風乙改
+      [[558], 1] #浜風乙改
+      [[556], 1] #浦風丁改
+      [[559], 1] #谷風丁改
+    ]
+    required: 4
+    init: 0
+331: #艦載機演習 (C31)
+  resetInterval: 1
+  "practice_win_a":
+    description: "演習勝利 A"
+    flagshiptype: [11, 18] #正規空母/装甲空母
+    escortshiptype: [
+      [[11, 18], 2] #正規空母/装甲空母
+      [[2], 2] #駆逐艦
+    ]
+    required: 3
+    init: 0
+332: #六周年記念演習 (C32)
+  # 6隻編成の条件は追跡不可
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshiptype: [
+      [[3, 21, 4], 1] #軽巡洋艦/練習巡洋艦/重雷装巡洋艦
+      [[2, 1], 3] #駆逐艦/海防艦
+    ]
+    required: 4
+    init: 0
+333: #航空戦隊演習(その壱) (C33)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshiptype: [
+      [[7, 11, 18], 3] #軽空母/正規空母/装甲空母
+      [[2], 2] #駆逐艦
+    ]
+    required: 3
+    init: 0
+334: #航空戦隊演習(その弐) (C34)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshiptype: [
+      [[7, 11, 18], 3] #軽空母/正規空母/装甲空母
+      [[2], 2] #駆逐艦
+    ]
+    required: 6
+    init: 0
+335: #新しき盾 (C35)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipIdAll: [
+      [[68], 1] #摩耶
+      [[65], 1] #羽黒
+    ]
+    required: 3
+    init: 0
+336: #輸送船団演習 (C37)
+  resetInterval: 1
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshiptype: [
+      [[22, 17, 1], 2] #補給艦/揚陸艦/海防艦
+    ]
+    required: 4
+    init: 0
+338: #睦月型集合！演習始め！ (C39)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    escortshipclass: [
+      [[28], 4] #睦月型
+    ]
+    required: 4
+    init: 0
+343: #航空母艦演習 (C46)
+  resetInterval: 1
+  "practice_win":
+    description: "演習勝利"
+    flagshiptype: [11, 18] #正規空母/装甲空母
+    escortshiptype: [
+      [[11, 18], 2] #正規空母/装甲空母
+      [[2], 2] #駆逐艦
+    ]
+    required: 4
+    init: 0
+344: #「第十方面艦隊」演習！ (C48)
+  resetInterval: 1
+  "practice_win_a":
+    description: "演習勝利 A"
+    escortshipIdAll: [
+      [[65, 64, 471], 2] #羽黒/足柄/神風
+    ]
+    required: 4
+    init: 0
+347: #奇跡の駆逐艦 (C51)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [20] #雪風
+    escortshiptype: [
+      [[2], 3, true] #駆逐艦
+    ]
+    required: 4
+    init: 0
+351: #改装航空巡洋艦「最上」、進発せよ！ (C56)
+  resetInterval: 1
+  "practice_win_a":
+    description: "演習勝利 A"
+    flagshipId: [501] #最上改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 4
+    init: 0
+352: #改装「矢矧」、精鋭水雷戦隊旗艦演習！ (C57)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [663] #矢矧改二
+    escortshiptype: [
+      [[2], 4] #駆逐艦
+    ]
+    required: 4
+    init: 0
+358: #「Taffy Ⅲ」 This is a drill! (C68)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipIdAll: [
+      [[561], 1] #Samuel B.Roberts
+      [[562], 1] #Johnston
+      [[544], 1] #Gambier Bay
+    ]
+    required: 4
+    init: 0
+360: #第一線航空母艦「鳳翔改二」、演習開始！ (C70)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [894] #鳳翔改二
+    escortshiptype: [
+      [[2], 3] #駆逐艦
+    ]
+    required: 5
+    init: 0
+364: #精鋭第三戦隊、演習開始！ (C73)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipIdAll: [
+      [[593, 954], 1] #榛名改二乙/榛名改二丙
+      [[591], 1] #金剛改二丙
+    ]
+    escortshiptype: [
+      [[2], 2] #駆逐艦
+    ]
+    required: 4
+    init: 0
+365: #「佐世保の時雨」練度向上を図れ！ (C75)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipIdAll: [
+      [[43], 1] #時雨
+      [[42, 632, 633], 1] #白露/有明/夕暮
+    ]
+    required: 5
+    init: 0
+366: #最精鋭！改装「時雨」演習開始！ (C76)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    flagshipId: [961] #時雨改三
+    escortshiptype: [
+      [[2], 3, true] #駆逐艦
+    ]
+    required: 4
+    init: 0
+376: #「第三戦隊」精鋭第二小隊、特別演習！ (C77)
+  resetInterval: 1
+  "practice_win_s":
+    description: "演習勝利 S"
+    escortshipIdAll: [
+      [[150], 1] #比叡改二
+      [[152], 1] #霧島改二
+    ]
+    escortshiptype: [
+      [[3], 1] #軽巡洋艦
+      [[2], 2] #駆逐艦
+    ]
+    required: 5
+    init: 0
