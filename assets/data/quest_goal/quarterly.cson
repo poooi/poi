@@ -439,31 +439,31 @@
   type: 4
   fuzzy: true
   "battle_boss_win_rank_s@13":
-    description: "1-3 A"
+    description: "1-3 S"
     maparea: [13]
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
     init: 0
   "battle_boss_win_rank_s@14":
-    description: "1-4 A"
+    description: "1-4 S"
     maparea: [14]
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
     init: 0
   "battle_boss_win_rank_s@21":
-    description: "2-1 A"
+    description: "2-1 S"
     maparea: [21]
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
     init: 0
   "battle_boss_win_rank_s@22":
-    description: "2-2 A"
+    description: "2-2 S"
     maparea: [22]
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
-    description: "2-3 A"
+    description: "2-3 S"
     maparea: [23]
     escortshiptype: [[[7, 11, 18], 1]] #空母1以上
     required: 1
