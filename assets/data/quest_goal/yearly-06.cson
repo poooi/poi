@@ -201,8 +201,9 @@
     init: 0
 1138: #【高射装置量産】94式高射装置の追加配備
   type: 106
+  # 旗艦に秋月型を置いて廃棄する条件は追跡不可
   "destory_item":
-    description: "廃棄 - 高射装置"
-    slotitemType2: [17] # 17=高射装置
+    description: "廃棄 - 91式高射装置"
+    slotitemId: [120] # 91式高射装置 (type 17 was 機関部強化; 高射装置 is 36)
     required: 4
     init: 0
