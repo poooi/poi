@@ -8,7 +8,6 @@
   type: 109
   fuzzy: true
   "battle_boss_win_rank_s@14":
-    description: "1-4 S"
     maparea: [14]
     # 北上改二/改三 + 大井改二（いずれかが旗艦）。改二以降だけを数えたいので id 指定
     flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
@@ -21,7 +20,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@21":
-    description: "2-1 S"
     maparea: [21]
     flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
     escortshipId: [
@@ -33,7 +31,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@22":
-    description: "2-2 S"
     maparea: [22]
     flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
     escortshipId: [
@@ -45,7 +42,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
-    description: "2-3 S"
     maparea: [23]
     flagshipId: [119, 118] #北上改二(改三を含む)/大井改二
     escortshipId: [
@@ -78,7 +74,6 @@
     required: 2
     init: 0
   "battle_boss_win_rank_s@42":
-    description: "4-2 S"
     maparea: [42]
     escortshipId: [
       [[65, 64, 62, 66, 471], 2] #羽黒/足柄/妙高/高雄/神風
@@ -89,7 +84,6 @@
   type: 109
   fuzzy: true
   "battle_boss_win_rank_a@51":
-    description: "5-1 A"
     maparea: [51]
     escortshipId: [
       [[86, 85], 2] #比叡/霧島
@@ -100,7 +94,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@53":
-    description: "5-3 A"
     maparea: [53]
     escortshipId: [
       [[86, 85], 2] #比叡/霧島
@@ -111,7 +104,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@54":
-    description: "5-4 A"
     maparea: [54]
     escortshipId: [
       [[86, 85], 2] #比叡/霧島
@@ -122,7 +114,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@55":
-    description: "5-5 A"
     maparea: [55]
     escortshipId: [
       [[86, 85], 2] #比叡/霧島
@@ -135,7 +126,6 @@
 375: #「第三戦隊」第二小隊、演習開始！
   type: 109
   "practice_win_s":
-    description: "演習勝利 S"
     escortshipId: [
       [[86, 85], 2] #比叡/霧島
     ]

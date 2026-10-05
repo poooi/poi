@@ -6,6 +6,13 @@ const { isEqual, last, padStart, size } = require('lodash')
 const moment = require('moment')
 const path = require('path')
 
+// The subgoal description generator is shared with the app, which is TypeScript.
+require('../babel-hook')(require('../babel-register.config'))
+const {
+  describeQuestGoals,
+  generateDescription,
+} = require('../views/redux/info/quests/description.ts')
+
 const DEST = path.resolve(__dirname, '../assets/data/fcd')
 
 // current: currentData in forms of {meta, data}
@@ -144,6 +151,21 @@ const validateQuestGoal = (data) => {
         typeof subgoal.required === 'number' && subgoal.required > 0,
         `quest ${id} subgoal ${event} has no required count`,
       )
+      // See views/redux/info/quests/description.ts for which subgoals need one written.
+      const generated = generateDescription(event, subgoal)
+      assert(
+        subgoal.description === undefined ||
+          (typeof subgoal.description === 'string' && subgoal.description.trim() !== ''),
+        `quest ${id} subgoal ${event}: description must be a non-blank string`,
+      )
+      assert(
+        generated !== undefined || subgoal.description !== undefined,
+        `quest ${id} subgoal ${event} needs a description (it names a cell, expeditions or equipment)`,
+      )
+      assert(
+        subgoal.description !== generated,
+        `quest ${id} subgoal ${event}: description "${generated}" is generated, drop it`,
+      )
     }
   }
 }
@@ -157,7 +179,8 @@ const validateQuestGoal = (data) => {
     buildData('map.json'),
     buildData('shipavatar.json'),
     buildData('shiptag.cson'),
-    buildPayload('questgoal.json', questGoals),
+    // Older builds and external readers expect every subgoal to carry its description.
+    buildPayload('questgoal.json', describeQuestGoals(questGoals)),
   ])
 
   await buildMeta()

@@ -8,7 +8,6 @@
   type: 101
   fuzzy: true
   "battle_boss_win_rank_a@12":
-    description: "1-2 A"
     maparea: [12]
     escortshipId: [
       [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
@@ -16,7 +15,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@13":
-    description: "1-3 A"
     maparea: [13]
     escortshipId: [
       [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
@@ -24,7 +22,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@15":
-    description: "1-5 A"
     maparea: [15]
     escortshipId: [
       [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）
@@ -32,7 +29,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@32":
-    description: "3-2 A"
     maparea: [32]
     escortshipId: [
       [[230, 232, 231, 233], 4] #朧改/漣改/曙改/潮改（以降の改装も含む）

@@ -35,7 +35,6 @@
 714: #「駆逐艦」の改修工事を実施せよ！
   type: 111
   "remodel_ship":
-    description: "近代化改修"
     materialShipType: [2] # 駆逐艦
     materialShipMinCount: 3
     required: 2
@@ -43,7 +42,6 @@
 715: #続：「駆逐艦」の改修工事を実施せよ！
   type: 111
   "remodel_ship":
-    description: "近代化改修"
     materialShipType: [3] # 軽巡洋艦
     materialShipMinCount: 3
     required: 2

@@ -31,7 +31,6 @@
   type: 108
   fuzzy: true
   "battle_boss_win_rank_s@15":
-    description: "1-5 S"
     maparea: [15]
     flagshipId: [749] #山城改二補
     # 扶桑/時雨1隻 + 最上/満潮/朝雲/山雲2隻 の両方が必要なので All（AND）を使う
@@ -54,7 +53,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
-    description: "2-3 S"
     maparea: [23]
     flagshipId: [749] #山城改二補
     escortshipIdAll: [
@@ -64,7 +62,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@25":
-    description: "2-5 S"
     maparea: [25]
     flagshipId: [749] #山城改二補
     escortshipIdAll: [
@@ -74,7 +71,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@43":
-    description: "4-3 S"
     maparea: [43]
     flagshipId: [749] #山城改二補
     escortshipIdAll: [

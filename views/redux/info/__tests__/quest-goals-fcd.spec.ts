@@ -169,7 +169,11 @@ describe('questGoalsFcdMiddleware', () => {
     path: 'questgoal' as const,
     data: {
       303: { type: 3 as const, practice: { description: '演習', required: 6, init: 0 } },
-      313: { type: 4 as const, resetInterval: 1, practice_win: { required: 8, init: 0 } },
+      313: {
+        type: 4 as const,
+        resetInterval: 1,
+        practice_win: { description: '演習勝利', required: 8, init: 0 },
+      },
     },
   }
 
@@ -301,6 +305,9 @@ describe('questGoalsFcdMiddleware', () => {
       id: 303,
       practice: { count: 2, required: 6, description: '演習' },
     })
-    expect(records[313]).toEqual({ id: 313, practice_win: { count: 0, required: 8 } })
+    expect(records[313]).toEqual({
+      id: 313,
+      practice_win: { count: 0, required: 8, description: '演習勝利' },
+    })
   })
 })

@@ -8,7 +8,6 @@
   type: 105
   fuzzy: true
   "battle_boss_win_rank_s@15":
-    description: "1-5 S"
     maparea: [15]
     escortshipId: [
       [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
@@ -16,7 +15,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@23":
-    description: "2-3 S"
     maparea: [23]
     escortshipId: [
       [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
@@ -24,7 +22,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@32":
-    description: "3-2 S"
     maparea: [32]
     escortshipId: [
       [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
@@ -32,7 +29,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
-    description: "5-3 S"
     maparea: [53]
     escortshipId: [
       [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
@@ -45,7 +41,6 @@
   type: 105
   fuzzy: true
   "battle_boss_win_rank_a@31":
-    description: "3-1 A"
     maparea: [31]
     escortshipclass: [
       [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
@@ -54,7 +49,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@33":
-    description: "3-3 A"
     maparea: [33]
     escortshipclass: [
       [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
@@ -63,7 +57,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@43":
-    description: "4-3 A"
     maparea: [43]
     escortshipclass: [
       [[65, 67, 69, 78, 82, 83, 84, 87, 88, 91, 93, 95, 99, 102, 105, 106, 107, 108, 110, 112, 114, 116, 118, 121, 122, 125, 134, 135], 3] #米英艦艇3隻以上
@@ -85,7 +78,6 @@
   type: 105
   fuzzy: true
   "battle_boss_win_rank_s@11":
-    description: "1-1 S"
     maparea: [11]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
@@ -96,7 +88,6 @@
     required: 3
     init: 0
   "battle_boss_win_rank_a@12":
-    description: "1-2 A"
     maparea: [12]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
@@ -107,7 +98,6 @@
     required: 2
     init: 0
   "battle_boss_win_rank_a@15":
-    description: "1-5 A"
     maparea: [15]
     flagshipclass: [117] #鵜来型
     escortshiptype: [
@@ -120,7 +110,6 @@
 356: #精鋭「第十九駆逐隊」演習！
   type: 105
   "practice_win_s":
-    description: "演習勝利 S"
     escortshipId: [
       [[195, 627, 666, 647], 4] #綾波改二/敷波改二/磯波改二/浦波改二
     ]
