@@ -80,8 +80,10 @@ A subgoal's `description` is the `data:` i18n key the task panel shows. The goal
 it out wherever `views/redux/info/quests/description.ts` can generate it from the event and
 filters ("1-3 S", "演習勝利 S", "敵空母"); `describeQuestGoals` fills it in when the app loads the
 bundled table, on delivered fcd quests, and in `fcd/build.js`, so the payload still carries a
-description on every subgoal — older builds and external readers rely on that. Every generated
-label is an existing translation key.
+description on every subgoal — older builds and external readers rely on that. The fixed
+event and enemy labels (`LABELS`/`SUNK`: "作戰", "演習勝利 S", "敵空母") are existing translation
+keys, so a new one needs an entry in `i18n/data/*.json`; a map-and-rank label ("1-3 S") is not a
+key and shows as it is in every language.
 
 A written `description` always wins, and is **required** for a subgoal with a `mapcell` (a cell
 number means nothing to a player — write the gauge or node: "7-3-2", "7-4-O 到達") or one naming

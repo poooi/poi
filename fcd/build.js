@@ -154,7 +154,12 @@ const validateQuestGoal = (data) => {
       // See views/redux/info/quests/description.ts for which subgoals need one written.
       const generated = generateDescription(event, subgoal)
       assert(
-        generated !== undefined || typeof subgoal.description === 'string',
+        subgoal.description === undefined ||
+          (typeof subgoal.description === 'string' && subgoal.description.trim() !== ''),
+        `quest ${id} subgoal ${event}: description must be a non-blank string`,
+      )
+      assert(
+        generated !== undefined || subgoal.description !== undefined,
         `quest ${id} subgoal ${event} needs a description (it names a cell, expeditions or equipment)`,
       )
       assert(

@@ -15,8 +15,9 @@ import type { QuestGoal, QuestGoalSubgoal, QuestGoalTable } from './types'
  * - a `mission_success` naming its expeditions, or a `destory_item` naming equipment —
  *   those names need master data, which this module deliberately does without.
  *
- * Every label below is an existing translation key in `i18n/data/*.json`, so filling
- * a description never changes what a translated panel shows.
+ * The fixed event and enemy labels below (`LABELS`, `SUNK`) are existing translation
+ * keys in `i18n/data/*.json`. A map-and-rank label ("1-3 S") is not a key and is shown
+ * as it is in every language, as the hand-written ones always were.
  *
  * Keep this module free of imports other than types: `fcd/build.js` loads it outside
  * the app.

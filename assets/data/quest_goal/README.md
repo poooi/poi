@@ -35,7 +35,7 @@ the data does not say it: a subgoal with a `mapcell` (name the gauge or node: "7
 description and on one that repeats the generated text. The rules are in
 `views/redux/info/quests/description.ts`.
 
-The schema The schema (events, filters, ship ids) is documented
+The schema (events, filters, ship ids) is documented
 in `skills/quest-goal-data/SKILL.md`.
 
 ## References
