@@ -8,7 +8,6 @@
   type: 103
   fuzzy: true
   "battle_boss_win_rank_a@13":
-    description: "1-3 A"
     maparea: [13]
     flagshipId: [182] #明石
     escortshiptype: [
@@ -27,7 +26,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@21":
-    description: "2-1 A"
     maparea: [21]
     flagshipId: [182] #明石
     escortshiptype: [
@@ -36,7 +34,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@22":
-    description: "2-2 A"
     maparea: [22]
     flagshipId: [182] #明石
     escortshiptype: [
@@ -45,7 +42,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@23":
-    description: "2-3 A"
     maparea: [23]
     flagshipId: [182] #明石
     escortshiptype: [
@@ -57,7 +53,6 @@
   type: 103
   fuzzy: true
   "battle_boss_win_rank_a@41":
-    description: "4-1 A"
     maparea: [41]
     escortshiptype: [
       [[5], 3] #重巡3
@@ -66,7 +61,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@42":
-    description: "4-2 A"
     maparea: [42]
     escortshiptype: [
       [[5], 3] #重巡3
@@ -75,7 +69,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@43":
-    description: "4-3 A"
     maparea: [43]
     escortshiptype: [
       [[5], 3] #重巡3
@@ -84,7 +77,6 @@
     required: 1
     init: 0
   "battle_boss_win_rank_a@44":
-    description: "4-4 A"
     maparea: [44]
     escortshiptype: [
       [[5], 3] #重巡3
@@ -95,7 +87,6 @@
 350: #精鋭「第七駆逐隊」演習開始！
   type: 103
   "practice_win_a":
-    description: "演習勝利 A"
     # 朧・漣・曙・潮（どの改装段階でも可）
     escortshipId: [
       [[93, 94, 15, 16], 4] #朧/漣/曙/潮

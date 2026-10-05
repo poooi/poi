@@ -24,7 +24,18 @@ A quest's file names its period, and `fcd/build.js` asserts that its `type` agre
 | `one-time.cson`, `one-time-*.cson`  | none — one-time quests never reset       |
 | `limited-time.cson`                 | whatever period the game gives the quest |
 
-A quest id may appear in only one file. The schema (events, filters, ship ids) is documented
+A quest id may appear in only one file.
+
+## Descriptions
+
+A subgoal's `description` (the i18n key the task panel shows) is generated from the subgoal —
+`battle_boss_win_rank_s` on `maparea: [13]` is "1-3 S" — so leave it out. Write one only where
+the data does not say it: a subgoal with a `mapcell` (name the gauge or node: "7-3-2",
+"7-4-O 到達"), or one naming expeditions or equipment. `fcd/build.js` fails both on a missing
+description and on one that repeats the generated text. The rules are in
+`views/redux/info/quests/description.ts`.
+
+The schema The schema (events, filters, ship ids) is documented
 in `skills/quest-goal-data/SKILL.md`.
 
 ## References

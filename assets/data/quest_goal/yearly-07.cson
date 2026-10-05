@@ -7,7 +7,6 @@
 354: #「改装特務空母」任務部隊演習！
   type: 107
   "practice_win_s":
-    description: "演習勝利 S"
     flagshipId: [707] #Gambier Bay Mk.II
     escortshipclass: [
       [[91, 87], 2] #Fletcher級駆逐艦/John C.Butler級駆逐艦2隻
@@ -17,7 +16,6 @@
 368: #「十六駆」演習！
   type: 107
   "practice_win_s":
-    description: "演習勝利 S"
     escortshipId: [
       [[181, 20, 186, 190], 2] #天津風/雪風/丹陽/時津風/初風
     ]
@@ -30,7 +28,6 @@
   # 2026-07-19: added Algérie (CA), Vautour (DD), Béarn (CV) from 2026 summer event backend ops
   type: 107
   "practice_win_a":
-    description: "演習勝利 A"
     flagshipId: [492, 935, 965, 962, 491, 1051, 1053, 1055] #Richelieu/Jean Bart/Gloire/Mogador/Commandant Teste/Algérie/Vautour/Béarn
     escortshipId: [
       [[492, 935, 965, 962, 491, 1051, 1053, 1055], 2] #Richelieu/Jean Bart/Gloire/Mogador/Commandant Teste/Algérie/Vautour/Béarn

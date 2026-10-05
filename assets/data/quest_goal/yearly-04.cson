@@ -8,28 +8,24 @@
   type: 104
   fuzzy: true
   "battle_boss_win_rank_s@51":
-    description: "5-1 S"
     maparea: [51]
     flagshipId: [1035] #吹雪改三（改三護も id 展開で含まれる）
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@53":
-    description: "5-3 S"
     maparea: [53]
     flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@54":
-    description: "5-4 S"
     maparea: [54]
     flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
     required: 1
     init: 0
   "battle_boss_win_rank_s@55":
-    description: "5-5 S"
     maparea: [55]
     flagshipId: [1035] #吹雪改三
     secondshipclass: [12] #特I型
@@ -46,7 +42,6 @@
 362: #特型初代「第十一駆逐隊」演習スペシャル！
   type: 104
   "practice_win_a":
-    description: "演習勝利 A"
     escortshipId: [
       [[9, 10, 32, 11], 4] #吹雪/白雪/初雪/深雪
     ]
@@ -55,7 +50,6 @@
 371: #春です！「春雨」、演習しますっ！
   type: 104
   "practice_win_a":
-    description: "演習勝利 A"
     flagshipId: [405] #春雨
     escortshipId: [
       [[44, 45, 46, 42, 43], 3] #村雨/夕立/五月雨/白露/時雨

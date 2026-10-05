@@ -9,7 +9,6 @@
 401: #はじめての「遠征」！ (D1)
   # 遠征の出発ではなく帰投（成功）で数える
   "mission_success":
-    description: "遠征"
     required: 1
     init: 0
 405: #第一次潜水艦派遣作戦 (D5)

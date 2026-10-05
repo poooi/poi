@@ -1,5 +1,8 @@
+import type { QuestGoalTable } from 'views/redux/info/quests'
+
 import fs from 'fs'
 import path from 'path'
+import { describeQuestGoals } from 'views/redux/info/quests/description'
 
 /**
  * `fcd/build.js` mirrors each source into `assets/data/fcd/<name>.json`. If a source
@@ -25,6 +28,9 @@ interface Payload {
   meta: { name?: unknown; version?: unknown }
   data: unknown
 }
+
+const isTable = (value: unknown): value is QuestGoalTable =>
+  typeof value === 'object' && value !== null && !Array.isArray(value)
 
 const isPayload = (value: unknown): value is Payload =>
   typeof value === 'object' && value !== null && 'meta' in value && 'data' in value
@@ -59,7 +65,11 @@ describe('assets/data/fcd payloads are in step with their sources', () => {
     const payload = read(`assets/data/fcd/${name}.json`)
     if (!isPayload(payload)) throw new Error(`assets/data/fcd/${name}.json has no meta/data`)
     expect(payload.meta).toMatchObject({ name, version: expect.any(String) })
-    expect(payload.data).toEqual(read(source))
+    const data = read(source)
+    // fcd/build.js fills in the subgoal descriptions the goal files leave out
+    expect(payload.data).toEqual(
+      name === 'questgoal' && isTable(data) ? describeQuestGoals(data) : data,
+    )
   })
 
   it('meta.json lists every payload', () => {

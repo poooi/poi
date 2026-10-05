@@ -14,6 +14,7 @@ description: Quest tracking — the assets/data/quest_goal/*.cson schema and the
 | Bundled/delivered merge and record re-sync              | `views/redux/info/quests/goals.ts`                                     |
 | `QuestOptions` (what an event dispatch carries)         | `views/redux/actions/quest.ts`                                         |
 | `QuestGoalSubgoal` and the other engine types           | `views/redux/info/quests/types.ts`                                     |
+| Subgoal descriptions (generated, with overrides)        | `views/redux/info/quests/description.ts`                               |
 | Matching helpers (`satisfyGoal`, `satisfyShip`)         | `views/redux/info/quests/goal-matching.ts`                             |
 | Progress evaluation (where subgoal filters are applied) | `views/redux/info/quests/records.ts`                                   |
 | API responses -> quest events                           | `views/redux/middlewares/quests-cross-slice.ts`                        |
@@ -72,6 +73,22 @@ an old build **silently ignores** a field its `satisfyShip`/`satisfyGoal` does n
 makes that constraint vanish rather than fail. So data that will reach older builds has to keep
 expressing the constraint in fields they already understand, or move to a new fcd name so those
 builds keep their bundled copy.
+
+## Descriptions are generated
+
+A subgoal's `description` is the `data:` i18n key the task panel shows. The goal files leave
+it out wherever `views/redux/info/quests/description.ts` can generate it from the event and
+filters ("1-3 S", "演習勝利 S", "敵空母"); `describeQuestGoals` fills it in when the app loads the
+bundled table, on delivered fcd quests, and in `fcd/build.js`, so the payload still carries a
+description on every subgoal — older builds and external readers rely on that. Every generated
+label is an existing translation key.
+
+A written `description` always wins, and is **required** for a subgoal with a `mapcell` (a cell
+number means nothing to a player — write the gauge or node: "7-3-2", "7-4-O 到達") or one naming
+expeditions (`mission`) or equipment (`slotitemId`/`slotitemType2`), whose names need master
+data the generator does without. `fcd/build.js` rejects a missing one, and also one that just
+repeats the generated text. When adding a generator rule, check the payload diff: the
+regenerated `questgoal.json` should change only where you meant it to.
 
 ## `type`, and what the game's own fields mean
 

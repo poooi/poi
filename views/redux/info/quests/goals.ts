@@ -5,6 +5,8 @@ import path from 'path'
 
 import type { GoalKey, QuestGoalTable, QuestRecord, SubgoalRecord } from './types'
 
+import { describeQuestGoals } from './description'
+
 /**
  * Quest goals come from two places:
  *
@@ -16,7 +18,9 @@ import type { GoalKey, QuestGoalTable, QuestRecord, SubgoalRecord } from './type
  *   existing installs without a poi release.
  *
  * The delivered copy is layered over the bundled one per quest id — see
- * `mergeQuestGoals` for why it merges rather than replaces.
+ * `mergeQuestGoals` for why it merges rather than replaces. Both get their subgoal
+ * descriptions filled in (`describeQuestGoals`), since the goal files omit the ones
+ * that can be generated.
  */
 const questGoalsDir = path.join(ROOT, 'assets', 'data', 'quest_goal')
 const bundledPayloadPath = path.join(ROOT, 'assets', 'data', 'fcd', 'questgoal.json')
@@ -56,7 +60,7 @@ function parseBundledQuestGoals(): QuestGoalTable {
         console.warn('Broken quest goal file!', file, parsed instanceof Error ? parsed.message : '')
         continue
       }
-      Object.assign(merged, parsed)
+      Object.assign(merged, describeQuestGoals(parsed))
     } catch (e) {
       console.warn('Broken quest goal file!', file, e instanceof Error ? e.message : String(e))
     }
@@ -141,7 +145,8 @@ export function mergeQuestGoals(
   if (!delivered || typeof delivered !== 'object') return merged
   const bundled = bundledQuestGoalsVersion()
   if (deliveredVersion && bundled && deliveredVersion <= bundled) return merged
-  for (const [id, goal] of Object.entries(delivered)) {
+  // describeQuestGoals copies each goal, so the delivered table is not aliased.
+  for (const [id, goal] of Object.entries(describeQuestGoals(delivered))) {
     if (goal && typeof goal === 'object') {
       merged[id] = cloneDeep(goal)
     }
