@@ -83,6 +83,9 @@ export const gameReload = () => {
   `)
 }
 
+// smallest fixed game width accepted from settings; 0 makes the webview zoom factor 0
+export const MIN_WEBVIEW_WIDTH = 100
+
 export const getPoiInfoHeight = () => document.querySelector('poi-info')?.clientHeight ?? 0
 
 export const getTitleBarHeight = () => document.querySelector('title-bar')?.clientHeight ?? 0

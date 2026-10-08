@@ -88,10 +88,12 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
     }, [])
 
     // Sync zoomFactor state
+    // setZoomFactor throws on a non-positive factor, which a 0-width webview produces
     useEffect(() => {
       if (
         isReady &&
         zoomFactor != null &&
+        zoomFactor > 0 &&
         view?.getZoomFactor &&
         view.getZoomFactor() !== zoomFactor
       ) {
@@ -227,7 +229,7 @@ const ElectronWebView = forwardRef<ExtendedWebviewTag | undefined, Props>(
         },
         isReady: () => isReady,
         forceSyncZoom: () => {
-          if (view && zoomFactor) {
+          if (view && zoomFactor != null && zoomFactor > 0) {
             view.setZoomFactor(zoomFactor)
           }
         },

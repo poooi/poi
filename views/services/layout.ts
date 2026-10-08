@@ -4,11 +4,14 @@ import { dispatch, getStore } from 'views/create-store'
 import { config } from 'views/env'
 import { createLayoutWebviewUseFixedResolutionAction } from 'views/redux/actions/layout'
 
-import { getPoiInfoHeight, getYOffset, getRealSize } from './utils'
+import { getPoiInfoHeight, getYOffset, getRealSize, MIN_WEBVIEW_WIDTH } from './utils'
 
 // polyfill
-if (config.get('poi.webview.width', 1200) < 0) {
+if (!(config.get('poi.webview.width', 1200) >= MIN_WEBVIEW_WIDTH)) {
   config.set('poi.webview.width', 1200)
+}
+if (!(config.get('poi.webview.windowWidth', 1200) >= MIN_WEBVIEW_WIDTH)) {
+  config.set('poi.webview.windowWidth', 1200)
 }
 
 const additionalStyle = document.createElement('style')
