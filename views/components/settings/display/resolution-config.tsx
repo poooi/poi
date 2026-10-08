@@ -7,6 +7,7 @@ import { Trans } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { Section, Wrapper, FillAvailable } from 'views/components/settings/components/section'
+import { MIN_WEBVIEW_WIDTH } from 'views/services/utils'
 
 const Icon = styled.div`
   margin: 0 1em;
@@ -91,7 +92,7 @@ export const ResolutionConfig = () => {
         ? webview.windowUseFixedResolution
         : webview.useFixedResolution
       const w = Math.round(value)
-      if (isNaN(w) || w < 0 || !useFixed) return
+      if (isNaN(w) || w < MIN_WEBVIEW_WIDTH || !useFixed) return
       if (w > screenSize.screenWidth || w * 0.6 > screenSize.screenHeight) {
         const fallback = Number(
           config.get(
@@ -176,7 +177,7 @@ export const ResolutionConfig = () => {
               </Icon>
               <NumericResolution>
                 <NumericInput
-                  min={0}
+                  min={MIN_WEBVIEW_WIDTH}
                   majorStepSize={20}
                   stepSize={10}
                   minorStepSize={5}
