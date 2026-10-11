@@ -209,5 +209,8 @@
   "Resource icons": "Resource icons",
   "Original game icons": "Original game icons",
   "Simplified icons": "Simplified icons",
-  "HD game-style icons": "HD game-style icons"
+  "HD game-style icons": "HD game-style icons",
+  "contributors-loading": "Loading contributors...",
+  "contributors-error": "Failed to load contributors.",
+  "contributors-retry": "Retry"
 }

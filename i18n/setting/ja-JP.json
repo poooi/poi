@@ -254,5 +254,8 @@
   "Resource icons": "資源アイコン",
   "Original game icons": "ゲームオリジナル",
   "Simplified icons": "シンプル",
-  "HD game-style icons": "ゲーム風（高精細）"
+  "HD game-style icons": "ゲーム風（高精細）",
+  "contributors-loading": "コントリビューターを読み込み中...",
+  "contributors-error": "コントリビューターの読み込みに失敗しました。",
+  "contributors-retry": "再試行"
 }
