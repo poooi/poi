@@ -1,0 +1,13 @@
+{
+  "name": "poi-plugin-ooi-autofill",
+  "version": "1.0.0",
+  "description": "Record an OOI login locally and fill it on the matching OOI login page.",
+  "main": "index.es",
+  "license": "MIT",
+  "poiPlugin": {
+    "title": "OOI 自动填入",
+    "description": "在本地记录 OOI 登录账号和密码，打开匹配的 OOI 登录页时自动填入。",
+    "icon": "key",
+    "priority": 50
+  }
+}
