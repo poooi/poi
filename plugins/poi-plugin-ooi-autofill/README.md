@@ -13,7 +13,7 @@ mkdir "%APPDATA%\poi\plugins\node_modules"
 mklink /J "%APPDATA%\poi\plugins\node_modules\poi-plugin-ooi-autofill" "%CD%\plugins\poi-plugin-ooi-autofill"
 ```
 
-在仓库根目录执行上面的命令。然后打开 poi 的插件设置，填写 OOI 站点地址、登录 ID 和密码。
+在仓库根目录执行上面的命令。然后打开 poi 的插件设置，填写登录 ID 和密码。站点地址默认是 `ooi.moe`。
 
 也可以在已经打开的 OOI 登录页点击「从当前登录页读取」。
 

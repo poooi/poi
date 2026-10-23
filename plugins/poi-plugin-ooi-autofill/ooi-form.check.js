@@ -57,12 +57,15 @@ test('does not overwrite a value the user already typed', () => {
 
 test('ignores pages without the OOI form', () => {
   assert.equal(fillOoiForm({ querySelector: () => null }, 'a', 'b', true), 'no-form')
-  assert.equal(readOoiForm({ querySelector: () => null }), null)
+  assert.equal(readOoiForm({ querySelector: () => null, location: { href: 'https://ooi.moe/' } }).found, false)
 })
 
 test('reads the current OOI form', () => {
   const { doc } = page({ loginId: 'ooi-user', password: 'ooi-pass' })
-  assert.deepEqual(readOoiForm(doc), { loginId: 'ooi-user', password: 'ooi-pass' })
+  const read = readOoiForm(doc)
+  assert.equal(read.found, true)
+  assert.equal(read.loginId, 'ooi-user')
+  assert.equal(read.password, 'ooi-pass')
 })
 
 test('host allowlist is exact and required', () => {
@@ -85,7 +88,8 @@ test('injected script keeps credentials quoted and only touches an OOI form', ()
   assert.equal(filled, 'filled')
   assert.equal(context.idEl.value, loginId)
   assert.equal(context.pwEl.value, password)
-  const read = vm.runInNewContext(buildReadCall(), context)
+  const read = JSON.parse(vm.runInNewContext(buildReadCall(), context))
+  assert.equal(read.found, true)
   assert.equal(read.loginId, loginId)
   assert.equal(read.password, password)
   const other = { document: { querySelector: () => null } }

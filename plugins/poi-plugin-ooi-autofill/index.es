@@ -5,8 +5,10 @@ import { buildFillCall, buildReadCall, hostAllowed } from './ooi-form'
 
 const PREFIX = 'plugin.poi-plugin-ooi-autofill'
 
+const DEFAULT_HOST = 'ooi.moe'
+
 const readSettings = () => ({
-  hosts: window.config.get(`${PREFIX}.hosts`, '') || '',
+  hosts: window.config.get(`${PREFIX}.hosts`, DEFAULT_HOST) || DEFAULT_HOST,
   loginId: window.config.get(`${PREFIX}.loginId`, '') || '',
   password: window.config.get(`${PREFIX}.password`, '') || '',
   autoFill: window.config.get(`${PREFIX}.autoFill`, true) !== false,
@@ -19,6 +21,42 @@ const writeSettings = (settings) => {
   window.config.set(`${PREFIX}.password`, settings.password)
   window.config.set(`${PREFIX}.autoFill`, settings.autoFill)
   window.config.set(`${PREFIX}.selectPoiMode`, settings.selectPoiMode)
+}
+
+const parseResult = (raw) => {
+  if (raw == null || raw === '') return null
+  if (typeof raw === 'string') {
+    try {
+      return JSON.parse(raw)
+    } catch (_e) {
+      return raw
+    }
+  }
+  return raw
+}
+
+const evalInFrames = async (view, code) => {
+  let webContents = null
+  try {
+    webContents = typeof view.getWebContents === 'function' ? view.getWebContents() : null
+  } catch (_e) {
+    webContents = null
+  }
+  const frames = webContents?.mainFrame?.framesInSubtree
+  if (frames && frames.length) {
+    let fallback = null
+    for (let i = 0; i < frames.length; i += 1) {
+      try {
+        const data = parseResult(await frames[i].executeJavaScript(code, true))
+        if (data?.found || data === 'filled') return data
+        if (data) fallback = data
+      } catch (_e) {
+        // A frame can navigate away while it is being read.
+      }
+    }
+    if (fallback) return fallback
+  }
+  return parseResult(await view.executeJavaScript(code, true))
 }
 
 const getWebview = () => {
@@ -44,7 +82,8 @@ const tryFill = async () => {
   }
   if (!hostAllowed(url, settings.hosts)) return
   try {
-    await view.executeJavaScript(
+    await evalInFrames(
+      view,
       buildFillCall(settings.loginId, settings.password, settings.selectPoiMode),
     )
   } catch (_e) {
@@ -125,13 +164,29 @@ export const settingsClass = () => {
     }
     let result = null
     try {
-      result = await view.executeJavaScript(buildReadCall())
+      result = await evalInFrames(view, buildReadCall())
     } catch (_e) {
       notify('读取登录页失败', 'error')
       return
     }
-    if (!result || !result.loginId) {
-      notify('当前页面没有可读取的 OOI 登录表单', 'warning')
+    let pageUrl = ''
+    try {
+      pageUrl = view.getURL?.() || ''
+    } catch (_e) {
+      pageUrl = ''
+    }
+    if (!result || !result.found) {
+      notify(`没有找到 OOI 登录表单。当前游戏页是 ${result?.href || pageUrl || '空白页'}`, 'warning')
+      return
+    }
+    if (!result.loginId) {
+      const settings = readSettings()
+      if (settings.loginId) {
+        await tryFill()
+        notify('登录框是空的，已用上面保存的账号填入', 'success')
+        return
+      }
+      notify('找到了 ooi.moe 的登录框，但邮箱还是空的。请先在游戏页输入，或在上面填写账号。', 'warning')
       return
     }
     update({
@@ -149,7 +204,7 @@ export const settingsClass = () => {
       </Callout>
       <FormGroup label="OOI 站点地址">
         <InputGroup
-          placeholder="ooi.example.com，多个用逗号或空格分隔"
+          placeholder="ooi.moe"
           value={settings.hosts}
           onChange={(e) => update({ hosts: e.target.value })}
         />

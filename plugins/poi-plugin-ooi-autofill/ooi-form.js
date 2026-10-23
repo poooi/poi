@@ -39,14 +39,36 @@ function fillOoiForm(doc, loginId, password, selectPoiMode) {
 }
 
 function readOoiForm(doc) {
-  const root = doc.querySelector('#ooi-form')
-  if (!root) return null
-  const idEl = query(root, ['#login_id', 'input[name="login_id"]'])
-  const pwEl = query(root, ['#password', 'input[name="password"]'])
-  if (!idEl || !pwEl) return null
+  const roots = []
+  if (doc) roots.push(doc)
+  const marked = doc && typeof doc.querySelector === 'function' ? doc.querySelector('#ooi-form') : null
+  if (marked) roots.push(marked)
+  const frames =
+    doc && typeof doc.querySelectorAll === 'function' ? doc.querySelectorAll('iframe,frame') : []
+  for (let i = 0; i < frames.length; i += 1) {
+    try {
+      if (frames[i].contentDocument) roots.push(frames[i].contentDocument)
+    } catch (_e) {
+      // Cross-origin frames are searched from the host instead.
+    }
+  }
+  for (let i = 0; i < roots.length; i += 1) {
+    const root = roots[i]
+    const idEl = query(root, ['#login_id', 'input[name="login_id"]', 'input[type="email"]'])
+    const pwEl = query(root, ['#password', 'input[name="password"]', 'input[type="password"]'])
+    if (!idEl || !pwEl) continue
+    return {
+      found: true,
+      loginId: idEl.value || '',
+      password: pwEl.value || '',
+      href: (root.location && root.location.href) || (doc.location && doc.location.href) || '',
+    }
+  }
   return {
-    loginId: idEl.value || '',
-    password: pwEl.value || '',
+    found: false,
+    loginId: '',
+    password: '',
+    href: (doc && doc.location && doc.location.href) || '',
   }
 }
 
@@ -90,7 +112,7 @@ function buildFillCall(loginId, password, selectPoiMode) {
 }
 
 function buildReadCall() {
-  return `(function(){${query.toString()};${readOoiForm.toString()};return readOoiForm(document);})()`
+  return `(function(){${query.toString()};${readOoiForm.toString()};return JSON.stringify(readOoiForm(document));})()`
 }
 
 module.exports = {
