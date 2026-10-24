@@ -46,11 +46,12 @@ jobs:
         uses: ./.github/actions/shared-build
         with:
           buildType: ${{ matrix.buildType }}
-          csc_link: ${{ secrets.CSC_LINK }}
-          csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
-          apple_id: ${{ secrets.APPLE_ID }}
-          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
+          # electron-builder skips signing for PRs; notarize trusted push builds.
+          csc_link: ${{ github.event_name == 'push' && secrets.CSC_LINK || '' }}
+          csc_key_password: ${{ github.event_name == 'push' && secrets.CSC_KEY_PASSWORD || '' }}
+          apple_id: ${{ github.event_name == 'push' && secrets.APPLE_ID || '' }}
+          apple_app_specific_password: ${{ github.event_name == 'push' && secrets.APPLE_APP_SPECIFIC_PASSWORD || '' }}
+          apple_team_id: ${{ github.event_name == 'push' && secrets.APPLE_TEAM_ID || '' }}
 
   windows:
     runs-on: windows-latest
