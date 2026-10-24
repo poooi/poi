@@ -48,6 +48,9 @@ jobs:
           buildType: ${{ matrix.buildType }}
           csc_link: ${{ secrets.CSC_LINK }}
           csc_key_password: ${{ secrets.CSC_KEY_PASSWORD }}
+          apple_id: ${{ secrets.APPLE_ID }}
+          apple_app_specific_password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          apple_team_id: ${{ secrets.APPLE_TEAM_ID }}
 
   windows:
     runs-on: windows-latest
