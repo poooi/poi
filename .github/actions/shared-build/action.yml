@@ -11,6 +11,19 @@ inputs:
   csc_key_password:
     description: 'Certificate key password'
     required: false
+  apple_id:
+    description: 'Apple account used for macOS notarization'
+    required: false
+  apple_app_specific_password:
+    description: 'App-specific password for the Apple account'
+    required: false
+  apple_team_id:
+    description: 'Apple Developer team for notarization'
+    required: false
+  require_notarization:
+    description: 'Require notarized macOS artifacts before upload'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -35,6 +48,23 @@ runs:
         restore-keys: |
           ${{ steps.npm-cache-dir.outputs.month }}-npm-${{ runner.os }}-
 
+    - name: Validate macOS notarization credentials
+      if: ${{ runner.os == 'macOS' && (inputs.require_notarization == 'true' || inputs.apple_id != '' || inputs.apple_app_specific_password != '' || inputs.apple_team_id != '') }}
+      shell: bash
+      env:
+        APPLE_ID: ${{ inputs.apple_id }}
+        APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.apple_app_specific_password }}
+        APPLE_TEAM_ID: ${{ inputs.apple_team_id }}
+      run: |
+        missing=0
+        for name in APPLE_ID APPLE_APP_SPECIFIC_PASSWORD APPLE_TEAM_ID; do
+          if [[ -z "${!name}" ]]; then
+            echo "::error::$name is required for macOS notarization. Configure it in Actions secrets."
+            missing=1
+          fi
+        done
+        exit "$missing"
+
     - name: Install dependencies
       shell: bash
       run: npm ci
@@ -45,6 +75,25 @@ runs:
       env:
         CSC_LINK: ${{ inputs.csc_link }}
         CSC_KEY_PASSWORD: ${{ inputs.csc_key_password }}
+        APPLE_ID: ${{ inputs.apple_id }}
+        APPLE_APP_SPECIFIC_PASSWORD: ${{ inputs.apple_app_specific_password }}
+        APPLE_TEAM_ID: ${{ inputs.apple_team_id }}
+
+    - name: Verify notarized macOS apps
+      if: ${{ runner.os == 'macOS' && (inputs.require_notarization == 'true' || inputs.apple_id != '' || inputs.apple_app_specific_password != '' || inputs.apple_team_id != '') }}
+      shell: bash
+      run: |
+        shopt -s nullglob
+        apps=(dist/mac*/poi.app)
+        if (( ${#apps[@]} == 0 )); then
+          echo "::error::No macOS app bundles found for notarization verification."
+          exit 1
+        fi
+        for app in "${apps[@]}"; do
+          codesign --verify --deep --strict "$app"
+          xcrun stapler validate "$app"
+          spctl --assess --type execute --verbose=4 "$app"
+        done
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
