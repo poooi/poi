@@ -8,11 +8,12 @@
 # deleted, because the game reuses limited-time ids for later campaigns and a
 # stale entry would then track the wrong quest. Each entry records when it was
 # implemented; check it against the latest maintenance notes before a release.
-# Verified live as of the 2026-09-10 maintenance (ととねこ / ぜかましねっと).
+# Verified live as of the 2026-10-14 maintenance (wikiwiki 任務/新着任務, KC3Kai).
+# Removed then: 384/385 (秋祭り任務群) and 1048/1049 (戦略兵站物資), whose period
+# ended 2026-10-14. 382 has no end date yet.
 #
-# Not tracked from the same batch: 199 第三十一戦隊 特務編成 (fleet composition
-# only — the engine has no such event), 383 フランス艦隊、特別演習 (period ended
-# at the 2026-09-10 maintenance).
+# Not tracked: 199 第三十一戦隊 特務編成 (fleet composition only — the engine has
+# no such event).
 ###
 382: #【期間限定任務】第三十一戦隊 緊急演習！ 2026-08 実装
   type: 3
@@ -25,65 +26,249 @@
     ]
     required: 3
     init: 0
-384: #【期間限定任務】提督との秋祭り演習！ 2026-09-10 実装
+359: #Halloween艦隊 実りの秋、最新演習！ 2026-10-14 実装
   type: 2
   resetInterval: 1
-  "practice_win":
-    # 指定17隻から4隻以上、B勝利以上を同日中に4回
+  "practice_win_a":
+    # 指定14隻から4隻以上、A勝利以上を同日中に5回
     escortshipId: [
-      [[132, 421, 13, 14, 42, 168, 170, 135, 485, 425, 964, 93, 94, 634, 635, 183, 55], 4] #秋雲/秋月/綾波/敷波/白露/浦風/浜風/長波/藤波/朝霜/白雲/朧/漣/迅鯨/長鯨/大淀/神通
+      [[124, 114, 93, 15, 44, 45, 415, 95, 528, 484, 881, 519, 1005, 562], 4] #鈴谷/阿武隈/朧/曙/村雨/夕立/野分/朝潮/早波/浜波/伊201/Jervis/Minneapolis/Johnston
     ]
-    required: 4
+    required: 5
     init: 0
-385: #【期間限定拡張任務】秋祭り拡張演習！ 2026-09-10 実装（384 の後続）
-  type: 2
-  resetInterval: 1
-  "practice_win_s":
-    # 指定10隻から3隻以上、S勝利を同日中に4回（A勝利は不可）
-    escortshipId: [
-      [[1051, 1053, 962, 1055, 1065, 944, 995, 81, 602, 885], 3] #Algérie/Vautour/Mogador/Béarn/日枝丸/平安丸/大泊/陸奥/South Dakota/Victorious
-    ]
-    required: 4
-    init: 0
-1048: #【期間限定任務】戦略兵站物資、緊急輸送！ 2026-06-26 実装
-  # 弾薬2,200・ボーキ1,800の準備は追跡できない（イベントを伴わない）ので出撃分のみ
-  type: 3
+984: #【期間限定任務】14年目実りの秋、南瓜始め！ 2026-10-14 実装
   fuzzy: true
-  "battle_boss_win_rank_a@13":
+  "battle_boss_win_rank_s@13":
     maparea: [13]
-    flagshiptype: [22, 17, 16, 10] #補給・揚陸・水母・航戦
-    escortshiptype: [
-      [[1, 2], 4] #駆逐+海防 計4
+    # 旗艦+随伴2隻を 鈴谷/村雨/夕立/曙/朧/朝潮/野分/迅鯨/長鯨 から
+    flagshipId: [124, 44, 45, 15, 93, 95, 415, 634, 635]
+    escortshipId: [
+      [[124, 44, 45, 15, 93, 95, 415, 634, 635], 2, true] #旗艦以外に2隻
     ]
-    required: 1
+    required: 2
     init: 0
-  "battle_boss_win_rank_a@14":
+  "battle_boss_win_rank_s@14":
     maparea: [14]
-    flagshiptype: [22, 17, 16, 10] #補給・揚陸・水母・航戦
-    escortshiptype: [
-      [[1, 2], 4] #駆逐+海防 計4
+    # 旗艦+随伴2隻を 鈴谷/村雨/夕立/曙/朧/朝潮/野分/迅鯨/長鯨 から
+    flagshipId: [124, 44, 45, 15, 93, 95, 415, 634, 635]
+    escortshipId: [
+      [[124, 44, 45, 15, 93, 95, 415, 634, 635], 2, true] #旗艦以外に2隻
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@21":
+    maparea: [21]
+    # 旗艦+随伴2隻を 鈴谷/村雨/夕立/曙/朧/朝潮/野分/迅鯨/長鯨 から
+    flagshipId: [124, 44, 45, 15, 93, 95, 415, 634, 635]
+    escortshipId: [
+      [[124, 44, 45, 15, 93, 95, 415, 634, 635], 2, true] #旗艦以外に2隻
+    ]
+    required: 2
+    init: 0
+985: #【期間限定任務】特務護衛戦隊、抜錨せよ！ 2026-10-14 実装
+  type: 2
+  fuzzy: true
+  "battle_boss_win_rank_s@12":
+    maparea: [12]
+    # 指定12隻から3隻以上
+    escortshipId: [
+      [[540, 921, 922, 995, 634, 635, 953, 44, 671, 528, 484, 993], 3] #対馬/鵜来/稲木/大泊/迅鯨/長鯨/朝日/村雨/巻波/早波/浜波/樫
     ]
     required: 1
     init: 0
-1049: #【期間限定拡張作戦】戦略兵站物資、拡張輸送！ 2026-06-26 実装
-  # 弾薬2,400・ボーキ2,400の準備は追跡できない（イベントを伴わない）ので出撃分のみ
+  "battle_boss_win_rank_s@15":
+    maparea: [15]
+    # 指定12隻から3隻以上
+    escortshipId: [
+      [[540, 921, 922, 995, 634, 635, 953, 44, 671, 528, 484, 993], 3] #対馬/鵜来/稲木/大泊/迅鯨/長鯨/朝日/村雨/巻波/早波/浜波/樫
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@22":
+    maparea: [22]
+    # 指定12隻から3隻以上
+    escortshipId: [
+      [[540, 921, 922, 995, 634, 635, 953, 44, 671, 528, 484, 993], 3] #対馬/鵜来/稲木/大泊/迅鯨/長鯨/朝日/村雨/巻波/早波/浜波/樫
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@23":
+    maparea: [23]
+    # 指定12隻から3隻以上
+    escortshipId: [
+      [[540, 921, 922, 995, 634, 635, 953, 44, 671, 528, 484, 993], 3] #対馬/鵜来/稲木/大泊/迅鯨/長鯨/朝日/村雨/巻波/早波/浜波/樫
+    ]
+    required: 1
+    init: 0
+986: #【期間限定任務】USS Trick or Treat！ 2026-10-14 実装
+  fuzzy: true
+  "battle_boss_win_rank_s@21":
+    maparea: [21]
+    # 指定7隻から3隻以上
+    escortshipId: [
+      [[1005, 923, 544, 896, 562, 942, 932], 3] #Minneapolis/Tuscaloosa/Gambier Bay/Brooklyn/Johnston/Richard P.Leary/Indiana
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@25":
+    maparea: [25]
+    # 指定7隻から3隻以上
+    escortshipId: [
+      [[1005, 923, 544, 896, 562, 942, 932], 3] #Minneapolis/Tuscaloosa/Gambier Bay/Brooklyn/Johnston/Richard P.Leary/Indiana
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@31":
+    maparea: [31]
+    # 指定7隻から3隻以上
+    escortshipId: [
+      [[1005, 923, 544, 896, 562, 942, 932], 3] #Minneapolis/Tuscaloosa/Gambier Bay/Brooklyn/Johnston/Richard P.Leary/Indiana
+    ]
+    required: 2
+    init: 0
+987: #【期間限定任務】西方南瓜祭り!  Buono! 2026-10-14 実装
   type: 3
   fuzzy: true
-  "battle_boss_win_rank_a@23":
-    maparea: [23]
-    flagshiptype: [22, 17] #補給・揚陸
-    escortshiptype: [
-      [[1, 2], 3] #駆逐+海防 計3
+  "battle_boss_win_rank_s@42":
+    maparea: [42]
+    # 旗艦+随伴2隻を Roma/Luigi Torelli/Maestrale/Grecale/Libeccio/Scirocco/Jervis/伊47/伊201/鈴谷/村雨/朧/曙 から
+    flagshipId: [442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15]
+    escortshipId: [
+      [[442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15], 2, true] #旗艦以外に2隻
     ]
     required: 1
     init: 0
-  "battle_boss_win_rank_a@752":
-    description: "7-5-2 A"
-    maparea: [75]
-    mapcell: [19] #第二ゲージボス Qマス
-    flagshiptype: [22, 17] #補給・揚陸
-    escortshiptype: [
-      [[1, 2], 3] #駆逐+海防 計3
+  "battle_boss_win_rank_s@43":
+    maparea: [43]
+    # 旗艦+随伴2隻を Roma/Luigi Torelli/Maestrale/Grecale/Libeccio/Scirocco/Jervis/伊47/伊201/鈴谷/村雨/朧/曙 から
+    flagshipId: [442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15]
+    escortshipId: [
+      [[442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15], 2, true] #旗艦以外に2隻
     ]
     required: 1
+    init: 0
+  "battle_boss_win_rank_s@44":
+    maparea: [44]
+    # 旗艦+随伴2隻を Roma/Luigi Torelli/Maestrale/Grecale/Libeccio/Scirocco/Jervis/伊47/伊201/鈴谷/村雨/朧/曙 から
+    flagshipId: [442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15]
+    escortshipId: [
+      [[442, 535, 575, 614, 443, 653, 519, 636, 881, 124, 44, 93, 15], 2, true] #旗艦以外に2隻
+    ]
+    required: 1
+    init: 0
+1002: #【限定拡張作戦】南瓜祭り2026、北方作戦！ 2026-10-14 実装
+  fuzzy: true
+  "battle_boss_win_rank_s@32":
+    maparea: [32]
+    # 旗艦+随伴2隻を Minneapolis/Tuscaloosa/Gambier Bay/Johnston/鈴谷/阿武隈/曙/朧/清霜/樫 から
+    flagshipId: [1005, 923, 544, 562, 124, 114, 15, 93, 410, 993]
+    escortshipId: [
+      [[1005, 923, 544, 562, 124, 114, 15, 93, 410, 993], 2, true] #旗艦以外に2隻
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@34":
+    maparea: [34]
+    # 旗艦+随伴2隻を Minneapolis/Tuscaloosa/Gambier Bay/Johnston/鈴谷/阿武隈/曙/朧/清霜/樫 から
+    flagshipId: [1005, 923, 544, 562, 124, 114, 15, 93, 410, 993]
+    escortshipId: [
+      [[1005, 923, 544, 562, 124, 114, 15, 93, 410, 993], 2, true] #旗艦以外に2隻
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@35":
+    maparea: [35]
+    # 旗艦+随伴2隻を Minneapolis/Tuscaloosa/Gambier Bay/Johnston/鈴谷/阿武隈/曙/朧/清霜/樫 から
+    flagshipId: [1005, 923, 544, 562, 124, 114, 15, 93, 410, 993]
+    escortshipId: [
+      [[1005, 923, 544, 562, 124, 114, 15, 93, 410, 993], 2, true] #旗艦以外に2隻
+    ]
+    required: 1
+    init: 0
+1038: #【限定拡張作戦】Halloween、おかわり開始！ 2026-10-14 実装
+  fuzzy: true
+  "battle_boss_win_rank_s@11":
+    maparea: [11]
+    # 旗艦+随伴3隻を 鈴谷/曙/朧/樫/朝日/迅鯨/長鯨/瑞穂/Johnston/Richard P.Leary から
+    flagshipId: [124, 15, 93, 993, 953, 634, 635, 451, 562, 942]
+    escortshipId: [
+      [[124, 15, 93, 993, 953, 634, 635, 451, 562, 942], 3, true] #旗艦以外に3隻
+    ]
+    required: 4
+    init: 0
+  "battle_boss_win_rank_s@13":
+    maparea: [13]
+    # 旗艦+随伴3隻を 鈴谷/曙/朧/樫/朝日/迅鯨/長鯨/瑞穂/Johnston/Richard P.Leary から
+    flagshipId: [124, 15, 93, 993, 953, 634, 635, 451, 562, 942]
+    escortshipId: [
+      [[124, 15, 93, 993, 953, 634, 635, 451, 562, 942], 3, true] #旗艦以外に3隻
+    ]
+    required: 4
+    init: 0
+1039: #【限定拡張作戦】Halloween海上護衛隊出撃！ 2026-10-14 実装
+  type: 2
+  fuzzy: true
+  "battle_boss_win_rank_s@15":
+    maparea: [15]
+    # 指定艦または丁型海防艦から4隻以上 # extend when new 丁型海防艦 ships are added
+    escortshipId: [
+      [[540, 993, 95, 671, 484, 114, 921, 922, 904, 637, 638, 898], 4] #対馬/樫/朝潮/巻波/浜波/阿武隈/鵜来/稲木/能美/丁型(第四号/第三〇号/第二十二号)
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@12":
+    maparea: [12]
+    # 指定艦または丁型海防艦から4隻以上 # extend when new 丁型海防艦 ships are added
+    escortshipId: [
+      [[540, 993, 95, 671, 484, 114, 921, 922, 904, 637, 638, 898], 4] #対馬/樫/朝潮/巻波/浜波/阿武隈/鵜来/稲木/能美/丁型(第四号/第三〇号/第二十二号)
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@14":
+    maparea: [14]
+    # 指定艦または丁型海防艦から4隻以上 # extend when new 丁型海防艦 ships are added
+    escortshipId: [
+      [[540, 993, 95, 671, 484, 114, 921, 922, 904, 637, 638, 898], 4] #対馬/樫/朝潮/巻波/浜波/阿武隈/鵜来/稲木/能美/丁型(第四号/第三〇号/第二十二号)
+    ]
+    required: 1
+    init: 0
+1040: #【限定拡張作戦】Halloween狼隊、夜の襲撃！ 2026-10-14 実装
+  type: 3
+  fuzzy: true
+  "battle_boss_win_rank_s@21":
+    maparea: [21]
+    # 旗艦+随伴2隻を 朧/夕立/野分/早波/熊野丸/迅鯨改/Tuscaloosa/Indiana から（迅鯨は改以降のみ）
+    flagshipId: [93, 45, 415, 528, 943, 639, 923, 932]
+    escortshipId: [
+      [[93, 45, 415, 528, 943, 639, 923, 932], 2, true] #旗艦以外に2隻
+    ]
+    required: 2
+    init: 0
+  "battle_boss_win_rank_s@22":
+    maparea: [22]
+    # 旗艦+随伴2隻を 朧/夕立/野分/早波/熊野丸/迅鯨改/Tuscaloosa/Indiana から（迅鯨は改以降のみ）
+    flagshipId: [93, 45, 415, 528, 943, 639, 923, 932]
+    escortshipId: [
+      [[93, 45, 415, 528, 943, 639, 923, 932], 2, true] #旗艦以外に2隻
+    ]
+    required: 2
+    init: 0
+1119: #【期間限定】Halloweenの南瓜、食べりゅ? 2026-10-14 実装
+  # 九九式艦爆・九七式艦攻 x各10 と家具コイン1,031の準備は追跡できない（イベントを伴わない）ので廃棄分のみ
+  type: 3
+  fuzzy: true
+  "destory_item@小口径主砲":
+    description: "廃棄 - 小口径主砲"
+    slotitemType2: [1] # 1=小口径主砲
+    required: 9
+    init: 0
+  "destory_item@中口径主砲":
+    description: "廃棄 - 中口径主砲"
+    slotitemType2: [2] # 2=中口径主砲
+    required: 9
+    init: 0
+  "destory_item@水上偵察機":
+    description: "廃棄 - 水上偵察機"
+    slotitemType2: [10] # 10=水上偵察機
+    required: 9
     init: 0

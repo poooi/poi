@@ -1296,3 +1296,39 @@
     ]
     required: 2
     init: 0
+1053: #再編二十駆「天霧」「狭霧」南方へ展開せよ！ (B218) 2026-10-14 実装
+  fuzzy: true
+  "battle_boss_win_rank_s@51":
+    maparea: [51]
+    escortshipIdAll: [
+      [[903, 908], 1] #天霧改二/天霧改二丁
+      [[902], 1] #狭霧改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@53":
+    maparea: [53]
+    escortshipIdAll: [
+      [[903, 908], 1] #天霧改二/天霧改二丁
+      [[902], 1] #狭霧改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@54":
+    maparea: [54]
+    escortshipIdAll: [
+      [[903, 908], 1] #天霧改二/天霧改二丁
+      [[902], 1] #狭霧改二
+    ]
+    required: 1
+    init: 0
+  "battle_boss_win_rank_s@56Z":
+    description: "5-6-Z S"
+    maparea: [56]
+    mapcell: [43] #第三ゲージボス Zマス
+    escortshipIdAll: [
+      [[903, 908], 1] #天霧改二/天霧改二丁
+      [[902], 1] #狭霧改二
+    ]
+    required: 1
+    init: 0

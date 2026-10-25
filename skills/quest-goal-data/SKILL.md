@@ -309,10 +309,12 @@ These live in `assets/data/quest_goal/limited-time.cson`. Two rules:
    against the maintenance notes (ととねこ / ぜかましねっと) rather than from absence alone;
    presence in a capture taken _after_ the last maintenance is the reliable positive signal.
 
-Tracked as of the 2026-09-10 maintenance: 382, 384, 385 (秋祭り拡張演習, 384's follow-up — its id
-only showed up in a capture once 384 was cleared), 1048, 1049. Deliberately not tracked from the
-same batch: 199 (composition only), 383 (フランス艦隊、特別演習 — period ended at that
-maintenance). A follow-up quest does not appear in `questlist` until its prerequisite is cleared,
+Tracked as of the 2026-10-14 maintenance: 382 (no end date yet) and the Halloween 2026 batch —
+359, 984–987, 1002, 1038–1040, and 1119 (its scrap half only). Removed then, their period having
+ended 2026-10-14: 384/385 (秋祭り任務群) and 1048/1049 (戦略兵站物資). Not tracked: 199 (composition
+only). For end dates, wikiwiki's `任務/期間限定2` (raw source) carries a 期間 range per campaign
+header and per row; `任務/新着任務` has the newest batch's conditions.
+A follow-up quest does not appear in `questlist` until its prerequisite is cleared,
 so an unknown id is often just a locked chain rather than a missing quest.
 
 The resource-preparation half of a quest (「弾薬 x2,200 を準備」) carries no event and cannot be
