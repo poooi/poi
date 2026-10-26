@@ -254,5 +254,8 @@
   "Resource icons": "资源图标",
   "Original game icons": "游戏原版",
   "Simplified icons": "简洁风格",
-  "HD game-style icons": "原版风格（高清）"
+  "HD game-style icons": "原版风格（高清）",
+  "contributors-loading": "正在加载贡献者...",
+  "contributors-error": "贡献者加载失败。",
+  "contributors-retry": "重试"
 }
