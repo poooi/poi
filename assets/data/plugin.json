@@ -139,6 +139,26 @@
       "ko-KR": "해역 목록을 볼 때 데이터가 갱신됩니다."
     }
   },
+  "poi-plugin-navy-staff": {
+    "name": {
+      "zh-CN": "作战参谋",
+      "zh-TW": "作戰參謀",
+      "ja-JP": "作戦参謀",
+      "en-US": "Navy Staff",
+      "ko-KR": "작전참모"
+    },
+    "version": "v0.0.0",
+    "icon": "ship",
+    "author": "かがみ",
+    "link": "https://github.com/KagamiChan",
+    "description": {
+      "zh-CN": "规划舰娘出击分配",
+      "zh-TW": "規劃艦娘出擊分配",
+      "ja-JP": "艦娘の出撃割り当てを計画する",
+      "en-US": "Plan sortie assignments for your ship girls",
+      "ko-KR": "함선의 출격 배정을 계획합니다"
+    }
+  },
   "poi-plugin-new-window": {
     "name": {
       "zh-CN": "一心二用",
