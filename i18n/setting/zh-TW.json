@@ -254,5 +254,8 @@
   "Resource icons": "資源圖示",
   "Original game icons": "遊戲原版",
   "Simplified icons": "簡潔風格",
-  "HD game-style icons": "原版風格（高清）"
+  "HD game-style icons": "原版風格（高清）",
+  "contributors-loading": "正在載入貢獻者...",
+  "contributors-error": "載入貢獻者失敗。",
+  "contributors-retry": "重試"
 }

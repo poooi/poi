@@ -1,0 +1,69 @@
+{
+  "version": "fixture-version",
+  "schemaVersion": 1,
+  "cellSize": 96,
+  "displaySize": 48,
+  "pixelRatio": 2,
+  "sheets": [
+    {
+      "url": "avatars-0.9f8e7d6c5b4a3210.webp",
+      "width": 1536,
+      "height": 1056
+    },
+    {
+      "url": "avatars-1.0123456789abcdef.webp",
+      "width": 960,
+      "height": 480
+    }
+  ],
+  "avatars": {
+    "github:fixture-alpha": {
+      "sheet": 0,
+      "x": 0,
+      "y": 0,
+      "width": 96,
+      "height": 96
+    },
+    "github:fixture-bravo": {
+      "sheet": 0,
+      "x": 96,
+      "y": 96,
+      "width": 96,
+      "height": 96
+    },
+    "github:fixture-charlie": {
+      "sheet": 1,
+      "x": 192,
+      "y": 0,
+      "width": 96,
+      "height": 96
+    }
+  },
+  "contributors": [
+    {
+      "id": "github:fixture-alpha",
+      "login": "fixture-alpha",
+      "name": "fixture-alpha",
+      "profile": "https://example.com/fixture-alpha"
+    },
+    {
+      "id": "github:fixture-bravo",
+      "login": "fixture-bravo",
+      "name": "Fixture Bravo",
+      "profile": "https://example.com/fixture-bravo"
+    },
+    {
+      "id": "github:fixture-charlie",
+      "login": "fixture-charlie",
+      "name": null,
+      "profile": "http://example.com/fixture-charlie"
+    },
+    {
+      "id": "github:fixture-delta",
+      "login": "fixture-delta",
+      "name": null,
+      "profile": "https://example.com/fixture-delta"
+    }
+  ],
+  "supporters": []
+}
