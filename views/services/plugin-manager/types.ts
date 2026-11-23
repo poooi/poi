@@ -1,5 +1,6 @@
 import type { BrowserWindowConstructorOptions } from 'electron'
 import type { BrowserWindow } from 'electron/main'
+import type { InstalledPackageSource } from 'lib/plugin-install-service'
 import type React from 'react'
 
 export function isRecord(v: unknown): v is Record<string, unknown> {
@@ -27,6 +28,8 @@ export interface NpmConfig {
   prefix: string
   enableBetaPluginCheck: boolean
   http_proxy?: string
+  /** Extra environment for npm children, e.g. a custom certificate authority. */
+  env?: Record<string, string>
 }
 
 export interface Plugin {
@@ -52,6 +55,12 @@ export interface Plugin {
   needRollback: boolean
   apiVer?: Record<string, string>
   isOutdated: boolean
+  /** Where the installed tree came from, used to decide update/repair support. */
+  installSource?: InstalledPackageSource
+  /** Exact spec that reinstalls the installed version, when the source is known. */
+  installSourceSpec?: string
+  /** Effective registry recorded at install time. */
+  installRegistry?: string
   displayIcon: React.JSX.Element | null
   displayName: React.ReactNode
   timestamp: number

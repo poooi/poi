@@ -2,7 +2,7 @@ import type { PoiWindowOptions, default as WindowManager } from 'lib/window'
 
 import * as remote from '@electron/remote'
 import { Module } from 'module'
-import { join, basename } from 'path'
+import { join, isAbsolute, normalize, relative } from 'path'
 import { pathToFileURL } from 'url'
 import { extendReducer } from 'views/create-store'
 import { config, ROOT } from 'views/env'
@@ -11,7 +11,6 @@ import { normalizeURL } from 'views/utils/tools'
 
 import type { NpmConfig, Plugin } from './types'
 
-import { repairDep } from './npm-utils'
 import { readPlugin } from './read-plugin'
 import { isRecord } from './types'
 
@@ -165,8 +164,17 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
 }
 
 function clearPluginCache(packagePath: string): void {
+  const root =
+    process.platform === 'win32' ? normalize(packagePath).toLowerCase() : normalize(packagePath)
+  const belongsToPackage = (candidate: string): boolean => {
+    if (!isAbsolute(candidate)) return false
+    const normalized =
+      process.platform === 'win32' ? normalize(candidate).toLowerCase() : normalize(candidate)
+    const rel = relative(root, normalized)
+    return rel !== '' && !rel.startsWith('..') && !isAbsolute(rel)
+  }
   for (const p in require.cache) {
-    if (p.includes(basename(packagePath))) {
+    if (belongsToPackage(p)) {
       delete require.cache[p]
     }
   }
@@ -174,10 +182,27 @@ function clearPluginCache(packagePath: string): void {
   type ModuleWithPathCache = typeof Module & { _pathCache?: Record<string, string | string[]> }
   const pathCache = (Module as ModuleWithPathCache)._pathCache
   for (const p in pathCache) {
-    if (p.includes(basename(packagePath))) {
+    const value = pathCache[p]
+    const values = Array.isArray(value) ? value : [value]
+    if (values.some((v) => typeof v === 'string' && belongsToPackage(v))) {
       delete pathCache[p]
     }
   }
+}
+
+/** Waits for a plugin's own window to actually close before files are swapped. */
+export async function closePluginWindows(plugin: Plugin, timeoutMs = 5000): Promise<void> {
+  const win = plugin.pluginWindow
+  if (!win || win.isDestroyed()) return
+  await new Promise<void>((resolve) => {
+    const done = (): void => {
+      clearTimeout(timer)
+      win.removeListener('closed', done)
+      resolve()
+    }
+    const timer = setTimeout(done, timeoutMs)
+    win.once('closed', done)
+  })
 }
 
 export function unloadPlugin(plugin: Plugin): Plugin {
@@ -196,17 +221,13 @@ export function unloadPlugin(plugin: Plugin): Plugin {
   return plugin
 }
 
-export function notifyFailed(state: Plugin[], npmConfig: NpmConfig): void {
-  const plugins = state.filter((plugin) => plugin.isBroken)
-  const unreadList: string[] = []
-  const reinstallList: string[] = []
-  for (const plugin of plugins) {
-    unreadList.push(plugin.name)
-    if (!plugin.linkedPlugin) reinstallList.push(plugin.packageName)
-  }
+export function notifyFailed(state: Plugin[], _npmConfig: NpmConfig): void {
+  // Only report load failures from the actual enable pass. A broken plugin is
+  // not a reason to silently reinstall it, and network failures are no longer
+  // turned into "repair all".
+  const unreadList = state.filter((plugin) => plugin.isBroken).map((plugin) => plugin.name)
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
     window.toast(content, { type: 'error', title: i18next.t('setting:Plugin error') })
   }
-  repairDep(reinstallList, npmConfig)
 }

@@ -178,7 +178,7 @@ export const PluginItem = ({
                 <Button
                   minimal
                   intent={Intent.PRIMARY}
-                  disabled={status === pluginManager.NEEDUPDATE}
+                  disabled={status === pluginManager.NEEDUPDATE || npmWorking}
                   onClick={status !== pluginManager.BROKEN ? onEnable : onReload}
                 >
                   <FontAwesome name={enableBtnFAname} />
@@ -189,7 +189,7 @@ export const PluginItem = ({
                   minimal
                   intent={Intent.DANGER}
                   onClick={onRemove}
-                  disabled={!plugin.isInstalled}
+                  disabled={!plugin.isInstalled || npmWorking}
                 >
                   <FontAwesome name={removeBtnFAname} />
                 </Button>
@@ -214,7 +214,7 @@ export const PluginItem = ({
             </AnchorButton>
           )}
           {plugin.isOutdated && (
-            <AnchorButton minimal intent={Intent.SUCCESS} onClick={onUpdate}>
+            <AnchorButton minimal intent={Intent.SUCCESS} onClick={onUpdate} disabled={npmWorking}>
               <FontAwesome name="cloud-download" /> {t('Available')} {plugin.latestVersion}
             </AnchorButton>
           )}

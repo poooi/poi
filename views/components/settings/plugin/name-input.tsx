@@ -1,24 +1,8 @@
 import { FormGroup, ControlGroup, InputGroup, Button, Intent } from '@blueprintjs/core'
-import { trim, last } from 'lodash'
-import npa from 'npm-package-arg'
+import { trim } from 'lodash'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-const validate = (packageName: string): boolean => {
-  if (!packageName) return false
-  try {
-    const resolved = npa(packageName)
-    if (
-      !resolved.registry ||
-      !/^poi-plugin-.+$/.test(last(resolved.name?.split('/') ?? []) ?? '')
-    ) {
-      return false
-    }
-  } catch (_) {
-    return false
-  }
-  return true
-}
+import { validateInstallInput } from 'views/services/plugin-manager/package-spec'
 
 interface Props {
   onInstall: (name: string) => void
@@ -30,7 +14,7 @@ export const NameInput = ({ onInstall, status, npmWorking }: Props): React.React
   const { t } = useTranslation('setting')
   const [packageName, setPackageName] = useState('')
 
-  const validPackageName = validate(packageName)
+  const validPackageName = validateInstallInput(packageName)
 
   return (
     <FormGroup label={t('Install directly from npm')}>

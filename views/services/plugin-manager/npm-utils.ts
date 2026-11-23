@@ -1,4 +1,3 @@
-import child_process from 'child_process'
 import crypto from 'crypto'
 import { createReadStream, readJson, lstat, unlink, remove } from 'fs-extra'
 import { glob } from 'glob'
@@ -7,6 +6,8 @@ import { config, ROOT } from 'views/env'
 
 import type { NpmConfig } from './types'
 
+import { runNpmCommand } from '../../../lib/npm-cli'
+import { buildHttpProxyUrl, proxyEnvironment } from './proxy'
 import { isRecord, getString } from './types'
 
 export const NPM_EXEC_PATH = join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
@@ -30,6 +31,8 @@ function calculateShasum(filePath: string): Promise<string> {
   })
 }
 
+// Kept for third-party callers. New installs take their identity from the
+// prepared candidate instead of guessing from npm's private manifest fields.
 export const findInstalledTarball = async (
   pluginRoot: string,
   tarballPath: string,
@@ -64,16 +67,37 @@ export const findInstalledTarball = async (
   return name
 }
 
-const runScriptAsync = (
-  scriptPath: string,
+const runNpmCli = async (
   args: string[],
-  options: child_process.ForkOptions,
-): Promise<void> =>
-  new Promise((resolve) => {
-    const proc = child_process.fork(scriptPath, args, options)
-    proc.on('exit', () => resolve())
-  })
+  cwd: string,
+  extraEnv: Record<string, string> = {},
+): Promise<void> => {
+  const customCertificateAuthority = config.get('poi.network.customCertificateAuthority', '')
+  try {
+    await runNpmCommand({
+      npmCliPath: NPM_EXEC_PATH,
+      args,
+      cwd,
+      env: {
+        ...extraEnv,
+        ...(customCertificateAuthority ? { NODE_EXTRA_CA_CERTS: customCertificateAuthority } : {}),
+      },
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    const detail =
+      error instanceof Error && 'detail' in error && typeof error.detail === 'string'
+        ? error.detail
+        : ''
+    throw new Error(`${message}${detail ? `\n${detail}` : ''}`, { cause: error })
+  }
+}
 
+/**
+ * Generic install into a caller-owned prefix. Kept for the WCTF database
+ * updater and third-party callers (`utils.ts` is a public entry point), so it
+ * must keep supporting non-plugin package names and a separate prefix.
+ */
 export async function installPackage(
   packageName: string,
   version: string | null | undefined,
@@ -81,54 +105,56 @@ export async function installPackage(
 ): Promise<void> {
   if (!packageName) return
   const target = version ? `${packageName}@${version}` : packageName
-  let args = ['install', '--registry', npmConfig.registry]
-  if (npmConfig.http_proxy) {
-    args = [...args, '--proxy', npmConfig.http_proxy]
-  }
-  args = [
-    ...args,
+  const args = ['install']
+  if (npmConfig.registry) args.push('--registry', npmConfig.registry)
+  args.push(
     '--no-progress',
     '--no-prune',
     '--global-style',
     '--ignore-scripts',
     '--legacy-peer-deps',
+    '--no-audit',
+    '--no-fund',
     target,
-  ]
-  await runScriptAsync(NPM_EXEC_PATH, args, { cwd: npmConfig.prefix })
+  )
+  await runNpmCli(args, npmConfig.prefix, proxyEnvironment(npmConfig.http_proxy))
 }
 
 export async function removePackage(target: string, npmConfig: NpmConfig): Promise<void> {
-  const args = ['uninstall', '--no-progress', target]
-  await runScriptAsync(NPM_EXEC_PATH, args, { cwd: npmConfig.prefix })
-  await repairDep([], npmConfig)
+  await runNpmCli(
+    ['uninstall', '--no-progress', target],
+    npmConfig.prefix,
+    proxyEnvironment(npmConfig.http_proxy),
+  )
 }
 
+/**
+ * Reinstalls only explicitly named packages. The previous implementation
+ * scanned and deleted every unrequireable dependency when given an empty list;
+ * that is not a safe repair and is gone.
+ */
 export async function repairDep(brokenList: string[], npmConfig: NpmConfig): Promise<void> {
-  // matches the previous callback form, which swallowed glob errors and yielded an empty list
-  const depList = (
-    await glob(join(npmConfig.prefix, 'node_modules', '*'), GLOB_OPTIONS).catch(() => [])
-  ).filter((p) => !p.includes('poi-plugin'))
-  depList.forEach((p) => {
-    try {
-      require(p)
-    } catch (_) {
-      safePhysicallyRemove(p)
-    }
-  })
-  brokenList.forEach((pluginName) => {
-    installPackage(pluginName, null, npmConfig)
-  })
+  for (const pluginName of brokenList) {
+    await installPackage(pluginName, null, npmConfig)
+  }
 }
 
-export const safePhysicallyRemove = async (packagePath: string): Promise<void> => {
+export interface ExtraRemovalResult {
+  removed: boolean
+  linked: boolean
+}
+
+/** Removes one extra plugin directory; symlinks are unlinked, Git trees are kept. */
+export const removeExtraPackage = async (packagePath: string): Promise<ExtraRemovalResult> => {
   let packageStat
   try {
     packageStat = await lstat(packagePath)
   } catch (_) {
-    return
+    return { removed: false, linked: false }
   }
   if (packageStat.isSymbolicLink()) {
-    return await unlink(packagePath)
+    await unlink(packagePath)
+    return { removed: true, linked: true }
   }
   try {
     const gitStat = await lstat(join(packagePath, '.git'))
@@ -136,11 +162,18 @@ export const safePhysicallyRemove = async (packagePath: string): Promise<void> =
       console.error(
         `${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`,
       )
-      return
+      return { removed: false, linked: false }
     }
   } catch (_) {
-    return await remove(packagePath)
+    // not a Git tree, safe to remove
   }
+  await remove(packagePath)
+  return { removed: true, linked: false }
+}
+
+/** Backwards-compatible void wrapper used by older callers. */
+export const safePhysicallyRemove = async (packagePath: string): Promise<void> => {
+  await removeExtraPackage(packagePath)
 }
 
 export const getNpmConfig = (prefix: string): NpmConfig => {
@@ -152,5 +185,22 @@ export const getNpmConfig = (prefix: string): NpmConfig => {
       ? 'taobao'
       : 'npm'
   const registry = MIRRORS[mirrorName]?.server ?? ''
-  return { registry, prefix, enableBetaPluginCheck }
+
+  let http_proxy: string | undefined
+  if (config.get('proxy.use') === 'http') {
+    http_proxy = buildHttpProxyUrl({
+      host: config.get('proxy.http.host', '127.0.0.1'),
+      port: config.get('proxy.http.port', 8118),
+      requirePassword: config.get('proxy.http.requirePassword', false),
+      username: config.get('proxy.http.username', ''),
+      password: config.get('proxy.http.password', ''),
+    })
+  }
+
+  const customCertificateAuthority = config.get('poi.network.customCertificateAuthority', '')
+  const env = customCertificateAuthority
+    ? { NODE_EXTRA_CA_CERTS: customCertificateAuthority }
+    : undefined
+
+  return { registry, prefix, enableBetaPluginCheck, http_proxy, env }
 }
