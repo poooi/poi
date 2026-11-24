@@ -9,7 +9,7 @@ import { config, ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { normalizeURL } from 'views/utils/tools'
 
-import type { NpmConfig, Plugin } from './types'
+import type { Plugin } from './types'
 
 import { readPlugin } from './read-plugin'
 import { isRecord } from './types'
@@ -204,7 +204,7 @@ export function unloadPlugin(plugin: Plugin): Plugin {
   return plugin
 }
 
-export function notifyFailed(state: Plugin[], _npmConfig?: NpmConfig): void {
+export function notifyFailed(state: Plugin[]): void {
   const plugins = state.filter((plugin) => plugin.isBroken)
   const unreadList = plugins.map((plugin) => plugin.name)
   if (unreadList.length > 0) {

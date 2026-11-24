@@ -48,6 +48,19 @@ const PluginList = styled.div`
   margin-top: 4em;
 `
 
+const describeError = (error: unknown): string =>
+  error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+
+const summarizeFailures = (failures: Array<{ name: string; error: unknown }>): string =>
+  failures
+    .map(({ name, error }) => {
+      const detail = describeError(error)
+      if (!name) return detail
+      return detail ? `${name}: ${detail}` : name
+    })
+    .filter(Boolean)
+    .join('; ')
+
 export const PluginConfig = (): React.ReactElement => {
   const { t } = useTranslation(['setting', 'others'])
 
@@ -76,7 +89,7 @@ export const PluginConfig = (): React.ReactElement => {
 
   const reportFailure = useCallback(
     (names: string[], error?: unknown) => {
-      const detail = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+      const detail = describeError(error)
       const label = names.length > 0 ? names.join(' / ') : t('plugin-install-failed-message')
       window.toast(detail ? `${label}: ${detail}` : label, {
         intent: 'danger',
@@ -96,11 +109,10 @@ export const PluginConfig = (): React.ReactElement => {
     try {
       const result = await pluginManager.gracefulRepair()
       if (result.failed.length > 0) {
-        const summary = result.failed.map((f) => `${f.packageName}: ${f.error}`).join('; ')
-        reportFailure(
-          result.failed.map((f) => f.packageName),
-          new Error(summary),
+        const summary = summarizeFailures(
+          result.failed.map((failed) => ({ name: failed.packageName, error: failed.error })),
         )
+        reportFailure([], new Error(summary))
       }
     } catch (error) {
       reportFailure([], error)
@@ -117,7 +129,7 @@ export const PluginConfig = (): React.ReactElement => {
 
   const showGracefulRepairToast = useCallback(
     (packageName?: string, error?: unknown) => {
-      const detail = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+      const detail = describeError(error)
       const label = packageName ? `${packageName}: ` : ''
       window.toast(`${label}${detail || t('plugin-install-failed-message')}`, {
         action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
@@ -177,7 +189,7 @@ export const PluginConfig = (): React.ReactElement => {
         setNpmWorking(false)
       }
       if (failures.length > 0) {
-        reportFailure(failures.map((f) => f.name).filter(Boolean), failures[0].error)
+        reportFailure([], new Error(summarizeFailures(failures)))
       }
     }
 
@@ -222,10 +234,7 @@ export const PluginConfig = (): React.ReactElement => {
       setNpmWorking(false)
     }
     if (failures.length > 0) {
-      reportFailure(
-        failures.map((f) => f.name),
-        failures[0].error,
-      )
+      reportFailure([], new Error(summarizeFailures(failures)))
     }
   }
 
@@ -254,10 +263,7 @@ export const PluginConfig = (): React.ReactElement => {
       setNpmWorking(false)
     }
     if (failures.length > 0) {
-      reportFailure(
-        failures.map((f) => f.name),
-        failures[0].error,
-      )
+      reportFailure([], new Error(summarizeFailures(failures)))
     }
   }
 

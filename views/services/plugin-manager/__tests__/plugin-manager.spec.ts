@@ -77,6 +77,7 @@ const mockedStage = jest.mocked(utils.stagePluginPackage)
 const mockedUnload = jest.mocked(utils.unloadPlugin)
 const mockedRead = jest.mocked(utils.readPlugin)
 const mockedEnable = jest.mocked(utils.enablePlugin)
+const mockedNotify = jest.mocked(utils.notifyFailed)
 
 const makePlugin = (packageName: string, overrides: Partial<Plugin> = {}): Plugin => ({
   packageData: { name: packageName, version: '1.0.0' },
@@ -150,6 +151,7 @@ beforeEach(async () => {
   mockedUnload.mockReset()
   mockedRead.mockReset()
   mockedEnable.mockReset()
+  mockedNotify.mockReset()
   mockedUnload.mockImplementation((plugin) => plugin)
   mockedEnable.mockImplementation(async (plugin) => plugin)
   mockedRead.mockImplementation(async (pluginPath: string) => {
@@ -377,6 +379,30 @@ describe('PluginManager isolated lifecycle', () => {
 
     await expect(manager.uninstallPlugin(extraPlugin)).resolves.toBeUndefined()
     expect(await fs.pathExists(extraDir)).toBe(false)
+  })
+
+  it('reports startup load failures from the post-enable plugin state', async () => {
+    await fs.ensureDir(path.join(mockPluginNodeModules, 'poi-plugin-broken'))
+    mockedEnable.mockResolvedValue(
+      makePlugin('poi-plugin-broken', {
+        enabled: false,
+        isBroken: true,
+        loadError: 'startup import failed',
+      }),
+    )
+
+    const manager = new PluginManager()
+    await manager.readPlugins()
+
+    expect(mockedNotify).toHaveBeenCalledTimes(1)
+    const notified = mockedNotify.mock.calls[0][0]
+    expect(notified).toHaveLength(1)
+    expect(notified[0]).toMatchObject({
+      packageName: 'poi-plugin-broken',
+      enabled: false,
+      isBroken: true,
+      loadError: 'startup import failed',
+    })
   })
 
   it('discovers scoped and unscoped plugins under both plugin roots', async () => {

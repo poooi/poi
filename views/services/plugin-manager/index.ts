@@ -118,8 +118,7 @@ class PluginManager extends EventEmitter {
     const plugins = await this.readPluginDirectories(PLUGIN_PATH)
     const extraPlugins = await this.readPluginDirectories(PLUGIN_EXTRA_PATH, true)
     const mergedPlugins = await this.enablePlugins(this.mergePlugins(plugins, extraPlugins))
-    const npmConfig = getNpmConfig(PLUGIN_PATH)
-    notifyFailed(plugins, npmConfig)
+    notifyFailed(mergedPlugins)
     dispatch(createPluginInitializeAction(mergedPlugins))
     return mergedPlugins
   }
@@ -282,7 +281,7 @@ class PluginManager extends EventEmitter {
     ).filter((p): p is Plugin => p != null)
     if (isNotif && outdatedList.length > 0) {
       const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t('setting:PluginUpdateMsg')}`
-      window.toast(content, { type: 'info', title: i18next.t('Plugin update') })
+      window.toast(content, { type: 'info', title: i18next.t('setting:Plugin update') })
     }
   }
 
