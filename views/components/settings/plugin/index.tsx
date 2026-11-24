@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux'
 import { styled } from 'styled-components'
 import { config, PLUGIN_PATH } from 'views/env'
 import { toggleModal } from 'views/env-parts/modal'
-import pluginManager from 'views/services/plugin-manager'
+import pluginManager, { type Plugin } from 'views/services/plugin-manager'
 import { bundlePluginMetaToPlugin } from 'views/services/plugin-manager/utils'
 
 import { Section } from '../components/section'
@@ -74,46 +74,40 @@ export const PluginConfig = (): React.ReactElement => {
     prevManuallyInstallStatus.current = manuallyInstallStatus
   }, [manuallyInstallStatus])
 
-  const handleUpdate = useCallback(async (index: number) => {
-    setNpmWorking(true)
-    const installedPlugins = pluginManager.getInstalledPlugins()
-    const plugin = installedPlugins[index]
-    if (!plugin || plugin.linkedPlugin || plugin.isExtra) {
-      setNpmWorking(false)
-      return
-    }
-    try {
-      await pluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setNpmWorking(false)
-    }
-  }, [])
+  const reportFailure = useCallback(
+    (names: string[], error?: unknown) => {
+      const detail = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+      const label = names.length > 0 ? names.join(' / ') : t('plugin-install-failed-message')
+      window.toast(detail ? `${label}: ${detail}` : label, {
+        intent: 'danger',
+        title: t('setting:Plugin error'),
+      })
+    },
+    [t],
+  )
 
-  const handleInstall = useCallback(async (name: string) => {
-    setInstallingPluginNames((prev) => [...prev, name])
-    setNpmWorking(true)
-    try {
-      await pluginManager.installPlugin(name)
-      setInstallingPluginNames((prev) => prev.filter((n) => n !== name))
-      setNpmWorking(false)
-    } catch (error) {
-      setNpmWorking(false)
-      throw error
-    }
+  const updatePlugin = useCallback(async (plugin: Plugin) => {
+    if (plugin.linkedPlugin || plugin.isExtra) return
+    await pluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
   }, [])
 
   const gracefulRepair = useCallback(async () => {
     setNpmWorking(true)
     try {
-      await pluginManager.gracefulRepair()
-    } catch (e) {
-      console.error(e)
+      const result = await pluginManager.gracefulRepair()
+      if (result.failed.length > 0) {
+        const summary = result.failed.map((f) => `${f.packageName}: ${f.error}`).join('; ')
+        reportFailure(
+          result.failed.map((f) => f.packageName),
+          new Error(summary),
+        )
+      }
+    } catch (error) {
+      reportFailure([], error)
     } finally {
       setNpmWorking(false)
     }
-  }, [])
+  }, [reportFailure])
 
   const handleGracefulRepair = useCallback(() => {
     toggleModal(t('Repair plugins'), t('repair-plugins-confirmation'), [
@@ -121,41 +115,74 @@ export const PluginConfig = (): React.ReactElement => {
     ])
   }, [t, gracefulRepair])
 
-  const showGracefulRepairToast = useCallback(() => {
-    window.toast(t('plugin-install-failed-message'), {
-      action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
-      intent: 'danger',
-    })
-  }, [t]) // eslint-disable-line react-hooks/exhaustive-deps
+  const showGracefulRepairToast = useCallback(
+    (packageName?: string, error?: unknown) => {
+      const detail = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+      const label = packageName ? `${packageName}: ` : ''
+      window.toast(`${label}${detail || t('plugin-install-failed-message')}`, {
+        action: { onClick: handleGracefulRepair, text: t('Repair plugins') },
+        intent: 'danger',
+      })
+    },
+    [t, handleGracefulRepair],
+  )
+
+  const handleUpdate = useCallback(
+    async (plugin: Plugin) => {
+      setNpmWorking(true)
+      try {
+        await updatePlugin(plugin)
+      } catch {
+        // The plugin manager's 'installfailed' listener reports this once.
+      } finally {
+        setNpmWorking(false)
+      }
+    },
+    [updatePlugin],
+  )
+
+  const handleInstall = useCallback(async (name: string) => {
+    setInstallingPluginNames((prev) => [...prev, name])
+    try {
+      await pluginManager.installPlugin(name)
+    } finally {
+      setInstallingPluginNames((prev) => prev.filter((n) => n !== name))
+    }
+  }, [])
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCheckingUpdate(true)
-    setNpmWorking(true)
-
     const isNotif = config.get('packageManager.enablePluginCheck', true) && !autoUpdate
 
     const handleAutoUpdate = async () => {
-      await pluginManager.getOutdatedPlugins(isNotif)
-      if (autoUpdate) {
-        const installedPlugins = pluginManager.getInstalledPlugins()
-        for (let i = 0; i < installedPlugins.length; i++) {
-          if (installedPlugins[i].isOutdated) {
+      const failures: Array<{ name: string; error: unknown }> = []
+      setCheckingUpdate(true)
+      setNpmWorking(true)
+      try {
+        await pluginManager.getOutdatedPlugins(isNotif)
+        if (autoUpdate) {
+          const installedPlugins = pluginManager.getInstalledPlugins()
+          for (const plugin of installedPlugins) {
+            if (!plugin.isOutdated) continue
             try {
-              await handleUpdate(i)
+              await updatePlugin(plugin)
             } catch (error) {
-              console.error(error)
+              failures.push({ name: plugin.packageName, error })
             }
           }
         }
+      } catch (error) {
+        failures.push({ name: '', error })
+      } finally {
+        setCheckingUpdate(false)
+        setNpmWorking(false)
+      }
+      if (failures.length > 0) {
+        reportFailure(failures.map((f) => f.name).filter(Boolean), failures[0].error)
       }
     }
 
-    pluginManager.once('installfailed', showGracefulRepairToast)
+    pluginManager.on('installfailed', showGracefulRepairToast)
     pluginManager.once('initialized', handleAutoUpdate)
-
-    setCheckingUpdate(false)
-    setNpmWorking(false)
 
     return () => {
       pluginManager.off('installfailed', showGracefulRepairToast)
@@ -167,24 +194,39 @@ export const PluginConfig = (): React.ReactElement => {
   const checkUpdate = async () => {
     setCheckingUpdate(true)
     setNpmWorking(true)
-    await pluginManager.getOutdatedPlugins()
-    setCheckingUpdate(false)
-    setNpmWorking(false)
+    try {
+      await pluginManager.getOutdatedPlugins()
+    } catch (error) {
+      reportFailure([], error)
+    } finally {
+      setCheckingUpdate(false)
+      setNpmWorking(false)
+    }
   }
 
   const doInstallAll = async () => {
     setInstallingAll(true)
     setNpmWorking(true)
+    const failures: Array<{ name: string; error: unknown }> = []
     const settings = pluginManager.getUninstalledPluginSettings()
-    for (const name of Object.keys(settings)) {
-      try {
-        await handleInstall(name)
-      } catch (e) {
-        console.error(e)
+    try {
+      for (const name of Object.keys(settings)) {
+        try {
+          await handleInstall(name)
+        } catch (error) {
+          failures.push({ name, error })
+        }
       }
+    } finally {
+      setInstallingAll(false)
+      setNpmWorking(false)
     }
-    setInstallingAll(false)
-    setNpmWorking(false)
+    if (failures.length > 0) {
+      reportFailure(
+        failures.map((f) => f.name),
+        failures[0].error,
+      )
+    }
   }
 
   const handleInstallAll = () => {
@@ -196,29 +238,56 @@ export const PluginConfig = (): React.ReactElement => {
   const handleUpdateAll = async () => {
     setUpdatingAll(true)
     setNpmWorking(true)
-    const installedPlugins = pluginManager.getInstalledPlugins()
-    for (let i = 0; i < installedPlugins.length; i++) {
-      if (installedPlugins[i].isOutdated) {
+    const failures: Array<{ name: string; error: unknown }> = []
+    try {
+      const installedPlugins = pluginManager.getInstalledPlugins()
+      for (const plugin of installedPlugins) {
+        if (!plugin.isOutdated) continue
         try {
-          await handleUpdate(i)
+          await updatePlugin(plugin)
         } catch (error) {
-          console.error(error)
+          failures.push({ name: plugin.packageName, error })
         }
       }
+    } finally {
+      setUpdatingAll(false)
+      setNpmWorking(false)
     }
-    setUpdatingAll(false)
-    setNpmWorking(false)
+    if (failures.length > 0) {
+      reportFailure(
+        failures.map((f) => f.name),
+        failures[0].error,
+      )
+    }
   }
 
   const handleInstallByName = async (name: string) => {
     setManuallyInstallStatus(1)
+    setNpmWorking(true)
     try {
       await handleInstall(name)
       setManuallyInstallStatus(2)
-    } catch (_) {
+    } catch {
       setManuallyInstallStatus(3)
+      // The Callout and the plugin manager's 'installfailed' listener report this.
+    } finally {
+      setNpmWorking(false)
     }
   }
+
+  const handleRemove = useCallback(
+    async (plugin: Plugin) => {
+      setNpmWorking(true)
+      try {
+        await pluginManager.uninstallPlugin(plugin)
+      } catch (error) {
+        reportFailure([plugin.packageName], error)
+      } finally {
+        setNpmWorking(false)
+      }
+    },
+    [reportFailure],
+  )
 
   const uninstalledPluginSettings = pluginManager.getUninstalledPluginSettings()
 
@@ -314,11 +383,14 @@ export const PluginConfig = (): React.ReactElement => {
       </Section>
 
       <PluginList className="plugin-list">
-        {plugins.map((plugin, index) => (
+        {plugins.map((plugin) => (
           <PluginItem
             key={plugin.id}
             plugin={plugin}
-            onUpdate={() => handleUpdate(index)}
+            npmWorking={npmWorking}
+            onUpdate={() => {
+              void handleUpdate(plugin)
+            }}
             onEnable={async () => {
               switch (pluginManager.getStatusOfPlugin(plugin)) {
                 case pluginManager.DISABLED:
@@ -329,17 +401,8 @@ export const PluginConfig = (): React.ReactElement => {
                   break
               }
             }}
-            onRemove={async () => {
-              setNpmWorking(true)
-              try {
-                const installedPlugins = pluginManager.getInstalledPlugins()
-                const p = installedPlugins[index]
-                await pluginManager.uninstallPlugin(p)
-              } catch (error) {
-                console.error(error)
-              } finally {
-                setNpmWorking(false)
-              }
+            onRemove={() => {
+              void handleRemove(plugin)
             }}
             onReload={() => pluginManager.reloadPlugin(plugin)}
           />
@@ -354,7 +417,9 @@ export const PluginConfig = (): React.ReactElement => {
               plugin={plugin}
               npmWorking={npmWorking}
               installing={installingPluginNames.includes(name)}
-              onInstall={() => handleInstall(name)}
+              onInstall={() => {
+                void handleInstallByName(name)
+              }}
             />
           )
         })}

@@ -109,7 +109,7 @@
   "Notify when expedition returns in": "원정 알림 시간 조정",
   "Notify when morale is greater than": "피로도가 해당 수치 이상일 때 알림",
   "Plugins are installed successfully": "설치가 완료되었습니다",
-  "InstallFailedMsg": "설치에 실패했습니다. 선택한 파일이 플러그인 패키지가 아닐 수 있습니다.",
+  "InstallFailedMsg": "설치에 실패했습니다. 플러그인 이름과 네트워크 연결을 확인한 후 다시 시도하세요.",
   "Install complete": "설치 완료",
   "Install failed": "설치 실패",
   "Install": "설치",

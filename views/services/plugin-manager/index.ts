@@ -1,11 +1,12 @@
 import * as remote from '@electron/remote'
 import EventEmitter from 'events'
-import { access } from 'fs'
-import { readJsonSync, accessSync, ensureDir, writeJSON } from 'fs-extra'
+import { existsSync } from 'fs'
+import { ensureDir, move, readJsonSync } from 'fs-extra'
+import { rmdir } from 'fs/promises'
 import { glob } from 'glob'
-import { fromPairs, map } from 'lodash'
+import { map } from 'lodash'
 import fetch from 'node-fetch'
-import { join } from 'path'
+import { basename, dirname, join } from 'path'
 import semver from 'semver'
 import { dispatch, getStore } from 'views/create-store'
 import { config, PLUGIN_EXTRA_PATH, PLUGIN_PATH, ROOT } from 'views/env'
@@ -21,16 +22,15 @@ import { sortPlugins } from 'views/redux/plugins'
 import type { BundlePluginMeta, Plugin, NpmConfig } from './utils'
 
 import {
-  installPackage,
-  removePackage,
   readPlugin,
   enablePlugin,
   disablePlugin,
   unloadPlugin,
   notifyFailed,
   safePhysicallyRemove,
-  findInstalledTarball,
   getNpmConfig,
+  resolveRegistryPluginSpec,
+  stagePluginPackage,
   isRecord,
 } from './utils'
 
@@ -42,8 +42,10 @@ const defaultFetchOption = {
   },
 }
 
-const PLUGIN_NAME_WILDCARD = 'poi-plugin-*'
+const PLUGIN_NAME_PATTERNS = ['poi-plugin-*', '@*/poi-plugin-*']
 const PACKAGE_JSON_PATH = join(PLUGIN_PATH, 'package.json')
+const PACKAGE_LOCK_PATH = join(PLUGIN_PATH, 'package-lock.json')
+const PLUGIN_NODE_MODULES_PATH = join(PLUGIN_PATH, 'node_modules')
 const getPluginPath = (packageName: string) => join(PLUGIN_PATH, 'node_modules', packageName)
 const getPluginExtraPath = (packageName: string) =>
   join(PLUGIN_EXTRA_PATH, 'node_modules', packageName)
@@ -52,21 +54,48 @@ const BUNDLED_PLUGINS: Record<string, BundlePluginMeta> = readJsonSync(PLUGIN_DA
 
 const getPlugins = () => getStore('plugins')
 
+export interface PluginRepairResult {
+  succeeded: string[]
+  failed: Array<{ packageName: string; error: string }>
+}
+
 class PluginManager extends EventEmitter {
   readonly VALID = 0
   readonly DISABLED = 1
   readonly NEEDUPDATE = 2
   readonly BROKEN = 3
 
+  private operationQueue: Promise<unknown> = Promise.resolve()
+
   async initialize(): Promise<void> {
     await this.getPlugins()
     this.emit('initialized')
+  }
+
+  private enqueue<T>(operation: () => Promise<T>): Promise<T> {
+    const next = this.operationQueue.then(operation, operation)
+    // Keep the queue resolved even when an operation rejects, so one failed
+    // install cannot poison every later plugin-management action.
+    this.operationQueue = next.then(
+      () => undefined,
+      () => undefined,
+    )
+    return next
   }
 
   private async readFromWildcardPath(wildcardPath: string, isExtra = false): Promise<Plugin[]> {
     // matches the previous callback form, which swallowed glob errors and yielded an empty list
     const pluginPaths = await glob(wildcardPath, { windowsPathsNoEscape: true }).catch(() => [])
     return sortPlugins(await Promise.all(pluginPaths.map((p) => readPlugin(p, isExtra))))
+  }
+
+  private async readPluginDirectories(basePath: string, isExtra = false): Promise<Plugin[]> {
+    const paths = await Promise.all(
+      PLUGIN_NAME_PATTERNS.map((pattern) =>
+        this.readFromWildcardPath(join(basePath, 'node_modules', pattern), isExtra),
+      ),
+    )
+    return sortPlugins(paths.flat())
   }
 
   private mergePlugins(plugins: Plugin[], extraPlugins: Plugin[]): Plugin[] {
@@ -85,29 +114,9 @@ class PluginManager extends EventEmitter {
     )
   }
 
-  private async ensurePackageJson(plugins: Plugin[]): Promise<void> {
-    try {
-      await new Promise<void>((res, rej) => access(PACKAGE_JSON_PATH, (e) => (e ? rej(e) : res())))
-    } catch (_) {
-      const packageJsonContent = {
-        dependencies: fromPairs(
-          plugins
-            .slice()
-            .sort((a, b) => (a.packageName < b.packageName ? -1 : 1))
-            .map((plugin) => [plugin.packageName, '^' + plugin.version]),
-        ),
-      }
-      await writeJSON(PACKAGE_JSON_PATH, packageJsonContent, { spaces: 2 })
-    }
-  }
-
   async readPlugins(): Promise<Plugin[]> {
-    const plugins = await this.readFromWildcardPath(getPluginPath(PLUGIN_NAME_WILDCARD))
-    await this.ensurePackageJson(plugins)
-    const extraPlugins = await this.readFromWildcardPath(
-      getPluginExtraPath(PLUGIN_NAME_WILDCARD),
-      true,
-    )
+    const plugins = await this.readPluginDirectories(PLUGIN_PATH)
+    const extraPlugins = await this.readPluginDirectories(PLUGIN_EXTRA_PATH, true)
     const mergedPlugins = await this.enablePlugins(this.mergePlugins(plugins, extraPlugins))
     const npmConfig = getNpmConfig(PLUGIN_PATH)
     notifyFailed(plugins, npmConfig)
@@ -273,109 +282,292 @@ class PluginManager extends EventEmitter {
     ).filter((p): p is Plugin => p != null)
     if (isNotif && outdatedList.length > 0) {
       const content = `${map(outdatedList, 'name').join(' / ')} ${i18next.t('setting:PluginUpdateMsg')}`
-      window.toast(content, { type: 'info', title: i18next.t('setting:Plugin update') })
+      window.toast(content, { type: 'info', title: i18next.t('Plugin update') })
+    }
+  }
+
+  private updatePluginStatus(
+    packageName: string,
+    path: 'isUpdating' | 'isUninstalling',
+    status: boolean,
+  ): void {
+    dispatch(
+      createPluginChangeStatusAction({
+        packageName,
+        option: [{ path, status }],
+      }),
+    )
+  }
+
+  private reportInstallFailure(packageSource: string, error: unknown): void {
+    console.error(error instanceof Error ? error.stack : error)
+    this.emit('installfailed', packageSource, error)
+  }
+
+  private markPluginUnloaded(plugin: Plugin, isUpdating = false): void {
+    try {
+      unloadPlugin(plugin)
+    } catch (error) {
+      console.error(error instanceof Error ? error.stack : error)
+    }
+    dispatch(
+      createPluginAddAction({
+        ...plugin,
+        enabled: false,
+        ...(isUpdating ? { isUpdating: true } : {}),
+      }),
+    )
+  }
+
+  private buildBrokenPlugin(packageName: string, previous?: Plugin, isExtra = false): Plugin {
+    const pluginPath = isExtra ? getPluginExtraPath(packageName) : getPluginPath(packageName)
+    const base: Plugin = previous ?? {
+      packageData: { name: packageName },
+      packageName,
+      name: packageName,
+      id: packageName,
+      author: 'unknown',
+      link: 'https://github.com/poooi',
+      description: '',
+      pluginPath,
+      icon: 'fa/th-large',
+      version: '0.0.0',
+      latestVersion: '0.0.0',
+      earliestCompatibleMain: '0.0.0',
+      lastApiVer: '0.0.0',
+      priority: 10000,
+      enabled: false,
+      isExtra,
+      isInstalled: true,
+      isUpdating: false,
+      needRollback: false,
+      isOutdated: false,
+      displayIcon: null,
+      displayName: packageName,
+      timestamp: Date.now(),
+      isRead: false,
+    }
+    return {
+      ...base,
+      pluginPath,
+      enabled: false,
+      isInstalled: true,
+      isBroken: true,
+      isUpdating: false,
+      isUninstalling: false,
+    }
+  }
+
+  /**
+   * Make Redux reflect the actual directory left behind by a failed replace or
+   * removal. Never leave a missing plugin looking installed, or a leftover
+   * directory looking enabled.
+   */
+  private async syncAfterFailure(
+    packageName: string,
+    previous?: Plugin,
+    isExtra = false,
+    loadError?: string,
+  ): Promise<void> {
+    const targetPath = isExtra ? getPluginExtraPath(packageName) : getPluginPath(packageName)
+    if (!existsSync(targetPath)) {
+      if (previous) dispatch(createPluginRemoveAction(previous))
+      return
+    }
+
+    let base = previous
+    if (!base) {
+      try {
+        base = await readPlugin(targetPath, isExtra)
+      } catch (_) {
+        base = undefined
+      }
+    }
+    const broken = this.buildBrokenPlugin(packageName, base, isExtra)
+    dispatch(
+      createPluginAddAction({
+        ...broken,
+        ...(loadError ? { loadError } : {}),
+      }),
+    )
+  }
+
+  private async removeEmptyScopeDirectory(targetPath: string): Promise<void> {
+    const parent = dirname(targetPath)
+    if (!basename(parent).startsWith('@')) return
+    await rmdir(parent).catch(() => undefined)
+  }
+
+  private async installPluginInternal(packageSource: string, version?: string): Promise<void> {
+    let resolved
+    try {
+      resolved = resolveRegistryPluginSpec(packageSource, version)
+    } catch (error) {
+      this.reportInstallFailure(packageSource, error)
+      throw error
+    }
+
+    const { packageName, spec } = resolved
+    const nowPlugin = getPlugins().find((plugin) => plugin.packageName === packageName)
+    if (nowPlugin) {
+      this.updatePluginStatus(packageName, 'isUpdating', true)
+    }
+
+    let staged
+    try {
+      const npmConfig = getNpmConfig(PLUGIN_PATH)
+      staged = await stagePluginPackage(packageName, spec, npmConfig)
+    } catch (error) {
+      if (nowPlugin) {
+        this.updatePluginStatus(packageName, 'isUpdating', false)
+      }
+      this.reportInstallFailure(packageName, error)
+      throw error
+    }
+
+    try {
+      if (nowPlugin) {
+        // Unload before touching the directory on disk.
+        this.markPluginUnloaded(nowPlugin, true)
+      }
+
+      const targetPath = getPluginPath(packageName)
+      try {
+        await safePhysicallyRemove(targetPath)
+        await ensureDir(dirname(targetPath))
+        await move(staged.pluginPath, targetPath)
+      } catch (error) {
+        await this.syncAfterFailure(packageName, nowPlugin)
+        this.reportInstallFailure(packageName, error)
+        throw error
+      }
+
+      try {
+        let plugin = await readPlugin(targetPath)
+        if (plugin.enabled && !window.isSafeMode) {
+          plugin = await enablePlugin(plugin, false)
+        }
+        if (plugin.isBroken) {
+          throw new Error(
+            `Plugin ${packageName} failed to load${plugin.loadError ? `: ${plugin.loadError}` : '.'}`,
+          )
+        }
+        dispatch(createPluginAddAction({ ...plugin, isUpdating: false }))
+      } catch (error) {
+        const loadError = error instanceof Error ? error.message : String(error)
+        await this.syncAfterFailure(packageName, undefined, false, loadError)
+        this.reportInstallFailure(packageName, error)
+        throw error
+      }
+    } finally {
+      await staged.cleanup()
     }
   }
 
   async installPlugin(packageSource: string, version?: string): Promise<void> {
-    if (packageSource.includes('@')) {
-      const parts = packageSource.split('@')
-      packageSource = parts[0]
-      version = parts[1]
-    }
+    return this.enqueue(() => this.installPluginInternal(packageSource, version))
+  }
 
-    let installingByPluginName: boolean
+  private async uninstallPluginInternal(plugin: Plugin): Promise<void> {
+    // A queued removal may have been requested with an older Plugin object;
+    // unload the instance that is actually current in Redux.
+    const currentPlugin =
+      getPlugins().find((stored) => stored.packageName === plugin.packageName) ?? plugin
+    this.updatePluginStatus(currentPlugin.packageName, 'isUninstalling', true)
     try {
-      accessSync(packageSource)
-      installingByPluginName = false
-    } catch (_) {
-      installingByPluginName = true
-    }
-
-    if (installingByPluginName) {
-      dispatch(
-        createPluginChangeStatusAction({
-          packageName: packageSource,
-          option: [{ path: 'isUpdating', status: true }],
-        }),
-      )
-    }
-
-    try {
-      const npmConfig = getNpmConfig(PLUGIN_PATH)
-      await installPackage(packageSource, version, npmConfig)
-    } catch (e) {
-      this.emit('installfailed', packageSource)
-      console.error(e instanceof Error ? e.stack : e)
-      throw e
-    }
-
-    const packageName = installingByPluginName
-      ? packageSource
-      : await findInstalledTarball(join(PLUGIN_PATH, 'node_modules'), packageSource)
-
-    const nowPlugin = getPlugins().find((plugin) => plugin.packageName === packageName)
-    if (nowPlugin) {
-      try {
-        unloadPlugin(nowPlugin)
-      } catch (error) {
-        console.error(error instanceof Error ? error.stack : error)
-      }
-    }
-
-    try {
-      let plugin = await readPlugin(getPluginPath(packageName))
-      if (plugin.enabled) {
-        plugin = await enablePlugin(plugin, false)
-      }
-      dispatch(createPluginAddAction(plugin))
+      unloadPlugin(currentPlugin)
     } catch (error) {
-      if (nowPlugin) {
-        dispatch(
-          createPluginChangeStatusAction({
-            packageName: nowPlugin.packageName,
-            option: [{ path: 'isUpdating', status: false }],
-          }),
-        )
-      }
       console.error(error instanceof Error ? error.stack : error)
+    }
+    dispatch(createPluginAddAction({ ...currentPlugin, enabled: false, isUninstalling: true }))
+
+    const targetPath = currentPlugin.isExtra
+      ? getPluginExtraPath(currentPlugin.packageName)
+      : getPluginPath(currentPlugin.packageName)
+    try {
+      await safePhysicallyRemove(targetPath)
+      if (existsSync(targetPath)) {
+        throw new Error(`Failed to remove plugin directory ${targetPath}.`)
+      }
+    } catch (error) {
+      await this.syncAfterFailure(currentPlugin.packageName, currentPlugin, currentPlugin.isExtra)
       throw error
     }
+
+    dispatch(createPluginRemoveAction(currentPlugin))
+    await this.removeEmptyScopeDirectory(targetPath)
   }
 
   async uninstallPlugin(plugin: Plugin): Promise<void> {
-    try {
+    return this.enqueue(() => this.uninstallPluginInternal(plugin))
+  }
+
+  private syncAfterRepairFailure(plugins: Plugin[]): void {
+    for (const plugin of plugins) {
+      if (!existsSync(getPluginPath(plugin.packageName))) {
+        dispatch(createPluginRemoveAction(plugin))
+        continue
+      }
       dispatch(
-        createPluginChangeStatusAction({
-          packageName: plugin.packageName,
-          option: [{ path: 'isUninstalling', status: true }],
+        createPluginAddAction({
+          ...plugin,
+          enabled: false,
+          isUpdating: false,
+          isUninstalling: false,
         }),
       )
-      this.removePlugin(plugin)
-    } catch (error) {
-      console.error(error instanceof Error ? error.stack : error)
-    }
-    try {
-      if (!plugin.isExtra) {
-        const npmConfig = getNpmConfig(PLUGIN_PATH)
-        await removePackage(plugin.packageName, npmConfig)
-        await safePhysicallyRemove(getPluginPath(plugin.packageName))
-      } else {
-        await safePhysicallyRemove(getPluginExtraPath(plugin.packageName))
-      }
-    } catch (error) {
-      console.error(error instanceof Error ? error.stack : error)
     }
   }
 
-  async gracefulRepair(repair = true): Promise<void> {
-    const plugins = this.getInstalledPlugins()
-    const modulePath = join(PLUGIN_PATH, 'node_modules')
-    await safePhysicallyRemove(modulePath)
-    await ensureDir(modulePath)
-    await Promise.all(plugins.map((plugin) => this.uninstallPlugin(plugin)))
-    if (!repair) return
-    await Promise.all(plugins.map((plugin) => this.installPlugin(plugin.packageName)))
+  private async gracefulRepairInternal(repair: boolean): Promise<PluginRepairResult> {
+    const plugins = this.getInstalledPlugins().filter((plugin) => !plugin.isExtra)
+
+    // Unload everything first, so no stale running instance survives the wipe.
+    for (const plugin of plugins) {
+      try {
+        unloadPlugin(plugin)
+      } catch (error) {
+        console.error(error instanceof Error ? error.stack : error)
+      }
+      dispatch(createPluginAddAction({ ...plugin, enabled: false }))
+    }
+
+    try {
+      await safePhysicallyRemove(PLUGIN_NODE_MODULES_PATH)
+      await safePhysicallyRemove(PACKAGE_JSON_PATH)
+      await safePhysicallyRemove(PACKAGE_LOCK_PATH)
+      if (existsSync(PLUGIN_NODE_MODULES_PATH)) {
+        throw new Error(`Failed to clear plugin directory ${PLUGIN_NODE_MODULES_PATH}.`)
+      }
+      await ensureDir(PLUGIN_NODE_MODULES_PATH)
+    } catch (error) {
+      this.syncAfterRepairFailure(plugins)
+      throw error
+    }
+
+    for (const plugin of plugins) {
+      dispatch(createPluginRemoveAction(plugin))
+    }
+    if (!repair) return { succeeded: [], failed: [] }
+
+    const result: PluginRepairResult = { succeeded: [], failed: [] }
+    for (const plugin of plugins) {
+      if (plugin.linkedPlugin) continue
+      try {
+        await this.installPluginInternal(plugin.packageName)
+        result.succeeded.push(plugin.packageName)
+      } catch (error) {
+        result.failed.push({
+          packageName: plugin.packageName,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+    }
+    return result
+  }
+
+  async gracefulRepair(repair = true): Promise<PluginRepairResult> {
+    return this.enqueue(() => this.gracefulRepairInternal(repair))
   }
 
   async enablePlugin(plugin: Plugin): Promise<void> {
@@ -435,5 +627,6 @@ window.gracefulResetPlugin = () => pluginManager.gracefulRepair(false)
 
 remote.getCurrentWebContents().once('dom-ready', () => pluginManager.initialize())
 
+export { PluginManager }
 export default pluginManager
 export { isRecord, type NpmConfig, type Plugin }

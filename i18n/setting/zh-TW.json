@@ -109,7 +109,7 @@
   "Notify when expedition returns in": "遠征通知提前時間",
   "Notify when morale is greater than": "疲勞度回覆至此時通知",
   "Plugins are installed successfully": "安裝完成",
-  "InstallFailedMsg": "安裝失敗。是否選擇了正確的安裝套件？",
+  "InstallFailedMsg": "安裝失敗。請檢查套件名稱與網路連線後重試。",
   "Install complete": "安裝完成",
   "Install failed": "安裝失敗",
   "Install": "安裝",

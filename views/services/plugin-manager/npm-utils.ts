@@ -1,67 +1,83 @@
 import child_process from 'child_process'
-import crypto from 'crypto'
-import { createReadStream, readJson, lstat, unlink, remove } from 'fs-extra'
-import { glob } from 'glob'
-import { join, basename } from 'path'
+import { lstat, pathExists, remove, unlink, ensureDir, writeJSON } from 'fs-extra'
+import { mkdtemp } from 'fs/promises'
+import npa from 'npm-package-arg'
+import { join } from 'path'
 import { config, ROOT } from 'views/env'
 
 import type { NpmConfig } from './types'
-
-import { isRecord, getString } from './types'
 
 export const NPM_EXEC_PATH = join(ROOT, 'node_modules', 'npm', 'bin', 'npm-cli.js')
 const MIRROR_JSON_PATH = join(ROOT, 'assets', 'data', 'mirror.json')
 const MIRRORS: Record<string, { server: string }> = require(MIRROR_JSON_PATH)
 
-// glob v9+ treats `\` as an escape character; ROOT/join produce backslash paths on Windows.
-const GLOB_OPTIONS = { windowsPathsNoEscape: true } as const
+const STAGING_DIRECTORY = '.staging'
 
-function calculateShasum(filePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    try {
-      const hash = crypto.createHash('sha1')
-      const stream = createReadStream(filePath)
-      stream.on('data', (data) => hash.update(data.toString(), 'utf8'))
-      stream.on('end', () => resolve(hash.digest('hex')))
-      stream.on('error', (e) => reject(e))
-    } catch (e) {
-      reject(e)
-    }
-  })
+export interface RegistryPluginSpec {
+  packageName: string
+  spec: string
 }
 
-export const findInstalledTarball = async (
-  pluginRoot: string,
-  tarballPath: string,
-): Promise<string> => {
-  const filename = basename(tarballPath)
-  const pluginPaths = await glob(join(pluginRoot, 'poi-plugin-*'), GLOB_OPTIONS)
-  const packageDatas: Array<Record<string, unknown>> = await Promise.all(
-    pluginPaths.map((p: string) => readJson(join(p, 'package.json'))),
-  )
-  const nameMatchDatas = packageDatas.filter((packageData) => {
-    const requested = packageData['_requested']
-    const raw = isRecord(requested) ? (getString(requested, 'raw') ?? '') : ''
-    return raw.endsWith(filename)
-  })
-  if (nameMatchDatas.length === 1) {
-    const name = nameMatchDatas[0]['name']
-    if (typeof name !== 'string') throw new Error(`Invalid package name in ${pluginRoot}`)
-    return name
+export interface StagedPluginPackage {
+  stagingDir: string
+  pluginPath: string
+  cleanup: () => Promise<void>
+}
+
+const describeError = (error: unknown): string =>
+  error instanceof Error ? error.message : String(error)
+
+/**
+ * Parse and validate a plugin install spec. Only packages that live on the
+ * configured npm registry are accepted, so Git URLs, local directories,
+ * tarballs and `npm:` aliases are rejected before npm is ever started.
+ */
+export function resolveRegistryPluginSpec(
+  packageSource: string,
+  version?: string,
+): RegistryPluginSpec {
+  const raw = packageSource.trim()
+  if (!raw) throw new Error('Plugin package name is required.')
+
+  const assertRegistrySpec = (result: npa.Result): void => {
+    if (result.registry !== true || !['tag', 'version', 'range'].includes(result.type)) {
+      throw new Error(`Only npm registry packages can be installed (got "${raw}").`)
+    }
+    if (!result.name) {
+      throw new Error(`Invalid plugin package spec "${raw}": package name is missing.`)
+    }
   }
-  if (nameMatchDatas.length === 0) {
-    throw new Error(`Error: Can't find a package matching ${tarballPath}.`)
+
+  let resolved: npa.Result
+  try {
+    resolved = npa(raw)
+    // Check the original source first: a separate `version` argument must not
+    // let `poi-plugin-x@file:../x` bypass registry-only validation.
+    assertRegistrySpec(resolved)
+    if (version) {
+      if (!resolved.name) throw new Error('Plugin package name is required.')
+      resolved = npa.resolve(resolved.name, version)
+      assertRegistrySpec(resolved)
+    }
+  } catch (error) {
+    throw new Error(`Invalid plugin package spec "${raw}": ${describeError(error)}`, {
+      cause: error,
+    })
   }
-  const shasum = await calculateShasum(tarballPath)
-  const shasumMatchDatas = nameMatchDatas.filter((data) => data['_shasum'] === shasum)
-  if (!shasumMatchDatas[0]) {
-    throw new Error(
-      `Error: Can't find a package installed from ${tarballPath} matching shasum ${shasum}.`,
-    )
+
+  if (!resolved.name) {
+    throw new Error(`Invalid plugin package spec "${raw}": package name is missing.`)
   }
-  const name = shasumMatchDatas[0]['name']
-  if (typeof name !== 'string') throw new Error(`Invalid package name in ${pluginRoot}`)
-  return name
+
+  const unscopedName = resolved.name.slice(resolved.name.lastIndexOf('/') + 1)
+  if (!/^poi-plugin-.+$/.test(unscopedName)) {
+    throw new Error(`Plugin package name "${resolved.name}" must match "poi-plugin-*".`)
+  }
+
+  return {
+    packageName: resolved.name,
+    spec: version ? `${resolved.name}@${version}` : raw,
+  }
 }
 
 const runScriptAsync = (
@@ -69,9 +85,34 @@ const runScriptAsync = (
   args: string[],
   options: child_process.ForkOptions,
 ): Promise<void> =>
-  new Promise((resolve) => {
+  new Promise((resolve, reject) => {
     const proc = child_process.fork(scriptPath, args, options)
-    proc.on('exit', () => resolve())
+    let stdout = ''
+    let stderr = ''
+
+    proc.stdout?.on('data', (chunk: Buffer | string) => {
+      stdout += chunk.toString()
+    })
+    proc.stderr?.on('data', (chunk: Buffer | string) => {
+      stderr += chunk.toString()
+    })
+
+    proc.once('error', (error) => {
+      reject(error)
+    })
+    proc.once('exit', (code, signal) => {
+      if (signal) {
+        reject(new Error(`npm terminated by signal ${signal}.`))
+        return
+      }
+      if (code !== 0) {
+        const diagnostics = [stderr.trim(), stdout.trim()].filter(Boolean).join('\n')
+        const detail = diagnostics ? `\n${diagnostics.slice(-4000)}` : ''
+        reject(new Error(`npm failed with exit code ${code}.${detail}`))
+        return
+      }
+      resolve()
+    })
   })
 
 export async function installPackage(
@@ -87,37 +128,80 @@ export async function installPackage(
   }
   args = [
     ...args,
+    '--install-strategy=shallow',
     '--no-progress',
-    '--no-prune',
-    '--global-style',
     '--ignore-scripts',
     '--legacy-peer-deps',
+    '--no-audit',
+    '--no-fund',
+    '--',
     target,
   ]
   await runScriptAsync(NPM_EXEC_PATH, args, { cwd: npmConfig.prefix })
 }
 
-export async function removePackage(target: string, npmConfig: NpmConfig): Promise<void> {
-  const args = ['uninstall', '--no-progress', target]
-  await runScriptAsync(NPM_EXEC_PATH, args, { cwd: npmConfig.prefix })
-  await repairDep([], npmConfig)
+const buildStageInstallArgs = (
+  spec: string,
+  stagingDir: string,
+  npmConfig: NpmConfig,
+): string[] => {
+  const args = ['install', '--prefix', stagingDir, '--registry', npmConfig.registry]
+  if (npmConfig.http_proxy) {
+    args.push('--proxy', npmConfig.http_proxy)
+  }
+  args.push(
+    '--install-strategy=shallow',
+    '--legacy-peer-deps',
+    '--ignore-scripts',
+    '--no-save',
+    '--no-package-lock',
+    '--no-audit',
+    '--no-fund',
+    '--no-progress',
+    '--',
+    spec,
+  )
+  return args
 }
 
-export async function repairDep(brokenList: string[], npmConfig: NpmConfig): Promise<void> {
-  // matches the previous callback form, which swallowed glob errors and yielded an empty list
-  const depList = (
-    await glob(join(npmConfig.prefix, 'node_modules', '*'), GLOB_OPTIONS).catch(() => [])
-  ).filter((p) => !p.includes('poi-plugin'))
-  depList.forEach((p) => {
-    try {
-      require(p)
-    } catch (_) {
-      safePhysicallyRemove(p)
+/**
+ * Install a plugin into a temporary staging directory on the same volume as
+ * the plugin root, so it can be moved into place without EXDEV failures.
+ * The returned staging directory must be cleaned up by the caller.
+ */
+export async function stagePluginPackage(
+  packageName: string,
+  spec: string,
+  npmConfig: NpmConfig,
+): Promise<StagedPluginPackage> {
+  const stagingRoot = join(npmConfig.prefix, STAGING_DIRECTORY)
+  await ensureDir(stagingRoot)
+  const stagingDir = await mkdtemp(join(stagingRoot, 'tmp-'))
+  const cleanup = async (): Promise<void> => {
+    await remove(stagingDir).catch(() => undefined)
+  }
+
+  try {
+    await writeJSON(
+      join(stagingDir, 'package.json'),
+      { name: 'poi-plugin-staging', private: true },
+      { spaces: 2 },
+    )
+    await runScriptAsync(NPM_EXEC_PATH, buildStageInstallArgs(spec, stagingDir, npmConfig), {
+      cwd: stagingDir,
+      silent: true,
+      env: { ...process.env, npm_config_update_notifier: 'false' },
+    })
+
+    const pluginPath = join(stagingDir, 'node_modules', packageName)
+    if (!(await pathExists(pluginPath))) {
+      throw new Error(`npm finished without installing ${packageName}.`)
     }
-  })
-  brokenList.forEach((pluginName) => {
-    installPackage(pluginName, null, npmConfig)
-  })
+    return { stagingDir, pluginPath, cleanup }
+  } catch (error) {
+    await cleanup()
+    throw error
+  }
 }
 
 export const safePhysicallyRemove = async (packagePath: string): Promise<void> => {
