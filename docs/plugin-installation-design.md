@@ -1,6 +1,6 @@
 # Isolated plugin installation
 
-Installing or updating a plugin must leave other plugins and their dependencies alone. The bundled npm CLI installs one plugin at a time in a fresh staging project outside the active plugin root. Its shallow layout keeps dependencies with the plugin when poi moves it to `plugins/node_modules/<package-name>`. npm continues to handle package resolution, registry configuration, authentication, caching and integrity checks. See [implementation issue #2740](https://github.com/poooi/poi/issues/2740).
+This design covers installing, updating, repairing and uninstalling managed plugins. Each operation must leave other plugins and their dependencies intact. The bundled npm CLI installs one plugin at a time in a fresh staging project outside the active plugin root. Its shallow layout keeps dependencies with the plugin when poi moves it to `plugins/node_modules/<package-name>`. npm continues to handle package resolution, registry configuration, authentication, caching and integrity checks. See [implementation issue #2740](https://github.com/poooi/poi/issues/2740).
 
 ## Installation and retry
 
@@ -12,10 +12,12 @@ Installing or updating a plugin must leave other plugins and their dependencies 
 
 ## Existing installations
 
-Discover ordinary and scoped plugins from disk and preserve extra-plugin precedence, safe mode and enablement preferences. Update or repair one plugin at a time. Preserve the legacy shared dependencies used by other plugins. A batch repair reports each result and continues after an individual failure. Use the recorded source for repairs and ask for a source when a legacy installation cannot be identified reliably.
+Discover ordinary and scoped plugins from disk and preserve extra-plugin precedence, safe mode and enablement preferences. To uninstall a managed plugin, remove only its package directory. Run neither npm uninstall nor dependency cleanup in the shared prefix. To repair a plugin, prepare and replace it using the same single-package installation path. Preserve the legacy shared dependencies used by other plugins. A batch repair reports each result and continues after an individual failure. Use the recorded source for repairs and ask for a source when a legacy installation cannot be identified reliably.
 
 The WCTF database updater keeps its independent prefix and generic package installer. Continue to support offline release tarballs. Runtime module resolution, including host-provided React, is unchanged.
 
 ## Acceptance
 
 Install A and B with different versions of a shared dependency. Force replacement of A to fail after its old directory has been removed. Check that the failure clears the busy state, then reinstall A through the same entry point and load it. Compare B's files and loaded version before and after the operation.
+
+Uninstall A and compare B's files and loaded dependency version with the same baseline. In a batch repair, make preparation of A fail, verify A remains usable, and check that repair continues to B from its recorded source. Verify the failed attempt left B and any legacy shared dependencies intact before B's own repair begins.
