@@ -1,4 +1,7 @@
-# Plugin Installation & Dependency Isolation Design (#2740)
+# Plugin Dependency Isolation
+
+This document describes the design of plugin installation and dependency isolation in poi.
+Background: [#2740](https://github.com/poooi/poi/issues/2740).
 
 ## 1. Goal & Boundaries
 
