@@ -1,23 +1,13 @@
-# Isolated plugin installation
+# Isolate changes to the selected npm plugin
 
-This design covers installing, updating, repairing and uninstalling managed plugins. Each operation must leave other plugins and their dependencies intact. The bundled npm CLI installs one plugin at a time in a fresh staging project outside the active plugin root. Its shallow layout keeps dependencies with the plugin when poi moves it to `plugins/node_modules/<package-name>`. npm continues to handle package resolution, registry configuration, authentication, caching and integrity checks. See [implementation issue #2740](https://github.com/poooi/poi/issues/2740).
+Installing, updating, repairing or removing plugin A can currently change shared dependencies and break plugin B. Keep the existing plugin manager and limit each operation to A and its private dependencies. [Issue #2740](https://github.com/poooi/poi/issues/2740)
 
-## Installation and retry
+The installer accepts npm registry package names, including scoped names and optional versions, ranges or tags. Validate the request before invoking npm. Reject local paths, tarballs, URLs, Git sources and aliases. Update, repair and retry use the same boundary and existing npm registry configuration.
 
-1. Parse registry names, versions, ranges and tags with `npm-package-arg`. Preserve the full name for scoped packages. For a local tarball, determine its name and version from the installed manifest so a renamed archive works.
-2. Create a private staging project on the same volume as the plugin directory. Run the bundled npm CLI with an explicit prefix, shallow installation, legacy peer dependency handling and lifecycle scripts disabled. Use the trusted project and user npm configuration, including scoped registries, mirrors, proxies and TLS settings. Keep credentials out of arguments and diagnostics.
-3. Check the candidate's package identity, entry and dependency layout before unloading the active plugin. Keep source metadata with the installed package so repair can use its registry or original tarball.
-4. Replace only the selected managed package directory. Protect development links, Git worktrees and extra plugins. The main process serializes writes. The renderer manages plugin windows, loading and installation progress.
-5. If preparation fails, the installed copy is still available. If replacement fails after the installed copy has been removed, report the failure, clear the progress indicator and reflect the actual state on disk. The user can install the package again from the usual entry point or select the original tarball. A plugin whose entry throws after installation remains installed and reports its load error.
-
-## Existing installations
-
-Discover ordinary and scoped plugins from disk and preserve extra-plugin precedence, safe mode and enablement preferences. To uninstall a managed plugin, remove only its package directory. Run neither npm uninstall nor dependency cleanup in the shared prefix. To repair a plugin, prepare and replace it using the same single-package installation path. Preserve the legacy shared dependencies used by other plugins. A batch repair reports each result and continues after an individual failure. Use the recorded source for repairs and ask for a source when a legacy installation cannot be identified reliably.
-
-The WCTF database updater keeps its independent prefix and generic package installer. Continue to support offline release tarballs. Runtime module resolution, including host-provided React, is unchanged.
+Prepare A and its dependencies in a separate directory and validate the candidate while the old A is still running. Then unload the old instance, replace A's directory and load the replacement if enabled. Repair repeats installation for A. Uninstall removes A's directory and leaves shared dependencies in place.
 
 ## Acceptance
 
-Install A and B with different versions of a shared dependency. Force replacement of A to fail after its old directory has been removed. Check that the failure clears the busy state, then reinstall A through the same entry point and load it. Compare B's files and loaded version before and after the operation.
-
-Uninstall A and compare B's files and loaded dependency version with the same baseline. In a batch repair, make preparation of A fail, verify A remains usable, and check that repair continues to B from its recorded source. Verify the failed attempt left B and any legacy shared dependencies intact before B's own repair begins.
+- Install A and B with different versions of a dependency. Update, repair and uninstall A. B's files and loaded dependency version remain intact, including when B uses a legacy shared dependency.
+- Fail preparation while A is running. A remains usable. Fail replacement after unloading A. The UI clears progress, shows whether A is installed and running, and permits retry from the ordinary install entry point.
+- Show the plugin name and error when installation fails. If installation succeeds but loading fails, show A as installed with a load error.
