@@ -244,7 +244,7 @@ describe('plugin manager install paths', () => {
     ).toBe(true)
   })
 
-  it('reports an unloaded instance before replacement and keeps it inactive when its directory survives', async () => {
+  it('reports the unload before replacement, then restores the surviving instance after failure', async () => {
     const previous = makePlugin({ enabled: true })
     const inactive = { ...previous, enabled: false, isRead: false, isUpdating: true }
     mockStore.plugins = [previous]
@@ -260,11 +260,16 @@ describe('plugin manager install paths', () => {
       throw new Error('target is protected')
     })
     jest.requireMock<{ existsSync: jest.Mock }>('fs-extra').existsSync.mockReturnValue(true)
+    jest.mocked(readPlugin).mockResolvedValue(previous)
     await expect(loadManager().installPlugin(previous.packageName)).rejects.toThrow(
       'target is protected',
     )
     expect(dispatchPayloads('@@Plugin/remove')).toEqual([])
-    expect(enablePlugin).not.toHaveBeenCalled()
+    expect(enablePlugin).toHaveBeenCalledWith(
+      expect.objectContaining({ packageName: previous.packageName }),
+      false,
+    )
+    expect(dispatchPayloads('@@Plugin/add').at(-1)).toMatchObject({ enabled: true, isRead: true })
     expect(dispatchPayloads('@@Plugin/changeStatus').at(-1)).toEqual({
       packageName: previous.packageName,
       option: [{ path: 'isUpdating', status: false }],
@@ -396,6 +401,20 @@ describe('plugin manager install paths', () => {
     )
   })
 
+  it.each([true, false])(
+    'clears a missing directory from the store (extra=%s)',
+    async (isExtra) => {
+      const plugin = makePlugin({ isExtra })
+      jest
+        .mocked(removeExtraPackage)
+        .mockResolvedValue({ removed: false, missing: true, linked: false })
+      installer.removePluginDirectory.mockResolvedValue({ removed: false })
+      await loadManager().uninstallPlugin(plugin)
+      expect(dispatchPayloads('@@Plugin/remove')).toEqual([plugin])
+      expect(enablePlugin).not.toHaveBeenCalled()
+    },
+  )
+
   it('reveals the normal install after removing an extra override', async () => {
     const extra = makePlugin({
       packageName: 'poi-plugin-x',
@@ -403,11 +422,22 @@ describe('plugin manager install paths', () => {
       isExtra: true,
     })
     const normal = makePlugin({
-      packageName: 'poi-plugin-x',
-      pluginPath: path.join(defaultPluginsPath, 'poi-plugin-x'),
+      packageName: 'poi-plugin-normal',
+      pluginPath: path.join(defaultPluginsPath, 'poi-plugin-normal'),
       isRead: false,
     })
     mockStore.plugins = [extra]
+    jest
+      .mocked(dispatch)
+      .mockImplementationOnce((action) => action)
+      .mockImplementationOnce((action) => {
+        mockStore.plugins = []
+        return action
+      })
+    jest
+      .requireMock<{ glob: jest.Mock }>('glob')
+      .glob.mockResolvedValueOnce([normal.pluginPath])
+      .mockResolvedValueOnce([])
     jest.mocked(readPlugin).mockResolvedValue(normal)
     const { existsSync } = jest.requireMock<{ existsSync: jest.Mock }>('fs-extra')
     existsSync.mockReturnValue(true)
@@ -416,13 +446,16 @@ describe('plugin manager install paths', () => {
     await pluginManager.uninstallPlugin(extra)
 
     expect(removeExtraPackage).toHaveBeenCalledWith(path.join(extraPluginsPath, 'poi-plugin-x'))
-    expect(readPlugin).toHaveBeenCalledWith(path.join(defaultPluginsPath, 'poi-plugin-x'), false)
+    expect(readPlugin).toHaveBeenCalledWith(
+      path.join(defaultPluginsPath, 'poi-plugin-normal'),
+      false,
+    )
     expect(enablePlugin).toHaveBeenCalledWith(
-      expect.objectContaining({ packageName: 'poi-plugin-x', isExtra: false }),
+      expect.objectContaining({ packageName: 'poi-plugin-normal', isExtra: false }),
     )
     expect(
       dispatchPayloads('@@Plugin/add').some(
-        (payload) => isRecord(payload) && payload['packageName'] === 'poi-plugin-x',
+        (payload) => isRecord(payload) && payload['packageName'] === 'poi-plugin-normal',
       ),
     ).toBe(true)
   })

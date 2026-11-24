@@ -1,5 +1,8 @@
 import childProcess from 'child_process'
 import { EventEmitter } from 'events'
+import fs from 'fs/promises'
+import { tmpdir } from 'os'
+import path from 'path'
 
 jest.mock('views/env', () => {
   const path = require('path')
@@ -11,7 +14,7 @@ jest.mock('views/env', () => {
 
 jest.mock('child_process', () => ({ spawn: jest.fn() }))
 
-import { installPackage } from '../npm-utils'
+import { installPackage, removeExtraPackage } from '../npm-utils'
 
 describe('generic npm install (WCTF compatibility)', () => {
   it('passes the proxy through the environment, never argv', async () => {
@@ -46,4 +49,17 @@ describe('generic npm install (WCTF compatibility)', () => {
     expect(args).not.toContain('--proxy')
     expect(args.join(' ')).not.toContain('dummy')
   })
+})
+
+it('preserves an extra checkout with a .git file and reports an absent package separately', async () => {
+  const root = await fs.mkdtemp(path.join(tmpdir(), 'poi-extra-'))
+  try {
+    await fs.writeFile(path.join(root, '.git'), 'gitdir: ../worktree')
+    await fs.writeFile(path.join(root, 'local.txt'), 'uncommitted')
+    expect((await removeExtraPackage(root)).removed).toBe(false)
+    expect(await fs.readFile(path.join(root, 'local.txt'), 'utf8')).toBe('uncommitted')
+    expect(await removeExtraPackage(path.join(root, 'missing'))).toMatchObject({ missing: true })
+  } finally {
+    await fs.rm(root, { recursive: true, force: true })
+  }
 })

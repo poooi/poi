@@ -125,11 +125,16 @@ export const PluginConfig = (): React.ReactElement => {
     setNpmWorking(true)
     try {
       const results = await pluginManager.gracefulRepair()
-      const failed = results.filter((result) => result.status === 'failed')
-      if (failed.length > 0) {
+      const incomplete = results.filter((result) => result.status !== 'repaired')
+      if (incomplete.length > 0) {
         window.toast(
-          failed.map((result) => `${result.packageName}: ${result.error ?? ''}`).join('\n'),
-          { intent: 'danger', title: t('Repair plugins') },
+          incomplete
+            .map((result) => `${result.packageName}: ${result.error ?? result.reason}`)
+            .join('\n'),
+          {
+            intent: incomplete.some((result) => result.status === 'failed') ? 'danger' : 'warning',
+            title: t('Repair plugins'),
+          },
         )
       }
     } catch (e) {

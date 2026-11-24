@@ -141,31 +141,26 @@ export async function repairDep(brokenList: string[], npmConfig: NpmConfig): Pro
 
 export interface ExtraRemovalResult {
   removed: boolean
+  missing?: true
   linked: boolean
 }
 
 /** Removes one extra plugin directory; symlinks are unlinked, Git trees are kept. */
 export const removeExtraPackage = async (packagePath: string): Promise<ExtraRemovalResult> => {
-  let packageStat
-  try {
-    packageStat = await lstat(packagePath)
-  } catch (_) {
-    return { removed: false, linked: false }
-  }
+  const packageStat = await lstat(packagePath).catch((error: unknown) => {
+    if (isRecord(error) && error['code'] === 'ENOENT') return undefined
+    throw error
+  })
+  if (!packageStat) return { removed: false, linked: false, missing: true }
   if (packageStat.isSymbolicLink()) {
     await unlink(packagePath)
     return { removed: true, linked: true }
   }
   try {
-    const gitStat = await lstat(join(packagePath, '.git'))
-    if (gitStat.isDirectory()) {
-      console.error(
-        `${packagePath} appears to be a git repository. For the safety of your files in development, please use 'npm link' to install plugins from github.`,
-      )
-      return { removed: false, linked: false }
-    }
-  } catch (_) {
-    // not a Git tree, safe to remove
+    await lstat(join(packagePath, '.git'))
+    return { removed: false, linked: false }
+  } catch (error) {
+    if (!isRecord(error) || error['code'] !== 'ENOENT') throw error
   }
   await remove(packagePath)
   return { removed: true, linked: false }

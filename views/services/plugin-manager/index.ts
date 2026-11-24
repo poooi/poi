@@ -96,16 +96,18 @@ class PluginManager extends EventEmitter {
       )
     ).flat()
 
-    const plugins: Plugin[] = []
-    for (const pluginPath of pluginPaths) {
-      try {
-        plugins.push(await this.readInstalledPlugin(pluginPath, isExtra))
-      } catch (error) {
-        // A directory with a broken manifest should not hide the other plugins.
-        console.error(error instanceof Error ? error.stack : error)
-      }
-    }
-    return sortPlugins(plugins)
+    const plugins = await Promise.all(
+      pluginPaths.map(async (pluginPath) => {
+        try {
+          return await this.readInstalledPlugin(pluginPath, isExtra)
+        } catch (error) {
+          // A directory with a broken manifest should not hide the other plugins.
+          console.error(error instanceof Error ? error.stack : error)
+          return undefined
+        }
+      }),
+    )
+    return sortPlugins(plugins.filter((plugin) => plugin !== undefined))
   }
 
   private async readInstalledPlugin(pluginPath: string, isExtra: boolean): Promise<Plugin> {
@@ -334,6 +336,7 @@ class PluginManager extends EventEmitter {
     const previous = getPlugins().find(
       (plugin) => plugin.packageName === prepared.packageName && !plugin.isExtra,
     )
+    let replaced = false
     try {
       if (previous) {
         unloadPlugin(previous)
@@ -345,6 +348,7 @@ class PluginManager extends EventEmitter {
         await closePluginWindows(previous)
       }
       const installed = await installer.activatePluginInstall(prepared.operationId)
+      replaced = true
       const pluginPath = getPluginPath(installed.packageName)
       let plugin = await readPlugin(pluginPath)
       plugin = { ...plugin, ...(await this.describeInstall(plugin)) }
@@ -378,6 +382,21 @@ class PluginManager extends EventEmitter {
           (candidate) => candidate.packageName === prepared.packageName && !candidate.isExtra,
         )
         if (stale) dispatch(createPluginRemoveAction(stale))
+      } else if (!replaced && previous?.enabled && previous.isRead && !window.isSafeMode) {
+        try {
+          const current = await this.readInstalledPlugin(getPluginPath(previous.packageName), false)
+          if (
+            current.enabled &&
+            current.packageName === previous.packageName &&
+            current.pluginPath === previous.pluginPath &&
+            current.version === previous.version &&
+            current.id === previous.id
+          ) {
+            dispatch(createPluginAddAction(await enablePlugin(current, false)))
+          }
+        } catch (restoreError) {
+          console.error(restoreError)
+        }
       }
       this.emit('installfailed', prepared.packageName)
       console.error(error instanceof Error ? error.stack : error)
@@ -415,18 +434,15 @@ class PluginManager extends EventEmitter {
 
       if (plugin.isExtra) {
         const result = await removeExtraPackage(getPluginExtraPath(plugin.packageName))
-        if (!result.removed) {
+        if (!result.removed && !result.missing) {
           throw new Error(`Failed to remove extra plugin ${plugin.packageName}`)
         }
       } else {
-        const result = await installer.removePluginDirectory(plugin.packageName)
-        if (!result.removed) {
-          throw new Error(`Failed to remove plugin ${plugin.packageName}`)
-        }
+        // A missing directory is already uninstalled. Other failures reject.
+        await installer.removePluginDirectory(plugin.packageName)
       }
       // Only leave the UI after the disk operation succeeded.
       dispatch(createPluginRemoveAction(plugin))
-      if (plugin.isExtra) await this.revealShadowedPlugin(plugin.packageName)
     } catch (error) {
       this.setStatus(plugin.packageName, 'isUninstalling', false)
       // The disk operation failed, so keep the plugin usable instead of leaving
@@ -442,18 +458,16 @@ class PluginManager extends EventEmitter {
       console.error(error instanceof Error ? error.stack : error)
       throw error
     }
+    if (plugin.isExtra) await this.revealShadowedPlugins(plugin)
   }
 
-  /** Removes the extra override in the UI so the normal install shows up again. */
-  private async revealShadowedPlugin(packageName: string): Promise<void> {
-    const pluginPath = getPluginPath(packageName)
-    if (!existsSync(pluginPath)) return
-    try {
-      let plugin = await this.readInstalledPlugin(pluginPath, false)
+  private async revealShadowedPlugins(extra: Plugin): Promise<void> {
+    const normal = await this.readFromWildcardPath(PLUGIN_PATH)
+    for (let plugin of normal) {
+      if (plugin.id !== extra.id && plugin.packageName !== extra.packageName) continue
+      if (this.findExtraShadow(plugin)) continue
       if (plugin.enabled && !window.isSafeMode) plugin = await enablePlugin(plugin)
       dispatch(createPluginAddAction(plugin))
-    } catch (error) {
-      console.error(error instanceof Error ? error.stack : error)
     }
   }
 
@@ -464,7 +478,8 @@ class PluginManager extends EventEmitter {
       spec: plugin.packageName,
     }
     if (plugin.isExtra) return { ...base, skip: 'extra' }
-    if (plugin.linkedPlugin || !existsSync(plugin.pluginPath)) {
+    if (!existsSync(plugin.pluginPath)) return { ...base, skip: 'missing' }
+    if (plugin.linkedPlugin) {
       return { ...base, skip: 'linked' }
     }
     if (existsSync(join(plugin.pluginPath, '.git'))) return { ...base, skip: 'git' }
