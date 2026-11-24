@@ -337,6 +337,11 @@ class PluginManager extends EventEmitter {
     try {
       if (previous) {
         unloadPlugin(previous)
+        // The runtime has stopped. Keep the saved enablement preference for
+        // the replacement, but stop exposing the old instance as active.
+        dispatch(
+          createPluginAddAction({ ...previous, enabled: false, isRead: false, isUpdating: true }),
+        )
         await closePluginWindows(previous)
       }
       const installed = await installer.activatePluginInstall(prepared.operationId)

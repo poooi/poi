@@ -96,16 +96,26 @@ export const PluginConfig = (): React.ReactElement => {
     [t],
   )
 
-  const handleInstall = useCallback(async (name: string) => {
-    setInstallingPluginNames((prev) => [...prev, name])
-    setNpmWorking(true)
-    try {
-      await pluginManager.installPlugin(name)
-    } finally {
-      setInstallingPluginNames((prev) => prev.filter((n) => n !== name))
-      setNpmWorking(false)
-    }
-  }, [])
+  const handleInstall = useCallback(
+    async (name: string) => {
+      setInstallingPluginNames((prev) => [...prev, name])
+      setNpmWorking(true)
+      try {
+        await pluginManager.installPlugin(name)
+        return true
+      } catch (error) {
+        window.toast(error instanceof Error ? error.message : String(error), {
+          intent: 'danger',
+          title: `${name} - ${t('setting:Plugin error')}`,
+        })
+        return false
+      } finally {
+        setInstallingPluginNames((prev) => prev.filter((n) => n !== name))
+        setNpmWorking(false)
+      }
+    },
+    [t],
+  )
 
   const gracefulRepair = useCallback(async () => {
     setNpmWorking(true)
@@ -180,11 +190,7 @@ export const PluginConfig = (): React.ReactElement => {
     try {
       const settings = pluginManager.getUninstalledPluginSettings()
       for (const name of Object.keys(settings)) {
-        try {
-          await handleInstall(name)
-        } catch (e) {
-          console.error(e)
-        }
+        await handleInstall(name)
       }
     } finally {
       setInstallingAll(false)
@@ -218,12 +224,8 @@ export const PluginConfig = (): React.ReactElement => {
 
   const handleInstallByName = async (name: string) => {
     setManuallyInstallStatus(1)
-    try {
-      await handleInstall(name)
-      setManuallyInstallStatus(2)
-    } catch (_) {
-      setManuallyInstallStatus(3)
-    }
+    const installed = await handleInstall(name)
+    setManuallyInstallStatus(installed ? 2 : 3)
   }
 
   const uninstalledPluginSettings = pluginManager.getUninstalledPluginSettings()

@@ -233,6 +233,33 @@ describe('plugin manager install paths', () => {
     ).toBe(true)
   })
 
+  it('reports an unloaded instance before replacement and keeps it inactive when its directory survives', async () => {
+    const previous = makePlugin({ enabled: true })
+    const inactive = { ...previous, enabled: false, isRead: false, isUpdating: true }
+    mockStore.plugins = [previous]
+    jest
+      .mocked(installer.preparePluginInstall)
+      .mockResolvedValue({ packageName: previous.packageName, operationId: 'a'.repeat(24) })
+    jest.mocked(closePluginWindows).mockImplementation(async () => {
+      expect(unloadPlugin).toHaveBeenCalledWith(previous)
+      expect(dispatchPayloads('@@Plugin/add')).toEqual([inactive])
+    })
+    jest.mocked(installer.activatePluginInstall).mockImplementation(async () => {
+      expect(closePluginWindows).toHaveBeenCalledWith(previous)
+      throw new Error('target is protected')
+    })
+    jest.requireMock<{ existsSync: jest.Mock }>('fs-extra').existsSync.mockReturnValue(true)
+    await expect(loadManager().installPlugin(previous.packageName)).rejects.toThrow(
+      'target is protected',
+    )
+    expect(dispatchPayloads('@@Plugin/remove')).toEqual([])
+    expect(enablePlugin).not.toHaveBeenCalled()
+    expect(dispatchPayloads('@@Plugin/changeStatus').at(-1)).toEqual({
+      packageName: previous.packageName,
+      option: [{ path: 'isUpdating', status: false }],
+    })
+  })
+
   it('keeps an extra shadow selected when a normal install shares its id', async () => {
     const extra = makePlugin({
       id: 'shared-id',
