@@ -327,6 +327,11 @@ describe('plugin install service', () => {
       installSource: 'legacy-registry',
       spec: 'poi-plugin-legacy@1.4.0',
     })
+    await fs.unlink(path.join(legacyDir, 'package.json'))
+    expect(await service.inspectPlugin('poi-plugin-legacy')).toMatchObject({
+      installSource: 'legacy-registry',
+      spec: 'poi-plugin-legacy@^1.0.0',
+    })
 
     await fs.writeFile(
       path.join(context.pluginsRoot, 'package-lock.json'),

@@ -82,7 +82,11 @@ export const PluginConfig = (): React.ReactElement => {
           .getInstalledPlugins()
           .find((p) => p.packageName === packageName)
         if (!plugin || plugin.linkedPlugin || plugin.isExtra) return
-        await pluginManager.installPlugin(plugin.packageName, plugin.latestVersion)
+        await pluginManager.installPlugin(
+          plugin.packageName,
+          plugin.latestVersion,
+          plugin.installRegistry,
+        )
       } catch (error) {
         console.error(error)
         window.toast(error instanceof Error ? error.message : String(error), {

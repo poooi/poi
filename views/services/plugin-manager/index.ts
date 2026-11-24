@@ -395,9 +395,9 @@ class PluginManager extends EventEmitter {
     )
   }
 
-  async installPlugin(packageSource: string, version?: string): Promise<void> {
+  async installPlugin(packageSource: string, version?: string, registry?: string): Promise<void> {
     const { spec } = normalizeInstallSpec(packageSource, version)
-    await this.installSpec(spec)
+    await this.installSpec(spec, { registry })
   }
 
   async uninstallPlugin(plugin: Plugin): Promise<void> {

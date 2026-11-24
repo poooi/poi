@@ -14,7 +14,7 @@ interface RepairResultLike {
 
 interface ManagerLike {
   gracefulRepair(repair?: boolean): Promise<RepairResultLike[]>
-  installPlugin(source: string, version?: string): Promise<void>
+  installPlugin(source: string, version?: string, registry?: string): Promise<void>
   uninstallPlugin(plugin: Plugin): Promise<void>
 }
 
@@ -170,6 +170,17 @@ beforeEach(() => {
 })
 
 describe('plugin manager install paths', () => {
+  it('installs an offered update from the registry that supplied it', async () => {
+    const registry = 'https://mirror.example/'
+    jest.mocked(installer.preparePluginInstall).mockRejectedValue(new Error('offline'))
+    await expect(loadManager().installPlugin('poi-plugin-a', '2.0.0', registry)).rejects.toThrow(
+      'offline',
+    )
+    expect(installer.preparePluginInstall).toHaveBeenCalledWith(
+      expect.objectContaining({ spec: 'poi-plugin-a@2.0.0', registry }),
+    )
+  })
+
   it('drops stale UI when activation removed the old plugin, then retries normally', async () => {
     const previous = makePlugin({
       packageName: 'poi-plugin-a',

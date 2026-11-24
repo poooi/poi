@@ -308,7 +308,7 @@ export class PluginInstallService {
         if (!/^(?:[a-z]+:|[./])/i.test(spec) && !/[\\/]/.test(spec)) {
           return {
             installSource: 'legacy-registry',
-            spec: version ? `${packageName}@${version}` : spec,
+            spec: `${packageName}@${version ?? spec}`,
           }
         }
         return { installSource: 'unknown' }
