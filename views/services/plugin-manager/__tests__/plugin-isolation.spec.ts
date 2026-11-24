@@ -9,7 +9,9 @@ import http from 'http'
 import { createRequire } from 'module'
 import os from 'os'
 import path from 'path'
-import * as tar from 'tar'
+import { pipeline } from 'stream/promises'
+import tarFs from 'tar-fs'
+import zlib from 'zlib'
 
 import type { NpmConfig } from '../types'
 
@@ -129,8 +131,11 @@ const buildTarball = async (pkg: TestPackage): Promise<void> => {
     : `module.exports = { self: ${JSON.stringify(`${pkg.name}@${pkg.version}`)}, version: ${JSON.stringify(pkg.version)} }\n`
   await fs.writeFile(path.join(packageDir, 'index.js'), moduleSource)
 
-  const tarballPath = path.join(buildDir, 'package.tgz')
-  await tar.c({ cwd: buildDir, file: tarballPath, gzip: true, portable: true }, ['package'])
+  const tarballDir = path.join(workRoot, 'tarballs')
+  await fs.ensureDir(tarballDir)
+  const tarballName = `${packageKey(pkg.name, pkg.version).replace(/[^a-zA-Z0-9.-]+/g, '_')}.tgz`
+  const tarballPath = path.join(tarballDir, tarballName)
+  await pipeline(tarFs.pack(buildDir), zlib.createGzip(), fs.createWriteStream(tarballPath))
   const buffer = await fs.readFile(tarballPath)
   artifacts.set(packageKey(pkg.name, pkg.version), {
     buffer,

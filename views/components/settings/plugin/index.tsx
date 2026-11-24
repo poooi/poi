@@ -48,8 +48,15 @@ const PluginList = styled.div`
   margin-top: 4em;
 `
 
-const describeError = (error: unknown): string =>
-  error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+const MAX_DISPLAYED_ERROR_LENGTH = 240
+
+const describeError = (error: unknown): string => {
+  const raw = error instanceof Error ? error.message : typeof error === 'string' ? error : ''
+  const detail = raw.replace(/\s+/g, ' ').trim()
+  return detail.length > MAX_DISPLAYED_ERROR_LENGTH
+    ? `${detail.slice(0, MAX_DISPLAYED_ERROR_LENGTH - 3)}...`
+    : detail
+}
 
 const summarizeFailures = (failures: Array<{ name: string; error: unknown }>): string =>
   failures
@@ -76,6 +83,7 @@ export const PluginConfig = (): React.ReactElement => {
   const [updatingAll, setUpdatingAll] = useState(false)
   const [manuallyInstallStatus, setManuallyInstallStatus] = useState(0)
 
+  const batchOperationRef = useRef(false)
   const prevManuallyInstallStatus = useRef(manuallyInstallStatus)
   useEffect(() => {
     if (
@@ -106,17 +114,19 @@ export const PluginConfig = (): React.ReactElement => {
 
   const gracefulRepair = useCallback(async () => {
     setNpmWorking(true)
+    batchOperationRef.current = true
     try {
       const result = await pluginManager.gracefulRepair()
       if (result.failed.length > 0) {
         const summary = summarizeFailures(
           result.failed.map((failed) => ({ name: failed.packageName, error: failed.error })),
         )
-        reportFailure([], new Error(summary))
+        reportFailure([summary])
       }
     } catch (error) {
       reportFailure([], error)
     } finally {
+      batchOperationRef.current = false
       setNpmWorking(false)
     }
   }, [reportFailure])
@@ -129,6 +139,7 @@ export const PluginConfig = (): React.ReactElement => {
 
   const showGracefulRepairToast = useCallback(
     (packageName?: string, error?: unknown) => {
+      if (batchOperationRef.current) return
       const detail = describeError(error)
       const label = packageName ? `${packageName}: ` : ''
       window.toast(`${label}${detail || t('plugin-install-failed-message')}`, {
@@ -169,6 +180,7 @@ export const PluginConfig = (): React.ReactElement => {
       const failures: Array<{ name: string; error: unknown }> = []
       setCheckingUpdate(true)
       setNpmWorking(true)
+      batchOperationRef.current = true
       try {
         await pluginManager.getOutdatedPlugins(isNotif)
         if (autoUpdate) {
@@ -185,11 +197,12 @@ export const PluginConfig = (): React.ReactElement => {
       } catch (error) {
         failures.push({ name: '', error })
       } finally {
+        batchOperationRef.current = false
         setCheckingUpdate(false)
         setNpmWorking(false)
       }
       if (failures.length > 0) {
-        reportFailure([], new Error(summarizeFailures(failures)))
+        reportFailure([summarizeFailures(failures)])
       }
     }
 
@@ -220,8 +233,9 @@ export const PluginConfig = (): React.ReactElement => {
     setInstallingAll(true)
     setNpmWorking(true)
     const failures: Array<{ name: string; error: unknown }> = []
-    const settings = pluginManager.getUninstalledPluginSettings()
+    batchOperationRef.current = true
     try {
+      const settings = pluginManager.getUninstalledPluginSettings()
       for (const name of Object.keys(settings)) {
         try {
           await handleInstall(name)
@@ -230,11 +244,12 @@ export const PluginConfig = (): React.ReactElement => {
         }
       }
     } finally {
+      batchOperationRef.current = false
       setInstallingAll(false)
       setNpmWorking(false)
     }
     if (failures.length > 0) {
-      reportFailure([], new Error(summarizeFailures(failures)))
+      reportFailure([summarizeFailures(failures)])
     }
   }
 
@@ -248,6 +263,7 @@ export const PluginConfig = (): React.ReactElement => {
     setUpdatingAll(true)
     setNpmWorking(true)
     const failures: Array<{ name: string; error: unknown }> = []
+    batchOperationRef.current = true
     try {
       const installedPlugins = pluginManager.getInstalledPlugins()
       for (const plugin of installedPlugins) {
@@ -259,11 +275,12 @@ export const PluginConfig = (): React.ReactElement => {
         }
       }
     } finally {
+      batchOperationRef.current = false
       setUpdatingAll(false)
       setNpmWorking(false)
     }
     if (failures.length > 0) {
-      reportFailure([], new Error(summarizeFailures(failures)))
+      reportFailure([summarizeFailures(failures)])
     }
   }
 
