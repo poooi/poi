@@ -109,7 +109,7 @@
   "Notify when expedition returns in": "遠征帰投の下記時間前に通知する",
   "Notify when morale is greater than": "コンディションが下記の数値に回復した時に通知する",
   "Plugins are installed successfully": "インストールが完了しました",
-  "InstallFailedMsg": "インストールが失敗しました。選択したファイルはプラグインパッケージではない可能性があります。",
+  "InstallFailedMsg": "インストールに失敗しました。プラグイン名とネットワーク接続を確認して、もう一度お試しください。",
   "Install complete": "インストール完了",
   "Install failed": "インストール失敗",
   "Install": "インストール",

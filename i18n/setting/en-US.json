@@ -56,7 +56,7 @@
   "Drop plugin tarballs here to install": "Drop plugin tarballs here to install",
   "Developer option check update of beta version": "Developer option: check update of beta version",
   "PluginLoadFailed": "failed to load. There may be some compatibility problems.",
-  "InstallFailedMsg": "Installation failed. The selected files may not be plugin packages.",
+  "InstallFailedMsg": "Installation failed. Check the plugin name and network connection, then try again.",
   "Zoom": "Zoom",
   "Zoom level": "Zoom level",
   "Screenshot Folder": "Screenshot Folder",

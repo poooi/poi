@@ -56,6 +56,7 @@ export interface Plugin {
   displayName: React.ReactNode
   timestamp: number
   isBroken?: boolean
+  loadError?: string
   isRead?: boolean
   isUninstalling?: boolean
   windowURL?: string

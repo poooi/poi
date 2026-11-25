@@ -2,16 +2,15 @@ import type { PoiWindowOptions, default as WindowManager } from 'lib/window'
 
 import * as remote from '@electron/remote'
 import { Module } from 'module'
-import { join, basename } from 'path'
+import { join, sep } from 'path'
 import { pathToFileURL } from 'url'
 import { extendReducer } from 'views/create-store'
 import { config, ROOT } from 'views/env'
 import i18next from 'views/env-parts/i18next'
 import { normalizeURL } from 'views/utils/tools'
 
-import type { NpmConfig, Plugin } from './types'
+import type { Plugin } from './types'
 
-import { repairDep } from './npm-utils'
 import { readPlugin } from './read-plugin'
 import { isRecord } from './types'
 
@@ -56,7 +55,11 @@ export async function enablePlugin(plugin: Plugin, reread = true): Promise<Plugi
     }
   } catch (error) {
     console.error(error instanceof Error ? error.stack : error)
-    pluginMain = { enabled: false, isBroken: true }
+    pluginMain = {
+      enabled: false,
+      isBroken: true,
+      loadError: error instanceof Error ? error.message : String(error),
+    }
   }
   let result: Plugin = { ...plugin, ...pluginMain }
   if (result.windowURL) {
@@ -165,8 +168,13 @@ const postEnableProcess = (plugin: Plugin): Plugin => {
 }
 
 function clearPluginCache(packagePath: string): void {
+  // Stay inside the plugin's own directory: matching only the basename would
+  // also evict another plugin with the same name under a different @scope.
+  const boundary = packagePath + sep
+  const belongsToPlugin = (path: string): boolean =>
+    path === packagePath || path.startsWith(boundary) || path.includes(boundary)
   for (const p in require.cache) {
-    if (p.includes(basename(packagePath))) {
+    if (belongsToPlugin(p)) {
       delete require.cache[p]
     }
   }
@@ -174,7 +182,7 @@ function clearPluginCache(packagePath: string): void {
   type ModuleWithPathCache = typeof Module & { _pathCache?: Record<string, string | string[]> }
   const pathCache = (Module as ModuleWithPathCache)._pathCache
   for (const p in pathCache) {
-    if (p.includes(basename(packagePath))) {
+    if (belongsToPlugin(p)) {
       delete pathCache[p]
     }
   }
@@ -196,17 +204,11 @@ export function unloadPlugin(plugin: Plugin): Plugin {
   return plugin
 }
 
-export function notifyFailed(state: Plugin[], npmConfig: NpmConfig): void {
+export function notifyFailed(state: Plugin[]): void {
   const plugins = state.filter((plugin) => plugin.isBroken)
-  const unreadList: string[] = []
-  const reinstallList: string[] = []
-  for (const plugin of plugins) {
-    unreadList.push(plugin.name)
-    if (!plugin.linkedPlugin) reinstallList.push(plugin.packageName)
-  }
+  const unreadList = plugins.map((plugin) => plugin.name)
   if (unreadList.length > 0) {
     const content = `${unreadList.join(' / ')} ${i18next.t('setting:PluginLoadFailed')}`
     window.toast(content, { type: 'error', title: i18next.t('setting:Plugin error') })
   }
-  repairDep(reinstallList, npmConfig)
 }
